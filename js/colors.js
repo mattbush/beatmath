@@ -5,14 +5,7 @@ var tinycolor = require('tinycolor2');
 var fullTimeout = 1600;
 const MIX_COEFFICIENT = 1.4;
 
-var WIDTH_PX = 1280;
-var HEIGHT_PX = 800;
-
-var BASE = 8;
-var NUM_ROWS = 5 * BASE;
-var NUM_COLS = 8 * BASE;
-
-var CELL_SIZE = HEIGHT_PX / NUM_ROWS;
+var {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE} = require('js/colors_constants.js');
 
 var SHOW_INFLUENCES = false;
 

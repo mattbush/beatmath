@@ -1,12 +1,17 @@
+var {CELL_SIZE} = require('js/colors_constants.js');
+
 class InfluenceProperty {
-    constructor({type, min, max, start}) {
+    constructor({type, min, max, variance, start}) {
         this._type = type;
         this._min = min;
         this._max = max;
+        this._variance = variance;
         this.value = start;
         this._speed = 0;
     }
     update() {
+        this._speed += (Math.random() * this._variance * 2) - this._variance;
+
         switch (this._type) {
             case 'linear':
                 var next = this.value + this._speed;
@@ -15,7 +20,21 @@ class InfluenceProperty {
                 } else {
                     this.value += this._speed;
                 }
+                break;
 
+            case 'circular':
+                // TODO
+                break;
+
+            case 'color':
+                if (Math.abs(this._speed) > this._max) {
+                    this._speed *= 0.5;
+                }
+                this.value = this.value.spin(this._speed);
+                break;
+
+            default:
+                throw Error();
         }
     }
 }
@@ -29,6 +48,7 @@ class Influence {
             type: 'linear',
             min: 0,
             max: numCols,
+            variance: 0.25,
             start: startCol,
         });
 
@@ -36,13 +56,15 @@ class Influence {
             type: 'linear',
             min: 0,
             max: numRows,
+            variance: 0.25,
             start: startRow,
         });
 
         this._mainProperty = new InfluenceProperty({
-            type: {size: 'linear', color: 'color', rotation: 'circular'}[propertyType],
-            min: 0,
-            max: {size: 20, rotation: 360}[propertyType],
+            type: {size: 'linear', color: 'color', rotation: 'linear'}[propertyType],
+            min: {size: 1, rotation: -90}[propertyType],
+            max: {size: CELL_SIZE, rotation: 90, color: 5}[propertyType],
+            variance: {size: 0.25 /* TODO: vary with cell size */, rotation: 0.25, color: 1}[propertyType],
             start: startValue,
         });
 
