@@ -92,12 +92,6 @@
         "no-unused-expressions": 2,
         "no-unused-vars": [2, {
             "vars": "all",
-            // Allow requiring _/hs/hc/hcs boilerplate at the top of files without using it.
-            "varsIgnorePattern": "^(_|hcs|hs|hc)$",
-            // Don't validate that args are used. We often have subclasses which implement methods
-            // and don't use all their args. For example, columnTypeProvider subclasses frequently
-            // don't use the "typeOptions" arg.
-            "args": "none"
         }],
         "no-use-before-define": [2, "nofunc"],
         "no-useless-call": 2,

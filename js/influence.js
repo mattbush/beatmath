@@ -1,4 +1,4 @@
-const {CELL_SIZE, MIXER_REFRESH_RATE} = require('./colors_constants');
+const {CELL_SIZE, MIXER_REFRESH_RATE, MIX_COEFFICIENT} = require('./colors_constants');
 
 class InfluenceProperty {
     constructor({type, min, max, variance, start}) {
@@ -40,9 +40,7 @@ class InfluenceProperty {
 }
 
 class Influence {
-    constructor({refreshTime, mixCoefficient, propertyType, numRows, numCols, startRow, startCol, startValue}) {
-        this._refreshTime = refreshTime;
-        this._mixCoefficient = mixCoefficient;
+    constructor({propertyType, numRows, numCols, startRow, startCol, startValue}) {
         this._listeners = [];
 
         this._columnProperty = new InfluenceProperty({
@@ -79,7 +77,7 @@ class Influence {
         let dy = this._rowProperty.value - row;
         let distance = Math.sqrt(dx * dx + dy * dy);
 //            let mixAmount = 500 / (distance * 5 + 5);
-        let mixAmount = ((120 - (distance * 8)) * this._mixCoefficient) / 100;
+        let mixAmount = ((120 - (distance * 8)) * MIX_COEFFICIENT) / 100;
         if (mixAmount > 0) {
             pixelProperty = this._mixByPropertyType(pixelProperty, mixAmount);
         }
