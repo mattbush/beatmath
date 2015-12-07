@@ -93,11 +93,9 @@ var ColorPixel = React.createClass({
         // whether to oscillate (for diamonds/sectors)
         setTimeout(this._update, fullTimeout * 2 - this._refreshOffset * 2);
         this._refreshOffset = fullTimeout - this._refreshOffset;
-        this.setState({
-            color: this.props.colorMixer.mixColors(this.state.color, this.props.row, this.props.col),
-            size: this.props.sizeMixer.mixSizes(this.state.size, this.props.row, this.props.col),
-            rotation: this.props.rotationMixer.mixRotations(this.state.rotation, this.props.row, this.props.col),
-        });
+        var state = _.clone(this.state);
+        _.each(this.props.influences, influence => influence.mix(state, this.props.row, this.props.col));
+        this.setState(state);
     },
     render: function() {
         var rotation = Math.floor(this.state.rotation);
@@ -117,7 +115,7 @@ var ColorGrid = React.createClass({
         const children = [];
         for (let row = 0; row < this.props.numRows; row++) {
             for (let col = 0; col < this.props.numCols; col++) {
-                children.push(<ColorPixel influences={influences} row={row} col={col} key={row + '|' + col} />);
+                children.push(<ColorPixel influences={this.props.influences} row={row} col={col} key={row + '|' + col} />);
             }
         }
 
