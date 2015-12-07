@@ -40,6 +40,7 @@ var RIPPLE_REFRESH_ALGORITHM = function(row, col) {
     var euclideanDistance = Math.sqrt(dx * dx + dy * dy);
     var distance = (MANHATTAN_COEFFICIENT * manhattanDistance + (1 - MANHATTAN_COEFFICIENT) * euclideanDistance);
     return (((distance / RIPPLE_RADIUS + (polarAngle * NUM_SPIRALS / 360)) + NUM_SPIRALS) % 1) * fullTimeout;
+//    return (((Math.log(distance / RIPPLE_RADIUS) + (polarAngle * NUM_SPIRALS / 360)) + NUM_SPIRALS + 10) % 1) * fullTimeout;
 };
 
 const NUM_SECTORS = 6;
@@ -83,9 +84,9 @@ var ColorPixel = React.createClass({
         };
     },
     _update: function() {
-        // setTimeout(this._update, fullTimeout);
+        setTimeout(this._update, fullTimeout);
         // whether to oscillate (for diamonds/sectors)
-        setTimeout(this._update, fullTimeout * 2 - this._refreshOffset * 2);
+        // setTimeout(this._update, fullTimeout * 2 - this._refreshOffset * 2);
         this._refreshOffset = fullTimeout - this._refreshOffset;
         var state = _.clone(this.state);
         _.each(this.props.influences, influence => influence.mix(state, this.props.row, this.props.col));
