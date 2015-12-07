@@ -92,7 +92,7 @@ class Influence {
             case 'rotation': /* TODO */
                 return mixAmount * influenceProperty + (1 - mixAmount) * pixelProperty;
             case 'color':
-                return tinycolor.mix(pixelProperty, influenceProperty, mixAmount);
+                return tinycolor.mix(pixelProperty, influenceProperty, mixAmount * 100);
             default:
                 throw Error();
         }

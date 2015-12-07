@@ -4,7 +4,7 @@ const {CELL_SIZE, MIXER_REFRESH_RATE} = require('./colors_constants');
 
 var InfluenceCircle = React.createClass({
     componentDidMount: function() {
-        this.props.influence.addListener(this.forceUpdate);
+        this.props.influence.addListener(this.forceUpdate.bind(this));
     },
     render: function() {
         var influence = this.props.influence;

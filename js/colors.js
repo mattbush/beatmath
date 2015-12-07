@@ -9,7 +9,7 @@ const {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE} = require('./colors_c
 const Influence = require('./influence');
 const InfluenceCircle = require('./influence_circle');
 
-const SHOW_INFLUENCES = false;
+const SHOW_INFLUENCES = true;
 
 var gray = tinycolor('#909090');
 
@@ -60,7 +60,7 @@ var SECTOR_REFRESH_ALGORITHM = function(row, col) {
 
 const ALL_REFRESH_ALGORITHMS = [RIPPLE_REFRESH_ALGORITHM, SECTOR_REFRESH_ALGORITHM, DIAMOND_REFRESH_ALGORITHM];
 
-const REFRESH_ALGORITHM = ALL_REFRESH_ALGORITHMS[1];
+const REFRESH_ALGORITHM = ALL_REFRESH_ALGORITHMS[2];
 
 var influences = [
     new Influence({propertyType: 'color', startRow: 0.2 * NUM_ROWS, startCol: 0.2 * NUM_COLS, startValue: tinycolor('#f22')}),
