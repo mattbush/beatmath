@@ -254,6 +254,13 @@ var ColorPixel = React.createClass({
         this._refreshOffset = REFRESH_ALGORITHM(this.props.row, this.props.col);
         setTimeout(this._update, this._refreshOffset);
     },
+    getInitialState: function() {
+        return {
+            color: gray,
+            size: 8,
+            rotation: 0,
+        };
+    },
     _update: function() {
         setTimeout(this._update, fullTimeout);
         // whether to oscillate (for diamonds/sectors)
@@ -264,13 +271,6 @@ var ColorPixel = React.createClass({
             size: this.props.sizeMixer.mixSizes(this.state.size, this.props.row, this.props.col),
             rotation: this.props.rotationMixer.mixRotations(this.state.rotation, this.props.row, this.props.col),
         });
-    },
-    getInitialState: function() {
-        return {
-            color: gray,
-            size: 8,
-            rotation: 0,
-        };
     },
     render: function() {
         var rotation = Math.floor(this.state.rotation);
