@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var tinycolor = require('tinycolor2');
@@ -5,12 +6,12 @@ var tinycolor = require('tinycolor2');
 var fullTimeout = 1600;
 
 const {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE} = require('./colors_constants');
+const Influence = require('./influence');
 const InfluenceCircle = require('./influence_circle');
 
 const SHOW_INFLUENCES = false;
 
 var gray = tinycolor('#909090');
-// var white = tinycolor('#ffffff');
 
 const DIAMOND_SIZE = 10;
 const NUM_DIAMOND_SPIRALS = 0;
@@ -116,7 +117,7 @@ var ColorGrid = React.createClass({
         const children = [];
         for (let row = 0; row < this.props.numRows; row++) {
             for (let col = 0; col < this.props.numCols; col++) {
-                children.push(<ColorPixel rotationMixer={this.props.rotationMixer} colorMixer={this.props.colorMixer} sizeMixer={this.props.sizeMixer} row={row} col={col} key={row + '|' + col} />);
+                children.push(<ColorPixel influences={influences} row={row} col={col} key={row + '|' + col} />);
             }
         }
 
@@ -126,15 +127,9 @@ var ColorGrid = React.createClass({
                     {children}
                 </g>
                 {SHOW_INFLUENCES && <g>
-                    <InfluenceCircle mixer={theColorMixer} index={0} />
-                    <InfluenceCircle mixer={theColorMixer} index={1} />
-                    <InfluenceCircle mixer={theColorMixer} index={2} />
-                    <InfluenceCircle mixer={theSizeMixer} index={0} />
-                    <InfluenceCircle mixer={theSizeMixer} index={1} />
-                    <InfluenceCircle mixer={theSizeMixer} index={2} />
-                    <InfluenceCircle mixer={theRotationMixer} index={0} />
-                    <InfluenceCircle mixer={theRotationMixer} index={1} />
-                    <InfluenceCircle mixer={theRotationMixer} index={2} />
+                    {_.map(this.props.influences, (influence, index) =>
+                        <InfluenceCircle influence={influence} key={index} />
+                    )}
                 </g>}
             </svg>
         );
@@ -144,12 +139,10 @@ var ColorGrid = React.createClass({
 document.addEventListener('DOMContentLoaded', function() {
     ReactDOM.render(
       <div className="main">
-        <ColorGrid numRows={NUM_ROWS} numCols={NUM_COLS} colorMixer={theColorMixer} sizeMixer={theSizeMixer} rotationMixer={theRotationMixer} />
+        <ColorGrid numRows={NUM_ROWS} numCols={NUM_COLS} influences={influences} />
       </div>,
       document.getElementById('start')
     );
 
-    theColorMixer.update();
-    theSizeMixer.update();
-    theRotationMixer.update();
+    _.each(influences, influence => influence.update());
 });
