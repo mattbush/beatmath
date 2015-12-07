@@ -1,6 +1,6 @@
-/* global React ReactDOM tinycolor */
-
-/* tinycolor */
+var React = require('react');
+var ReactDOM = require('react-dom');
+var tinycolor = require('tinycolor');
 
 // var ColorPixel = React.createClass({
 //     _getInitialTimeout: function() {

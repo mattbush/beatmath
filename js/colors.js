@@ -1,4 +1,6 @@
-/* global React ReactDOM tinycolor */
+var React = require('react');
+var ReactDOM = require('react-dom');
+var tinycolor = require('tinycolor2');
 
 var fullTimeout = 1000;
 const MIX_COEFFICIENT = 1;
@@ -349,13 +351,15 @@ var ColorGrid = React.createClass({
     },
 });
 
-ReactDOM.render(
-  <div className="main">
-    <ColorGrid numRows={NUM_ROWS} numCols={NUM_COLS} colorMixer={theColorMixer} sizeMixer={theSizeMixer} rotationMixer={theRotationMixer} />
-  </div>,
-  document.getElementById('start')
-);
+document.addEventListener('DOMContentLoaded', function(e) {
+    ReactDOM.render(
+      <div className="main">
+        <ColorGrid numRows={NUM_ROWS} numCols={NUM_COLS} colorMixer={theColorMixer} sizeMixer={theSizeMixer} rotationMixer={theRotationMixer} />
+      </div>,
+      document.getElementById('start')
+    );
 
-theColorMixer._update();
-theSizeMixer._update();
-theRotationMixer._update();
+    theColorMixer._update();
+    theSizeMixer._update();
+    theRotationMixer._update();
+});

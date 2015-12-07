@@ -1,6 +1,6 @@
-/* global React ReactDOM tinycolor */
-
-/* tinycolor */
+var React = require('react');
+var ReactDOM = require('react-dom');
+var tinycolor = require('tinycolor2');
 
 // var ColorPixel = React.createClass({
 //     _getInitialTimeout: function() {
@@ -209,9 +209,11 @@ var AnimationController = React.createClass({
     },
 });
 
-ReactDOM.render(
-    <AnimationController bpm={BPM_CONST}>
-        <RotatingCore />
-    </AnimationController>,
-    document.getElementById('start')
-);
+document.addEventListener('DOMContentLoaded', function(e) {
+    ReactDOM.render(
+        <AnimationController bpm={BPM_CONST}>
+            <RotatingCore />
+        </AnimationController>,
+        document.getElementById('start')
+    );
+});
