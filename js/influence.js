@@ -7,7 +7,7 @@ class InfluenceProperty {
         this._type = type;
         this._min = min;
         this._max = max;
-        this._variance = variance;
+        this._variance = variance * 2;
         this.value = start;
         this._speed = 0;
     }
