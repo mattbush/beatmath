@@ -1,7 +1,7 @@
 /* global React ReactDOM tinycolor */
 
-var fullTimeout = 1000;
-const MIX_COEFFICIENT = 1;
+var fullTimeout = 1600;
+const MIX_COEFFICIENT = 1.4;
 
 var WIDTH_PX = 1280;
 var HEIGHT_PX = 800;
@@ -12,7 +12,7 @@ var NUM_COLS = 8 * BASE;
 
 var CELL_SIZE = HEIGHT_PX / NUM_ROWS;
 
-var SHOW_INFLUENCES = true;
+var SHOW_INFLUENCES = false;
 
 var gray = tinycolor('#909090');
 // var white = tinycolor('#ffffff');
@@ -33,11 +33,8 @@ var DIAMOND_REFRESH_ALGORITHM = function(row, col) {
 
 // 10, 0|1, 0|1 is standard
 // 3.5-4, 1, 2 is a nice combo
-// var RIPPLE_RADIUS = 12;
-// var NUM_SPIRALS = 1;
-// var MANHATTAN_COEFFICIENT = 0;
-var RIPPLE_RADIUS = 10;
-var NUM_SPIRALS = 0;
+var RIPPLE_RADIUS = 12;
+var NUM_SPIRALS = 1;
 var MANHATTAN_COEFFICIENT = 0;
 var RIPPLE_REFRESH_ALGORITHM = function(row, col) {
     var dx = col - (NUM_COLS / 2);
@@ -67,7 +64,7 @@ var SECTOR_REFRESH_ALGORITHM = function(row, col) {
 
 var ALL_REFRESH_ALGORITHMS = [RIPPLE_REFRESH_ALGORITHM, SECTOR_REFRESH_ALGORITHM, DIAMOND_REFRESH_ALGORITHM];
 
-var REFRESH_ALGORITHM = ALL_REFRESH_ALGORITHMS[2];
+var REFRESH_ALGORITHM = ALL_REFRESH_ALGORITHMS[1];
 
 var MIXER_REFRESH_RATE = 200;
 
@@ -255,9 +252,9 @@ var ColorPixel = React.createClass({
         setTimeout(this._update, this._refreshOffset);
     },
     _update: function() {
-        setTimeout(this._update, fullTimeout);
+        // setTimeout(this._update, fullTimeout);
         // whether to oscillate (for diamonds/sectors)
-        // setTimeout(this._update, fullTimeout * 2 - this._refreshOffset * 2);
+        setTimeout(this._update, fullTimeout * 2 - this._refreshOffset * 2);
         this._refreshOffset = fullTimeout - this._refreshOffset;
         this.setState({
             color: this.props.colorMixer.mixColors(this.state.color, this.props.row, this.props.col),
