@@ -3,7 +3,6 @@ var ReactDOM = require('react-dom');
 var tinycolor = require('tinycolor2');
 
 var fullTimeout = 1600;
-const MIX_COEFFICIENT = 1.4;
 
 const {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE} = require('./colors_constants');
 const InfluenceCircle = require('./influence_circle');
@@ -62,74 +61,19 @@ const ALL_REFRESH_ALGORITHMS = [RIPPLE_REFRESH_ALGORITHM, SECTOR_REFRESH_ALGORIT
 
 const REFRESH_ALGORITHM = ALL_REFRESH_ALGORITHMS[1];
 
-var theColorMixer = {
-    circles: [
-        {col: 0.2 * NUM_COLS, row: 0.2 * NUM_ROWS, dx: 0, dy: 0, dz: 0, dw: 0, color: tinycolor('#f22'), size: CELL_SIZE * 0.5},
-        {col: 0.8 * NUM_COLS, row: 0.2 * NUM_ROWS, dx: 0, dy: 0, dz: 0, dw: 0, color: tinycolor('#2f2'), size: CELL_SIZE * 0.5},
-        {col: 0.5 * NUM_COLS, row: 0.8 * NUM_ROWS, dx: 0, dy: 0, dz: 0, dw: 0, color: tinycolor('#22f'), size: CELL_SIZE * 0.5},
-    ],
-    mixColors: function(oldColor, row, col) {
-        let color = oldColor;
-        for (let circle of this.circles) {
-            let dx = circle.col - col;
-            let dy = circle.row - row;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-//            let mixAmount = 500 / (distance * 5 + 5);
-            let mixAmount = (120 - (distance * 8)) * MIX_COEFFICIENT;
-            if (mixAmount > 0) {
-                color = tinycolor.mix(color, circle.color, mixAmount);
-            }
-        }
-        return color;
-    },
-};
+var influences = [
+    new Influence({propertyType: 'color', startRow: 0.2 * NUM_ROWS, startCol: 0.2 * NUM_COLS, startValue: tinycolor('#f22')}),
+    new Influence({propertyType: 'color', startRow: 0.8 * NUM_ROWS, startCol: 0.2 * NUM_COLS, startValue: tinycolor('#2f2')}),
+    new Influence({propertyType: 'color', startRow: 0.5 * NUM_ROWS, startCol: 0.8 * NUM_COLS, startValue: tinycolor('#22f')}),
 
-var theSizeMixer = {
-    circles: [
-        {col: 0.2 * NUM_COLS, row: 0.2 * NUM_ROWS, dx: 0, dy: 0, dz: 0, dw: 0, size: CELL_SIZE * 0.5, color: tinycolor('#BBB')},
-        {col: 0.8 * NUM_COLS, row: 0.2 * NUM_ROWS, dx: 0, dy: 0, dz: 0, dw: 0, size: CELL_SIZE * 0.5, color: tinycolor('#BBB')},
-        {col: 0.5 * NUM_COLS, row: 0.8 * NUM_ROWS, dx: 0, dy: 0, dz: 0, dw: 0, size: CELL_SIZE * 0.5, color: tinycolor('#BBB')},
-    ],
-    mixSizes: function(oldSize, row, col) {
-        let size = oldSize;
-        for (let circle of this.circles) {
-            let dx = circle.col - col;
-            let dy = circle.row - row;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-//            let mixAmount = 500 / (distance * 5 + 5);
-            let mixAmount = (120 - (distance * 8)) * MIX_COEFFICIENT;
-            if (mixAmount > 0) {
-                mixAmount /= 100;
-                size = mixAmount * circle.size + (1 - mixAmount) * size;
-            }
-        }
-        return size;
-    },
-    listeners: [],
-};
+    new Influence({propertyType: 'size', startRow: 0.2 * NUM_ROWS, startCol: 0.2 * NUM_COLS, startValue: CELL_SIZE * 0.5}),
+    new Influence({propertyType: 'size', startRow: 0.8 * NUM_ROWS, startCol: 0.2 * NUM_COLS, startValue: CELL_SIZE * 0.5}),
+    new Influence({propertyType: 'size', startRow: 0.5 * NUM_ROWS, startCol: 0.8 * NUM_COLS, startValue: CELL_SIZE * 0.5}),
 
-var theRotationMixer = {
-    circles: [
-        {col: 0.2 * NUM_COLS, row: 0.2 * NUM_ROWS, dx: 0, dy: 0, dz: 0, dw: 0, rotation: 0, size: CELL_SIZE * 0.5, color: tinycolor('#999')},
-        {col: 0.8 * NUM_COLS, row: 0.2 * NUM_ROWS, dx: 0, dy: 0, dz: 0, dw: 0, rotation: 0, size: CELL_SIZE * 0.5, color: tinycolor('#999')},
-        {col: 0.5 * NUM_COLS, row: 0.8 * NUM_ROWS, dx: 0, dy: 0, dz: 0, dw: 0, rotation: 0, size: CELL_SIZE * 0.5, color: tinycolor('#999')},
-    ],
-    mixRotations: function(oldSize, row, col) {
-        let size = oldSize;
-        for (let circle of this.circles) {
-            let dx = circle.col - col;
-            let dy = circle.row - row;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-//            let mixAmount = 500 / (distance * 5 + 5);
-            let mixAmount = (120 - (distance * 8)) * MIX_COEFFICIENT;
-            if (mixAmount > 0) {
-                mixAmount /= 100;
-                size = mixAmount * circle.rotation + (1 - mixAmount) * size;
-            }
-        }
-        return size;
-    },
-};
+    new Influence({propertyType: 'rotation', startRow: 0.2 * NUM_ROWS, startCol: 0.2 * NUM_COLS, startValue: 0}),
+    new Influence({propertyType: 'rotation', startRow: 0.8 * NUM_ROWS, startCol: 0.2 * NUM_COLS, startValue: 0}),
+    new Influence({propertyType: 'rotation', startRow: 0.5 * NUM_ROWS, startCol: 0.8 * NUM_COLS, startValue: 0}),
+];
 
 var ColorPixel = React.createClass({
     componentDidMount: function() {
@@ -197,7 +141,7 @@ var ColorGrid = React.createClass({
     },
 });
 
-document.addEventListener('DOMContentLoaded', function(e) {
+document.addEventListener('DOMContentLoaded', function() {
     ReactDOM.render(
       <div className="main">
         <ColorGrid numRows={NUM_ROWS} numCols={NUM_COLS} colorMixer={theColorMixer} sizeMixer={theSizeMixer} rotationMixer={theRotationMixer} />

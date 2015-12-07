@@ -1,5 +1,7 @@
 var React = require('react');
 
+// size: CELL_SIZE * 0.5, color: tinycolor('#999')
+
 const {CELL_SIZE, MIXER_REFRESH_RATE} = require('./colors_constants');
 
 var InfluenceCircle = React.createClass({

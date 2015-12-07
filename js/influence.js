@@ -1,4 +1,4 @@
-const {CELL_SIZE, MIXER_REFRESH_RATE, MIX_COEFFICIENT} = require('./colors_constants');
+const {CELL_SIZE, NUM_ROWS, NUM_COLS, MIXER_REFRESH_RATE, MIX_COEFFICIENT} = require('./colors_constants');
 
 class InfluenceProperty {
     constructor({type, min, max, variance, start}) {
@@ -40,13 +40,13 @@ class InfluenceProperty {
 }
 
 class Influence {
-    constructor({propertyType, numRows, numCols, startRow, startCol, startValue}) {
+    constructor({propertyType, startRow, startCol, startValue}) {
         this._listeners = [];
 
         this._columnProperty = new InfluenceProperty({
             type: 'linear',
             min: 0,
-            max: numCols,
+            max: NUM_COLS,
             variance: 0.25,
             start: startCol,
         });
@@ -54,7 +54,7 @@ class Influence {
         this._rowProperty = new InfluenceProperty({
             type: 'linear',
             min: 0,
-            max: numRows,
+            max: NUM_ROWS,
             variance: 0.25,
             start: startRow,
         });
@@ -63,7 +63,7 @@ class Influence {
             type: {size: 'linear', color: 'color', rotation: 'linear'}[propertyType],
             min: {size: 1, rotation: -90}[propertyType],
             max: {size: CELL_SIZE, rotation: 90, color: 5}[propertyType],
-            variance: {size: 0.25 /* TODO: vary with cell size */, rotation: 0.25, color: 1}[propertyType],
+            variance: {size: 0.25/* TODO: vary with cell size */, rotation: 0.25, color: 1}[propertyType],
             start: startValue,
         });
 

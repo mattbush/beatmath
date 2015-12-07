@@ -104,7 +104,7 @@ var CharacterSet = React.createClass({
     },
 });
 
-document.addEventListener('DOMContentLoaded', function(e) {
+document.addEventListener('DOMContentLoaded', function() {
     ReactDOM.render(
         <CharacterSet />,
         document.getElementById('start')

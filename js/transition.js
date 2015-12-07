@@ -209,7 +209,7 @@ var AnimationController = React.createClass({
     },
 });
 
-document.addEventListener('DOMContentLoaded', function(e) {
+document.addEventListener('DOMContentLoaded', function() {
     ReactDOM.render(
         <AnimationController bpm={BPM_CONST}>
             <RotatingCore />
