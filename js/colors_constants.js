@@ -9,7 +9,7 @@ const CELL_SIZE = HEIGHT_PX / NUM_ROWS;
 
 const MIXER_REFRESH_RATE = 200;
 
-const MIX_COEFFICIENT = 1.2;
+const MIX_COEFFICIENT = 1.0;
 
 module.exports = {
     WIDTH_PX,
