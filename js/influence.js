@@ -1,4 +1,6 @@
-var {CELL_SIZE} = require('js/colors_constants.js');
+const {CELL_SIZE} = require('./colors_constants');
+
+const MIXER_REFRESH_RATE = 200;
 
 class InfluenceProperty {
     constructor({type, min, max, variance, start}) {
@@ -43,6 +45,7 @@ class Influence {
     constructor({refreshTime, mixCoefficient, propertyType, numRows, numCols, startRow, startCol, startValue}) {
         this._refreshTime = refreshTime;
         this._mixCoefficient = mixCoefficient;
+        this._listeners = [];
 
         this._columnProperty = new InfluenceProperty({
             type: 'linear',
@@ -70,6 +73,9 @@ class Influence {
 
         this.update = this.update.bind(this);
     }
+    addListener(fn) {
+        this._listeners.push(fn);
+    }
     mix(pixelProperty, row, col) {
         let dx = this._columnProperty.value - col;
         let dy = this._rowProperty.value - row;
@@ -93,8 +99,14 @@ class Influence {
         }
     }
     update() {
-
+        setTimeout(this.update, MIXER_REFRESH_RATE);
+        this._mainProperty.update();
+        this._columnProperty.update();
+        this._rowProperty.update();
+        for (let listener of this._listeners) {
+            listener();
+        }
     }
 }
 
-window.Influence = Influence;
+module.exports = Influence;

@@ -5,15 +5,15 @@ var tinycolor = require('tinycolor2');
 var fullTimeout = 1600;
 const MIX_COEFFICIENT = 1.4;
 
-var {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE} = require('js/colors_constants.js');
+const {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE} = require('./colors_constants');
 
-var SHOW_INFLUENCES = false;
+const SHOW_INFLUENCES = false;
 
 var gray = tinycolor('#909090');
 // var white = tinycolor('#ffffff');
 
-var DIAMOND_SIZE = 10;
-var NUM_DIAMOND_SPIRALS = 0;
+const DIAMOND_SIZE = 10;
+const NUM_DIAMOND_SPIRALS = 0;
 var DIAMOND_REFRESH_ALGORITHM = function(row, col) {
     var dx = col - (NUM_COLS / 2);
     var dy = row - (NUM_ROWS / 2);
@@ -28,9 +28,9 @@ var DIAMOND_REFRESH_ALGORITHM = function(row, col) {
 
 // 10, 0|1, 0|1 is standard
 // 3.5-4, 1, 2 is a nice combo
-var RIPPLE_RADIUS = 12;
-var NUM_SPIRALS = 1;
-var MANHATTAN_COEFFICIENT = 0;
+const RIPPLE_RADIUS = 12;
+const NUM_SPIRALS = 1;
+const MANHATTAN_COEFFICIENT = 0;
 var RIPPLE_REFRESH_ALGORITHM = function(row, col) {
     var dx = col - (NUM_COLS / 2);
     var dy = row - (NUM_ROWS / 2);
@@ -57,11 +57,9 @@ var SECTOR_REFRESH_ALGORITHM = function(row, col) {
     return proportion * fullTimeout;
 };
 
-var ALL_REFRESH_ALGORITHMS = [RIPPLE_REFRESH_ALGORITHM, SECTOR_REFRESH_ALGORITHM, DIAMOND_REFRESH_ALGORITHM];
+const ALL_REFRESH_ALGORITHMS = [RIPPLE_REFRESH_ALGORITHM, SECTOR_REFRESH_ALGORITHM, DIAMOND_REFRESH_ALGORITHM];
 
-var REFRESH_ALGORITHM = ALL_REFRESH_ALGORITHMS[1];
-
-var MIXER_REFRESH_RATE = 200;
+const REFRESH_ALGORITHM = ALL_REFRESH_ALGORITHMS[1];
 
 var theColorMixer = {
     circles: [
@@ -83,53 +81,7 @@ var theColorMixer = {
         }
         return color;
     },
-    _update: function() {
-        setTimeout(this._update, MIXER_REFRESH_RATE);
-        for (let circle of this.circles) {
-            circle.dx += Math.random() * 0.5 - 0.25;
-            circle.dy += Math.random() * 0.5 - 0.25;
-            circle.dz += Math.random() * 2 - 1;
-            circle.dw += Math.random() * 1 - 0.5;
-
-            circle.row += circle.dx;
-            if (circle.row >= NUM_ROWS || circle.row < 0) {
-                circle.dx *= -1;
-                circle.row += circle.dx;
-                circle.dx *= 0.5;
-            }
-            circle.col += circle.dy;
-            if (circle.col >= NUM_COLS || circle.col < 0) {
-                circle.dy *= -1;
-                circle.col += circle.dy;
-                circle.dy *= 0.5;
-            }
-
-            circle.color = circle.color.spin(circle.dz);
-            if (Math.abs(circle.dz) > 5) {
-                circle.dz *= 0.5;
-            }
-
-            circle.col += circle.dy;
-            if (circle.col >= NUM_COLS || circle.col < 0) {
-                circle.dy *= -1;
-                circle.col += circle.dy;
-                circle.dy *= 0.5;
-            }
-            // circle.color = circle.color[circle.dw > 0 ? 'lighten' : 'darken'](circle.dw);
-            // let luminance = circle.color.getLuminance();
-            // if (luminance > 0.8 || luminance < 0.2) {
-            //     circle.dw *= -1;
-            //     circle.color = circle.color[circle.dw > 0 ? 'lighten' : 'darken'](circle.dw);
-            //     circle.dw *= 0.5;
-            // }
-        }
-        for (let listener of this.listeners) {
-            listener();
-        }
-    },
-    listeners: [],
 };
-theColorMixer._update = theColorMixer._update.bind(theColorMixer);
 
 var theSizeMixer = {
     circles: [
@@ -152,39 +104,8 @@ var theSizeMixer = {
         }
         return size;
     },
-    _update: function() {
-        setTimeout(this._update, MIXER_REFRESH_RATE);
-        for (let circle of this.circles) {
-            circle.dx += Math.random() * 0.5 - 0.25;
-            circle.dy += Math.random() * 0.5 - 0.25;
-            circle.dz += Math.random() * 0.5 - 0.25;
-
-            circle.row += circle.dx;
-            if (circle.row >= NUM_ROWS || circle.row < 0) {
-                circle.dx *= -1;
-                circle.row += circle.dx;
-                circle.dx *= 0.5;
-            }
-            circle.col += circle.dy;
-            if (circle.col >= NUM_COLS || circle.col < 0) {
-                circle.dy *= -1;
-                circle.col += circle.dy;
-                circle.dy *= 0.5;
-            }
-            circle.size += circle.dz;
-            if (circle.size >= CELL_SIZE || circle.size < 1) {
-                circle.dz *= -1;
-                circle.size += circle.dz;
-                circle.dz *= 0.5;
-            }
-        }
-        for (let listener of this.listeners) {
-            listener();
-        }
-    },
     listeners: [],
 };
-theSizeMixer._update = theSizeMixer._update.bind(theSizeMixer);
 
 var theRotationMixer = {
     circles: [
@@ -207,39 +128,7 @@ var theRotationMixer = {
         }
         return size;
     },
-    _update: function() {
-        setTimeout(this._update, MIXER_REFRESH_RATE);
-        for (let circle of this.circles) {
-            circle.dx += Math.random() * 0.5 - 0.25;
-            circle.dy += Math.random() * 0.5 - 0.25;
-            circle.dz += Math.random() * 0.5 - 0.25;
-
-            circle.row += circle.dx;
-            if (circle.row >= NUM_ROWS || circle.row < 0) {
-                circle.dx *= -1;
-                circle.row += circle.dx;
-                circle.dx *= 0.5;
-            }
-            circle.col += circle.dy;
-            if (circle.col >= NUM_COLS || circle.col < 0) {
-                circle.dy *= -1;
-                circle.col += circle.dy;
-                circle.dy *= 0.5;
-            }
-            circle.rotation += circle.dz;
-            if (circle.rotation >= 90 || circle.rotation < -90) {
-                circle.dz *= -1;
-                circle.rotation += circle.dz;
-                circle.dz *= 0.5;
-            }
-        }
-        for (let listener of this.listeners) {
-            listener();
-        }
-    },
-    listeners: [],
 };
-theRotationMixer._update = theRotationMixer._update.bind(theRotationMixer);
 
 var ColorPixel = React.createClass({
     componentDidMount: function() {

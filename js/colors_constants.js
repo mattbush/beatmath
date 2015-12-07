@@ -1,11 +1,11 @@
-var WIDTH_PX = 1280;
-var HEIGHT_PX = 800;
+const WIDTH_PX = 1280;
+const HEIGHT_PX = 800;
 
-var BASE = 8;
-var NUM_ROWS = 5 * BASE;
-var NUM_COLS = 8 * BASE;
+const BASE = 8;
+const NUM_ROWS = 5 * BASE;
+const NUM_COLS = 8 * BASE;
 
-var CELL_SIZE = HEIGHT_PX / NUM_ROWS;
+const CELL_SIZE = HEIGHT_PX / NUM_ROWS;
 
 module.exports = {
     WIDTH_PX,
