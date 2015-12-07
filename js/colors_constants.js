@@ -7,6 +7,8 @@ const NUM_COLS = 8 * BASE;
 
 const CELL_SIZE = HEIGHT_PX / NUM_ROWS;
 
+const MIXER_REFRESH_RATE = 200;
+
 module.exports = {
     WIDTH_PX,
     HEIGHT_PX,
@@ -14,4 +16,5 @@ module.exports = {
     NUM_ROWS,
     NUM_COLS,
     CELL_SIZE,
+    MIXER_REFRESH_RATE,
 };

@@ -1,6 +1,4 @@
-const {CELL_SIZE} = require('./colors_constants');
-
-const MIXER_REFRESH_RATE = 200;
+const {CELL_SIZE, MIXER_REFRESH_RATE} = require('./colors_constants');
 
 class InfluenceProperty {
     constructor({type, min, max, variance, start}) {

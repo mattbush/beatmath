@@ -6,6 +6,7 @@ var fullTimeout = 1600;
 const MIX_COEFFICIENT = 1.4;
 
 const {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE} = require('./colors_constants');
+const InfluenceCircle = require('./influence_circle');
 
 const SHOW_INFLUENCES = false;
 
@@ -166,40 +167,6 @@ var ColorPixel = React.createClass({
     },
 });
 
-var InfluenceCircle = React.createClass({
-    componentDidMount: function() {
-        this.props.mixer.listeners.push(this.forceUpdate.bind(this));
-    },
-    render: function() {
-        var circle = this.props.mixer.circles[this.props.index];
-        var x = circle.col * CELL_SIZE + CELL_SIZE / 2;
-        var y = circle.row * CELL_SIZE + CELL_SIZE / 2;
-        var size = circle.size * 5;
-        var style = {
-            transition: `transform ${MIXER_REFRESH_RATE / 1000}s linear`,
-            fill: circle.color.toHexString(true),
-        };
-        if (circle.rotation !== undefined) {
-            var rotation = Math.floor(circle.rotation);
-            let transform = `translate(${x} ${y}) rotate(${rotation})`;
-            var pixelOffset = -size / 2;
-            return (
-                <g style={style} transform={transform}>
-                    <rect x={pixelOffset} y={pixelOffset} width={size} height={size} />
-                </g>
-
-            );
-        } else {
-            let transform = `translate(${x} ${y})`;
-            return (
-                <g style={style} transform={transform}>
-                    <circle cx={0} cy={0} r={size / 2} />
-                </g>
-            );
-        }
-    },
-});
-
 var ColorGrid = React.createClass({
     render: function() {
         const children = [];
@@ -238,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
       document.getElementById('start')
     );
 
-    theColorMixer._update();
-    theSizeMixer._update();
-    theRotationMixer._update();
+    theColorMixer.update();
+    theSizeMixer.update();
+    theRotationMixer.update();
 });
