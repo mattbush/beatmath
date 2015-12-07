@@ -1,0 +1,14 @@
+body {
+    margin: 0;
+    background: #000;
+    font-family: Helvetica;
+}
+.characterSet {
+    position: relative;
+}
+.character {
+    position: absolute;
+    font-size: 24px;
+    transition: all 1s linear;
+    font-weight: bold,
+}
