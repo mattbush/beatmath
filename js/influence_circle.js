@@ -1,24 +1,23 @@
 var React = require('react');
 
-// size: CELL_SIZE * 0.5, color: tinycolor('#999')
-
 const {CELL_SIZE, MIXER_REFRESH_RATE} = require('./colors_constants');
 
 var InfluenceCircle = React.createClass({
     componentDidMount: function() {
-        this.props.mixer.addListener(this.forceUpdate);
+        this.props.influence.addListener(this.forceUpdate);
     },
     render: function() {
-        var circle = this.props.mixer.circles[this.props.index];
-        var x = circle.col * CELL_SIZE + CELL_SIZE / 2;
-        var y = circle.row * CELL_SIZE + CELL_SIZE / 2;
-        var size = circle.size * 5;
+        var influence = this.props.influence;
+        var x = influence.getCol() * CELL_SIZE + CELL_SIZE / 2;
+        var y = influence.getRow() * CELL_SIZE + CELL_SIZE / 2;
+        var size = influence.getSize() * 5;
         var style = {
             transition: `transform ${MIXER_REFRESH_RATE / 1000}s linear`,
-            fill: circle.color.toHexString(true),
+            fill: influence.getColor().toHexString(true),
         };
-        if (circle.rotation !== undefined) {
-            var rotation = Math.floor(circle.rotation);
+        var rotation = influence.getRotation();
+        if (rotation !== null) {
+            rotation = Math.floor(rotation);
             let transform = `translate(${x} ${y}) rotate(${rotation})`;
             var pixelOffset = -size / 2;
             return (

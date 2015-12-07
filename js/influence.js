@@ -1,3 +1,5 @@
+var tinycolor = require('tinycolor2');
+
 const {CELL_SIZE, NUM_ROWS, NUM_COLS, MIXER_REFRESH_RATE, MIX_COEFFICIENT} = require('./colors_constants');
 
 class InfluenceProperty {
@@ -41,9 +43,10 @@ class InfluenceProperty {
 
 class Influence {
     constructor({propertyType, startRow, startCol, startValue}) {
+        this._propertyType = propertyType;
         this._listeners = [];
 
-        this._columnProperty = new InfluenceProperty({
+        this._colProperty = new InfluenceProperty({
             type: 'linear',
             min: 0,
             max: NUM_COLS,
@@ -73,7 +76,7 @@ class Influence {
         this._listeners.push(fn);
     }
     mix(pixelProperty, row, col) {
-        let dx = this._columnProperty.value - col;
+        let dx = this._colProperty.value - col;
         let dy = this._rowProperty.value - row;
         let distance = Math.sqrt(dx * dx + dy * dy);
 //            let mixAmount = 500 / (distance * 5 + 5);
@@ -87,9 +90,10 @@ class Influence {
         const influenceProperty = this._mainProperty.value;
         switch (this._propertyType) {
             case 'size':
+            case 'rotation': /* TODO */
                 return mixAmount * influenceProperty + (1 - mixAmount) * pixelProperty;
             case 'color':
-            case 'rotation':
+                return tinycolor.mix(pixelProperty, influenceProperty, mixAmount);
             default:
                 throw Error();
         }
@@ -97,11 +101,26 @@ class Influence {
     update() {
         setTimeout(this.update, MIXER_REFRESH_RATE);
         this._mainProperty.update();
-        this._columnProperty.update();
+        this._colProperty.update();
         this._rowProperty.update();
         for (let listener of this._listeners) {
             listener();
         }
+    }
+    getCol() {
+        return this._colProperty.value;
+    }
+    getRow() {
+        return this._rowProperty.value;
+    }
+    getColor() {
+        return this._propertyType === 'color' ? this._mainProperty.value : tinycolor('#999');
+    }
+    getSize() {
+        return this._propertyType === 'size' ? this._mainProperty.value : CELL_SIZE * 0.5;
+    }
+    getRotation() {
+        return this._propertyType === 'rotation' ? this._mainProperty.value : null;
     }
 }
 
