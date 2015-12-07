@@ -75,12 +75,12 @@ class Influence {
     addListener(fn) {
         this._listeners.push(fn);
     }
-    mix(pixelState, row, col) {
-        let dx = this._colProperty.value - col;
-        let dy = this._rowProperty.value - row;
-        let distance = Math.sqrt(dx * dx + dy * dy);
+    mix(pixelState) {
+//        let dx = this._colProperty.value - col;
+//        let dy = this._rowProperty.value - row;
+//        let distance = Math.sqrt(dx * dx + dy * dy);
 //            let mixAmount = 500 / (distance * 5 + 5);
-        let mixAmount = ((120 - (distance * 8)) * MIX_COEFFICIENT) / 100;
+        let mixAmount = 1;
         if (mixAmount > 0) {
             pixelState[this._propertyType] = this._mixByPropertyType(pixelState[this._propertyType], mixAmount);
         }
