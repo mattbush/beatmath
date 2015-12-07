@@ -1,4 +1,6 @@
-/* global React ReactDOM tinycolor */
+var React = require('react');
+var ReactDOM = require('react-dom');
+var tinycolor = require('tinycolor2');
 
 var fullTimeout = 1600;
 const MIX_COEFFICIENT = 1.4;
@@ -251,6 +253,13 @@ var ColorPixel = React.createClass({
         this._refreshOffset = REFRESH_ALGORITHM(this.props.row, this.props.col);
         setTimeout(this._update, this._refreshOffset);
     },
+    getInitialState: function() {
+        return {
+            color: gray,
+            size: 8,
+            rotation: 0,
+        };
+    },
     _update: function() {
         // setTimeout(this._update, fullTimeout);
         // whether to oscillate (for diamonds/sectors)
@@ -261,13 +270,6 @@ var ColorPixel = React.createClass({
             size: this.props.sizeMixer.mixSizes(this.state.size, this.props.row, this.props.col),
             rotation: this.props.rotationMixer.mixRotations(this.state.rotation, this.props.row, this.props.col),
         });
-    },
-    getInitialState: function() {
-        return {
-            color: gray,
-            size: 8,
-            rotation: 0,
-        };
     },
     render: function() {
         var rotation = Math.floor(this.state.rotation);
@@ -346,13 +348,15 @@ var ColorGrid = React.createClass({
     },
 });
 
-ReactDOM.render(
-  <div className="main">
-    <ColorGrid numRows={NUM_ROWS} numCols={NUM_COLS} colorMixer={theColorMixer} sizeMixer={theSizeMixer} rotationMixer={theRotationMixer} />
-  </div>,
-  document.getElementById('start')
-);
+document.addEventListener('DOMContentLoaded', function(e) {
+    ReactDOM.render(
+      <div className="main">
+        <ColorGrid numRows={NUM_ROWS} numCols={NUM_COLS} colorMixer={theColorMixer} sizeMixer={theSizeMixer} rotationMixer={theRotationMixer} />
+      </div>,
+      document.getElementById('start')
+    );
 
-theColorMixer._update();
-theSizeMixer._update();
-theRotationMixer._update();
+    theColorMixer._update();
+    theSizeMixer._update();
+    theRotationMixer._update();
+});

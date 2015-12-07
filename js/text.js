@@ -1,5 +1,5 @@
-/* global React ReactDOM */
-// tinycolor
+var React = require('react');
+var ReactDOM = require('react-dom');
 
 // const CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZETAOINSHRDLUETAOINCMFGYPETAOINSHRDLUETAOIN😁😂😆😉😍😎😋😘😏😴💁👍🙌💀🤖🐵🐷🐥🌲🌺☀️⛅🌟🌙🔥🌎";
 const CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZETAOINSHRDLUETAOINCMFGYPETAOINSHRDLUETAOIN";
@@ -32,6 +32,9 @@ let Character = React.createClass({
             transform: 'rotate(0)',
         };
     },
+    componentDidMount: function() {
+        setTimeout(this._update, this._getInitialTimeout());
+    },
     _fall: function() {
         setTimeout(this._reset, REFRESH_RATE_MS);
         this.setState({
@@ -52,9 +55,6 @@ let Character = React.createClass({
     },
     _getInitialTimeout: function() {
         return (this.props.index / NUM_CHARS) * REFRESH_RATE_MS;
-    },
-    componentDidMount: function() {
-        setTimeout(this._update, this._getInitialTimeout());
     },
     _update: function() {
         if (this.state.y <= -40) {
@@ -104,7 +104,9 @@ var CharacterSet = React.createClass({
     },
 });
 
-ReactDOM.render(
-    <CharacterSet />,
-    document.getElementById('start')
-);
+document.addEventListener('DOMContentLoaded', function(e) {
+    ReactDOM.render(
+        <CharacterSet />,
+        document.getElementById('start')
+    );
+});
