@@ -20,6 +20,7 @@ coverage
 .lock-wscript
 
 js/build
+js/hue_constants.js
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release

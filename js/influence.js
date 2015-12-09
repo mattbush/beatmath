@@ -1,6 +1,7 @@
 var tinycolor = require('tinycolor2');
+var updateHue = require('./update_hue');
 
-const {CELL_SIZE, NUM_ROWS, NUM_COLS, MIXER_REFRESH_RATE, MIX_COEFFICIENT} = require('./colors_constants');
+const {CELL_SIZE, NUM_ROWS, NUM_COLS, MIXER_REFRESH_RATE, MIX_COEFFICIENT, ENABLE_HUE} = require('./colors_constants');
 
 class InfluenceProperty {
     constructor({type, min, max, variance, start}) {
@@ -42,8 +43,9 @@ class InfluenceProperty {
 }
 
 class Influence {
-    constructor({propertyType, startRow, startCol, startValue}) {
+    constructor({index, propertyType, startRow, startCol, startValue}) {
         this._propertyType = propertyType;
+        this._index = index;
         this._listeners = [];
 
         this._colProperty = new InfluenceProperty({
@@ -104,6 +106,9 @@ class Influence {
         this._rowProperty.update();
         for (let listener of this._listeners) {
             listener();
+        }
+        if (ENABLE_HUE && this._propertyType === 'color') {
+            updateHue(this._index, this._mainProperty.value);
         }
     }
     getCol() {

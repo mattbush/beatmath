@@ -64,9 +64,9 @@ const ALL_REFRESH_ALGORITHMS = [RIPPLE_REFRESH_ALGORITHM, SECTOR_REFRESH_ALGORIT
 const REFRESH_ALGORITHM = ALL_REFRESH_ALGORITHMS[2];
 
 var influences = [
-    new Influence({propertyType: 'color', startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#f22')}),
-    new Influence({propertyType: 'color', startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#2f2')}),
-    new Influence({propertyType: 'color', startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: tinycolor('#22f')}),
+    new Influence({propertyType: 'color', startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#f22'), index: 0}),
+    new Influence({propertyType: 'color', startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#2f2'), index: 1}),
+    new Influence({propertyType: 'color', startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: tinycolor('#22f'), index: 2}),
 
     new Influence({propertyType: 'size', startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: CELL_SIZE * 0.5}),
     new Influence({propertyType: 'size', startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: CELL_SIZE * 0.5}),
