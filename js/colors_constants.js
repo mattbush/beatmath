@@ -11,7 +11,7 @@ const MIXER_REFRESH_RATE = 200;
 
 const MIX_COEFFICIENT = 1.0;
 
-const ENABLE_HUE = false;
+const ENABLE_HUE = true;
 
 module.exports = {
     WIDTH_PX,
