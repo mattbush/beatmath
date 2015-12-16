@@ -3,6 +3,7 @@ module.exports = {
         colors: "./js/colors",
         text: "./js/text",
         transition: "./js/transition",
+        mixboard_and_hue: "./js/mixboard_and_hue",
     },
     output: {
         path: __dirname,
@@ -14,8 +15,8 @@ module.exports = {
             {
                 test: /\.jsx?$/,
                 exclude: /(node_modules|bower_components)/,
-                loader: 'babel' // 'babel-loader' is also a legal name to reference
+                loader: 'babel', // 'babel-loader' is also a legal name to reference
             },
-        ]
+        ],
     }
 };
