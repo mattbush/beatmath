@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var {mixboardWheel, mixboardFader} = require('./mixboard_constants');
+var {mixboardWheel, mixboardFader, mixboardWheelCoefficients} = require('./mixboard_constants');
 
 class Mixboard {
     constructor() {
@@ -63,6 +63,7 @@ class Mixboard {
             eventCode === mixboardWheel.R_SELECT) { // these ones are definitely backwards
             value = -value;
         }
+        value *= mixboardWheelCoefficients[eventCode];
         this._notifyListeners(this._onWheelListeners, eventCode, value);
     }
     _notifyListeners(listenerObj, eventCode, value) {

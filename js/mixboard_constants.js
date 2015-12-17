@@ -45,9 +45,22 @@ var mixboardWheel = {
     R_CONTROL_2: 32,
 };
 
+var mixboardWheelCoefficients = {
+    [mixboardWheel.R_TURNTABLE]: 0.25,
+    [mixboardWheel.L_TURNTABLE]: 0.25,
+    [mixboardWheel.BROWSE]: 4,
+    [mixboardWheel.L_SELECT]: 1,
+    [mixboardWheel.L_CONTROL_1]: 1,
+    [mixboardWheel.L_CONTROL_2]: 1,
+    [mixboardWheel.R_SELECT]: 1,
+    [mixboardWheel.R_CONTROL_1]: 1,
+    [mixboardWheel.R_CONTROL_2]: 1,
+};
+
 module.exports = {
     mixboardButton,
     mixboardWheel,
     mixboardFader,
     mixboardKnob,
+    mixboardWheelCoefficients,
 };
