@@ -45,7 +45,6 @@
         "dot-notation": [2, {"allowPattern": "[$_0-9]"}], // Allow array notation for "props" with $, _, or numbers.
         "eqeqeq": 2,
         "eol-last": 2,
-        "guard-for-in": 2,
         "handle-callback-err": 2,
         "indent": [2, 4, {"SwitchCase": 1}],
         "jsx-quotes": 2,
