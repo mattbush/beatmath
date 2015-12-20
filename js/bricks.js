@@ -34,6 +34,13 @@ var Triangle = React.createClass({
     },
 });
 
+var insertItemIntoHeap = function(heap, item) {
+    var dx = item.x * INV_SQRT_3;
+    var dy = item.y;
+    item.heapWeight = dx * dx + dy * dy;
+    heap.insert(item);
+};
+
 var extractMinAndAddNeighbors = function(heap, grid, enqueued) {
     var newItem = heap.removeHead();
     var coords = `${newItem.x},${newItem.y}`;
@@ -50,8 +57,7 @@ var extractMinAndAddNeighbors = function(heap, grid, enqueued) {
         var neighborCoords = `${neighbor.x},${neighbor.y}`;
         if (!_.has(enqueued, neighborCoords)) {
             enqueued[neighborCoords] = true;
-            neighbor.heapWeight = neighbor.x * neighbor.x + neighbor.y * neighbor.y;
-            heap.insert(neighbor);
+            insertItemIntoHeap(heap, neighbor);
         }
     }
 };
@@ -89,8 +95,7 @@ var heap = new MinHeap(function(l, r) {
 var enqueued = {};
 var coords = `${startItem.x},${startItem.y}`;
 enqueued[coords] = true;
-startItem.heapWeight = startItem.x * startItem.x + startItem.y * startItem.y;
-heap.insert(startItem);
+insertItemIntoHeap(heap, startItem);
 
 var grid = {};
 extractMinAndAddNeighbors(heap, grid, enqueued);
