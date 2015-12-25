@@ -18,6 +18,8 @@
     "eslint-plugin-react": "^3.7.1",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
+    "regenerator": "^0.8.42",
+    "regenerator-loader": "^2.0.0",
     "webpack": "^1.12.9"
   }
 }
