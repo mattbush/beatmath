@@ -1,5 +1,4 @@
-const WIDTH_PX = 1280;
-const HEIGHT_PX = 800;
+const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants.js');
 
 const BASE = 8;
 const NUM_ROWS = 5 * BASE;

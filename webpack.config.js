@@ -1,5 +1,6 @@
 module.exports = {
     entry: {
+        bricks: "./js/bricks",
         colors: "./js/colors",
         text: "./js/text",
         transition: "./js/transition",
