@@ -12,8 +12,8 @@ const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants.js');
 
 const LETTER_SPACING = 64;
 const JUMP_UNIT_HEIGHT = -16;
-const ANAGRAM_SET_CYCLE_TIME = 15000;
-const ANAGRAM_CYCLE_TIME = 3000;
+const ANAGRAM_SET_CYCLE_TIME = 24000;
+const ANAGRAM_CYCLE_TIME = 4000;
 const LETTER_TRANSITION_TIME = 1000;
 const WORD_TRANSITION_TIME = 600;
 const LETTER_TILT_TIME = 600;
@@ -269,11 +269,80 @@ var AnagramDisplay = React.createClass({
     getInitialState: function() {
         return {
             anagramSets: [
-                new AnagramSet(['MATT BUSH', 'BUTTMASH', 'MATHTUBS']),
+                new AnagramSet(['MATT BUSH', 'MATHTUBS']),
                 new AnagramSet(['ANAGRAMS NEVER LIE', 'A RENAMING REVEALS']),
             ],
+            inputState: null,
+            error: false,
             textValue: '',
+            textEntries: [],
         };
+    },
+    _onInputKeyDown: function(e) {
+        if (this.state.inputState === null) {
+            this.setState({
+                inputState: 0,
+                textValue: '',
+                textEntries: [],
+                error: false,
+            });
+            e.preventDefault();
+        } else if (this.state.inputState === 0) {
+            if (e.key === 'Enter') {
+                this.state.textEntries.push(this.state.textValue.trim());
+                this.setState({
+                    textValue: '',
+                    inputState: 1,
+                    error: false,
+                });
+            } else if (e.key === 'Escape') {
+                this.setState({inputState: null});
+            }
+        } else {
+            if (e.key === 'Enter') {
+                this.state.textEntries.push(this.state.textValue.trim());
+
+                if (e.getModifierState('Shift')) {
+                    this.setState({
+                        textValue: '',
+                        inputState: this.state.inputState + 1,
+                        error: false,
+                    });
+                } else {
+                    var anagramSet = new AnagramSet(this.state.textEntries);
+                    if (anagramSet.isValid()) {
+                        this.state.anagramSets.unshift(anagramSet);
+                        this.setState({inputState: null});
+                    } else {
+                        this.state.textEntries.pop();
+                        this.setState({
+                            textValue: '',
+                            error: true,
+                        });
+                    }
+                }
+            } else if (e.key === 'Escape') {
+                this.setState({inputState: null});
+            }
+        }
+    },
+    _renderContents: function() {
+        if (this.state.inputState === null) {
+            return <AnagramSetCycler key={this.state.anagramSets.length} anagramSets={this.state.anagramSets} />;
+        } else {
+            var headerText = ['Enter your name', 'Enter your anagram'][this.state.inputState] || 'Enter another anagram';
+            if (this.state.error) {
+                headerText = 'Invalid. Re-' + headerText;
+            }
+            return (
+                <g>
+                    <text className="header" textAnchor="middle" x="0" y="-56">
+                        {headerText.toUpperCase()}
+                    </text>
+                    <DancingText text={this.state.textValue.toUpperCase()} />
+                </g>
+            );
+        }
     },
     render: function() {
         return (
@@ -281,11 +350,17 @@ var AnagramDisplay = React.createClass({
                 <div className="main">
                     <svg width={WIDTH_PX} height={HEIGHT_PX} className="brickGrid">
                         <g transform={`translate(${WIDTH_PX / 2}, ${HEIGHT_PX / 2}) scale(1)`}>
-                            <AnagramSetCycler key={this.state.anagramSets.length} anagramSets={this.state.anagramSets} />
+                            {this._renderContents()}
                         </g>
                     </svg>
                 </div>
-                <input className="anagramTextInput" type="text" valueLink={this.linkState('textValue')} />
+                <input
+                    autoFocus={true}
+                    className="anagramTextInput"
+                    onKeyDown={this._onInputKeyDown}
+                    type="text"
+                    valueLink={this.linkState('textValue')}
+                />
             </div>
         );
     },
