@@ -215,18 +215,12 @@ var AnagramSetComponent = React.createClass({
     }
 });
 
-var AnagramDisplay = React.createClass({
-    mixins: [LinkedStateMixin],
+var AnagramSetCycler = React.createClass({
     getInitialState: function() {
         return {
-            anagramSets: [
-                new AnagramSet(['MATT BUSH', 'BUTTMASH', 'MATHTUBS']),
-                new AnagramSet(['ANAGRAMS NEVER LIE', 'A RENAMING REVEALS']),
-            ],
             prevAnagramSetIndex: -1,
             anagramSetIndex: 0,
             nextAnagramSetIndex: -1,
-            textValue: '',
         };
     },
     componentDidMount: function() {
@@ -236,7 +230,7 @@ var AnagramDisplay = React.createClass({
         clearInterval(this._intervalId);
     },
     _cycleAnagramSetIndex: async function() {
-        var newAnagramSetIndex = (this.state.anagramSetIndex + 1) % this.state.anagramSets.length;
+        var newAnagramSetIndex = (this.state.anagramSetIndex + 1) % this.props.anagramSets.length;
         this.setState({
             nextAnagramSetIndex: newAnagramSetIndex,
         });
@@ -252,22 +246,42 @@ var AnagramDisplay = React.createClass({
         });
     },
     render: function() {
-        var prev = this.state.anagramSets[this.state.prevAnagramSetIndex];
-        var cur = this.state.anagramSets[this.state.anagramSetIndex];
-        var next = this.state.anagramSets[this.state.nextAnagramSetIndex];
+        var prev = this.props.anagramSets[this.state.prevAnagramSetIndex];
+        var cur = this.props.anagramSets[this.state.anagramSetIndex];
+        var next = this.props.anagramSets[this.state.nextAnagramSetIndex];
 
+        return (
+            <g>
+                {prev &&
+                    <AnagramSetComponent xPosition={-1} anagramSet={prev} key={prev.getId()} />
+                }
+                <AnagramSetComponent xPosition={0} anagramSet={cur} key={cur.getId()} />
+                {next &&
+                    <AnagramSetComponent xPosition={1} anagramSet={next} key={next.getId()} />
+                }
+            </g>
+        );
+    },
+});
+
+var AnagramDisplay = React.createClass({
+    mixins: [LinkedStateMixin],
+    getInitialState: function() {
+        return {
+            anagramSets: [
+                new AnagramSet(['MATT BUSH', 'BUTTMASH', 'MATHTUBS']),
+                new AnagramSet(['ANAGRAMS NEVER LIE', 'A RENAMING REVEALS']),
+            ],
+            textValue: '',
+        };
+    },
+    render: function() {
         return (
             <div>
                 <div className="main">
                     <svg width={WIDTH_PX} height={HEIGHT_PX} className="brickGrid">
                         <g transform={`translate(${WIDTH_PX / 2}, ${HEIGHT_PX / 2}) scale(1)`}>
-                            {prev &&
-                                <AnagramSetComponent xPosition={-1} anagramSet={prev} key={prev.getId()} />
-                            }
-                            <AnagramSetComponent xPosition={0} anagramSet={cur} key={cur.getId()} />
-                            {next &&
-                                <AnagramSetComponent xPosition={1} anagramSet={next} key={next.getId()} />
-                            }
+                            <AnagramSetCycler key={this.state.anagramSets.length} anagramSets={this.state.anagramSets} />
                         </g>
                     </svg>
                 </div>
