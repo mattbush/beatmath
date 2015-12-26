@@ -6,7 +6,7 @@ var tinycolor = require('tinycolor2');
 var fullTimeout = 1000;
 
 const {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE} = require('./colors_constants');
-const Influence = require('./influence');
+const {ColorInfluence, RotationInfluence, SizeInfluence} = require('./influence');
 const InfluenceCircle = require('./influence_circle');
 
 const SHOW_INFLUENCES = false;
@@ -64,17 +64,17 @@ const ALL_REFRESH_ALGORITHMS = [RIPPLE_REFRESH_ALGORITHM, SECTOR_REFRESH_ALGORIT
 const REFRESH_ALGORITHM = ALL_REFRESH_ALGORITHMS[2];
 
 var influences = [
-    new Influence({propertyType: 'color', startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#f22'), index: 0}),
-    new Influence({propertyType: 'color', startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#2f2'), index: 1}),
-    new Influence({propertyType: 'color', startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: tinycolor('#22f'), index: 2}),
+    new ColorInfluence({startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#f22'), index: 0}),
+    new ColorInfluence({startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#2f2'), index: 1}),
+    new ColorInfluence({startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: tinycolor('#22f'), index: 2}),
 
-    new Influence({propertyType: 'size', startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: CELL_SIZE * 0.5}),
-    new Influence({propertyType: 'size', startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: CELL_SIZE * 0.5}),
-    new Influence({propertyType: 'size', startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: CELL_SIZE * 0.5}),
+    new SizeInfluence({startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: CELL_SIZE * 0.5}),
+    new SizeInfluence({startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: CELL_SIZE * 0.5}),
+    new SizeInfluence({startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: CELL_SIZE * 0.5}),
 
-    new Influence({propertyType: 'rotation', startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: 0}),
-    new Influence({propertyType: 'rotation', startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: 0}),
-    new Influence({propertyType: 'rotation', startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: 0}),
+    new RotationInfluence({startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: 0}),
+    new RotationInfluence({startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: 0}),
+    new RotationInfluence({startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: 0}),
 ];
 
 var ColorPixel = React.createClass({
