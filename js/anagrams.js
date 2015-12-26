@@ -7,6 +7,7 @@ var AnagramSet = require('./anagram_set');
 const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants.js');
 
 const LETTER_SPACING = 64;
+const ANAGRAM_CYCLE_TIME = 2000;
 
 var Letter = React.createClass({
     render: function() {
@@ -25,7 +26,19 @@ var AnagramSetComponent = React.createClass({
             anagramIndex: 0,
         };
     },
-    // todo: update anagramIndex using getAnagramCount
+    componentDidMount: function() {
+        this._intervalId = setInterval(this._cycleAnagramIndex, ANAGRAM_CYCLE_TIME);
+    },
+    componentWillReceiveProps: function() {
+        this._clearInterval(this._intervalId);
+        this._intervalId = setInterval(this._cycleAnagramIndex, ANAGRAM_CYCLE_TIME);
+    },
+    _cycleAnagramIndex: function() {
+        var newAnagramIndex = (this.state.anagramIndex + 1) % this.props.anagramSet.getAnagramCount();
+        this.setState({
+            anagramIndex: newAnagramIndex,
+        });
+    },
     render: function() {
         var anagramSet = this.props.anagramSet;
         var anagramIndex = this.state.anagramIndex;
