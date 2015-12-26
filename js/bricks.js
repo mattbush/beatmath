@@ -2,8 +2,9 @@ var _ = require('underscore');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var MinHeap = require('min-heap');
+var getPossibleOrientation = require('./brick_possible_orientation');
 
-const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants.js');
+const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants');
 
 const REFRESH_RATE = 20;
 
@@ -14,34 +15,6 @@ const NEIGHBOR_OFFSETS_EVEN = [{x: 2, y: 0}, {x: -1, y: 1}, {x: -1, y: -1}];
 const NEIGHBOR_OFFSETS_ODD = [{x: -2, y: 0}, {x: 1, y: 1}, {x: 1, y: -1}];
 const NEIGHBOR_OFFSETS_BY_PARITY = [NEIGHBOR_OFFSETS_EVEN, NEIGHBOR_OFFSETS_ODD];
 
-const POSSIBLE_ORIENTATIONS_BY_PARITY = [
-    [0, 2, 4],
-    [1, 3, 5],
-];
-const NEIGHBOR_OFFSETS_AND_POSSIBLE_ORIENTATIONS_BY_PARITY = [
-    [
-        {x: 2, y: 0, constraints: {1: [0], 3: [2, 4], 5: [2, 4]}},
-        {x: -1, y: 1, constraints: {5: [4], 1: [0, 2], 3: [0, 2]}},
-        {x: -1, y: -1, constraints: {3: [2], 1: [0, 4], 5: [0, 4]}},
-        {x: 3, y: 1, constraints: {2: [2, 4]}},
-        {x: 0, y: 2, constraints: {2: [0, 2]}},
-        {x: -3, y: 1, constraints: {0: [0, 2]}},
-        {x: -3, y: -1, constraints: {0: [0, 4]}},
-        {x: 0, y: -2, constraints: {4: [0, 4]}},
-        {x: 3, y: -1, constraints: {4: [2, 4]}},
-    ],
-    [
-        {x: -2, y: 0, constraints: {0: [1], 2: [3, 5], 4: [3, 5]}},
-        {x: 1, y: 1, constraints: {2: [3], 0: [1, 5], 4: [1, 5]}},
-        {x: 1, y: -1, constraints: {4: [5], 0: [1, 3], 2: [1, 3]}},
-        {x: 3, y: 1, constraints: {1: [1, 5]}},
-        {x: 0, y: 2, constraints: {5: [1, 5]}},
-        {x: -3, y: 1, constraints: {5: [3, 5]}},
-        {x: -3, y: -1, constraints: {3: [3, 5]}},
-        {x: 0, y: -2, constraints: {3: [1, 3]}},
-        {x: 3, y: -1, constraints: {1: [1, 3]}},
-    ],
-];
 const FILLS = ['#fd0', '#fd0', '#f00', '#f00', '#0e0', '#0e0'];
 
 var Triangle = React.createClass({
@@ -69,32 +42,13 @@ var insertItemIntoHeap = function(heap, item) {
     heap.insert(item);
 };
 
-var getPossibleOrientationsBasedOnNeighbors = function(grid, newItem) {
-    var allPossibleOrientations = POSSIBLE_ORIENTATIONS_BY_PARITY[newItem.parity];
-    var possibleOrientations = allPossibleOrientations;
-    for (var neighborOffset of NEIGHBOR_OFFSETS_AND_POSSIBLE_ORIENTATIONS_BY_PARITY[newItem.parity]) {
-        var neighborCoords = `${newItem.x + neighborOffset.x},${newItem.y + neighborOffset.y}`;
-        if (_.has(grid, neighborCoords)) {
-            var neighborOrientation = grid[neighborCoords];
-            possibleOrientations = _.intersection(possibleOrientations, neighborOffset.constraints[neighborOrientation] || allPossibleOrientations);
-        }
-    }
-    return possibleOrientations;
-};
-
-var getRandomOrientationFromArray = function(orientations) {
-    var randomIndex = Math.floor(Math.random() * orientations.length);
-    return orientations[randomIndex];
-};
-
 var extractMinAndAddNeighbors = function(heap, grid, enqueued) {
     var newItem = heap.removeHead();
     var coords = `${newItem.x},${newItem.y}`;
 
-    var possibleOrientations = getPossibleOrientationsBasedOnNeighbors(grid, newItem);
-    console.log('possibleOrientations', possibleOrientations);
-    if (possibleOrientations.length) {
-        grid[coords] = getRandomOrientationFromArray(possibleOrientations);
+    var possibleOrientation = getPossibleOrientation(grid, newItem);
+    if (possibleOrientation !== null) {
+        grid[coords] = possibleOrientation;
     }
 
     var neighborParity = newItem.parity ? 0 : 1;
