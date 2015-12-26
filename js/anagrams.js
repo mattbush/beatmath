@@ -1,8 +1,9 @@
-// var _ = require('underscore');
+var _ = require('underscore');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var AnagramSet = require('./anagram_set');
+var tinycolor = require('tinycolor2');
 
 const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants.js');
 
@@ -12,10 +13,26 @@ const ANAGRAM_SET_CYCLE_TIME = 15000;
 const ANAGRAM_CYCLE_TIME = 3000;
 const LETTER_TRANSITION_TIME = 1000;
 
+var colorCache = {};
+var getColorForLetter = function(letter) {
+    if (!_.has(colorCache, letter)) {
+        var spinAmount = (letter.charCodeAt(0) - 'A'.charCodeAt(0)) / 26;
+        colorCache[letter] = tinycolor('#f33').spin(spinAmount * 360);
+        while (tinycolor.readability('black', colorCache[letter]) <= 4.5) {
+            colorCache[letter].lighten(5);
+        }
+    }
+    return colorCache[letter];
+};
+
 var Letter = React.createClass({
     render: function() {
+        var color = getColorForLetter(this.props.character);
+        var style = {
+            fill: color.toHexString(),
+        };
         return (
-            <text className="letter" textAnchor="middle" x="0" y="0">
+            <text style={style} className="letter" textAnchor="middle" x="0" y="0">
                 {this.props.character}
             </text>
         );
