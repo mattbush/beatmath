@@ -2,7 +2,7 @@ var tinycolor = require('tinycolor2');
 var updateHue = require('./update_hue');
 var {ColorProperty, LinearProperty} = require('./moving_property');
 
-const {CELL_SIZE, NUM_ROWS, NUM_COLS, INFLUENCE_REFRESH_RATE, MIX_COEFFICIENT, ENABLE_HUE} = require('./lattice_constants');
+const {CELL_SIZE, NUM_ROWS, NUM_COLS, INFLUENCE_REFRESH_RATE, MIX_COEFFICIENT, ENABLE_HUE, MAX_SIZE} = require('./lattice_constants');
 
 class Influence {
     constructor({startRow, startCol}) {
@@ -35,6 +35,7 @@ class Influence {
         let mixAmount = ((120 - (distance * 8)) * MIX_COEFFICIENT) / 100;
         var pixelStateKey = this._getPixelStateKey();
         if (mixAmount > 0) {
+            mixAmount = Math.min(mixAmount, 1);
             pixelState[pixelStateKey] = this._mixByPropertyType(pixelState[pixelStateKey], mixAmount);
         }
     }
@@ -82,7 +83,7 @@ class SizeInfluence extends LinearInfluence {
         super(params);
         this._mainProperty = new LinearProperty({
             min: 1,
-            max: CELL_SIZE,
+            max: MAX_SIZE,
             variance: 0.25,
             start: params.startValue,
         });
