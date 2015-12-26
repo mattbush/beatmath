@@ -1,0 +1,12 @@
+body {
+    margin: 0;
+}
+.main {
+    background: #000;
+    height: 800px;
+}
+.letter {
+    font-family: 'Futura', sans-serif;
+    font-size: 52px;
+    fill: white;
+}

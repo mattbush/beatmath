@@ -1,5 +1,6 @@
 module.exports = {
     entry: {
+        anagrams: "./js/anagrams",
         bricks: "./js/bricks",
         colors: "./js/colors",
         text: "./js/text",
