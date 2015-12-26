@@ -3,9 +3,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var tinycolor = require('tinycolor2');
 
-var fullTimeout = 1000;
-
-const {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE} = require('./lattice_constants');
+const {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE, PIXEL_REFRESH_RATE} = require('./lattice_constants');
 const {ColorInfluence, RotationInfluence, SizeInfluence} = require('./influence');
 const InfluenceCircle = require('./influence_circle');
 
@@ -24,7 +22,7 @@ var DIAMOND_REFRESH_ALGORITHM = function(row, col) {
     var half = DIAMOND_SIZE / 2;
     rowMod10 = (rowMod10 > half) ? (DIAMOND_SIZE - rowMod10) : rowMod10;
     colMod10 = (colMod10 > half) ? (DIAMOND_SIZE - colMod10) : colMod10;
-    return ((((0.5 + rowMod10 + colMod10) / DIAMOND_SIZE + (polarAngle * NUM_DIAMOND_SPIRALS / 360)) + NUM_DIAMOND_SPIRALS) % 1) * fullTimeout;
+    return ((((0.5 + rowMod10 + colMod10) / DIAMOND_SIZE + (polarAngle * NUM_DIAMOND_SPIRALS / 360)) + NUM_DIAMOND_SPIRALS) % 1) * PIXEL_REFRESH_RATE;
 };
 
 // 10, 0|1, 0|1 is standard
@@ -39,8 +37,8 @@ var RIPPLE_REFRESH_ALGORITHM = function(row, col) {
     var manhattanDistance = Math.abs(dx) + Math.abs(dy);
     var euclideanDistance = Math.sqrt(dx * dx + dy * dy);
     var distance = (MANHATTAN_COEFFICIENT * manhattanDistance + (1 - MANHATTAN_COEFFICIENT) * euclideanDistance);
-    return (((distance / RIPPLE_RADIUS + (polarAngle * NUM_SPIRALS / 360)) + NUM_SPIRALS) % 1) * fullTimeout;
-//    return (((Math.log(distance / RIPPLE_RADIUS) + (polarAngle * NUM_SPIRALS / 360)) + NUM_SPIRALS + 10) % 1) * fullTimeout;
+    return (((distance / RIPPLE_RADIUS + (polarAngle * NUM_SPIRALS / 360)) + NUM_SPIRALS) % 1) * PIXEL_REFRESH_RATE;
+//    return (((Math.log(distance / RIPPLE_RADIUS) + (polarAngle * NUM_SPIRALS / 360)) + NUM_SPIRALS + 10) % 1) * PIXEL_REFRESH_RATE;
 };
 
 const NUM_SECTORS = 6;
@@ -56,7 +54,7 @@ var SECTOR_REFRESH_ALGORITHM = function(row, col) {
     }
     var proportion = polarAngleMod / (SECTOR_SIZE / 2);
 
-    return proportion * fullTimeout;
+    return proportion * PIXEL_REFRESH_RATE;
 };
 
 const ALL_REFRESH_ALGORITHMS = [RIPPLE_REFRESH_ALGORITHM, SECTOR_REFRESH_ALGORITHM, DIAMOND_REFRESH_ALGORITHM];
@@ -90,10 +88,10 @@ var ColorPixel = React.createClass({
         };
     },
     _update: function() {
-        setTimeout(this._update, fullTimeout);
+        setTimeout(this._update, PIXEL_REFRESH_RATE);
         // whether to oscillate (for diamonds/sectors)
-        // setTimeout(this._update, fullTimeout * 2 - this._refreshOffset * 2);
-        this._refreshOffset = fullTimeout - this._refreshOffset;
+        // setTimeout(this._update, PIXEL_REFRESH_RATE * 2 - this._refreshOffset * 2);
+        this._refreshOffset = PIXEL_REFRESH_RATE - this._refreshOffset;
         var state = _.clone(this.state);
         _.each(this.props.influences, influence => influence.mix(state, this.props.row, this.props.col));
         this.setState(state);

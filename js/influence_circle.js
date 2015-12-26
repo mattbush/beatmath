@@ -1,6 +1,6 @@
 var React = require('react');
 
-const {CELL_SIZE, MIXER_REFRESH_RATE} = require('./lattice_constants');
+const {CELL_SIZE, INFLUENCE_REFRESH_RATE} = require('./lattice_constants');
 
 var InfluenceCircle = React.createClass({
     componentDidMount: function() {
@@ -12,7 +12,7 @@ var InfluenceCircle = React.createClass({
         var y = influence.getRow() * CELL_SIZE + CELL_SIZE / 2;
         var size = influence.getSize() * 5;
         var style = {
-            transition: `transform ${MIXER_REFRESH_RATE / 1000}s linear`,
+            transition: `transform ${INFLUENCE_REFRESH_RATE / 1000}s linear`,
             fill: influence.getColor().toHexString(true),
         };
         var rotation = influence.getRotation();
