@@ -7,20 +7,66 @@ var AnagramSet = require('./anagram_set');
 const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants.js');
 
 const LETTER_SPACING = 64;
-const ANAGRAM_CYCLE_TIME = 2000;
+const JUMP_UNIT_HEIGHT = -10;
+const ANAGRAM_CYCLE_TIME = 3000;
+const LETTER_TRANSITION_TIME = 1000;
 
 var Letter = React.createClass({
-    render: function() {
-        var x = this.props.index * this.props.letterSpacing;
-        var style = {
-            transform: `translate(${x}px, 0px)`,
-            transition: 'transform 0.5s ease',
+    getInitialState: function() {
+        return {
+            inTransition: false,
+            previousIndex: null,
+            nextIndex: this.props.index,
         };
+    },
+    componentWillReceiveProps: function(newProps) {
+        this.setState({
+            inTransition: true,
+            previousIndex: this.props.index,
+            nextIndex: newProps.index,
+        });
+    },
+    componentDidUpdate: function() {
+        if (this.state.inTransition) {
+            setTimeout(() => {
+                this.setState({
+                    inTransition: false,
+                });
+            }, LETTER_TRANSITION_TIME / 2);
+        }
+    },
+    render: function() {
+        var vertStyle, horizStyle;
+        if (this.state.inTransition) {
+            let x = (this.state.previousIndex + this.state.nextIndex) / 2 * this.props.letterSpacing;
+            let y = (this.state.nextIndex - this.state.previousIndex) * JUMP_UNIT_HEIGHT;
+            console.log('render', x, y);
+            vertStyle = {
+                transform: `translate(0px, ${y}px)`,
+                transition: `transform ${LETTER_TRANSITION_TIME / 2000}s ease-out`,
+            };
+            horizStyle = {
+                transform: `translate(${x}px, 0px)`,
+                transition: `transform ${LETTER_TRANSITION_TIME / 2000}s ease-in`,
+            };
+        } else {
+            let x = this.state.nextIndex * this.props.letterSpacing;
+            vertStyle = {
+                transform: `translate(0px, 0px)`,
+                transition: `transform ${LETTER_TRANSITION_TIME / 2000}s ease-in`,
+            };
+            horizStyle = {
+                transform: `translate(${x}px, 0px)`,
+                transition: `transform ${LETTER_TRANSITION_TIME / 2000}s ease-out`,
+            };
+        }
         return (
-            <g style={style}>
-                <text className="letter" textAnchor="middle" x="0" y="0">
-                    {this.props.character}
-                </text>
+            <g style={vertStyle}>
+                <g style={horizStyle}>
+                    <text className="letter" textAnchor="middle" x="0" y="0">
+                        {this.props.character}
+                    </text>
+                </g>
             </g>
         );
     },
