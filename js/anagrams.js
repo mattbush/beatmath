@@ -1,9 +1,12 @@
+require('regenerator/runtime');
 var _ = require('underscore');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var AnagramSet = require('./anagram_set');
 var tinycolor = require('tinycolor2');
+
+var timeout = duration => new Promise(cb => setTimeout(cb, duration));
 
 const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants.js');
 
@@ -135,13 +138,6 @@ var AnagramSetComponent = React.createClass({
     componentDidMount: function() {
         this._intervalId = setInterval(this._cycleAnagramIndex, ANAGRAM_CYCLE_TIME);
     },
-    componentWillReceiveProps: function() {
-        clearInterval(this._intervalId);
-        this._intervalId = setInterval(this._cycleAnagramIndex, ANAGRAM_CYCLE_TIME);
-        this.setState({
-            anagramIndex: 0,
-        });
-    },
     componentWillUnmount: function() {
         clearInterval(this._intervalId);
     },
@@ -157,7 +153,7 @@ var AnagramSetComponent = React.createClass({
 
         var anagramLength = anagramSet.getLengthOfAnagram(anagramIndex);
         var letterSpacing = Math.min(LETTER_SPACING, (WIDTH_PX - LETTER_SPACING) / anagramLength);
-        var xOffset = -1 * (anagramLength - 1) / 2 * letterSpacing;
+        var xOffset = -1 * (anagramLength - 1) / 2 * letterSpacing + WIDTH_PX * this.props.xPosition;
         var letterCount = anagramSet.getLetterCount();
 
         var letterComponents = [];
@@ -190,10 +186,12 @@ var AnagramDisplay = React.createClass({
     getInitialState: function() {
         return {
             anagramSets: [
-                new AnagramSet(['STEVE DANIELS', 'VESTED ALIENS']),
+                new AnagramSet(['MATT BUSH', 'BUTTMASH', 'MATHTUBS']),
                 new AnagramSet(['ANAGRAMS NEVER LIE', 'A RENAMING REVEALS']),
             ],
+            prevAnagramSetIndex: -1,
             anagramSetIndex: 0,
+            nextAnagramSetIndex: -1,
             textValue: '',
         };
     },
@@ -203,19 +201,39 @@ var AnagramDisplay = React.createClass({
     componentWillUnmount: function() {
         clearInterval(this._intervalId);
     },
-    _cycleAnagramSetIndex: function() {
+    _cycleAnagramSetIndex: async function() {
         var newAnagramSetIndex = (this.state.anagramSetIndex + 1) % this.state.anagramSets.length;
         this.setState({
-            anagramSetIndex: newAnagramSetIndex,
+            nextAnagramSetIndex: newAnagramSetIndex,
+        });
+        await timeout(LETTER_TRANSITION_TIME);
+        this.setState({
+            nextAnagramSetIndex: -1,
+            anagramSetIndex: this.state.nextAnagramSetIndex,
+            prevAnagramSetIndex: this.state.anagramSetIndex,
+        });
+        await timeout(LETTER_TRANSITION_TIME);
+        this.setState({
+            prevAnagramSetIndex: -1,
         });
     },
     render: function() {
+        var prev = this.state.anagramSets[this.state.prevAnagramSetIndex];
+        var cur = this.state.anagramSets[this.state.anagramSetIndex];
+        var next = this.state.anagramSets[this.state.nextAnagramSetIndex];
+
         return (
             <div>
                 <div className="main">
                     <svg width={WIDTH_PX} height={HEIGHT_PX} className="brickGrid">
                         <g transform={`translate(${WIDTH_PX / 2}, ${HEIGHT_PX / 2}) scale(1)`}>
-                            <AnagramSetComponent anagramSet={this.state.anagramSets[this.state.anagramSetIndex]} />
+                            {prev &&
+                                <AnagramSetComponent xPosition={-1} anagramSet={prev} key={prev.getId()} />
+                            }
+                            <AnagramSetComponent xPosition={0} anagramSet={cur} key={cur.getId()} />
+                            {next &&
+                                <AnagramSetComponent xPosition={1} anagramSet={next} key={next.getId()} />
+                            }
                         </g>
                     </svg>
                 </div>
