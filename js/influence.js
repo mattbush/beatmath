@@ -1,46 +1,8 @@
 var tinycolor = require('tinycolor2');
 var updateHue = require('./update_hue');
+var MovingProperty = require('./moving_property');
 
 const {CELL_SIZE, NUM_ROWS, NUM_COLS, MIXER_REFRESH_RATE, MIX_COEFFICIENT, ENABLE_HUE} = require('./colors_constants');
-
-class InfluenceProperty {
-    constructor({type, min, max, variance, start}) {
-        this._type = type;
-        this._min = min;
-        this._max = max;
-        this._variance = variance;
-        this.value = start;
-        this._speed = 0;
-    }
-    update() {
-        this._speed += (Math.random() * this._variance * 2) - this._variance;
-
-        switch (this._type) {
-            case 'linear':
-                var next = this.value + this._speed;
-                if (next > this._max || next < this._min) {
-                    this._speed *= -0.5;
-                } else {
-                    this.value += this._speed;
-                }
-                break;
-
-            case 'circular':
-                // TODO
-                break;
-
-            case 'color':
-                if (Math.abs(this._speed) > this._max) {
-                    this._speed *= 0.5;
-                }
-                this.value = this.value.spin(this._speed);
-                break;
-
-            default:
-                throw Error();
-        }
-    }
-}
 
 class Influence {
     constructor({index, propertyType, startRow, startCol, startValue}) {
@@ -48,7 +10,7 @@ class Influence {
         this._index = index;
         this._listeners = [];
 
-        this._colProperty = new InfluenceProperty({
+        this._colProperty = new MovingProperty({
             type: 'linear',
             min: 0,
             max: NUM_COLS,
@@ -56,7 +18,7 @@ class Influence {
             start: startCol,
         });
 
-        this._rowProperty = new InfluenceProperty({
+        this._rowProperty = new MovingProperty({
             type: 'linear',
             min: 0,
             max: NUM_ROWS,
@@ -64,7 +26,7 @@ class Influence {
             start: startRow,
         });
 
-        this._mainProperty = new InfluenceProperty({
+        this._mainProperty = new MovingProperty({
             type: {size: 'linear', color: 'color', rotation: 'linear'}[propertyType],
             min: {size: 1, rotation: -90}[propertyType],
             max: {size: CELL_SIZE, rotation: 90, color: 5}[propertyType],
