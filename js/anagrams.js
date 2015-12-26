@@ -12,10 +12,16 @@ const ANAGRAM_CYCLE_TIME = 2000;
 var Letter = React.createClass({
     render: function() {
         var x = this.props.index * this.props.letterSpacing;
+        var style = {
+            transform: `translate(${x}px, 0px)`,
+            transition: 'transform 0.5s ease',
+        };
         return (
-            <text className="letter" textAnchor="middle" x={x} y={0}>
-                {this.props.character}
-            </text>
+            <g style={style}>
+                <text className="letter" textAnchor="middle" x="0" y="0">
+                    {this.props.character}
+                </text>
+            </g>
         );
     },
 });
