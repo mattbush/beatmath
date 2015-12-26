@@ -1,7 +1,8 @@
-var _ = require('underscore');
+// var _ = require('underscore');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
+var AnagramSet = require('./anagram_set');
 
 const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants.js');
 
@@ -18,18 +19,37 @@ var Letter = React.createClass({
     },
 });
 
-var AnagramPair = React.createClass({
+var AnagramSetComponent = React.createClass({
+    getInitialState: function() {
+        return {
+            anagramIndex: 0,
+        };
+    },
+    // todo: update anagramIndex using getAnagramCount
     render: function() {
-        var anagram = this.props.anagramPair[0];
-        var letterSpacing = Math.min(LETTER_SPACING, (WIDTH_PX - LETTER_SPACING) / anagram.length);
-        var xOffset = -1 * (anagram.length - 1) / 2 * letterSpacing;
-        var letters = _.map(anagram, (character, index) =>
-            <Letter character={character} index={index} key={index} letterSpacing={letterSpacing} />
-        );
+        var anagramSet = this.props.anagramSet;
+        var anagramIndex = this.state.anagramIndex;
+
+        var anagramLength = anagramSet.getLengthOfAnagram(anagramIndex);
+        var letterSpacing = Math.min(LETTER_SPACING, (WIDTH_PX - LETTER_SPACING) / anagramLength);
+        var xOffset = -1 * (anagramLength - 1) / 2 * letterSpacing;
+        var letterCount = anagramSet.getLetterCount();
+
+        var letterComponents = [];
+        for (var letterIndex = 0; letterIndex < letterCount; letterIndex++) {
+            letterComponents.push(
+                <Letter
+                    character={anagramSet.getLetterAtLetterIndex(letterIndex)}
+                    index={anagramSet.getLetterOffsetForAnagram(anagramIndex, letterIndex)}
+                    key={letterIndex}
+                    letterSpacing={letterSpacing}
+                />
+            );
+        }
 
         return (
             <g transform={`translate(${xOffset}, 0)`}>
-                {letters}
+                {letterComponents}
             </g>
         );
     }
@@ -39,8 +59,8 @@ var AnagramDisplay = React.createClass({
     mixins: [LinkedStateMixin],
     getInitialState: function() {
         return {
-            anagramPairs: [
-                ['ANAGRAMS NEVER LIE', 'A RENAMING REVEALS'],
+            anagramSets: [
+                new AnagramSet(['ANAGRAMS NEVER LIE', 'A RENAMING REVEALS']),
             ],
             textValue: '',
         };
@@ -51,7 +71,7 @@ var AnagramDisplay = React.createClass({
                 <div className="main">
                     <svg width={WIDTH_PX} height={HEIGHT_PX} className="brickGrid">
                         <g transform={`translate(${WIDTH_PX / 2}, ${HEIGHT_PX / 2}) scale(1)`}>
-                            <AnagramPair anagramPair={this.state.anagramPairs[0]} />
+                            <AnagramSetComponent anagramSet={this.state.anagramSets[0]} />
                         </g>
                     </svg>
                 </div>
