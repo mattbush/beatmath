@@ -1,6 +1,6 @@
 var React = require('react');
 
-const {CELL_SIZE, MIXER_REFRESH_RATE} = require('./colors_constants');
+const {CELL_SIZE, MIXER_REFRESH_RATE} = require('./lattice_constants');
 
 var InfluenceCircle = React.createClass({
     componentDidMount: function() {

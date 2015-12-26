@@ -2,7 +2,7 @@ module.exports = {
     entry: {
         anagrams: "./js/anagrams",
         bricks: "./js/bricks",
-        colors: "./js/colors",
+        lattice: "./js/lattice",
         text: "./js/text",
         transition: "./js/transition",
         mixboard_and_hue: "./js/mixboard_and_hue",

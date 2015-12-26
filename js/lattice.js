@@ -5,7 +5,7 @@ var tinycolor = require('tinycolor2');
 
 var fullTimeout = 1000;
 
-const {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE} = require('./colors_constants');
+const {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE} = require('./lattice_constants');
 const {ColorInfluence, RotationInfluence, SizeInfluence} = require('./influence');
 const InfluenceCircle = require('./influence_circle');
 

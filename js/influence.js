@@ -2,7 +2,7 @@ var tinycolor = require('tinycolor2');
 var updateHue = require('./update_hue');
 var {ColorProperty, LinearProperty} = require('./moving_property');
 
-const {CELL_SIZE, NUM_ROWS, NUM_COLS, MIXER_REFRESH_RATE, MIX_COEFFICIENT, ENABLE_HUE} = require('./colors_constants');
+const {CELL_SIZE, NUM_ROWS, NUM_COLS, MIXER_REFRESH_RATE, MIX_COEFFICIENT, ENABLE_HUE} = require('./lattice_constants');
 
 class Influence {
     constructor({startRow, startCol}) {
