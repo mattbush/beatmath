@@ -7,11 +7,22 @@ var AnagramSet = require('./anagram_set');
 const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants.js');
 
 const LETTER_SPACING = 64;
-const JUMP_UNIT_HEIGHT = -10;
+const JUMP_UNIT_HEIGHT = -16;
+const ANAGRAM_SET_CYCLE_TIME = 15000;
 const ANAGRAM_CYCLE_TIME = 3000;
 const LETTER_TRANSITION_TIME = 1000;
 
 var Letter = React.createClass({
+    render: function() {
+        return (
+            <text className="letter" textAnchor="middle" x="0" y="0">
+                {this.props.character}
+            </text>
+        );
+    }
+});
+
+var RearrangingLetter = React.createClass({
     getInitialState: function() {
         return {
             inTransition: false,
@@ -40,7 +51,6 @@ var Letter = React.createClass({
         if (this.state.inTransition) {
             let x = (this.state.previousIndex + this.state.nextIndex) / 2 * this.props.letterSpacing;
             let y = (this.state.nextIndex - this.state.previousIndex) * JUMP_UNIT_HEIGHT;
-            console.log('render', x, y);
             vertStyle = {
                 transform: `translate(0px, ${y}px)`,
                 transition: `transform ${LETTER_TRANSITION_TIME / 2000}s ease-out`,
@@ -63,9 +73,7 @@ var Letter = React.createClass({
         return (
             <g style={vertStyle}>
                 <g style={horizStyle}>
-                    <text className="letter" textAnchor="middle" x="0" y="0">
-                        {this.props.character}
-                    </text>
+                    <Letter character={this.props.character} />
                 </g>
             </g>
         );
@@ -82,8 +90,11 @@ var AnagramSetComponent = React.createClass({
         this._intervalId = setInterval(this._cycleAnagramIndex, ANAGRAM_CYCLE_TIME);
     },
     componentWillReceiveProps: function() {
-        this._clearInterval(this._intervalId);
+        clearInterval(this._intervalId);
         this._intervalId = setInterval(this._cycleAnagramIndex, ANAGRAM_CYCLE_TIME);
+        this.setState({
+            anagramIndex: 0,
+        });
     },
     _cycleAnagramIndex: function() {
         var newAnagramIndex = (this.state.anagramIndex + 1) % this.props.anagramSet.getAnagramCount();
@@ -103,7 +114,7 @@ var AnagramSetComponent = React.createClass({
         var letterComponents = [];
         for (var letterIndex = 0; letterIndex < letterCount; letterIndex++) {
             letterComponents.push(
-                <Letter
+                <RearrangingLetter
                     character={anagramSet.getLetterAtLetterIndex(letterIndex)}
                     index={anagramSet.getLetterOffsetForAnagram(anagramIndex, letterIndex)}
                     key={letterIndex}
@@ -125,10 +136,21 @@ var AnagramDisplay = React.createClass({
     getInitialState: function() {
         return {
             anagramSets: [
+                new AnagramSet(['STEVE DANIELS', 'VESTED ALIENS']),
                 new AnagramSet(['ANAGRAMS NEVER LIE', 'A RENAMING REVEALS']),
             ],
+            anagramSetIndex: 0,
             textValue: '',
         };
+    },
+    componentDidMount: function() {
+        this._intervalId = setInterval(this._cycleAnagramSetIndex, ANAGRAM_SET_CYCLE_TIME);
+    },
+    _cycleAnagramSetIndex: function() {
+        var newAnagramSetIndex = (this.state.anagramSetIndex + 1) % this.state.anagramSets.length;
+        this.setState({
+            anagramSetIndex: newAnagramSetIndex,
+        });
     },
     render: function() {
         return (
@@ -136,7 +158,7 @@ var AnagramDisplay = React.createClass({
                 <div className="main">
                     <svg width={WIDTH_PX} height={HEIGHT_PX} className="brickGrid">
                         <g transform={`translate(${WIDTH_PX / 2}, ${HEIGHT_PX / 2}) scale(1)`}>
-                            <AnagramSetComponent anagramSet={this.state.anagramSets[0]} />
+                            <AnagramSetComponent anagramSet={this.state.anagramSets[this.state.anagramSetIndex]} />
                         </g>
                     </svg>
                 </div>
