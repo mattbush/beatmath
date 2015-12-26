@@ -347,6 +347,7 @@ var AnagramDisplay = React.createClass({
     render: function() {
         return (
             <div>
+                <div className="backgroundImage" style={{top: (HEIGHT_PX - HEIGHT_PX) / 2}} />
                 <div className="main">
                     <svg width={WIDTH_PX} height={HEIGHT_PX} className="brickGrid">
                         <g transform={`translate(${WIDTH_PX / 2}, ${HEIGHT_PX / 2}) scale(1)`}>
@@ -369,7 +370,7 @@ var AnagramDisplay = React.createClass({
 document.addEventListener('DOMContentLoaded', function() {
     ReactDOM.render(
       <div className="main">
-        <AnagramDisplay />
+          <AnagramDisplay />
       </div>,
       document.getElementById('start')
     );
