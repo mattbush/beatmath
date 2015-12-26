@@ -37,6 +37,9 @@ class AnagramSet {
     isValid() {
         return this._isValid;
     }
+    getId() {
+        return this._sortedLetters;
+    }
     getLetterCount() {
         return this._sortedLetters.length;
     }
@@ -47,9 +50,15 @@ class AnagramSet {
         return this._sortedLetters[letterIndex];
     }
     getLengthOfAnagram(anagramIndex) {
+        if (anagramIndex < 0 || anagramIndex >= this.getAnagramCount()) {
+            return 1;
+        }
         return this._originalAnagrams[anagramIndex].length;
     }
     getLetterOffsetForAnagram(anagramIndex, letterIndex) {
+        if (anagramIndex < 0 || anagramIndex >= this.getAnagramCount()) {
+            return 0;
+        }
         return this._anagramLetterOffsets[anagramIndex][letterIndex];
     }
 }

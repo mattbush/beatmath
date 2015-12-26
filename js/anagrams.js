@@ -12,6 +12,7 @@ const JUMP_UNIT_HEIGHT = -16;
 const ANAGRAM_SET_CYCLE_TIME = 15000;
 const ANAGRAM_CYCLE_TIME = 3000;
 const LETTER_TRANSITION_TIME = 1000;
+const LETTER_TILT_TIME = 600;
 
 var colorCache = {};
 var getColorForLetter = function(letter) {
@@ -26,15 +27,43 @@ var getColorForLetter = function(letter) {
 };
 
 var Letter = React.createClass({
+    getInitialState: function() {
+        return {
+            tilt: 1,
+            revolutions: 0,
+        };
+    },
+    componentDidMount: function() {
+        this._intervalId = setInterval(this._updateTilt, LETTER_TILT_TIME);
+    },
+    componentWillUnmount: function() {
+        clearInterval(this._intervalId);
+    },
+    _updateTilt: function() {
+        var delay = this.props.index * 0.05;
+        var newTilt = -1 * this.state.tilt;
+        var newRevolutions = this.state.revolutions + (Math.random() > 0.99 ? newTilt : 0);
+        setTimeout(() => {
+            this.setState({
+                tilt: newTilt,
+                revolutions: newRevolutions,
+            });
+        }, delay);
+    },
     render: function() {
         var color = getColorForLetter(this.props.character);
+        var degrees = 8 * this.state.tilt + 360 * this.state.revolutions;
         var style = {
             fill: color.toHexString(),
+            transform: `rotate(${degrees}deg) translate(0px, 20px)`,
+            transition: `transform ${LETTER_TILT_TIME / 1000}s ease`,
         };
         return (
-            <text style={style} className="letter" textAnchor="middle" x="0" y="0">
-                {this.props.character}
-            </text>
+            <g style={style}>
+                <text className="letter" textAnchor="middle" x="0" y="0">
+                    {this.props.character}
+                </text>
+            </g>
         );
     }
 });
@@ -90,7 +119,7 @@ var RearrangingLetter = React.createClass({
         return (
             <g style={vertStyle}>
                 <g style={horizStyle}>
-                    <Letter character={this.props.character} />
+                    <Letter character={this.props.character} index={this.props.index} />
                 </g>
             </g>
         );
@@ -113,6 +142,9 @@ var AnagramSetComponent = React.createClass({
             anagramIndex: 0,
         });
     },
+    componentWillUnmount: function() {
+        clearInterval(this._intervalId);
+    },
     _cycleAnagramIndex: function() {
         var newAnagramIndex = (this.state.anagramIndex + 1) % this.props.anagramSet.getAnagramCount();
         this.setState({
@@ -133,15 +165,20 @@ var AnagramSetComponent = React.createClass({
             letterComponents.push(
                 <RearrangingLetter
                     character={anagramSet.getLetterAtLetterIndex(letterIndex)}
-                    index={anagramSet.getLetterOffsetForAnagram(anagramIndex, letterIndex)}
-                    key={letterIndex}
+                    index={anagramSet.getLetterOffsetForAnagram(anagramIndex, letterIndex) || 0}
+                    key={anagramSet.getId() + '~' + letterIndex}
                     letterSpacing={letterSpacing}
                 />
             );
         }
 
+        var style = {
+            transform: `translate(${xOffset}px, 0px)`,
+            transition: `transform ${LETTER_TRANSITION_TIME / 1000}s ease`,
+        };
+
         return (
-            <g transform={`translate(${xOffset}, 0)`}>
+            <g style={style}>
                 {letterComponents}
             </g>
         );
@@ -162,6 +199,9 @@ var AnagramDisplay = React.createClass({
     },
     componentDidMount: function() {
         this._intervalId = setInterval(this._cycleAnagramSetIndex, ANAGRAM_SET_CYCLE_TIME);
+    },
+    componentWillUnmount: function() {
+        clearInterval(this._intervalId);
     },
     _cycleAnagramSetIndex: function() {
         var newAnagramSetIndex = (this.state.anagramSetIndex + 1) % this.state.anagramSets.length;
