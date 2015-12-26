@@ -1,5 +1,7 @@
 var _ = require('underscore');
 
+const BRICK_HOMOGENEITY = 0;
+
 const POSSIBLE_ORIENTATIONS_BY_PARITY = [
     [0, 2, 4],
     [1, 3, 5],
@@ -29,28 +31,55 @@ const NEIGHBOR_OFFSETS_AND_POSSIBLE_ORIENTATIONS_BY_PARITY = [
     ],
 ];
 
+var truncateToBaseOrientation = function(orientation) {
+    return orientation % 2 ? orientation - 1 : orientation;
+};
+
 var getPossibleOrientationsBasedOnNeighbors = function(grid, newItem) {
     var allPossibleOrientations = POSSIBLE_ORIENTATIONS_BY_PARITY[newItem.parity];
+    var neighborOrientationsSeen = {0: 0, 2: 0, 4: 0};
     var possibleOrientations = allPossibleOrientations;
     for (var neighborOffset of NEIGHBOR_OFFSETS_AND_POSSIBLE_ORIENTATIONS_BY_PARITY[newItem.parity]) {
         var neighborCoords = `${newItem.x + neighborOffset.x},${newItem.y + neighborOffset.y}`;
         if (_.has(grid, neighborCoords)) {
             var neighborOrientation = grid[neighborCoords];
+            neighborOrientationsSeen[truncateToBaseOrientation(neighborOrientation)]++;
             possibleOrientations = _.intersection(possibleOrientations, neighborOffset.constraints[neighborOrientation] || allPossibleOrientations);
         }
     }
-    return possibleOrientations;
+    if (!possibleOrientations.length) {
+        return {};
+    }
+    var weightedPossibleOrientations = {};
+    var multiple = Math.abs(BRICK_HOMOGENEITY);
+    var sign = Math.sign(BRICK_HOMOGENEITY);
+    for (var possibleOrientation of possibleOrientations) {
+        var neighborCount = neighborOrientationsSeen[possibleOrientation - newItem.parity];
+        weightedPossibleOrientations[possibleOrientation] = Math.pow((1 + neighborCount * multiple), sign);
+    }
+    return weightedPossibleOrientations;
 };
 
-var getRandomOrientationFromArray = function(orientations) {
-    var randomIndex = Math.floor(Math.random() * orientations.length);
-    return orientations[randomIndex];
+var addPair = function(a, b) { return a + b; };
+
+var getRandomOrientationFromArray = function(weightedPossibleOrientations) {
+    var sum = _.values(weightedPossibleOrientations).reduce(addPair, 0);
+    var randomVal = Math.random() * sum;
+    for (var orientation in weightedPossibleOrientations) {
+        var weight = weightedPossibleOrientations[orientation];
+        if (randomVal < weight) {
+            return orientation;
+        } else {
+            randomVal -= weight;
+        }
+    }
+    throw new Error('this should be unreachable');
 };
 
 var getPossibleOrientation = function(grid, newItem) {
-    var possibleOrientations = getPossibleOrientationsBasedOnNeighbors(grid, newItem);
-    if (!_.isEmpty(possibleOrientations)) {
-        return getRandomOrientationFromArray(possibleOrientations);
+    var weightedPossibleOrientations = getPossibleOrientationsBasedOnNeighbors(grid, newItem);
+    if (!_.isEmpty(weightedPossibleOrientations)) {
+        return getRandomOrientationFromArray(weightedPossibleOrientations);
     }
     return null;
 };
