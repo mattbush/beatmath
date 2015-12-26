@@ -18,18 +18,18 @@ var InfluenceCircle = React.createClass({
         var rotation = influence.getRotation();
         if (rotation !== null) {
             rotation = Math.floor(rotation);
-            let transform = `translate(${x} ${y}) rotate(${rotation})`;
+            style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg)`;
             var pixelOffset = -size / 2;
             return (
-                <g style={style} transform={transform}>
+                <g style={style}>
                     <rect x={pixelOffset} y={pixelOffset} width={size} height={size} />
                 </g>
 
             );
         } else {
-            let transform = `translate(${x} ${y})`;
+            style.transform = `translate(${x}px, ${y}px)`;
             return (
-                <g style={style} transform={transform}>
+                <g style={style}>
                     <circle cx={0} cy={0} r={size / 2} />
                 </g>
             );
