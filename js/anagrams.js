@@ -4,11 +4,11 @@ var ReactDOM = require('react-dom');
 
 const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants.js');
 
-const LETTER_SPACING = 50;
+const LETTER_SPACING = 64;
 
 var Letter = React.createClass({
     render: function() {
-        var x = this.props.index * LETTER_SPACING;
+        var x = this.props.index * this.props.letterSpacing;
         return (
             <text className="letter" textAnchor="middle" x={x} y={0}>
                 {this.props.character}
@@ -20,9 +20,10 @@ var Letter = React.createClass({
 var AnagramPair = React.createClass({
     render: function() {
         var anagram = this.props.anagramPair[0];
-        var xOffset = -1 * anagram.length / 2 * LETTER_SPACING;
+        var letterSpacing = Math.min(LETTER_SPACING, (WIDTH_PX - LETTER_SPACING) / anagram.length);
+        var xOffset = -1 * (anagram.length - 1) / 2 * letterSpacing;
         var letters = _.map(anagram, (character, index) =>
-            <Letter character={character} index={index} key={index} />
+            <Letter character={character} index={index} key={index} letterSpacing={letterSpacing} />
         );
 
         return (
