@@ -1,6 +1,6 @@
 var tinycolor = require('tinycolor2');
 var updateHue = require('./update_hue');
-var MovingProperty = require('./moving_property');
+var {ColorProperty, LinearProperty} = require('./moving_property');
 
 const {CELL_SIZE, NUM_ROWS, NUM_COLS, MIXER_REFRESH_RATE, MIX_COEFFICIENT, ENABLE_HUE} = require('./colors_constants');
 
@@ -10,7 +10,7 @@ class Influence {
         this._index = index;
         this._listeners = [];
 
-        this._colProperty = new MovingProperty({
+        this._colProperty = new LinearProperty({
             type: 'linear',
             min: 0,
             max: NUM_COLS,
@@ -18,7 +18,7 @@ class Influence {
             start: startCol,
         });
 
-        this._rowProperty = new MovingProperty({
+        this._rowProperty = new LinearProperty({
             type: 'linear',
             min: 0,
             max: NUM_ROWS,
@@ -26,8 +26,7 @@ class Influence {
             start: startRow,
         });
 
-        this._mainProperty = new MovingProperty({
-            type: {size: 'linear', color: 'color', rotation: 'linear'}[propertyType],
+        this._mainProperty = new (propertyType === 'color' ? ColorProperty : LinearProperty)({
             min: {size: 1, rotation: -90}[propertyType],
             max: {size: CELL_SIZE, rotation: 90, color: 5}[propertyType],
             variance: {size: 0.25/* TODO: vary with cell size */, rotation: 0.25, color: 1}[propertyType],
