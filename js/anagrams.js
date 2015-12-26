@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var React = require('react');
 var ReactDOM = require('react-dom');
+var LinkedStateMixin = require('react-addons-linked-state-mixin');
 
 const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants.js');
 
@@ -35,20 +36,27 @@ var AnagramPair = React.createClass({
 });
 
 var AnagramDisplay = React.createClass({
+    mixins: [LinkedStateMixin],
     getInitialState: function() {
         return {
             anagramPairs: [
                 ['ANAGRAMS NEVER LIE', 'A RENAMING REVEALS'],
             ],
+            textValue: '',
         };
     },
     render: function() {
         return (
-            <svg width={WIDTH_PX} height={HEIGHT_PX} className="brickGrid">
-                <g transform={`translate(${WIDTH_PX / 2}, ${HEIGHT_PX / 2}) scale(1)`}>
-                    <AnagramPair anagramPair={this.state.anagramPairs[0]} />
-                </g>
-            </svg>
+            <div>
+                <div className="main">
+                    <svg width={WIDTH_PX} height={HEIGHT_PX} className="brickGrid">
+                        <g transform={`translate(${WIDTH_PX / 2}, ${HEIGHT_PX / 2}) scale(1)`}>
+                            <AnagramPair anagramPair={this.state.anagramPairs[0]} />
+                        </g>
+                    </svg>
+                </div>
+                <input className="anagramTextInput" type="text" valueLink={this.linkState('textValue')} />
+            </div>
         );
     },
 });
