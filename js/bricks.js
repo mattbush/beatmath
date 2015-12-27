@@ -18,11 +18,15 @@ const NEIGHBOR_OFFSETS_EVEN = [{x: 2, y: 0}, {x: -1, y: 1}, {x: -1, y: -1}];
 const NEIGHBOR_OFFSETS_ODD = [{x: -2, y: 0}, {x: 1, y: 1}, {x: 1, y: -1}];
 const NEIGHBOR_OFFSETS_BY_PARITY = [NEIGHBOR_OFFSETS_EVEN, NEIGHBOR_OFFSETS_ODD];
 
-const FILLS = ['#fd0', '#f00', '#0e0'];
+var brickColors = [
+    new BrickColor({startValue: '#fd8', index: 0}),
+    new BrickColor({startValue: '#180', index: 0}),
+    new BrickColor({startValue: '#f10', index: 0}),
+];
 
 var getFillForOrientation = function(orientation) {
     var orientationGroup = Math.floor(orientation / 2);
-    return FILLS[orientationGroup];
+    return brickColors[orientationGroup].getValue().toHexString();
 };
 
 var Triangle = React.createClass({

@@ -11,7 +11,7 @@ class BrickColor {
         this._property = new ColorProperty({
             max: 5,
             variance: 1,
-            start: startValue,
+            start: tinycolor(startValue),
         });
         this._index = index;
 
