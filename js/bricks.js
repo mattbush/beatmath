@@ -7,6 +7,8 @@ var getPossibleOrientation = require('./brick_possible_orientation');
 
 const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants');
 
+const {BrickColor, BrickPosition} = require('./brick_properties');
+
 const REFRESH_RATE = 50;
 
 const INV_SQRT_3 = 1 / Math.sqrt(3);
