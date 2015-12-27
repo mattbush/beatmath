@@ -6,9 +6,11 @@ var getPossibleOrientation = require('./brick_possible_orientation');
 
 const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants');
 
+const {POSITION_REFRESH_RATE} = require('./brick_constants');
+
 const {BrickColor, BrickPosition} = require('./brick_properties');
 
-const REFRESH_RATE = 50;
+const BRICK_GENERATING_RATE = 50;
 const BRICK_COLOR_REFRESH_RATE = 500;
 
 const INV_SQRT_3 = 1 / Math.sqrt(3);
@@ -23,6 +25,8 @@ var brickColors = [
     new BrickColor({startValue: '#180', index: 0}),
     new BrickColor({startValue: '#f10', index: 0}),
 ];
+
+var brickPosition = new BrickPosition();
 
 var getFillForOrientation = function(orientation) {
     var orientationGroup = Math.floor(orientation / 2);
@@ -100,7 +104,7 @@ var extractMinAndAddNeighbors = function(heap, grid, enqueued) {
 
 var BrickGrid = React.createClass({
     componentDidMount: function() {
-        setInterval(this._update, REFRESH_RATE);
+        setInterval(this._update, BRICK_GENERATING_RATE);
     },
     _update: function() {
         extractMinAndAddNeighbors(this.props.heap, this.props.grid, this.props.enqueued);
@@ -114,10 +118,17 @@ var BrickGrid = React.createClass({
             triangles.push(<Triangle key={coords} x={Number(x)} y={Number(y)} orientation={grid[coords]} />);
         }
 
+        var style = {
+            transform: `translate(${brickPosition.getX()}px, ${brickPosition.getY()}px)`,
+            transition: `transform ${POSITION_REFRESH_RATE / 1000}s linear`,
+        };
+
         return (
             <svg width={WIDTH_PX} height={HEIGHT_PX} className="brickGrid">
                 <g transform={`translate(${WIDTH_PX / 2}, ${HEIGHT_PX / 2}) scale(20)`}>
-                    {triangles}
+                    <g style={style}>
+                        {triangles}
+                    </g>
                 </g>
             </svg>
         );
