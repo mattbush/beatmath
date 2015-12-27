@@ -5,3 +5,6 @@ body {
     background: #000;
     height: 800px;
 }
+.triangle {
+    transition: fill 0.25s linear;
+}

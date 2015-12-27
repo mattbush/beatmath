@@ -2,7 +2,6 @@ var _ = require('underscore');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var MinHeap = require('min-heap');
-var tinycolor = require('tinycolor2');
 var getPossibleOrientation = require('./brick_possible_orientation');
 
 const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants');
@@ -10,6 +9,7 @@ const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants');
 const {BrickColor, BrickPosition} = require('./brick_properties');
 
 const REFRESH_RATE = 50;
+const BRICK_COLOR_REFRESH_RATE = 500;
 
 const INV_SQRT_3 = 1 / Math.sqrt(3);
 const TWO_X_INV_SQRT_3 = 2 / Math.sqrt(3);
@@ -26,14 +26,29 @@ var brickColors = [
 
 var getFillForOrientation = function(orientation) {
     var orientationGroup = Math.floor(orientation / 2);
-    return brickColors[orientationGroup].getValue().toHexString();
+    return brickColors[orientationGroup].getValue();
+};
+var updateFillForOrientation = function(previousFill, orientation) {
+    var orientationGroup = Math.floor(orientation / 2);
+    return brickColors[orientationGroup].mix(previousFill);
 };
 
 var Triangle = React.createClass({
     getInitialState: function() {
         return {
-            color: tinycolor(getFillForOrientation(this.props.orientation)),
+            color: getFillForOrientation(this.props.orientation),
         };
+    },
+    componentDidMount: function() {
+        this._intervalId = setInterval(this._updateColor, BRICK_COLOR_REFRESH_RATE);
+    },
+    componentWillUnmount: function() {
+        clearInterval(this._intervalId);
+    },
+    _updateColor: function() {
+        this.setState({
+            color: updateFillForOrientation(this.state.color, this.props.orientation),
+        });
     },
     render: function() {
         var x = this.props.x * INV_SQRT_3;
@@ -47,7 +62,7 @@ var Triangle = React.createClass({
             points = `${x - INV_SQRT_3},${y + 1} ${x + TWO_X_INV_SQRT_3},${y} ${x - INV_SQRT_3},${y - 1}`;
         }
         return (
-            <polygon fill={this.state.color.toHexString(true)} points={points} />
+            <polygon className="triangle" fill={this.state.color.toHexString(true)} points={points} />
         );
     },
 });
