@@ -1,48 +1,19 @@
+var _ = require('underscore');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var tinycolor = require('tinycolor2');
 
-// var ColorPixel = React.createClass({
-//     _getInitialTimeout: function() {
-//         var rowMod10 = this.props.row % 10;
-//         var colMod10 = this.props.col % 10;
-//         rowMod10 = (rowMod10 > 5) ? (10 - rowMod10) : rowMod10;
-//         colMod10 = (colMod10 > 5) ? (10 - colMod10) : colMod10;
-//         return ((0.5 + rowMod10 + colMod10) / 10) * fullTimeout;
-//     },
-//     componentDidMount: function() {
-//         setTimeout(this._updateColor, this._getInitialTimeout());
-//     },
-//     _updateColor: function() {
-//         setTimeout(this._updateColor, fullTimeout);
-//         this.setState({
-//             color: this.props.colorMixer.mixColors(this.state.color, this.props.row, this.props.col),
-//         });
-//     },
-//     getInitialState: function() {
-//         return {
-//             color: gray,
-//         };
-//     },
-//     render: function() {
-//         var style = {
-//             top: CELL_SIZE * this.props.row,
-//             left: CELL_SIZE * this.props.col,
-//             background: this.state.color.toHexString(true),
-//         };
-//         return (
-//             <div className="colorPixel" style={style} />
-//         );
-//     },
-// });
+const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants');
 
-const BPM_CONST = 103;
+const BPM_CONST = 128;
 
 const ROTATIONS_IN_SET = 32;
 
 const COLORS = [tinycolor('#f00'), tinycolor('#1a1'), tinycolor('#36f')];
 
 const SIX_RANGE = [0, 1, 2, 3, 4, 5];
+
+var NUM_CORES = 3;
 
 let AnimationControlledMixin = {
     contextTypes: {
@@ -200,8 +171,8 @@ var AnimationController = React.createClass({
     },
     render: function() {
         return (
-            <svg width="1280" height="800" className="main">
-                <g transform="translate(640,400)">
+            <svg width={WIDTH_PX} height={HEIGHT_PX} className="main">
+                <g transform={`translate(${WIDTH_PX / 2}, ${HEIGHT_PX / 2})`}>
                     {this.props.children}
                 </g>
             </svg>
@@ -212,7 +183,14 @@ var AnimationController = React.createClass({
 document.addEventListener('DOMContentLoaded', function() {
     ReactDOM.render(
         <AnimationController bpm={BPM_CONST}>
-            <RotatingCore />
+            {_.times(NUM_CORES, i => {
+                var xOffset = WIDTH_PX / NUM_CORES * (i - (NUM_CORES - 1) / 2);
+                return (
+                    <g key={i} transform={`translate(${xOffset}, 0) scale(${1 / NUM_CORES})`}>
+                        <RotatingCore />
+                    </g>
+                );
+            })}
         </AnimationController>,
         document.getElementById('start')
     );
