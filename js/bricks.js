@@ -26,6 +26,9 @@ const NEIGHBOR_OFFSETS_EVEN = [{x: 2, y: 0}, {x: -1, y: 1}, {x: -1, y: -1}];
 const NEIGHBOR_OFFSETS_ODD = [{x: -2, y: 0}, {x: 1, y: 1}, {x: 1, y: -1}];
 const NEIGHBOR_OFFSETS_BY_PARITY = [NEIGHBOR_OFFSETS_EVEN, NEIGHBOR_OFFSETS_ODD];
 
+const HEAP_FLUSH_RATE = 10000;
+const NUM_ITEMS_TO_SAVE_IN_FLUSH = 32;
+
 var brickColors = [
     new BrickColor({startValue: '#fd8', index: 0}),
     new BrickColor({startValue: '#180', index: 0}),
@@ -136,6 +139,7 @@ var BrickGrid = React.createClass({
         setInterval(this._update, TRIANGLE_GENERATING_RATE);
     },
     componentDidUpdate: function() {
+        console.log(this.props.heap.size);
         for (var coords of this._coordsToDelete) {
             delete this.props.grid[coords];
             delete this.props.enqueued[coords];
@@ -188,6 +192,24 @@ insertItemIntoHeap(heap, startItem);
 
 var grid = {};
 extractMinAndAddNeighbors(heap, grid, enqueued);
+
+var flushHeap = function() {
+    if (heap.size <= NUM_ITEMS_TO_SAVE_IN_FLUSH) {
+        return;
+    }
+    var tempArray = [];
+    while (heap.size > 0) {
+        var head = heap.removeHead();
+        if (tempArray.length < NUM_ITEMS_TO_SAVE_IN_FLUSH) {
+            tempArray.push(head);
+        }
+    }
+    for (var item of tempArray) {
+        heap.insert(item);
+    }
+};
+
+setInterval(flushHeap, HEAP_FLUSH_RATE);
 
 document.addEventListener('DOMContentLoaded', function() {
     ReactDOM.render(
