@@ -94,7 +94,7 @@ var extractMinWithinRange = function(heap, enqueued) {
 };
 
 var extractMinAndAddNeighbors = function(heap, grid, enqueued) {
-    var newItem = extractMinWithinRange(heap);
+    var newItem = extractMinWithinRange(heap, enqueued);
 
     if (!newItem) {
         return;
