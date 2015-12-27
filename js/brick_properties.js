@@ -55,7 +55,7 @@ class BrickPosition {
     getDistance(item) {
         var dx = (item.x * INV_SQRT_3) - this._x;
         var dy = item.y - this._y;
-        return dx * dx + dy * dy;
+        return Math.sqrt(dx * dx + dy * dy);
     }
     update() {
         this._property.update();

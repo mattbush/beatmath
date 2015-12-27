@@ -10,13 +10,15 @@ const {POSITION_REFRESH_RATE} = require('./brick_constants');
 
 const {BrickColor, BrickPosition} = require('./brick_properties');
 
-const RENDER_DISTANCE_CUTOFF = 80;
+const RENDER_DISTANCE_CUTOFF = 20;
 
 const TRIANGLE_GENERATING_RATE = 250;
 const BRICK_COLOR_REFRESH_RATE = 500;
-const MAX_TRIANGLES_TO_EXTRACT = 8;
+const MAX_TRIANGLES_TO_EXTRACT = 12;
 
-const EXTRACTION_DISTANCE_TOLERANCE = 10;
+const BRICK_SCALE = 20;
+
+const EXTRACTION_DISTANCE_TOLERANCE = 4;
 const POSITION_OFFSET_REFRESH_RATE = Math.max(TRIANGLE_GENERATING_RATE, POSITION_REFRESH_RATE);
 
 const INV_SQRT_3 = 1 / Math.sqrt(3);
@@ -165,13 +167,13 @@ var BrickGrid = React.createClass({
         }
 
         var style = {
-            transform: `translate(${-brickPosition.getX()}px, ${-brickPosition.getY()}px)`,
+            transform: `scale(${BRICK_SCALE}) translate(${-brickPosition.getX()}px, ${-brickPosition.getY()}px)`,
             transition: `transform ${POSITION_OFFSET_REFRESH_RATE / 1000}s linear`,
         };
 
         return (
             <svg width={WIDTH_PX} height={HEIGHT_PX} className="brickGrid">
-                <g transform={`translate(${WIDTH_PX / 2}, ${HEIGHT_PX / 2}) scale(20)`}>
+                <g transform={`translate(${WIDTH_PX / 2}, ${HEIGHT_PX / 2})`}>
                     <g style={style}>
                         {triangles}
                     </g>
