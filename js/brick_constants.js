@@ -1,7 +1,7 @@
 const ENABLE_HUE = false;
 const COLOR_REFRESH_RATE = 200;
-const POSITION_REFRESH_RATE = 200;
-const POSITION_SPEED = 0.25;
+const POSITION_REFRESH_RATE = 50;
+const POSITION_SPEED = 0.06;
 const COLOR_MIX_COEFFICIENT = 0.1;
 
 module.exports = {

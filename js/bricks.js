@@ -10,6 +10,8 @@ const {POSITION_REFRESH_RATE} = require('./brick_constants');
 
 const {BrickColor, BrickPosition} = require('./brick_properties');
 
+const RENDER_DISTANCE_CUTOFF = 80;
+
 const BRICK_GENERATING_RATE = 50;
 const BRICK_COLOR_REFRESH_RATE = 500;
 
@@ -123,6 +125,12 @@ var BrickGrid = React.createClass({
     componentDidMount: function() {
         setInterval(this._update, BRICK_GENERATING_RATE);
     },
+    componentDidUpdate: function() {
+        for (var coords of this._coordsToDelete) {
+            delete this.props.grid[coords];
+            delete this.props.enqueued[coords];
+        }
+    },
     _update: function() {
         extractMinAndAddNeighbors(this.props.heap, this.props.grid, this.props.enqueued);
         this.forceUpdate();
@@ -130,9 +138,14 @@ var BrickGrid = React.createClass({
     render: function() {
         var grid = this.props.grid;
         var triangles = [];
+        this._coordsToDelete = [];
         for (var coords in grid) {
             var [x, y] = coords.split(',').map(Number);
-            triangles.push(<Triangle key={coords} x={x} y={y} orientation={grid[coords]} />);
+            if (brickPosition.getDistance({x, y}) < RENDER_DISTANCE_CUTOFF) {
+                triangles.push(<Triangle key={coords} x={x} y={y} orientation={grid[coords]} />);
+            } else {
+                this._coordsToDelete.push(coords);
+            }
         }
 
         var style = {

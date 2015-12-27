@@ -36,8 +36,8 @@ class BrickColor {
 class BrickPosition {
     constructor() {
         this._property = new AngleProperty({
-            max: 5,
-            variance: 0.5,
+            max: 1,
+            variance: 0.1,
             start: 0,
         });
 
