@@ -12,10 +12,12 @@ const {BrickColor, BrickPosition} = require('./brick_properties');
 
 const RENDER_DISTANCE_CUTOFF = 80;
 
-const BRICK_GENERATING_RATE = 50;
+const TRIANGLE_GENERATING_RATE = 250;
 const BRICK_COLOR_REFRESH_RATE = 500;
+const MAX_TRIANGLES_TO_EXTRACT = 8;
 
 const EXTRACTION_DISTANCE_TOLERANCE = 10;
+const POSITION_OFFSET_REFRESH_RATE = Math.max(TRIANGLE_GENERATING_RATE, POSITION_REFRESH_RATE);
 
 const INV_SQRT_3 = 1 / Math.sqrt(3);
 const TWO_X_INV_SQRT_3 = 2 / Math.sqrt(3);
@@ -115,15 +117,23 @@ var extractMinAndAddNeighbors = function(heap, grid, enqueued) {
         };
         var neighborCoords = `${neighbor.x},${neighbor.y}`;
         if (!_.has(enqueued, neighborCoords)) {
-            enqueued[neighborCoords] = true;
+            enqueued[neighborCoords] = neighbor;
             insertItemIntoHeap(heap, neighbor);
+        } else {
+            var existingEntry = enqueued[neighborCoords];
+            var newNeighborDistance = brickPosition.getDistance(existingEntry);
+            if (newNeighborDistance < existingEntry.heapWeight - EXTRACTION_DISTANCE_TOLERANCE) {
+                heap.remove(existingEntry);
+                existingEntry.heapWeight = newNeighborDistance;
+                heap.insert(existingEntry);
+            }
         }
     }
 };
 
 var BrickGrid = React.createClass({
     componentDidMount: function() {
-        setInterval(this._update, BRICK_GENERATING_RATE);
+        setInterval(this._update, TRIANGLE_GENERATING_RATE);
     },
     componentDidUpdate: function() {
         for (var coords of this._coordsToDelete) {
@@ -132,7 +142,9 @@ var BrickGrid = React.createClass({
         }
     },
     _update: function() {
-        extractMinAndAddNeighbors(this.props.heap, this.props.grid, this.props.enqueued);
+        for (var i = 0; i < MAX_TRIANGLES_TO_EXTRACT; i++) {
+            extractMinAndAddNeighbors(this.props.heap, this.props.grid, this.props.enqueued);
+        }
         this.forceUpdate();
     },
     render: function() {
@@ -150,7 +162,7 @@ var BrickGrid = React.createClass({
 
         var style = {
             transform: `translate(${-brickPosition.getX()}px, ${-brickPosition.getY()}px)`,
-            transition: `transform ${POSITION_REFRESH_RATE / 1000}s linear`,
+            transition: `transform ${POSITION_OFFSET_REFRESH_RATE / 1000}s linear`,
         };
 
         return (
@@ -171,7 +183,7 @@ var heap = new MinHeap(function(l, r) {
 });
 var enqueued = {};
 var coords = `${startItem.x},${startItem.y}`;
-enqueued[coords] = true;
+enqueued[coords] = startItem;
 insertItemIntoHeap(heap, startItem);
 
 var grid = {};
