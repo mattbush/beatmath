@@ -22,7 +22,7 @@ class Influence {
             start: startRow,
         });
 
-        this.update = this.update.bind(this);
+        setInterval(this.update.bind(this), INFLUENCE_REFRESH_RATE);
     }
     addListener(fn) {
         this._listeners.push(fn);
@@ -46,7 +46,6 @@ class Influence {
         throw new Error('abstract method');
     }
     update() {
-        setTimeout(this.update, INFLUENCE_REFRESH_RATE);
         this._mainProperty.update();
         this._colProperty.update();
         this._rowProperty.update();

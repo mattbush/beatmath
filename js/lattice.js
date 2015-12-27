@@ -140,6 +140,4 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>,
       document.getElementById('start')
     );
-
-    _.each(influences, influence => influence.update());
 });
