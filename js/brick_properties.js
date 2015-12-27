@@ -5,6 +5,7 @@ var {ColorProperty, AngleProperty} = require('./moving_property');
 const {ENABLE_HUE, COLOR_REFRESH_RATE, POSITION_REFRESH_RATE, POSITION_SPEED, COLOR_MIX_COEFFICIENT} = require('./brick_constants');
 
 const DEG_TO_RAD = Math.PI / 180;
+const INV_SQRT_3 = 1 / Math.sqrt(3);
 
 class BrickColor {
     constructor({startValue, index}) {
@@ -50,6 +51,11 @@ class BrickPosition {
     }
     getY() {
         return this._y;
+    }
+    getDistance(item) {
+        var dx = (item.x * INV_SQRT_3) - this._x;
+        var dy = item.y - this._y;
+        return dx * dx + dy * dy;
     }
     update() {
         this._property.update();

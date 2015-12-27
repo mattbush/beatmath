@@ -13,6 +13,8 @@ const {BrickColor, BrickPosition} = require('./brick_properties');
 const BRICK_GENERATING_RATE = 50;
 const BRICK_COLOR_REFRESH_RATE = 500;
 
+const EXTRACTION_DISTANCE_TOLERANCE = 10;
+
 const INV_SQRT_3 = 1 / Math.sqrt(3);
 const TWO_X_INV_SQRT_3 = 2 / Math.sqrt(3);
 
@@ -72,14 +74,29 @@ var Triangle = React.createClass({
 });
 
 var insertItemIntoHeap = function(heap, item) {
-    var dx = item.x * INV_SQRT_3;
-    var dy = item.y;
-    item.heapWeight = dx * dx + dy * dy;
+    item.heapWeight = brickPosition.getDistance(item);
     heap.insert(item);
 };
 
+var extractMinWithinRange = function(heap, enqueued) {
+    while (heap.size > 0) {
+        var newItem = heap.removeHead();
+
+        if (brickPosition.getDistance(newItem) <= newItem.heapWeight + EXTRACTION_DISTANCE_TOLERANCE) {
+            return newItem;
+        } else {
+            var coords = `${newItem.x},${newItem.y}`;
+            delete enqueued[coords];
+        }
+    }
+};
+
 var extractMinAndAddNeighbors = function(heap, grid, enqueued) {
-    var newItem = heap.removeHead();
+    var newItem = extractMinWithinRange(heap);
+
+    if (!newItem) {
+        return;
+    }
     var coords = `${newItem.x},${newItem.y}`;
 
     var possibleOrientation = getPossibleOrientation(grid, newItem);
@@ -114,12 +131,12 @@ var BrickGrid = React.createClass({
         var grid = this.props.grid;
         var triangles = [];
         for (var coords in grid) {
-            var [x, y] = coords.split(',');
-            triangles.push(<Triangle key={coords} x={Number(x)} y={Number(y)} orientation={grid[coords]} />);
+            var [x, y] = coords.split(',').map(Number);
+            triangles.push(<Triangle key={coords} x={x} y={y} orientation={grid[coords]} />);
         }
 
         var style = {
-            transform: `translate(${brickPosition.getX()}px, ${brickPosition.getY()}px)`,
+            transform: `translate(${-brickPosition.getX()}px, ${-brickPosition.getY()}px)`,
             transition: `transform ${POSITION_REFRESH_RATE / 1000}s linear`,
         };
 
