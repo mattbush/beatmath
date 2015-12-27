@@ -8,7 +8,7 @@ var tinycolor = require('tinycolor2');
 
 var timeout = duration => new Promise(cb => setTimeout(cb, duration));
 
-const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants.js');
+const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('./beatmath_constants.js');
 
 const LETTER_SPACING = 64;
 const JUMP_UNIT_HEIGHT = -16;
@@ -347,10 +347,10 @@ var AnagramDisplay = React.createClass({
     render: function() {
         return (
             <div>
-                <div className="backgroundImage" style={{top: (HEIGHT_PX - HEIGHT_PX) / 2}} />
+                {/* <div className="backgroundImage" style={{top: (DESIRED_HEIGHT_PX - HEIGHT_PX) / 2}} /> */}
                 <div className="main">
-                    <svg width={WIDTH_PX} height={HEIGHT_PX} className="brickGrid">
-                        <g transform={`translate(${WIDTH_PX / 2}, ${HEIGHT_PX / 2}) scale(1)`}>
+                    <svg width={WIDTH_PX} height={DESIRED_HEIGHT_PX} className="brickGrid">
+                        <g transform={`translate(${WIDTH_PX / 2}, ${DESIRED_HEIGHT_PX / 2}) scale(1)`}>
                             {this._renderContents()}
                         </g>
                     </svg>
