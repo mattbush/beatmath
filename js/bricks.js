@@ -2,11 +2,12 @@ var _ = require('underscore');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var MinHeap = require('min-heap');
+var tinycolor = require('tinycolor2');
 var getPossibleOrientation = require('./brick_possible_orientation');
 
 const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants');
 
-const REFRESH_RATE = 20;
+const REFRESH_RATE = 50;
 
 const INV_SQRT_3 = 1 / Math.sqrt(3);
 const TWO_X_INV_SQRT_3 = 2 / Math.sqrt(3);
@@ -15,9 +16,19 @@ const NEIGHBOR_OFFSETS_EVEN = [{x: 2, y: 0}, {x: -1, y: 1}, {x: -1, y: -1}];
 const NEIGHBOR_OFFSETS_ODD = [{x: -2, y: 0}, {x: 1, y: 1}, {x: 1, y: -1}];
 const NEIGHBOR_OFFSETS_BY_PARITY = [NEIGHBOR_OFFSETS_EVEN, NEIGHBOR_OFFSETS_ODD];
 
-const FILLS = ['#fd0', '#fd0', '#f00', '#f00', '#0e0', '#0e0'];
+const FILLS = ['#fd0', '#f00', '#0e0'];
+
+var getFillForOrientation = function(orientation) {
+    var orientationGroup = Math.floor(orientation / 2);
+    return FILLS[orientationGroup];
+};
 
 var Triangle = React.createClass({
+    getInitialState: function() {
+        return {
+            color: tinycolor(getFillForOrientation(this.props.orientation)),
+        };
+    },
     render: function() {
         var x = this.props.x * INV_SQRT_3;
         var y = this.props.y;
@@ -30,7 +41,7 @@ var Triangle = React.createClass({
             points = `${x - INV_SQRT_3},${y + 1} ${x + TWO_X_INV_SQRT_3},${y} ${x - INV_SQRT_3},${y - 1}`;
         }
         return (
-            <polygon fill={FILLS[this.props.orientation]} points={points} />
+            <polygon fill={this.state.color.toHexString(true)} points={points} />
         );
     },
 });
