@@ -1,10 +1,12 @@
 body {
     margin: 0;
+    overflow: hidden;
 }
 .main {
     background: #000;
     margin: auto;
     text-align: center;
+    overflow: hidden;
 }
 .rotatingCore {
     font-size: 36pt;

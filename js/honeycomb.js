@@ -2,8 +2,9 @@ var _ = require('underscore');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var tinycolor = require('tinycolor2');
+var updateHue = require('./update_hue');
 
-const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants');
+const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('./beatmath_constants');
 
 const BPM_CONST = 128;
 
@@ -14,6 +15,10 @@ const COLORS = [tinycolor('#f00'), tinycolor('#1a1'), tinycolor('#36f')];
 const SIX_RANGE = [0, 1, 2, 3, 4, 5];
 
 var NUM_CORES = 3;
+
+var ENABLE_HUE = false;
+var SAT_COEFF = 1.5;
+var BRI_COEFF = 0.6;
 
 let AnimationControlledMixin = {
     contextTypes: {
@@ -78,8 +83,12 @@ let HexagonGroup = React.createClass({
         };
     },
     render: function() {
+        var style = this.getStyle(this.context.ticks + 1);
+        if (ENABLE_HUE) {
+            updateHue(this.props.index, tinycolor(style.stroke), {satCoeff: SAT_COEFF, briCoeff: BRI_COEFF});
+        }
         return (
-            <g className="hexagonGroup" style={this.getStyle(this.context.ticks + 1)}>
+            <g className="hexagonGroup" style={style}>
                 <g transform={`translate(0 ${HEX_HEIGHT})`}>
                     <MagicHexagon index={this.props.index} order={1} />
                 </g>
@@ -171,8 +180,8 @@ var AnimationController = React.createClass({
     },
     render: function() {
         return (
-            <svg width={WIDTH_PX} height={HEIGHT_PX} className="main">
-                <g transform={`translate(${WIDTH_PX / 2}, ${HEIGHT_PX / 2})`}>
+            <svg width={WIDTH_PX} height={DESIRED_HEIGHT_PX} className="main">
+                <g transform={`translate(${WIDTH_PX / 2}, ${DESIRED_HEIGHT_PX / 2})`}>
                     {this.props.children}
                 </g>
             </svg>
@@ -182,16 +191,18 @@ var AnimationController = React.createClass({
 
 document.addEventListener('DOMContentLoaded', function() {
     ReactDOM.render(
-        <AnimationController bpm={BPM_CONST}>
-            {_.times(NUM_CORES, i => {
-                var xOffset = WIDTH_PX / NUM_CORES * (i - (NUM_CORES - 1) / 2);
-                return (
-                    <g key={i} transform={`translate(${xOffset}, 0) scale(${1 / NUM_CORES})`}>
-                        <RotatingCore />
-                    </g>
-                );
-            })}
-        </AnimationController>,
+        <div className="main">
+            <AnimationController bpm={BPM_CONST}>
+                {_.times(NUM_CORES, i => {
+                    var xOffset = WIDTH_PX / NUM_CORES * (i - (NUM_CORES - 1) / 2);
+                    return (
+                        <g key={i} transform={`translate(${xOffset}, 0) scale(${1 / NUM_CORES})`}>
+                            <RotatingCore />
+                        </g>
+                    );
+                })}
+            </AnimationController>
+        </div>,
         document.getElementById('start')
     );
 });

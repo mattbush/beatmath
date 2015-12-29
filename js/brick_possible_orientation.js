@@ -1,6 +1,6 @@
 var _ = require('underscore');
 
-const BRICK_HOMOGENEITY = 0;
+const BRICK_HOMOGENEITY = -0.4;
 
 const POSSIBLE_ORIENTATIONS_BY_PARITY = [
     [0, 2, 4],

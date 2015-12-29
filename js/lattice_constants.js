@@ -6,6 +6,8 @@ const NUM_COLS = 8 * BASE;
 
 const CELL_SIZE = HEIGHT_PX / NUM_ROWS;
 
+// const BPM_CONST = 120;
+
 const MIX_COEFFICIENT = 1.0;
 const ANIMATION_TIME_COEFFICIENT = 1.0;
 

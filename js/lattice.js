@@ -3,7 +3,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var tinycolor = require('tinycolor2');
 
-const {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE, PIXEL_REFRESH_RATE} = require('./lattice_constants');
+const {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE, PIXEL_REFRESH_RATE, MAX_SIZE} = require('./lattice_constants');
 const {ColorInfluence, RotationInfluence, SizeInfluence} = require('./influence');
 const InfluenceCircle = require('./influence_circle');
 
@@ -62,13 +62,13 @@ const ALL_REFRESH_ALGORITHMS = [RIPPLE_REFRESH_ALGORITHM, SECTOR_REFRESH_ALGORIT
 const REFRESH_ALGORITHM = ALL_REFRESH_ALGORITHMS[2];
 
 var influences = [
-    new ColorInfluence({startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: '#f22', index: 0}),
-    new ColorInfluence({startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: '#2f2', index: 1}),
-    new ColorInfluence({startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: '#22f', index: 2}),
+    new ColorInfluence({startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#800'), index: 0}),
+    new ColorInfluence({startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#080'), index: 1}),
+    new ColorInfluence({startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: tinycolor('#008'), index: 2}),
 
-    new SizeInfluence({startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: CELL_SIZE * 0.5}),
-    new SizeInfluence({startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: CELL_SIZE * 0.5}),
-    new SizeInfluence({startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: CELL_SIZE * 0.5}),
+    new SizeInfluence({startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: MAX_SIZE * 0.5}),
+    new SizeInfluence({startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: MAX_SIZE * 0.5}),
+    new SizeInfluence({startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: MAX_SIZE * 0.5}),
 
     new RotationInfluence({startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: 0}),
     new RotationInfluence({startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: 0}),
@@ -78,7 +78,7 @@ var influences = [
 var ColorPixel = React.createClass({
     componentDidMount: function() {
         this._refreshOffset = REFRESH_ALGORITHM(this.props.row, this.props.col);
-        setTimeout(this._update, this._refreshOffset);
+        setInterval(this._update, this._refreshOffset);
     },
     getInitialState: function() {
         return {
@@ -88,7 +88,6 @@ var ColorPixel = React.createClass({
         };
     },
     _update: function() {
-        setTimeout(this._update, PIXEL_REFRESH_RATE);
         // whether to oscillate (for diamonds/sectors)
         // setTimeout(this._update, PIXEL_REFRESH_RATE * 2 - this._refreshOffset * 2);
         this._refreshOffset = PIXEL_REFRESH_RATE - this._refreshOffset;

@@ -1,7 +1,9 @@
 body {
     margin: 0;
+    overflow: hidden;
 }
 .main {
     background: #000;
     height: 800px;
+    overflow: hidden;
 }

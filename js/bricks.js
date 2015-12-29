@@ -3,19 +3,25 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var MinHeap = require('min-heap');
 var getPossibleOrientation = require('./brick_possible_orientation');
+var updateHue = require('./update_hue');
 
-const {WIDTH_PX, HEIGHT_PX} = require('./beatmath_constants');
+var SAT_COEFF = 1.5;
+var BRI_COEFF = 0.6;
 
-const {POSITION_REFRESH_RATE} = require('./brick_constants');
+const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('./beatmath_constants');
+
+const {POSITION_REFRESH_RATE, ENABLE_HUE_ALTERNATING} = require('./brick_constants');
 
 const {BrickColor, BrickPosition} = require('./brick_properties');
 
-const TRIANGLE_GENERATING_RATE = 250;
-const BRICK_COLOR_REFRESH_RATE = 500;
-const MAX_TRIANGLES_TO_EXTRACT = 12;
+const BPM_CONST = 123;
 
-const BRICK_SCALE = 20;
-const RENDER_DISTANCE_CUTOFF = 500 / BRICK_SCALE;
+const TRIANGLE_GENERATING_RATE = 60 * 1000 / BPM_CONST;
+const BRICK_COLOR_REFRESH_RATE = 500;
+const MAX_TRIANGLES_TO_EXTRACT = 24;
+
+const BRICK_SCALE = 16;
+const RENDER_DISTANCE_CUTOFF = 240 / BRICK_SCALE;
 
 const EXTRACTION_DISTANCE_TOLERANCE = 4;
 const POSITION_OFFSET_REFRESH_RATE = Math.max(TRIANGLE_GENERATING_RATE, POSITION_REFRESH_RATE);
@@ -171,8 +177,8 @@ var BrickGrid = React.createClass({
         };
 
         return (
-            <svg width={WIDTH_PX} height={HEIGHT_PX} className="brickGrid">
-                <g transform={`translate(${WIDTH_PX / 2}, ${HEIGHT_PX / 2})`}>
+            <svg width={WIDTH_PX} height={DESIRED_HEIGHT_PX} className="brickGrid">
+                <g transform={`translate(${WIDTH_PX / 2}, ${DESIRED_HEIGHT_PX / 2})`}>
                     <g style={style}>
                         {triangles}
                     </g>
@@ -210,7 +216,20 @@ var flushHeap = function() {
     }
 };
 
+var tick = 0;
+var updateColors = function() {
+    _.times(3, i => {
+        var lightIndex = i + tick % 3;
+        updateHue(lightIndex, getFillForOrientation(i * 2), {satCoeff: SAT_COEFF, briCoeff: BRI_COEFF});
+    });
+    tick++;
+};
+
 setInterval(flushHeap, HEAP_FLUSH_RATE);
+
+if (ENABLE_HUE_ALTERNATING) {
+    setInterval(updateColors, TRIANGLE_GENERATING_RATE);
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     ReactDOM.render(

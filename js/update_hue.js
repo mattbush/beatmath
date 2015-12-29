@@ -3,15 +3,15 @@ var _ = require('underscore');
 const {HUE_BRIDGE_IP_ADDRESS, HUE_API_KEY, NUM_LIGHTS} = require('./hue_constants');
 
 const HUE_THROTTLE_RATE_MS = 200;
-const HUE_TRANSITION_TIME_MS = 100;
+const HUE_TRANSITION_TIME_MS = 10;
 
 const HUE_TRANSITION_TIME_CS = Math.round(HUE_TRANSITION_TIME_MS / 10);
 
-var updateHueLightHelper = function(lightNumber, color) {
+var updateHueLightHelper = function(lightNumber, color, {satCoeff = 1, briCoeff = 1}) {
     let {h, s, v} = color.toHsv();
     h = Math.floor(h * 65534 / 360);
-    s = Math.floor(s * 254);
-    v = Math.floor(v * 254);
+    s = Math.floor(Math.min(s * satCoeff, 1) * 254);
+    v = Math.floor(Math.min(v * briCoeff, 1) * 254);
     lightNumber++; // 1-index
 
     var url = `http://${HUE_BRIDGE_IP_ADDRESS}/api/${HUE_API_KEY}/lights/${lightNumber}/state`;
@@ -29,11 +29,11 @@ var throttledUpdateFnsPerLight = _.times(NUM_LIGHTS, lightNum => {
     );
 });
 
-var updateHue = function(lightNumber, color) {
+var updateHue = function(lightNumber, color, options = {}) {
     if (lightNumber < 0 || lightNumber >= NUM_LIGHTS || typeof lightNumber !== 'number') {
         return;
     }
-    throttledUpdateFnsPerLight[lightNumber](color);
+    throttledUpdateFnsPerLight[lightNumber](color, options);
 };
 
 module.exports = updateHue;
