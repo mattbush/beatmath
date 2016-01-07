@@ -1,19 +1,4 @@
-body {
-    margin: 0;
-    overflow: hidden;
-}
-.main {
-    background: #000;
-    margin: auto;
-    text-align: center;
-    overflow: hidden;
-}
-.rotatingCore {
-    font-size: 36pt;
-}
-
 .line {
     fill: none;
-/*    stroke: #fff;*/
     stroke-width: 0.1px;
 }
