@@ -1,7 +1,3 @@
-body {
-    margin: 0;
-    background: #000;
-}
 .anagramTextInput {
     opacity: 0;
     position: fixed;
@@ -16,9 +12,6 @@ body {
     background-size: 1280px 800px;
     opacity: .25;
     z-index: -1;
-}
-.main {
-    height: 800px;
 }
 .letter {
     font-family: 'Futura', sans-serif;
