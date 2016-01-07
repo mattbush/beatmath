@@ -4,6 +4,7 @@ var ReactDOM = require('react-dom');
 var MinHeap = require('min-heap');
 var getPossibleOrientation = require('./brick_possible_orientation');
 var updateHue = require('./update_hue');
+var tinycolor = require('tinycolor2');
 
 var SAT_COEFF = 1.5;
 var BRI_COEFF = 0.6;
@@ -20,8 +21,8 @@ const TRIANGLE_GENERATING_RATE = 60 * 1000 / BPM_CONST;
 const BRICK_COLOR_REFRESH_RATE = 500;
 const MAX_TRIANGLES_TO_EXTRACT = 24;
 
-const BRICK_SCALE = 16;
-const RENDER_DISTANCE_CUTOFF = 240 / BRICK_SCALE;
+const BRICK_SCALE = 30;
+const RENDER_DISTANCE_CUTOFF = 360 / BRICK_SCALE;
 
 const EXTRACTION_DISTANCE_TOLERANCE = 4;
 const POSITION_OFFSET_REFRESH_RATE = Math.max(TRIANGLE_GENERATING_RATE, POSITION_REFRESH_RATE);
@@ -36,21 +37,29 @@ const NEIGHBOR_OFFSETS_BY_PARITY = [NEIGHBOR_OFFSETS_EVEN, NEIGHBOR_OFFSETS_ODD]
 const HEAP_FLUSH_RATE = 10000;
 const NUM_ITEMS_TO_SAVE_IN_FLUSH = 32;
 
+// var brickColors = [
+//     new BrickColor({startValue: '#fd8', index: 0}),
+//     new BrickColor({startValue: '#180', index: 0}),
+//     new BrickColor({startValue: '#f10', index: 0}),
+// ];
 var brickColors = [
-    new BrickColor({startValue: '#fd8', index: 0}),
-    new BrickColor({startValue: '#180', index: 0}),
-    new BrickColor({startValue: '#f10', index: 0}),
+    tinycolor({r: 249, g: 199, b: 76}),
+    tinycolor({r: 254, g: 223, b: 94}),
+    tinycolor('#000'),
+    tinycolor({r: 216, g: 70, b: 80}),
+    tinycolor({r: 0, g: 205, b: 255}),
+    tinycolor({r: 0, g: 205, b: 255}),
 ];
 
 var brickPosition = new BrickPosition();
 
 var getFillForOrientation = function(orientation) {
-    var orientationGroup = Math.floor(orientation / 2);
-    return brickColors[orientationGroup].getValue();
+    return brickColors[orientation];
 };
 var updateFillForOrientation = function(previousFill, orientation) {
-    var orientationGroup = Math.floor(orientation / 2);
-    return brickColors[orientationGroup].mix(previousFill);
+    return previousFill;
+    // var orientationGroup = Math.floor(orientation / 2);
+    // return brickColors[orientationGroup].mix(previousFill);
 };
 
 var Triangle = React.createClass({
@@ -172,7 +181,7 @@ var BrickGrid = React.createClass({
         }
 
         var style = {
-            transform: `scale(${BRICK_SCALE}) translate(${-brickPosition.getX()}px, ${-brickPosition.getY()}px)`,
+            transform: `scale(${BRICK_SCALE}, ${BRICK_SCALE * 0.7}) translate(${-brickPosition.getX()}px, ${-brickPosition.getY()}px)`,
             transition: `transform ${POSITION_OFFSET_REFRESH_RATE / 1000}s linear`,
         };
 
