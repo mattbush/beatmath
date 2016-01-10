@@ -3,9 +3,9 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var tinycolor = require('tinycolor2');
 
-const {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE, PIXEL_REFRESH_RATE, MAX_SIZE} = require('./lattice_constants');
-const {ColorInfluence, RotationInfluence, SizeInfluence} = require('./influence');
-const InfluenceCircle = require('./influence_circle');
+const {NUM_COLS, NUM_ROWS, WIDTH_PX, HEIGHT_PX, CELL_SIZE, PIXEL_REFRESH_RATE, MAX_SIZE} = require('js/lattice_constants');
+const {ColorInfluence, RotationInfluence, SizeInfluence} = require('js/influence');
+const InfluenceCircle = require('js/influence_circle');
 
 const SHOW_INFLUENCES = false;
 

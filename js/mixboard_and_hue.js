@@ -1,9 +1,9 @@
 require('regenerator/runtime');
 var _ = require('underscore');
 var tinycolor = require('tinycolor2');
-var Mixboard = require('./mixboard');
-var updateHue = require('./update_hue');
-var {mixboardWheel, mixboardFader} = require('./mixboard_constants');
+var Mixboard = require('js/mixboard');
+var updateHue = require('js/update_hue');
+var {mixboardWheel, mixboardFader} = require('js/mixboard_constants');
 
 var startColor = {h: 60, s: 0.8, v: 0.8};
 

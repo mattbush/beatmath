@@ -1,8 +1,8 @@
 var tinycolor = require('tinycolor2');
-var updateHue = require('./update_hue');
-var {ColorProperty, AngleProperty} = require('./moving_property');
+var updateHue = require('js/update_hue');
+var {ColorProperty, AngleProperty} = require('js/moving_property');
 
-const {ENABLE_HUE, COLOR_REFRESH_RATE, POSITION_REFRESH_RATE, POSITION_SPEED, COLOR_MIX_COEFFICIENT} = require('./brick_constants');
+const {ENABLE_HUE, COLOR_REFRESH_RATE, POSITION_REFRESH_RATE, POSITION_SPEED, COLOR_MIX_COEFFICIENT} = require('js/brick_constants');
 
 const DEG_TO_RAD = Math.PI / 180;
 const INV_SQRT_3 = 1 / Math.sqrt(3);

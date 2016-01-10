@@ -3,12 +3,12 @@ var _ = require('underscore');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
-var AnagramSet = require('./anagram_set');
+var AnagramSet = require('js/anagram_set');
 var tinycolor = require('tinycolor2');
 
 var timeout = duration => new Promise(cb => setTimeout(cb, duration));
 
-const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('./beatmath_constants.js');
+const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('js/beatmath_constants.js');
 
 const LETTER_SPACING = 64;
 const JUMP_UNIT_HEIGHT = -16;

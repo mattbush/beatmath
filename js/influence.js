@@ -1,8 +1,8 @@
 var tinycolor = require('tinycolor2');
-var updateHue = require('./update_hue');
-var {ColorProperty, LinearProperty} = require('./moving_property');
+var updateHue = require('js/update_hue');
+var {ColorProperty, LinearProperty} = require('js/moving_property');
 
-const {CELL_SIZE, NUM_ROWS, NUM_COLS, INFLUENCE_REFRESH_RATE, MIX_COEFFICIENT, ENABLE_HUE, MAX_SIZE} = require('./lattice_constants');
+const {CELL_SIZE, NUM_ROWS, NUM_COLS, INFLUENCE_REFRESH_RATE, MIX_COEFFICIENT, ENABLE_HUE, MAX_SIZE} = require('js/lattice_constants');
 
 class Influence {
     constructor({startRow, startCol}) {

@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var BrickGrid = require('./components/bricks/BrickGrid');
+var BrickGrid = require('js/components/bricks/BrickGrid');
 
 document.addEventListener('DOMContentLoaded', function() {
     ReactDOM.render(

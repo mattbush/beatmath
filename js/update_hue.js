@@ -1,6 +1,6 @@
 var _ = require('underscore');
 
-const {HUE_BRIDGE_IP_ADDRESS, HUE_API_KEY, NUM_LIGHTS} = require('./hue_constants');
+const {HUE_BRIDGE_IP_ADDRESS, HUE_API_KEY, NUM_LIGHTS} = require('js/hue_constants');
 
 const HUE_THROTTLE_RATE_MS = 200;
 const HUE_TRANSITION_TIME_MS = 10;

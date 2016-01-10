@@ -2,9 +2,9 @@ var _ = require('underscore');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var tinycolor = require('tinycolor2');
-var updateHue = require('./update_hue');
+var updateHue = require('js/update_hue');
 
-const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('./beatmath_constants');
+const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('js/beatmath_constants');
 
 const BPM_CONST = 128;
 
