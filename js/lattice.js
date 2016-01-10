@@ -4,7 +4,7 @@ var tinycolor = require('tinycolor2');
 var LatticeGrid = require('js/components/lattice/LatticeGrid');
 
 const {NUM_COLS, NUM_ROWS, MAX_SIZE} = require('js/lattice_constants');
-const {ColorInfluence, RotationInfluence, SizeInfluence} = require('js/influence');
+const {ColorInfluence, RotationInfluence, SizeInfluence} = require('js/state/lattice/Influence');
 
 var influences = [
     new ColorInfluence({startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#800'), index: 0}),

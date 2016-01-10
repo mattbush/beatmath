@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var React = require('react');
 var tinycolor = require('tinycolor2');
-const InfluenceCircle = require('js/influence_circle');
+const InfluenceCircle = require('js/components/lattice/InfluenceCircle');
 const latticeRefreshAlgorithm = require('js/state/lattice/latticeRefreshAlgorithm');
 
 const {WIDTH_PX, HEIGHT_PX, CELL_SIZE, PIXEL_REFRESH_RATE} = require('js/lattice_constants');
