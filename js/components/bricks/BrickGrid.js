@@ -2,19 +2,11 @@ var _ = require('underscore');
 var React = require('react');
 var MinHeap = require('min-heap');
 var getPossibleOrientation = require('js/brick_possible_orientation');
-var updateHue = require('js/update_hue');
+var BrickTriangle = require('js/components/bricks/BrickTriangle');
 
 const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('js/beatmath_constants');
 
-var SAT_COEFF = 1.5;
-var BRI_COEFF = 0.6;
-
-const {POSITION_REFRESH_RATE, ENABLE_HUE_ALTERNATING} = require('js/brick_constants');
-
-const BPM_CONST = 123;
-
-const TRIANGLE_GENERATING_RATE = 60 * 1000 / BPM_CONST;
-const BRICK_COLOR_REFRESH_RATE = 500;
+const {POSITION_REFRESH_RATE, TRIANGLE_GENERATING_RATE} = require('js/brick_constants');
 
 const BRICK_SCALE = 16;
 const MAX_TRIANGLES_TO_EXTRACT = 24;
@@ -30,72 +22,7 @@ const NEIGHBOR_OFFSETS_BY_PARITY = [NEIGHBOR_OFFSETS_EVEN, NEIGHBOR_OFFSETS_ODD]
 const HEAP_FLUSH_RATE = 10000;
 const NUM_ITEMS_TO_SAVE_IN_FLUSH = 32;
 
-const INV_SQRT_3 = 1 / Math.sqrt(3);
-const TWO_X_INV_SQRT_3 = 2 / Math.sqrt(3);
-
-const {BrickColor, BrickPosition} = require('js/brick_properties');
-
-var brickColors = [
-    new BrickColor({startValue: '#fd8', index: 0}),
-    new BrickColor({startValue: '#180', index: 0}),
-    new BrickColor({startValue: '#f10', index: 0}),
-];
-
-var getFillForOrientation = function(orientation) {
-    var orientationGroup = Math.floor(orientation / 2);
-    return brickColors[orientationGroup].getValue();
-};
-var updateFillForOrientation = function(previousFill, orientation) {
-    var orientationGroup = Math.floor(orientation / 2);
-    return brickColors[orientationGroup].mix(previousFill);
-};
-
-var tick = 0;
-var updateColors = function() {
-    _.times(3, i => {
-        var lightIndex = i + tick % 3;
-        updateHue(lightIndex, getFillForOrientation(i * 2), {satCoeff: SAT_COEFF, briCoeff: BRI_COEFF});
-    });
-    tick++;
-};
-
-if (ENABLE_HUE_ALTERNATING) {
-    setInterval(updateColors, TRIANGLE_GENERATING_RATE);
-}
-
-var Triangle = React.createClass({
-    getInitialState: function() {
-        return {
-            color: getFillForOrientation(this.props.orientation),
-        };
-    },
-    componentDidMount: function() {
-        this._intervalId = setInterval(this._updateColor, BRICK_COLOR_REFRESH_RATE);
-    },
-    componentWillUnmount: function() {
-        clearInterval(this._intervalId);
-    },
-    _updateColor: function() {
-        this.setState({
-            color: updateFillForOrientation(this.state.color, this.props.orientation),
-        });
-    },
-    render: function() {
-        var x = this.props.x * INV_SQRT_3;
-        var y = this.props.y;
-
-        var points;
-
-        if (this.props.orientation % 2 === 0) {
-            points = `${x + INV_SQRT_3},${y + 1} ${x - TWO_X_INV_SQRT_3},${y} ${x + INV_SQRT_3},${y - 1}`;
-        } else {
-            points = `${x - INV_SQRT_3},${y + 1} ${x + TWO_X_INV_SQRT_3},${y} ${x - INV_SQRT_3},${y - 1}`;
-        }
-        return (
-            <polygon className="triangle" fill={this.state.color.toHexString(true)} points={points} />
-        );
-    },
-});
+const {BrickPosition} = require('js/brick_properties');
 
 var brickPosition = new BrickPosition();
 
@@ -214,7 +141,7 @@ var BrickGrid = React.createClass({
         for (let coords in grid) {
             var [x, y] = coords.split(',').map(Number);
             if (brickPosition.getDistance({x, y}) < RENDER_DISTANCE_CUTOFF) {
-                triangles.push(<Triangle key={coords} x={x} y={y} orientation={grid[coords]} />);
+                triangles.push(<BrickTriangle key={coords} x={x} y={y} orientation={grid[coords]} />);
             } else {
                 this._coordsToDelete.push(coords);
             }
