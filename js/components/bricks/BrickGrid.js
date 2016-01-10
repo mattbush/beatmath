@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var React = require('react');
 var MinHeap = require('min-heap');
-var getPossibleOrientation = require('js/brick_possible_orientation');
+var getPossibleOrientation = require('js/state/bricks/getPossibleOrientation');
 var BrickTriangle = require('js/components/bricks/BrickTriangle');
 
 const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('js/beatmath_constants');
