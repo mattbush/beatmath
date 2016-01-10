@@ -12,7 +12,7 @@ var BRI_COEFF = 0.6;
 
 const {ENABLE_HUE_ALTERNATING, TRIANGLE_GENERATING_RATE} = require('js/brick_constants');
 
-const {BrickColor} = require('js/brick_properties');
+const BrickColor = require('js/state/bricks/BrickColor');
 
 var brickColors = [
     new BrickColor({startValue: '#fd8', index: 0}),

@@ -22,7 +22,7 @@ const NEIGHBOR_OFFSETS_BY_PARITY = [NEIGHBOR_OFFSETS_EVEN, NEIGHBOR_OFFSETS_ODD]
 const HEAP_FLUSH_RATE = 10000;
 const NUM_ITEMS_TO_SAVE_IN_FLUSH = 32;
 
-const {BrickPosition} = require('js/brick_properties');
+const BrickPosition = require('js/state/bricks/BrickPosition');
 
 var brickPosition = new BrickPosition();
 
