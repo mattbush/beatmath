@@ -10,7 +10,7 @@ var gray = tinycolor('#909090');
 var LatticePixel = React.createClass({
     componentDidMount: function() {
         this._refreshOffset = latticeRefreshAlgorithm(this.props.row, this.props.col);
-        setInterval(this._update, this._refreshOffset);
+        setTimeout(this._firstUpdate, this._refreshOffset);
     },
     getInitialState: function() {
         return {
@@ -19,10 +19,14 @@ var LatticePixel = React.createClass({
             rotation: 0,
         };
     },
+    _firstUpdate: function() {
+        setInterval(this._update, PIXEL_REFRESH_RATE);
+        this._update();
+    },
     _update: function() {
         // whether to oscillate (for diamonds/sectors)
         // setTimeout(this._update, PIXEL_REFRESH_RATE * 2 - this._refreshOffset * 2);
-        this._refreshOffset = PIXEL_REFRESH_RATE - this._refreshOffset;
+        // this._refreshOffset = PIXEL_REFRESH_RATE - this._refreshOffset;
         var state = _.clone(this.state);
         _.each(this.props.influences, influence => influence.mix(state, this.props.row, this.props.col));
         this.setState(state);

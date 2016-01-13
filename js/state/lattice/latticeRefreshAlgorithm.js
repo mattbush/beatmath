@@ -16,8 +16,8 @@ var DIAMOND_REFRESH_ALGORITHM = function(row, col) {
 
 // 10, 0|1, 0|1 is standard
 // 3.5-4, 1, 2 is a nice combo
-const RIPPLE_RADIUS = 12;
-const NUM_SPIRALS = 1;
+const RIPPLE_RADIUS = 10;
+const NUM_SPIRALS = 3;
 const MANHATTAN_COEFFICIENT = 0;
 var RIPPLE_REFRESH_ALGORITHM = function(row, col) {
     var dx = col - (NUM_COLS / 2);
@@ -48,4 +48,4 @@ var SECTOR_REFRESH_ALGORITHM = function(row, col) {
 
 const ALL_REFRESH_ALGORITHMS = [RIPPLE_REFRESH_ALGORITHM, SECTOR_REFRESH_ALGORITHM, DIAMOND_REFRESH_ALGORITHM];
 
-module.exports = ALL_REFRESH_ALGORITHMS[2];
+module.exports = ALL_REFRESH_ALGORITHMS[0];

@@ -32,8 +32,8 @@ class Influence {
         return this._mainParameter;
     }
     mix(pixelState, row, col) {
-        let dx = this._colParameter.getValue() - col;
-        let dy = this._rowParameter.getValue() - row;
+        let dx = this.getCol() - col;
+        let dy = this.getRow() - row;
         let distance = Math.sqrt(dx * dx + dy * dy);
 //            let mixAmount = 500 / (distance * 5 + 5);
         let mixAmount = ((120 - (distance * 8)) * MIX_COEFFICIENT) / 100;
@@ -142,4 +142,46 @@ class ColorInfluence extends Influence {
     }
 }
 
-module.exports = {ColorInfluence, RotationInfluence, SizeInfluence};
+var ORBIT_RADIUS = 16;
+class ColorOrbitInfluence extends Influence {
+    constructor(params) {
+        super(params);
+        this._mainParameter = new MovingColorParameter({
+            max: 5,
+            variance: 1,
+            start: params.startValue,
+        });
+        this._index = params.index;
+        this._angle = params.startAngle;
+        this._recalcRowAndCol();
+        this._startColor = tinycolor(params.startValue.toHexString());
+    }
+    _mixByParameterType(pixelParameter, mixAmount) {
+        const influenceParameter = this._startColor;
+        return tinycolor.mix(pixelParameter, influenceParameter, mixAmount * 100);
+    }
+    update() {
+        this._angle += 10;
+        this._angle = (this._angle + 360) % 360;
+        this._recalcRowAndCol();
+        super.update();
+    }
+    _recalcRowAndCol() {
+        this._col = NUM_COLS / 2 + Math.cos(this._angle * Math.PI / 180) * ORBIT_RADIUS;
+        this._row = NUM_ROWS / 2 + Math.sin(this._angle * Math.PI / 180) * ORBIT_RADIUS;
+    }
+    getColor() {
+        return this._startColor;
+    }
+    _getPixelStateKey() {
+        return 'color';
+    }
+    getCol() {
+        return this._col;
+    }
+    getRow() {
+        return this._row;
+    }
+}
+
+module.exports = {ColorInfluence, RotationInfluence, SizeInfluence, ColorOrbitInfluence};

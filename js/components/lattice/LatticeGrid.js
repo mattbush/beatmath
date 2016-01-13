@@ -7,14 +7,14 @@ var BeatmathFrame = require('js/components/BeatmathFrame');
 const {NUM_COLS, NUM_ROWS, MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
 
 var tinycolor = require('tinycolor2');
-var {ColorInfluence, RotationInfluence, SizeInfluence} = require('js/state/lattice/Influence');
+var {ColorOrbitInfluence, RotationInfluence, SizeInfluence} = require('js/state/lattice/Influence');
 
-const SHOW_INFLUENCES = false;
+const SHOW_INFLUENCES = true;
 
 var influences = [
-    new ColorInfluence({startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#800'), index: 0}),
-    new ColorInfluence({startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#080'), index: 1}),
-    new ColorInfluence({startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: tinycolor('#008'), index: 2}),
+    new ColorOrbitInfluence({startAngle: 0, startValue: tinycolor('#800'), index: 0}),
+    new ColorOrbitInfluence({startAngle: 120, startValue: tinycolor('#080'), index: 1}),
+    new ColorOrbitInfluence({startAngle: 240, startValue: tinycolor('#008'), index: 2}),
 
     new SizeInfluence({startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: MAX_SIZE * 0.5}),
     new SizeInfluence({startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: MAX_SIZE * 0.5}),
