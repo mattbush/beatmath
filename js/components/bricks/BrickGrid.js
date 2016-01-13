@@ -2,9 +2,9 @@ var React = require('react');
 var BrickTriangle = require('js/components/bricks/BrickTriangle');
 var BrickGridState = require('js/state/bricks/BrickGridState');
 
-const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('js/beatmath_constants');
+const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('js/parameters/BeatmathConstants');
 
-const {BRICK_SCALE, POSITION_REFRESH_RATE, TRIANGLE_GENERATING_RATE} = require('js/brick_constants');
+const {BRICK_SCALE, POSITION_REFRESH_RATE, TRIANGLE_GENERATING_RATE} = require('js/parameters/bricks/BricksConstants');
 
 const POSITION_OFFSET_REFRESH_RATE = Math.max(TRIANGLE_GENERATING_RATE, POSITION_REFRESH_RATE);
 

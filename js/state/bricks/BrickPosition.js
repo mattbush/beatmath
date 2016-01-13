@@ -1,6 +1,6 @@
 var {MovingAngleParameter} = require('js/parameters/MovingParameter');
 
-const {POSITION_REFRESH_RATE, POSITION_SPEED} = require('js/brick_constants');
+const {POSITION_REFRESH_RATE, POSITION_SPEED} = require('js/parameters/bricks/BricksConstants');
 
 const DEG_TO_RAD = Math.PI / 180;
 const INV_SQRT_3 = 1 / Math.sqrt(3);

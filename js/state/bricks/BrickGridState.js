@@ -3,7 +3,7 @@ var MinHeap = require('min-heap');
 var getPossibleOrientation = require('js/state/bricks/getPossibleOrientation');
 const BrickPosition = require('js/state/bricks/BrickPosition');
 
-const {BRICK_SCALE} = require('js/brick_constants');
+const {BRICK_SCALE} = require('js/parameters/bricks/BricksConstants');
 
 const HEAP_FLUSH_RATE = 10000;
 const NUM_ITEMS_TO_SAVE_IN_FLUSH = 32;

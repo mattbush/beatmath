@@ -3,7 +3,7 @@ var ReactDOM = require('react-dom');
 var tinycolor = require('tinycolor2');
 var LatticeGrid = require('js/components/lattice/LatticeGrid');
 
-const {NUM_COLS, NUM_ROWS, MAX_SIZE} = require('js/lattice_constants');
+const {NUM_COLS, NUM_ROWS, MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
 const {ColorInfluence, RotationInfluence, SizeInfluence} = require('js/state/lattice/Influence');
 
 var influences = [

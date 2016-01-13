@@ -6,8 +6,8 @@ var DancingText = require('js/components/anagrams/DancingText');
 
 var timeout = duration => new Promise(cb => setTimeout(cb, duration));
 
-const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('js/beatmath_constants.js');
-const {ANAGRAM_SET_CYCLE_TIME, LETTER_TRANSITION_TIME} = require('js/anagram_constants');
+const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('js/parameters/BeatmathConstants.js');
+const {ANAGRAM_SET_CYCLE_TIME, LETTER_TRANSITION_TIME} = require('js/parameters/anagrams/AnagramsConstants');
 
 var AnagramSetCycler = React.createClass({
     getInitialState: function() {

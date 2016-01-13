@@ -10,7 +10,7 @@ const BRICK_COLOR_REFRESH_RATE = 500;
 var SAT_COEFF = 1.5;
 var BRI_COEFF = 0.6;
 
-const {ENABLE_HUE_ALTERNATING, TRIANGLE_GENERATING_RATE} = require('js/brick_constants');
+const {ENABLE_HUE_ALTERNATING, TRIANGLE_GENERATING_RATE} = require('js/parameters/bricks/BricksConstants');
 
 const BrickColor = require('js/state/bricks/BrickColor');
 

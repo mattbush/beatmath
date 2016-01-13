@@ -1,8 +1,8 @@
 var React = require('react');
 var Letter = require('js/components/anagrams/Letter');
 
-const {WIDTH_PX} = require('js/beatmath_constants.js');
-const {LETTER_SPACING, WORD_TRANSITION_TIME} = require('js/anagram_constants');
+const {WIDTH_PX} = require('js/parameters/BeatmathConstants.js');
+const {LETTER_SPACING, WORD_TRANSITION_TIME} = require('js/parameters/anagrams/AnagramsConstants');
 
 var DancingText = React.createClass({
     render: function() {

@@ -1,4 +1,4 @@
-const {NUM_COLS, NUM_ROWS, PIXEL_REFRESH_RATE} = require('js/lattice_constants');
+const {NUM_COLS, NUM_ROWS, PIXEL_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
 
 const DIAMOND_SIZE = 10;
 const NUM_DIAMOND_SPIRALS = 0;

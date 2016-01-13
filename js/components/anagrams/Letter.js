@@ -2,7 +2,7 @@ var _ = require('underscore');
 var React = require('react');
 var tinycolor = require('tinycolor2');
 
-const {LETTER_TILT_TIME} = require('js/anagram_constants');
+const {LETTER_TILT_TIME} = require('js/parameters/anagrams/AnagramsConstants');
 
 var colorCache = {};
 var getColorForLetter = function(letter) {
