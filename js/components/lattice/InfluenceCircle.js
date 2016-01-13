@@ -1,10 +1,16 @@
 var React = require('react');
+var ParameterBindingsMixin = require('js/components/ParameterBindingsMixin');
 
 const {CELL_SIZE, INFLUENCE_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
 
 var InfluenceCircle = React.createClass({
-    componentDidMount: function() {
-        this.props.influence.addListener(this.forceUpdate.bind(this));
+    mixins: [ParameterBindingsMixin],
+    getParameterBindings: function() {
+        return {
+            'main': this.props.influence.getMainParameter(),
+            'row': this.props.influence.getRowParameter(),
+            'col': this.props.influence.getColParameter(),
+        };
     },
     render: function() {
         var influence = this.props.influence;

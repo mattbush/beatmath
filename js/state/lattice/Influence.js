@@ -6,8 +6,6 @@ const {CELL_SIZE, NUM_ROWS, NUM_COLS, INFLUENCE_REFRESH_RATE, MIX_COEFFICIENT, E
 
 class Influence {
     constructor({startRow, startCol}) {
-        this._listeners = [];
-
         this._colParameter = new MovingLinearParameter({
             min: 0,
             max: NUM_COLS,
@@ -24,8 +22,14 @@ class Influence {
 
         setInterval(this.update.bind(this), INFLUENCE_REFRESH_RATE);
     }
-    addListener(fn) {
-        this._listeners.push(fn);
+    getColParameter() {
+        return this._colParameter;
+    }
+    getRowParameter() {
+        return this._rowParameter;
+    }
+    getMainParameter() {
+        return this._mainParameter;
     }
     mix(pixelState, row, col) {
         let dx = this._colParameter.getValue() - col;
@@ -49,9 +53,6 @@ class Influence {
         this._mainParameter.update();
         this._colParameter.update();
         this._rowParameter.update();
-        for (let listener of this._listeners) {
-            listener();
-        }
     }
     getCol() {
         return this._colParameter.getValue();
