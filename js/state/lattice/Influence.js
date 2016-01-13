@@ -1,6 +1,6 @@
 var tinycolor = require('tinycolor2');
 var updateHue = require('js/update_hue');
-var {ColorProperty, LinearProperty} = require('js/moving_property');
+var {MovingColorParameter, MovingLinearParameter} = require('js/parameters/MovingParameter');
 
 const {CELL_SIZE, NUM_ROWS, NUM_COLS, INFLUENCE_REFRESH_RATE, MIX_COEFFICIENT, ENABLE_HUE, MAX_SIZE} = require('js/lattice_constants');
 
@@ -8,14 +8,14 @@ class Influence {
     constructor({startRow, startCol}) {
         this._listeners = [];
 
-        this._colProperty = new LinearProperty({
+        this._colParameter = new MovingLinearParameter({
             min: 0,
             max: NUM_COLS,
             variance: 0.25,
             start: startCol,
         });
 
-        this._rowProperty = new LinearProperty({
+        this._rowParameter = new MovingLinearParameter({
             min: 0,
             max: NUM_ROWS,
             variance: 0.25,
@@ -28,36 +28,36 @@ class Influence {
         this._listeners.push(fn);
     }
     mix(pixelState, row, col) {
-        let dx = this._colProperty.value - col;
-        let dy = this._rowProperty.value - row;
+        let dx = this._colParameter.getValue() - col;
+        let dy = this._rowParameter.getValue() - row;
         let distance = Math.sqrt(dx * dx + dy * dy);
 //            let mixAmount = 500 / (distance * 5 + 5);
         let mixAmount = ((120 - (distance * 8)) * MIX_COEFFICIENT) / 100;
         var pixelStateKey = this._getPixelStateKey();
         if (mixAmount > 0) {
             mixAmount = Math.min(mixAmount, 1);
-            pixelState[pixelStateKey] = this._mixByPropertyType(pixelState[pixelStateKey], mixAmount);
+            pixelState[pixelStateKey] = this._mixByParameterType(pixelState[pixelStateKey], mixAmount);
         }
     }
     _getPixelStateKey() {
         throw new Error('abstract method');
     }
-    _mixByPropertyType() {
+    _mixByParameterType() {
         throw new Error('abstract method');
     }
     update() {
-        this._mainProperty.update();
-        this._colProperty.update();
-        this._rowProperty.update();
+        this._mainParameter.update();
+        this._colParameter.update();
+        this._rowParameter.update();
         for (let listener of this._listeners) {
             listener();
         }
     }
     getCol() {
-        return this._colProperty.value;
+        return this._colParameter.getValue();
     }
     getRow() {
-        return this._rowProperty.value;
+        return this._rowParameter.getValue();
     }
     getColor() {
         return tinycolor('#999');
@@ -71,16 +71,16 @@ class Influence {
 }
 
 class LinearInfluence extends Influence {
-    _mixByPropertyType(pixelProperty, mixAmount) {
-        const influenceProperty = this._mainProperty.value;
-        return mixAmount * influenceProperty + (1 - mixAmount) * pixelProperty;
+    _mixByParameterType(pixelParameter, mixAmount) {
+        const influenceParameter = this._mainParameter.getValue();
+        return mixAmount * influenceParameter + (1 - mixAmount) * pixelParameter;
     }
 }
 
 class SizeInfluence extends LinearInfluence {
     constructor(params) {
         super(params);
-        this._mainProperty = new LinearProperty({
+        this._mainParameter = new MovingLinearParameter({
             min: 1,
             max: MAX_SIZE,
             variance: 0.25,
@@ -88,7 +88,7 @@ class SizeInfluence extends LinearInfluence {
         });
     }
     getSize() {
-        return this._mainProperty.value;
+        return this._mainParameter.getValue();
     }
     _getPixelStateKey() {
         return 'size';
@@ -98,7 +98,7 @@ class SizeInfluence extends LinearInfluence {
 class RotationInfluence extends LinearInfluence {
     constructor(params) {
         super(params);
-        this._mainProperty = new LinearProperty({
+        this._mainParameter = new MovingLinearParameter({
             min: -90,
             max: 90,
             variance: 0.25,
@@ -106,7 +106,7 @@ class RotationInfluence extends LinearInfluence {
         });
     }
     getRotation() {
-        return this._mainProperty.value;
+        return this._mainParameter.getValue();
     }
     _getPixelStateKey() {
         return 'rotation';
@@ -116,25 +116,25 @@ class RotationInfluence extends LinearInfluence {
 class ColorInfluence extends Influence {
     constructor(params) {
         super(params);
-        this._mainProperty = new ColorProperty({
+        this._mainParameter = new MovingColorParameter({
             max: 5,
             variance: 1,
             start: params.startValue,
         });
         this._index = params.index;
     }
-    _mixByPropertyType(pixelProperty, mixAmount) {
-        const influenceProperty = this._mainProperty.value;
-        return tinycolor.mix(pixelProperty, influenceProperty, mixAmount * 100);
+    _mixByParameterType(pixelParameter, mixAmount) {
+        const influenceParameter = this._mainParameter.getValue();
+        return tinycolor.mix(pixelParameter, influenceParameter, mixAmount * 100);
     }
     update() {
         super.update();
         if (ENABLE_HUE) {
-            updateHue(this._index, this._mainProperty.value);
+            updateHue(this._index, this._mainParameter.getValue());
         }
     }
     getColor() {
-        return this._mainProperty.value;
+        return this._mainParameter.getValue();
     }
     _getPixelStateKey() {
         return 'color';
