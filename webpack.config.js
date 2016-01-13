@@ -21,5 +21,10 @@ module.exports = {
                 loader: 'babel', // 'babel-loader' is also a legal name to reference
             },
         ],
+    },
+    resolve: {
+        root: [
+            __dirname,
+        ],
     }
 };
