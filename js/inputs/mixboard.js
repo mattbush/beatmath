@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var {mixboardWheel, mixboardFader, mixboardWheelCoefficients} = require('js/mixboard_constants');
+var {mixboardWheel, mixboardFader, mixboardWheelCoefficients} = require('js/inputs/MixboardConstants');
 
 class Mixboard {
     constructor() {
