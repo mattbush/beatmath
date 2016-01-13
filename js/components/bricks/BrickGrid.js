@@ -1,8 +1,7 @@
 var React = require('react');
 var BrickTriangle = require('js/components/bricks/BrickTriangle');
 var BrickGridState = require('js/state/bricks/BrickGridState');
-
-const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('js/parameters/BeatmathConstants');
+var BeatmathFrame = require('js/components/BeatmathFrame');
 
 const {BRICK_SCALE, POSITION_REFRESH_RATE, TRIANGLE_GENERATING_RATE} = require('js/parameters/bricks/BricksConstants');
 
@@ -37,13 +36,11 @@ var BrickGrid = React.createClass({
         };
 
         return (
-            <svg width={WIDTH_PX} height={DESIRED_HEIGHT_PX} className="brickGrid">
-                <g transform={`translate(${WIDTH_PX / 2}, ${DESIRED_HEIGHT_PX / 2})`}>
-                    <g style={style}>
-                        {triangles}
-                    </g>
+            <BeatmathFrame>
+                <g style={style}>
+                    {triangles}
                 </g>
-            </svg>
+            </BeatmathFrame>
         );
     },
 });

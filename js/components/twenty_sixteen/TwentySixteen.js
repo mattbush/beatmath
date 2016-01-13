@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var React = require('react');
+var BeatmathFrame = require('js/components/BeatmathFrame');
 
 const ARRANGEMENTS = require('js/state/twenty_sixteen/arrangements');
 const NUM_GOLD = 20;
@@ -52,10 +53,12 @@ const TwentySixteen = React.createClass({
         };
 
         return (
-            <g style={style}>
-                {golds}
-                {blues}
-            </g>
+            <BeatmathFrame>
+                <g style={style}>
+                    {golds}
+                    {blues}
+                </g>
+            </BeatmathFrame>
         );
     },
 });

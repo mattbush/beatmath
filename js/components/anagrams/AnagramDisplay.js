@@ -3,10 +3,10 @@ var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var AnagramSet = require('js/state/anagrams/AnagramSet');
 var AnagramSetComponent = require('js/components/anagrams/AnagramSet');
 var DancingText = require('js/components/anagrams/DancingText');
+var BeatmathFrame = require('js/components/BeatmathFrame');
 
 var timeout = duration => new Promise(cb => setTimeout(cb, duration));
 
-const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('js/parameters/BeatmathConstants.js');
 const {ANAGRAM_SET_CYCLE_TIME, LETTER_TRANSITION_TIME} = require('js/parameters/anagrams/AnagramsConstants');
 
 var AnagramSetCycler = React.createClass({
@@ -142,13 +142,9 @@ var AnagramDisplay = React.createClass({
         return (
             <div>
                 {/* <div className="backgroundImage" style={{top: (DESIRED_HEIGHT_PX - HEIGHT_PX) / 2}} /> */}
-                <div className="main">
-                    <svg width={WIDTH_PX} height={DESIRED_HEIGHT_PX} className="brickGrid">
-                        <g transform={`translate(${WIDTH_PX / 2}, ${DESIRED_HEIGHT_PX / 2}) scale(1)`}>
-                            {this._renderContents()}
-                        </g>
-                    </svg>
-                </div>
+                <BeatmathFrame>
+                    {this._renderContents()}
+                </BeatmathFrame>
                 <input
                     autoFocus={true}
                     className="anagramTextInput"

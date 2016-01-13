@@ -5,9 +5,7 @@ var AnagramDisplay = require('js/components/anagrams/AnagramDisplay');
 
 document.addEventListener('DOMContentLoaded', function() {
     ReactDOM.render(
-      <div className="main">
-          <AnagramDisplay />
-      </div>,
+      <AnagramDisplay />,
       document.getElementById('start')
     );
 });

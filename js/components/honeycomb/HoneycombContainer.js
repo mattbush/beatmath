@@ -3,6 +3,7 @@ var React = require('react');
 
 let AnimationControlledMixin = require('js/components/honeycomb/AnimationControlledMixin');
 let HexagonGroup = require('js/components/honeycomb/HexagonGroup');
+var BeatmathFrame = require('js/components/BeatmathFrame');
 
 const {WIDTH_PX} = require('js/parameters/BeatmathConstants');
 
@@ -83,7 +84,7 @@ var HoneycombContainer = React.createClass({
     },
     render: function() {
         return (
-            <g>
+            <BeatmathFrame>
                 {_.times(NUM_CORES, i => {
                     var xOffset = WIDTH_PX / NUM_CORES * (i - (NUM_CORES - 1) / 2);
                     return (
@@ -92,7 +93,7 @@ var HoneycombContainer = React.createClass({
                         </g>
                     );
                 })}
-            </g>
+            </BeatmathFrame>
         );
     },
 });
