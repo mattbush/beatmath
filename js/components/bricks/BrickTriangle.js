@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var React = require('react');
-var updateHue = require('js/update_hue');
+var updateHue = require('js/outputs/updateHue');
 
 const INV_SQRT_3 = 1 / Math.sqrt(3);
 const TWO_X_INV_SQRT_3 = 2 / Math.sqrt(3);

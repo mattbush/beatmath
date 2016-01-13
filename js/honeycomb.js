@@ -2,7 +2,7 @@ var _ = require('underscore');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var tinycolor = require('tinycolor2');
-var updateHue = require('js/update_hue');
+var updateHue = require('js/outputs/updateHue');
 
 const {WIDTH_PX, DESIRED_HEIGHT_PX} = require('js/parameters/BeatmathConstants');
 
