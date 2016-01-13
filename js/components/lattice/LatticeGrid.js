@@ -2,8 +2,9 @@ var _ = require('underscore');
 var React = require('react');
 var InfluenceCircle = require('js/components/lattice/InfluenceCircle');
 var LatticePixel = require('js/components/lattice/LatticePixel');
+var BeatmathFrame = require('js/components/BeatmathFrame');
 
-const {WIDTH_PX, HEIGHT_PX, NUM_COLS, NUM_ROWS, MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
+const {NUM_COLS, NUM_ROWS, MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
 
 var tinycolor = require('tinycolor2');
 var {ColorInfluence, RotationInfluence, SizeInfluence} = require('js/state/lattice/Influence');
@@ -34,7 +35,7 @@ var LatticeGrid = React.createClass({
         }
 
         return (
-            <svg width={WIDTH_PX} height={HEIGHT_PX} className="colorGrid">
+            <BeatmathFrame disableTransform={true}>
                 <g>
                     {children}
                 </g>
@@ -43,7 +44,7 @@ var LatticeGrid = React.createClass({
                         <InfluenceCircle influence={influence} key={index} />
                     )}
                 </g>}
-            </svg>
+            </BeatmathFrame>
         );
     },
 });
