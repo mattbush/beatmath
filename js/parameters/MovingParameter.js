@@ -1,3 +1,5 @@
+var {lerp} = require('js/utils/math');
+
 class Parameter {
     constructor({min, max, start}) {
         this._listeners = [];
@@ -12,6 +14,16 @@ class Parameter {
         for (let listener of this._listeners) {
             listener();
         }
+    }
+    listenToFader(mixboard, eventCode) {
+        mixboard.addFaderListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
+    }
+    listenToKnob(mixboard, eventCode) {
+        mixboard.addFaderListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
+    }
+    onFaderOrKnobUpdate(inputValue) {
+        this._value = lerp(this._min, this._max, inputValue);
+        this._updateListeners();
     }
     addListener(fn) {
         this._listeners.push(fn);

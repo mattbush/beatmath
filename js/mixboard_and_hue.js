@@ -4,6 +4,7 @@ var tinycolor = require('tinycolor2');
 var Mixboard = require('js/inputs/Mixboard');
 var updateHue = require('js/outputs/updateHue');
 var {mixboardWheel, mixboardFader} = require('js/inputs/MixboardConstants');
+var {lerp} = require('js/utils/math');
 
 var startColor = {h: 60, s: 0.8, v: 0.8};
 
@@ -14,10 +15,6 @@ var configs = [
 ];
 
 var colors = [];
-
-var lerp = function(min, max, interpolation) {
-    return min + (max - min) * interpolation;
-};
 
 var onHueChange = function(lightNumber, wheelValue) {
     var hue = (colors[lightNumber].h + wheelValue) % 360;
