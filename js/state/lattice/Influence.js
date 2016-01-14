@@ -1,6 +1,6 @@
 var tinycolor = require('tinycolor2');
 var updateHue = require('js/outputs/updateHue');
-var {MovingColorParameter, MovingLinearParameter} = require('js/parameters/MovingParameter');
+var {MovingColorParameter, MovingLinearParameter} = require('js/parameters/Parameter');
 
 const {CELL_SIZE, NUM_ROWS, NUM_COLS, INFLUENCE_REFRESH_RATE, MIX_COEFFICIENT, ENABLE_HUE, MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
 

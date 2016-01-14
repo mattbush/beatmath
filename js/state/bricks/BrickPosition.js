@@ -1,4 +1,4 @@
-var {MovingAngleParameter} = require('js/parameters/MovingParameter');
+var {MovingAngleParameter} = require('js/parameters/Parameter');
 
 const {POSITION_REFRESH_RATE, POSITION_SPEED} = require('js/parameters/bricks/BricksConstants');
 

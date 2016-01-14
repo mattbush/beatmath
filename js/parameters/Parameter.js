@@ -35,7 +35,7 @@ class Parameter {
 
 class LinearParameter extends Parameter {}
 
-class MovingParameter extends Parameter {
+class MovingColorParameter extends Parameter {
     constructor(params) {
         super(params);
         this._variance = params.variance;
@@ -43,40 +43,47 @@ class MovingParameter extends Parameter {
     }
     update() {
         this._speed += (Math.random() * this._variance * 2) - this._variance;
-        this._updateProperty();
-        this._updateListeners();
-    }
-    _updateProperty() {
-        throw new Error('abstract method');
-    }
-}
-
-class MovingColorParameter extends MovingParameter {
-    _updateProperty() {
         if (Math.abs(this._speed) > this._max) {
             this._speed *= 0.5;
         }
         this._value = this._value.spin(this._speed);
+        this._updateListeners();
     }
 }
 
-class MovingAngleParameter extends MovingParameter {
-    _updateProperty() {
+class MovingAngleParameter extends Parameter {
+    constructor(params) {
+        super(params);
+        this._variance = params.variance;
+        this._speed = 0;
+    }
+    update() {
+        this._speed += (Math.random() * this._variance * 2) - this._variance;
         if (Math.abs(this._speed) > this._max) {
             this._speed *= 0.5;
         }
         this._value = (this._value + this._speed + 360) % 360;
+        this._updateListeners();
     }
 }
 
-class MovingLinearParameter extends MovingParameter {
-    _updateProperty() {
+class MovingLinearParameter extends LinearParameter {
+    constructor(params) {
+        super(params);
+        this._variance = params.variance;
+        this._speed = 0;
+    }
+    update() {
+        this._speed += (Math.random() * this._variance * 2) - this._variance;
+
         var next = this._value + this._speed;
         if (next > this._max || next < this._min) {
             this._speed *= -0.5;
         } else {
             this._value += this._speed;
         }
+
+        this._updateListeners();
     }
 }
 

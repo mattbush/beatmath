@@ -1,4 +1,4 @@
-var {LinearParameter} = require('js/parameters/MovingParameter');
+var {LinearParameter} = require('js/parameters/Parameter');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/parameters/BeatmathConstants');
 var {mixboardKnob} = require('js/inputs/MixboardConstants');
 
