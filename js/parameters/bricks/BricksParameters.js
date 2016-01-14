@@ -1,23 +1,17 @@
-// var {LinearParameter} = require('js/parameters/Parameter');
-// var {mixboardKnob} = require('js/inputs/MixboardConstants');
+var {MovingAngleParameter} = require('js/parameters/Parameter');
+var {mixboardWheel} = require('js/inputs/MixboardConstants');
 // const {NUM_COLS, NUM_ROWS, MAX_SIZE} = require('js/parameters/bricks/BricksConstants');
 
 class BricksParameters {
     constructor(mixboard) {
         this._mixboard = mixboard;
-        // this.width = new LinearParameter({
-        //     min: WIDTH_PX / 10,
-        //     max: WIDTH_PX,
-        //     start: WIDTH_PX,
-        // });
-        // this.width.listenToKnob(mixboard, mixboardKnob.CUE_MIX);
 
-        // this.height = new LinearParameter({
-        //     min: HEIGHT_PX / 10,
-        //     max: HEIGHT_PX,
-        //     start: DESIRED_HEIGHT_PX,
-        // });
-        // this.height.listenToKnob(mixboard, mixboardKnob.CUE_GAIN);
+        this.motionAngle = new MovingAngleParameter({
+            max: 1,
+            variance: 0.1,
+            start: 0,
+        });
+        this.motionAngle.listenToWheel(mixboard, mixboardWheel.L_TURNTABLE);
     }
 }
 

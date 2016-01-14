@@ -18,8 +18,9 @@ const MAX_TRIANGLES_TO_EXTRACT = 24;
 const RENDER_DISTANCE_CUTOFF = 240 / BRICK_SCALE;
 
 class BrickGridState {
-    constructor(mixboard) {
-        this._brickPosition = new BrickPosition(mixboard);
+    constructor(bricksParameters) {
+        this._bricksParameters = bricksParameters;
+        this._brickPosition = new BrickPosition(bricksParameters);
 
         var startItem = {x: 0, y: 0, parity: 0};
         this._heap = new MinHeap(function(l, r) {

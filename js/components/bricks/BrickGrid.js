@@ -21,9 +21,10 @@ var BrickGrid = React.createClass({
         };
     },
     getInitialState: function() {
+        var bricksParameters = new BricksParameters(this.context.mixboard);
         return {
-            bricksParameters: new BricksParameters(this.context.mixboard),
-            gridState: new BrickGridState(this.context.mixboard),
+            bricksParameters: bricksParameters,
+            gridState: new BrickGridState(bricksParameters),
         };
     },
     componentDidMount: function() {
