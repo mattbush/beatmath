@@ -1,10 +1,8 @@
 var {lerp} = require('js/utils/math');
 
 class Parameter {
-    constructor({min, max, start}) {
+    constructor({start}) {
         this._listeners = [];
-        this._min = min;
-        this._max = max;
         this._value = start;
     }
     getValue() {
@@ -14,6 +12,20 @@ class Parameter {
         for (let listener of this._listeners) {
             listener();
         }
+    }
+    addListener(fn) {
+        this._listeners.push(fn);
+    }
+    removeListener(fn) {
+        this._listeners.filter(listener => listener !== fn);
+    }
+}
+
+class LinearParameter extends Parameter {
+    constructor(params) {
+        super(params);
+        this._min = params.min;
+        this._max = params.max;
     }
     listenToFader(mixboard, eventCode) {
         mixboard.addFaderListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
@@ -25,15 +37,7 @@ class Parameter {
         this._value = lerp(this._min, this._max, inputValue);
         this._updateListeners();
     }
-    addListener(fn) {
-        this._listeners.push(fn);
-    }
-    removeListener(fn) {
-        this._listeners.filter(listener => listener !== fn);
-    }
 }
-
-class LinearParameter extends Parameter {}
 
 class MovingColorParameter extends Parameter {
     constructor(params) {
