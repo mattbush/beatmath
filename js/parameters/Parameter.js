@@ -26,6 +26,8 @@ class LinearParameter extends Parameter {
         super(params);
         this._min = params.min;
         this._max = params.max;
+        this._lePassedByInput = false;
+        this._gePassedByInput = false;
     }
     listenToFader(mixboard, eventCode) {
         mixboard.addFaderListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
@@ -34,8 +36,20 @@ class LinearParameter extends Parameter {
         mixboard.addFaderListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
     }
     onFaderOrKnobUpdate(inputValue) {
-        this._value = lerp(this._min, this._max, inputValue);
-        this._updateListeners();
+        var newValue = lerp(this._min, this._max, inputValue);
+        // don't update from the fader or knob until you've "met" the current value
+        if (!this._lePassedByInput || !this._gePassedByInput) {
+            if (newValue >= this._value) {
+                this._gePassedByInput = true;
+            }
+            if (newValue <= this._value) {
+                this._lePassedByInput = true;
+            }
+        }
+        if (this._lePassedByInput && this._gePassedByInput) {
+            this._value = newValue;
+            this._updateListeners();
+        }
     }
 }
 
