@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var React = require('react');
 
+let HoneycombParameters = require('js/parameters/honeycomb/HoneycombParameters');
 let AnimationControlledMixin = require('js/components/honeycomb/AnimationControlledMixin');
 let HexagonGroup = require('js/components/honeycomb/HexagonGroup');
 var BeatmathFrame = require('js/components/BeatmathFrame');
@@ -47,23 +48,32 @@ let RotatingCore = React.createClass({
 });
 
 var HoneycombContainer = React.createClass({
-    getInitialState: function() {
-        return {ticks: 0, bpm: BPM_CONST};
-    },
-    componentWillMount: function() {
-        this._startTime = Date.now();
-    },
     childContextTypes: {
+        honeycombParameters: React.PropTypes.object,
         bpm: React.PropTypes.number,
         ticks: React.PropTypes.number,
         period: React.PropTypes.number,
     },
+    contextTypes: {
+        mixboard: React.PropTypes.object,
+    },
     getChildContext: function() {
         return {
+            honeycombParameters: this.state.honeycombParameters,
             bpm: this.state.bpm,
             period: this._getPeriod(),
             ticks: this.state.ticks,
         };
+    },
+    getInitialState: function() {
+        return {
+            honeycombParameters: new HoneycombParameters(this.context.mixboard),
+            ticks: 0,
+            bpm: BPM_CONST,
+        };
+    },
+    componentWillMount: function() {
+        this._startTime = Date.now();
     },
     componentDidMount: function() {
         this._setTimer();

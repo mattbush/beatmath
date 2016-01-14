@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var React = require('react');
+var TwentySixteenParameters = require('js/parameters/twenty_sixteen/TwentySixteenParameters');
 var BeatmathFrame = require('js/components/BeatmathFrame');
 
 const ARRANGEMENTS = require('js/state/twenty_sixteen/arrangements');
@@ -20,8 +21,20 @@ const TwentySixteenPixel = React.createClass({
 });
 
 const TwentySixteen = React.createClass({
+    childContextTypes: {
+        twentySixteenParameters: React.PropTypes.object,
+    },
+    contextTypes: {
+        mixboard: React.PropTypes.object,
+    },
+    getChildContext: function() {
+        return {
+            twentySixteenParameters: this.state.twentySixteenParameters,
+        };
+    },
     getInitialState: function() {
         return {
+            twentySixteenParameters: new TwentySixteenParameters(this.context.mixboard),
             arrangementIndex: 1,
         };
     },

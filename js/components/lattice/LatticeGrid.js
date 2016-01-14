@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var React = require('react');
+var LatticeParameters = require('js/parameters/lattice/LatticeParameters');
 var InfluenceCircle = require('js/components/lattice/InfluenceCircle');
 var LatticePixel = require('js/components/lattice/LatticePixel');
 var BeatmathFrame = require('js/components/BeatmathFrame');
@@ -26,6 +27,22 @@ var influences = [
 ];
 
 var LatticeGrid = React.createClass({
+    childContextTypes: {
+        latticeParameters: React.PropTypes.object,
+    },
+    contextTypes: {
+        mixboard: React.PropTypes.object,
+    },
+    getChildContext: function() {
+        return {
+            latticeParameters: this.state.latticeParameters,
+        };
+    },
+    getInitialState: function() {
+        return {
+            latticeParameters: new LatticeParameters(this.context.mixboard),
+        };
+    },
     render: function() {
         const children = [];
         for (let row = 0; row < NUM_ROWS; row++) {

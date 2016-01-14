@@ -2,17 +2,27 @@ var React = require('react');
 var BrickTriangle = require('js/components/bricks/BrickTriangle');
 var BrickGridState = require('js/state/bricks/BrickGridState');
 var BeatmathFrame = require('js/components/BeatmathFrame');
+var BricksParameters = require('js/parameters/bricks/BricksParameters');
 
 const {BRICK_SCALE, POSITION_REFRESH_RATE, TRIANGLE_GENERATING_RATE} = require('js/parameters/bricks/BricksConstants');
 
 const POSITION_OFFSET_REFRESH_RATE = Math.max(TRIANGLE_GENERATING_RATE, POSITION_REFRESH_RATE);
 
 var BrickGrid = React.createClass({
+    childContextTypes: {
+        bricksParameters: React.PropTypes.object,
+    },
     contextTypes: {
         mixboard: React.PropTypes.object,
     },
+    getChildContext: function() {
+        return {
+            bricksParameters: this.state.bricksParameters,
+        };
+    },
     getInitialState: function() {
         return {
+            bricksParameters: new BricksParameters(this.context.mixboard),
             gridState: new BrickGridState(this.context.mixboard),
         };
     },

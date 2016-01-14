@@ -1,5 +1,6 @@
 var React = require('react');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
+var AnagramsParameters = require('js/parameters/anagrams/AnagramsParameters');
 var AnagramSet = require('js/state/anagrams/AnagramSet');
 var AnagramSetComponent = require('js/components/anagrams/AnagramSet');
 var DancingText = require('js/components/anagrams/DancingText');
@@ -60,8 +61,20 @@ var AnagramSetCycler = React.createClass({
 
 var AnagramDisplay = React.createClass({
     mixins: [LinkedStateMixin],
+    childContextTypes: {
+        anagramsParameters: React.PropTypes.object,
+    },
+    contextTypes: {
+        mixboard: React.PropTypes.object,
+    },
+    getChildContext: function() {
+        return {
+            anagramsParameters: this.state.anagramsParameters,
+        };
+    },
     getInitialState: function() {
         return {
+            anagramsParameters: new AnagramsParameters(this.context.mixboard),
             anagramSets: [
                 new AnagramSet(['MATT BUSH', 'MATHTUBS']),
                 new AnagramSet(['ANAGRAMS NEVER LIE', 'A RENAMING REVEALS']),
