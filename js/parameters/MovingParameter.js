@@ -1,18 +1,14 @@
-class MovingParameter {
-    constructor({min, max, variance, start}) {
+class Parameter {
+    constructor({min, max, start}) {
         this._listeners = [];
         this._min = min;
         this._max = max;
-        this._variance = variance;
         this._value = start;
-        this._speed = 0;
     }
     getValue() {
         return this._value;
     }
-    update() {
-        this._speed += (Math.random() * this._variance * 2) - this._variance;
-        this._updateProperty();
+    _updateListeners() {
         for (let listener of this._listeners) {
             listener();
         }
@@ -22,6 +18,19 @@ class MovingParameter {
     }
     removeListener(fn) {
         this._listeners.filter(listener => listener !== fn);
+    }
+}
+
+class MovingParameter extends Parameter {
+    constructor(params) {
+        super(params);
+        this._variance = params.variance;
+        this._speed = 0;
+    }
+    update() {
+        this._speed += (Math.random() * this._variance * 2) - this._variance;
+        this._updateProperty();
+        this._updateListeners();
     }
     _updateProperty() {
         throw new Error('abstract method');
