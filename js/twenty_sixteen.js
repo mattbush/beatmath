@@ -1,10 +1,17 @@
+require('regenerator/runtime');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var TwentySixteen = require('js/components/twenty_sixteen/TwentySixteen');
+var Mixboard = require('js/inputs/Mixboard');
+var MixboardContext = require('js/components/MixboardContext');
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    var mixboard = await Mixboard.getInstanceAsync();
+
     ReactDOM.render(
-      <TwentySixteen />,
-      document.getElementById('start')
+        <MixboardContext mixboard={mixboard}>
+            <TwentySixteen />
+        </MixboardContext>,
+        document.getElementById('start')
     );
 });
