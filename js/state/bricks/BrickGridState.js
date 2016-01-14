@@ -85,7 +85,7 @@ class BrickGridState {
         }
         var coords = `${newItem.x},${newItem.y}`;
 
-        var possibleOrientation = getPossibleOrientation(this._grid, newItem);
+        var possibleOrientation = getPossibleOrientation(this._bricksParameters, this._grid, newItem);
         if (possibleOrientation !== null) {
             this._grid[coords] = possibleOrientation;
         }

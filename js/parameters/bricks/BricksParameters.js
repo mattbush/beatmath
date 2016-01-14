@@ -1,5 +1,5 @@
-var {MovingAngleParameter} = require('js/parameters/Parameter');
-var {mixboardWheel} = require('js/inputs/MixboardConstants');
+var {MovingAngleParameter, LinearParameter} = require('js/parameters/Parameter');
+var {mixboardWheel, mixboardFader} = require('js/inputs/MixboardConstants');
 // const {NUM_COLS, NUM_ROWS, MAX_SIZE} = require('js/parameters/bricks/BricksConstants');
 
 class BricksParameters {
@@ -12,6 +12,13 @@ class BricksParameters {
             start: 0,
         });
         this.motionAngle.listenToWheel(mixboard, mixboardWheel.L_TURNTABLE);
+
+        this.brickHomogeneity = new LinearParameter({
+            min: -5,
+            max: 5,
+            start: -0.4,
+        });
+        this.brickHomogeneity.listenToFader(mixboard, mixboardFader.CROSSFADER);
     }
 }
 

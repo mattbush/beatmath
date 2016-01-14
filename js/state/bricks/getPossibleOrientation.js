@@ -1,7 +1,5 @@
 var _ = require('underscore');
 
-const BRICK_HOMOGENEITY = -0.4;
-
 const POSSIBLE_ORIENTATIONS_BY_PARITY = [
     [0, 2, 4],
     [1, 3, 5],
@@ -35,7 +33,7 @@ var truncateToBaseOrientation = function(orientation) {
     return orientation % 2 ? orientation - 1 : orientation;
 };
 
-var getPossibleOrientationsBasedOnNeighbors = function(grid, newItem) {
+var getPossibleOrientationsBasedOnNeighbors = function(bricksParameters, grid, newItem) {
     var allPossibleOrientations = POSSIBLE_ORIENTATIONS_BY_PARITY[newItem.parity];
     var neighborOrientationsSeen = {0: 0, 2: 0, 4: 0};
     var possibleOrientations = allPossibleOrientations;
@@ -51,8 +49,9 @@ var getPossibleOrientationsBasedOnNeighbors = function(grid, newItem) {
         return {};
     }
     var weightedPossibleOrientations = {};
-    var multiple = Math.abs(BRICK_HOMOGENEITY);
-    var sign = Math.sign(BRICK_HOMOGENEITY);
+    var brickHomogeneity = bricksParameters.brickHomogeneity.getValue();
+    var multiple = Math.abs(brickHomogeneity);
+    var sign = Math.sign(brickHomogeneity);
     for (var possibleOrientation of possibleOrientations) {
         var neighborCount = neighborOrientationsSeen[possibleOrientation - newItem.parity];
         weightedPossibleOrientations[possibleOrientation] = Math.pow((1 + neighborCount * multiple), sign);
@@ -76,8 +75,8 @@ var getRandomOrientationFromArray = function(weightedPossibleOrientations) {
     throw new Error('this should be unreachable');
 };
 
-var getPossibleOrientation = function(grid, newItem) {
-    var weightedPossibleOrientations = getPossibleOrientationsBasedOnNeighbors(grid, newItem);
+var getPossibleOrientation = function(bricksParameters, grid, newItem) {
+    var weightedPossibleOrientations = getPossibleOrientationsBasedOnNeighbors(bricksParameters, grid, newItem);
     if (!_.isEmpty(weightedPossibleOrientations)) {
         return getRandomOrientationFromArray(weightedPossibleOrientations);
     }
