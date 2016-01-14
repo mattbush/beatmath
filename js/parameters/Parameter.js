@@ -53,11 +53,25 @@ class LinearParameter extends Parameter {
     }
 }
 
+class AngleParameter extends Parameter {
+    listenToWheel(mixboard, eventCode) {
+        mixboard.addWheelListener(eventCode, this.onWheelUpdate.bind(this));
+    }
+    onWheelUpdate(inputValue) {
+        this._spinValue(inputValue);
+    }
+    _spinValue(spinAmount) {
+        this._value = (this._value + spinAmount + 360) % 360;
+        this._updateListeners();
+    }
+}
+
 class MovingColorParameter extends Parameter {
     constructor(params) {
         super(params);
         this._variance = params.variance;
         this._speed = 0;
+        this._max = params.max;
     }
     update() {
         this._speed += (Math.random() * this._variance * 2) - this._variance;
@@ -69,19 +83,19 @@ class MovingColorParameter extends Parameter {
     }
 }
 
-class MovingAngleParameter extends Parameter {
+class MovingAngleParameter extends AngleParameter {
     constructor(params) {
         super(params);
         this._variance = params.variance;
         this._speed = 0;
+        this._max = params.max;
     }
     update() {
         this._speed += (Math.random() * this._variance * 2) - this._variance;
         if (Math.abs(this._speed) > this._max) {
             this._speed *= 0.5;
         }
-        this._value = (this._value + this._speed + 360) % 360;
-        this._updateListeners();
+        this._spinValue(this._speed);
     }
 }
 
@@ -105,4 +119,10 @@ class MovingLinearParameter extends LinearParameter {
     }
 }
 
-module.exports = {LinearParameter, MovingColorParameter, MovingAngleParameter, MovingLinearParameter};
+module.exports = {
+    AngleParameter,
+    LinearParameter,
+    MovingAngleParameter,
+    MovingColorParameter,
+    MovingLinearParameter,
+};

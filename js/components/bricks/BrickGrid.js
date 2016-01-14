@@ -8,9 +8,12 @@ const {BRICK_SCALE, POSITION_REFRESH_RATE, TRIANGLE_GENERATING_RATE} = require('
 const POSITION_OFFSET_REFRESH_RATE = Math.max(TRIANGLE_GENERATING_RATE, POSITION_REFRESH_RATE);
 
 var BrickGrid = React.createClass({
+    contextTypes: {
+        mixboard: React.PropTypes.object,
+    },
     getInitialState: function() {
         return {
-            gridState: new BrickGridState(),
+            gridState: new BrickGridState(this.context.mixboard),
         };
     },
     componentDidMount: function() {

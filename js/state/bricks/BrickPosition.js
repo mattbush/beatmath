@@ -1,4 +1,5 @@
 var {MovingAngleParameter} = require('js/parameters/Parameter');
+var {mixboardWheel} = require('js/inputs/MixboardConstants');
 
 const {POSITION_REFRESH_RATE, POSITION_SPEED} = require('js/parameters/bricks/BricksConstants');
 
@@ -6,12 +7,13 @@ const DEG_TO_RAD = Math.PI / 180;
 const INV_SQRT_3 = 1 / Math.sqrt(3);
 
 class BrickPosition {
-    constructor() {
+    constructor(mixboard) {
         this._parameter = new MovingAngleParameter({
             max: 1,
             variance: 0.1,
             start: 0,
         });
+        this._parameter.listenToWheel(mixboard, mixboardWheel.L_TURNTABLE);
 
         this._x = 0;
         this._y = 0;
