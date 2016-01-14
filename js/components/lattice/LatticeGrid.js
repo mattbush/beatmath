@@ -4,13 +4,12 @@ var LatticeParameters = require('js/parameters/lattice/LatticeParameters');
 var InfluenceCircle = require('js/components/lattice/InfluenceCircle');
 var LatticePixel = require('js/components/lattice/LatticePixel');
 var BeatmathFrame = require('js/components/BeatmathFrame');
+var ParameterBindingsMixin = require('js/components/ParameterBindingsMixin');
 
 const {NUM_COLS, NUM_ROWS, MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
 
 var tinycolor = require('tinycolor2');
 var {ColorInfluence, RotationInfluence, SizeInfluence} = require('js/state/lattice/Influence');
-
-const SHOW_INFLUENCES = false;
 
 var influences = [
     new ColorInfluence({startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#800'), index: 0}),
@@ -27,6 +26,7 @@ var influences = [
 ];
 
 var LatticeGrid = React.createClass({
+    mixins: [ParameterBindingsMixin],
     childContextTypes: {
         latticeParameters: React.PropTypes.object,
     },
@@ -43,6 +43,11 @@ var LatticeGrid = React.createClass({
             latticeParameters: new LatticeParameters(this.context.mixboard),
         };
     },
+    getParameterBindings: function() {
+        return {
+            showInfluences: this.state.latticeParameters.showInfluences,
+        };
+    },
     render: function() {
         const children = [];
         for (let row = 0; row < NUM_ROWS; row++) {
@@ -56,7 +61,7 @@ var LatticeGrid = React.createClass({
                 <g>
                     {children}
                 </g>
-                {SHOW_INFLUENCES && <g>
+                {this.getParameterValue('showInfluences') && <g>
                     {_.map(influences, (influence, index) =>
                         <InfluenceCircle influence={influence} key={index} />
                     )}

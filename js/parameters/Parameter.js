@@ -21,6 +21,18 @@ class Parameter {
     }
 }
 
+class ToggleParameter extends Parameter {
+    listenToButton(mixboard, eventCode) {
+        mixboard.addButtonListener(eventCode, this.onButtonUpdate.bind(this));
+    }
+    onButtonUpdate(inputValue) {
+        if (inputValue) { // button is pressed down, not up
+            this._value = !this._value;
+            this._updateListeners();
+        }
+    }
+}
+
 class LinearParameter extends Parameter {
     constructor(params) {
         super(params);
@@ -122,6 +134,7 @@ class MovingLinearParameter extends LinearParameter {
 module.exports = {
     AngleParameter,
     LinearParameter,
+    ToggleParameter,
     MovingAngleParameter,
     MovingColorParameter,
     MovingLinearParameter,

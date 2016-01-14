@@ -9,8 +9,8 @@ var BeatmathFrame = React.createClass({
     },
     getParameterBindings: function() {
         return {
-            'width': this.context.beatmathParameters.width,
-            'height': this.context.beatmathParameters.height,
+            width: this.context.beatmathParameters.width,
+            height: this.context.beatmathParameters.height,
         };
     },
     render: function() {

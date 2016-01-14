@@ -1,23 +1,14 @@
-// var {LinearParameter} = require('js/parameters/Parameter');
-// var {mixboardKnob} = require('js/inputs/MixboardConstants');
+var {ToggleParameter} = require('js/parameters/Parameter');
+var {mixboardButton} = require('js/inputs/MixboardConstants');
 // const {NUM_COLS, NUM_ROWS, MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
 
 class LatticeParameters {
     constructor(mixboard) {
         this._mixboard = mixboard;
-        // this.width = new LinearParameter({
-        //     min: WIDTH_PX / 10,
-        //     max: WIDTH_PX,
-        //     start: WIDTH_PX,
-        // });
-        // this.width.listenToKnob(mixboard, mixboardKnob.CUE_MIX);
-
-        // this.height = new LinearParameter({
-        //     min: HEIGHT_PX / 10,
-        //     max: HEIGHT_PX,
-        //     start: DESIRED_HEIGHT_PX,
-        // });
-        // this.height.listenToKnob(mixboard, mixboardKnob.CUE_GAIN);
+        this.showInfluences = new ToggleParameter({
+            start: false,
+        });
+        this.showInfluences.listenToButton(mixboard, mixboardButton.L_SYNC);
     }
 }
 
