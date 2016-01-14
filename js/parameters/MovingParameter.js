@@ -33,6 +33,8 @@ class Parameter {
     }
 }
 
+class LinearParameter extends Parameter {}
+
 class MovingParameter extends Parameter {
     constructor(params) {
         super(params);
@@ -78,4 +80,4 @@ class MovingLinearParameter extends MovingParameter {
     }
 }
 
-module.exports = {MovingColorParameter, MovingAngleParameter, MovingLinearParameter};
+module.exports = {LinearParameter, MovingColorParameter, MovingAngleParameter, MovingLinearParameter};

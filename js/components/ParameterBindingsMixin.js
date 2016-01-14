@@ -13,6 +13,9 @@ var ParameterBindingsMixin = {
     componentWillUnmount: function() {
         _.each(this.getParameterBindings(), parameter => parameter.removeListener(this._boundThrottledForceUpdate));
     },
+    getParameterValue: function(paramName) {
+        return this.getParameterBindings()[paramName].getValue();
+    },
 };
 
 module.exports = ParameterBindingsMixin;
