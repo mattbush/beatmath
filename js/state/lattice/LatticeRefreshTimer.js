@@ -1,9 +1,10 @@
 var _ = require('underscore');
+var {ToggleParameter} = require('js/parameters/Parameter');
+var {mixboardButton} = require('js/inputs/MixboardConstants');
 
 const {PIXEL_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
 const {lerp, dist, manhattanDist, polarAngleDeg, posMod, modAndShiftToHalf, posModAndBendToLowerHalf} = require('js/utils/math');
 
-const USE_SUBDIVISIONS = true;
 const SUBDIVISION_SIZE = 10;
 
 const USE_DISTANCE = true;
@@ -12,16 +13,26 @@ const NUM_GLOBAL_POLAR_ANGLES = 0;
 
 const RIPPLE_RADIUS = 10;
 const MANHATTAN_COEFFICIENT = 1;
+const LOG_COEFFICIENT = 0;
 
 const NUM_LOCAL_POLAR_ANGLES = 0;
 const BEND_LOCAL_POLAR_ANGLES = true;
 
-const LOG_COEFFICIENT = 0;
-
 class LatticeRefreshTimer {
-    constructor({latticeParameters}) {
+    constructor({mixboard, latticeParameters}) {
         this._refreshOffsetCache = {};
         this._latticeParameters = latticeParameters;
+
+        this._flushCache = this._flushCache.bind(this);
+
+        this._useSubdivisions = new ToggleParameter({
+            start: false,
+        });
+        this._useSubdivisions.listenToButton(mixboard, mixboardButton.L_DELETE);
+        this._useSubdivisions.addListener(this._flushCache);
+    }
+    _flushCache() {
+        this._refreshOffsetCache = {};
     }
     getRefreshOffset(row, col) {
         var key = `${row}|${col}`;
@@ -38,7 +49,7 @@ class LatticeRefreshTimer {
             total += globalPolarAngle * NUM_GLOBAL_POLAR_ANGLES / 360;
         }
 
-        if (USE_SUBDIVISIONS) {
+        if (this._useSubdivisions.getValue()) {
             row = modAndShiftToHalf(row, SUBDIVISION_SIZE);
             col = modAndShiftToHalf(col, SUBDIVISION_SIZE);
         }

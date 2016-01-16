@@ -30,7 +30,7 @@ class LatticeParameters {
         this.oscillate = new ToggleParameter({
             start: false,
         });
-        this.oscillate.listenToButton(mixboard, mixboardButton.R_SYNC);
+        this.oscillate.listenToButton(mixboard, mixboardButton.L_PITCH_BEND_MINUS);
     }
 }
 
