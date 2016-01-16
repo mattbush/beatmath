@@ -1,4 +1,4 @@
-var {lerp, posMod} = require('js/utils/math');
+var {lerp, posMod, constrainToRange} = require('js/utils/math');
 
 class Parameter {
     constructor({start}) {
@@ -33,6 +33,36 @@ class ToggleParameter extends Parameter {
     }
 }
 
+class CycleParameter extends Parameter {
+    constructor(params) {
+        params.start = params.cycleValues[0];
+        super(params);
+
+        this._cycleValues = params.cycleValues;
+        this._valueIndex = 0;
+    }
+    listenToCycleButton(mixboard, eventCode) {
+        mixboard.addButtonListener(eventCode, this.onCycleButtonPress.bind(this));
+    }
+    onCycleButtonPress(inputValue) {
+        if (inputValue) {
+            this._valueIndex = posMod(this._valueIndex + 1, this._cycleValues.length);
+            this._value = this._cycleValues[this._valueIndex];
+            this._updateListeners();
+        }
+    }
+    listenToResetButton(mixboard, eventCode) {
+        mixboard.addButtonListener(eventCode, this.onResetButtonPress.bind(this));
+    }
+    onResetButtonPress(inputValue) {
+        if (inputValue) {
+            this._valueIndex = 0;
+            this._value = this._cycleValues[this._valueIndex];
+            this._updateListeners();
+        }
+    }
+}
+
 class LinearParameter extends Parameter {
     constructor(params) {
         if (params.startLerp !== undefined) {
@@ -41,14 +71,62 @@ class LinearParameter extends Parameter {
         super(params);
         this._min = params.min;
         this._max = params.max;
+        this._incrementAmount = params.incrementAmount || 1;
         this._lePassedByInput = false;
         this._gePassedByInput = false;
+        this._defaultOff = params.start;
+        this._defaultOn = params.defaultOn;
     }
     listenToFader(mixboard, eventCode) {
         mixboard.addFaderListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
     }
     listenToKnob(mixboard, eventCode) {
-        mixboard.addFaderListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
+        mixboard.addKnobListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
+    }
+    listenToWheel(mixboard, eventCode) {
+        mixboard.addWheelListener(eventCode, this.onWheelUpdate.bind(this));
+    }
+    listenToResetButton(mixboard, eventCode) {
+        mixboard.addButtonListener(eventCode, this.onResetButtonPress.bind(this));
+    }
+    listenToIncrementButton(mixboard, eventCode) {
+        mixboard.addButtonListener(eventCode, this.onIncrementButtonPress.bind(this));
+    }
+    listenToDecrementButton(mixboard, eventCode) {
+        mixboard.addButtonListener(eventCode, this.onDecrementButtonPress.bind(this));
+    }
+    onResetButtonPress(inputValue) {
+        if (inputValue) {
+            if (this._value === this._defaultOff && this._defaultOn !== undefined) {
+                this._value = this._defaultOn;
+            } else {
+                this._value = this._defaultOff;
+            }
+            this._updateListeners();
+        }
+    }
+    onIncrementButtonPress(inputValue) {
+        if (inputValue) {
+            var newValue = this._value + this._incrementAmount;
+            this._constrainToRangeAndUpdateValue(newValue);
+        }
+    }
+    onDecrementButtonPress(inputValue) {
+        if (inputValue) {
+            var newValue = this._value - this._incrementAmount;
+            this._constrainToRangeAndUpdateValue(newValue);
+        }
+    }
+    onWheelUpdate(inputValue) {
+        var newValue = this._value + (inputValue * this._incrementAmount);
+        this._constrainToRangeAndUpdateValue(newValue);
+    }
+    _constrainToRangeAndUpdateValue(newValue) {
+        newValue = constrainToRange(this._min, this._max, newValue);
+        if (newValue !== this._value) {
+            this._value = newValue;
+            this._updateListeners();
+        }
     }
     onFaderOrKnobUpdate(inputValue) {
         var newValue = lerp(this._min, this._max, inputValue);
@@ -158,6 +236,7 @@ module.exports = {
     AngleParameter,
     LinearParameter,
     ToggleParameter,
+    CycleParameter,
     MovingAngleParameter,
     MovingColorParameter,
     MovingLinearParameter,

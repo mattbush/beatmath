@@ -2,6 +2,10 @@ var lerp = function(min, max, interpolation) {
     return min + (max - min) * interpolation;
 };
 
+var constrainToRange = function(min, max, val) {
+    return Math.min(max, Math.max(min, val));
+};
+
 var dist = function(a, b) {
     return Math.sqrt(a * a + b * b);
 };
@@ -33,6 +37,7 @@ var posModAndBendToLowerHalf = function(dividend, divisor) {
 
 module.exports = {
     lerp,
+    constrainToRange,
     dist,
     manhattanDist,
     polarAngleDeg,
