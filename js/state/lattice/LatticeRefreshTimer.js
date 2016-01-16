@@ -1,13 +1,10 @@
 var _ = require('underscore');
 var {LinearParameter, CycleParameter, ToggleParameter} = require('js/parameters/Parameter');
-var {mixboardButton} = require('js/inputs/MixboardConstants');
+var {mixboardButton, mixboardWheel} = require('js/inputs/MixboardConstants');
 
 const {PIXEL_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
 const {lerp, dist, manhattanDist, polarAngleDeg, posMod, modAndShiftToHalf, posModAndBendToLowerHalf} = require('js/utils/math');
 
-const USE_DISTANCE = true;
-
-const RIPPLE_RADIUS = 10;
 const MANHATTAN_COEFFICIENT = 1;
 const LOG_COEFFICIENT = 0;
 
@@ -17,6 +14,18 @@ class LatticeRefreshTimer {
         this._latticeParameters = latticeParameters;
 
         this._flushCache = this._flushCache.bind(this);
+
+        this._rippleRadius = new LinearParameter({
+            start: 10, min: 2, max: 40,
+        });
+        this._rippleRadius.listenToWheel(mixboard, mixboardWheel.L_SELECT);
+        this._rippleRadius.addListener(this._flushCache);
+
+        this._useDistance = new ToggleParameter({
+            start: true,
+        });
+        this._useDistance.listenToButton(mixboard, mixboardButton.L_HOT_CUE_1);
+        this._useDistance.addListener(this._flushCache);
 
         this._globalPolarAngles = new LinearParameter({
             start: 0, min: -12, max: 12,
@@ -58,6 +67,8 @@ class LatticeRefreshTimer {
     _calculateRefreshOffset(row, col) {
         var total = 0;
 
+        var rippleRadius = this._rippleRadius.getValue();
+
         var globalPolarAngles = this._globalPolarAngles.getValue();
         if (globalPolarAngles !== 0) {
             var globalPolarAngle = polarAngleDeg(col, row);
@@ -66,22 +77,22 @@ class LatticeRefreshTimer {
 
         var subdivisionSize = this._subdivisionSize.getValue();
         if (subdivisionSize !== false) {
-            var subdivisionRadius = RIPPLE_RADIUS * subdivisionSize;
+            var subdivisionRadius = rippleRadius * subdivisionSize;
             row = modAndShiftToHalf(row, subdivisionRadius);
             col = modAndShiftToHalf(col, subdivisionRadius);
         }
 
-        if (USE_DISTANCE) {
+        if (this._useDistance.getValue()) {
             var distance = manhattanDist(col, row);
             if (MANHATTAN_COEFFICIENT !== 1) {
                 var euclideanDistance = dist(col, row);
                 distance = lerp(euclideanDistance, distance, MANHATTAN_COEFFICIENT);
             }
             if (LOG_COEFFICIENT !== 0) {
-                var logDistance = Math.log(distance / RIPPLE_RADIUS) * RIPPLE_RADIUS;
+                var logDistance = Math.log(distance / rippleRadius) * rippleRadius;
                 distance = lerp(distance, logDistance, LOG_COEFFICIENT);
             }
-            total += distance / RIPPLE_RADIUS;
+            total += distance / rippleRadius;
         }
 
         var localPolarAngles = this._localPolarAngles.getValue();
