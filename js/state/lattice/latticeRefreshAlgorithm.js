@@ -1,46 +1,57 @@
 const {PIXEL_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
-const {posMod} = require('js/utils/math');
+const {lerp, dist, manhattanDist, polarAngleDeg, posMod, modAndShiftToHalf, posModAndBendToLowerHalf} = require('js/utils/math');
 
-const DIAMOND_SIZE = 10;
-const NUM_DIAMOND_SPIRALS = 0;
-var DIAMOND_REFRESH_ALGORITHM = function(row, col) {
-    var polarAngle = Math.atan2(col, row) * 180 / Math.PI;
-    var rowMod10 = posMod(row, DIAMOND_SIZE);
-    var colMod10 = posMod(col, DIAMOND_SIZE);
-    var half = DIAMOND_SIZE / 2;
-    rowMod10 = (rowMod10 > half) ? (DIAMOND_SIZE - rowMod10) : rowMod10;
-    colMod10 = (colMod10 > half) ? (DIAMOND_SIZE - colMod10) : colMod10;
-    return ((((0.5 + rowMod10 + colMod10) / DIAMOND_SIZE + (polarAngle * NUM_DIAMOND_SPIRALS / 360)) + NUM_DIAMOND_SPIRALS) % 1) * PIXEL_REFRESH_RATE;
-};
+const USE_SUBDIVISIONS = true;
+const SUBDIVISION_SIZE = 10;
 
-// 10, 0|1, 0|1 is standard
-// 3.5-4, 1, 2 is a nice combo
-const RIPPLE_RADIUS = 12;
-const NUM_SPIRALS = 1;
-const MANHATTAN_COEFFICIENT = 0;
-var RIPPLE_REFRESH_ALGORITHM = function(row, col) {
-    var polarAngle = Math.atan2(col, row) * 180 / Math.PI;
-    var manhattanDistance = Math.abs(col) + Math.abs(row);
-    var euclideanDistance = Math.sqrt(col * col + row * row);
-    var distance = (MANHATTAN_COEFFICIENT * manhattanDistance + (1 - MANHATTAN_COEFFICIENT) * euclideanDistance);
-    return (((distance / RIPPLE_RADIUS + (polarAngle * NUM_SPIRALS / 360)) + NUM_SPIRALS) % 1) * PIXEL_REFRESH_RATE;
-//    return (((Math.log(distance / RIPPLE_RADIUS) + (polarAngle * NUM_SPIRALS / 360)) + NUM_SPIRALS + 10) % 1) * PIXEL_REFRESH_RATE;
-};
+const USE_DISTANCE = true;
 
-const NUM_SECTORS = 6;
-const SECTOR_SIZE = 360 / NUM_SECTORS;
-var SECTOR_REFRESH_ALGORITHM = function(row, col) {
-    var polarAngle = Math.atan2(col, row) * 180 / Math.PI;
-    polarAngle += 360;
-    var polarAngleMod = polarAngle % SECTOR_SIZE;
-    if (polarAngleMod > SECTOR_SIZE / 2) {
-        polarAngleMod = SECTOR_SIZE - polarAngleMod;
+const NUM_GLOBAL_POLAR_ANGLES = 0;
+
+const RIPPLE_RADIUS = 10;
+const MANHATTAN_COEFFICIENT = 1;
+
+const NUM_LOCAL_POLAR_ANGLES = 0;
+const BEND_LOCAL_POLAR_ANGLES = true;
+
+const LOG_COEFFICIENT = 0;
+
+var refreshAlgorithm = function(row, col) {
+    var total = 0;
+
+    if (NUM_GLOBAL_POLAR_ANGLES !== 0) {
+        var globalPolarAngle = polarAngleDeg(col, row);
+        total += globalPolarAngle * NUM_GLOBAL_POLAR_ANGLES / 360;
     }
-    var proportion = polarAngleMod / (SECTOR_SIZE / 2);
 
-    return proportion * PIXEL_REFRESH_RATE;
+    if (USE_SUBDIVISIONS) {
+        row = modAndShiftToHalf(row, SUBDIVISION_SIZE);
+        col = modAndShiftToHalf(col, SUBDIVISION_SIZE);
+    }
+
+    if (USE_DISTANCE) {
+        var distance = manhattanDist(col, row);
+        if (MANHATTAN_COEFFICIENT !== 1) {
+            var euclideanDistance = dist(col, row);
+            distance = lerp(euclideanDistance, distance, MANHATTAN_COEFFICIENT);
+        }
+        if (LOG_COEFFICIENT !== 0) {
+            var logDistance = Math.log(distance / RIPPLE_RADIUS) * RIPPLE_RADIUS;
+            distance = lerp(distance, logDistance, LOG_COEFFICIENT);
+        }
+        total += distance / RIPPLE_RADIUS;
+    }
+
+    if (NUM_LOCAL_POLAR_ANGLES !== 0) {
+        var sectorSize = 360 / NUM_LOCAL_POLAR_ANGLES;
+        var localPolarAngle = polarAngleDeg(col, row);
+        if (BEND_LOCAL_POLAR_ANGLES) {
+            localPolarAngle = posModAndBendToLowerHalf(localPolarAngle, sectorSize * 2);
+        }
+        total += localPolarAngle / sectorSize;
+    }
+
+    return posMod(total, 1) * PIXEL_REFRESH_RATE;
 };
 
-const ALL_REFRESH_ALGORITHMS = [RIPPLE_REFRESH_ALGORITHM, SECTOR_REFRESH_ALGORITHM, DIAMOND_REFRESH_ALGORITHM];
-
-module.exports = ALL_REFRESH_ALGORITHMS[2];
+module.exports = refreshAlgorithm;
