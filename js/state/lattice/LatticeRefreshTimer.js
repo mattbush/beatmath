@@ -5,9 +5,6 @@ var {mixboardButton, mixboardWheel} = require('js/inputs/MixboardConstants');
 const {PIXEL_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
 const {lerp, dist, manhattanDist, polarAngleDeg, posMod, modAndShiftToHalf, posModAndBendToLowerHalf} = require('js/utils/math');
 
-const MANHATTAN_COEFFICIENT = 1;
-const LOG_COEFFICIENT = 0;
-
 class LatticeRefreshTimer {
     constructor({mixboard, latticeParameters}) {
         this._refreshOffsetCache = {};
@@ -20,6 +17,20 @@ class LatticeRefreshTimer {
         });
         this._rippleRadius.listenToWheel(mixboard, mixboardWheel.L_SELECT);
         this._rippleRadius.addListener(this._flushCache);
+
+        this._manhattanCoefficient = new LinearParameter({
+            start: 0, defaultOn: 1, min: -2, max: 3, incrementAmount: 0.25,
+        });
+        this._manhattanCoefficient.listenToWheel(mixboard, mixboardWheel.L_CONTROL_1);
+        this._manhattanCoefficient.listenToResetButton(mixboard, mixboardButton.L_HOT_CUE_2);
+        this._manhattanCoefficient.addListener(this._flushCache);
+
+        this._logCoefficient = new LinearParameter({
+            start: 0, defaultOn: 1, min: -2, max: 3, incrementAmount: 0.25,
+        });
+        this._logCoefficient.listenToWheel(mixboard, mixboardWheel.L_CONTROL_2);
+        this._logCoefficient.listenToResetButton(mixboard, mixboardButton.L_HOT_CUE_3);
+        this._logCoefficient.addListener(this._flushCache);
 
         this._useDistance = new ToggleParameter({
             start: true,
@@ -84,13 +95,16 @@ class LatticeRefreshTimer {
 
         if (this._useDistance.getValue()) {
             var distance = manhattanDist(col, row);
-            if (MANHATTAN_COEFFICIENT !== 1) {
+            var manhattanCoefficient = this._manhattanCoefficient.getValue();
+            var logCoefficient = this._logCoefficient.getValue();
+
+            if (manhattanCoefficient !== 1) {
                 var euclideanDistance = dist(col, row);
-                distance = lerp(euclideanDistance, distance, MANHATTAN_COEFFICIENT);
+                distance = lerp(euclideanDistance, distance, manhattanCoefficient);
             }
-            if (LOG_COEFFICIENT !== 0) {
+            if (logCoefficient !== 0) {
                 var logDistance = Math.log(distance / rippleRadius) * rippleRadius;
-                distance = lerp(distance, logDistance, LOG_COEFFICIENT);
+                distance = lerp(distance, logDistance, logCoefficient);
             }
             total += distance / rippleRadius;
         }
