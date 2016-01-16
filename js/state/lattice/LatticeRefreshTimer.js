@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var {CycleParameter} = require('js/parameters/Parameter');
+var {LinearParameter, CycleParameter, ToggleParameter} = require('js/parameters/Parameter');
 var {mixboardButton} = require('js/inputs/MixboardConstants');
 
 const {PIXEL_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
@@ -7,14 +7,9 @@ const {lerp, dist, manhattanDist, polarAngleDeg, posMod, modAndShiftToHalf, posM
 
 const USE_DISTANCE = true;
 
-const NUM_GLOBAL_POLAR_ANGLES = 0;
-
 const RIPPLE_RADIUS = 10;
 const MANHATTAN_COEFFICIENT = 1;
 const LOG_COEFFICIENT = 0;
-
-const NUM_LOCAL_POLAR_ANGLES = 0;
-const BEND_LOCAL_POLAR_ANGLES = true;
 
 class LatticeRefreshTimer {
     constructor({mixboard, latticeParameters}) {
@@ -22,6 +17,26 @@ class LatticeRefreshTimer {
         this._latticeParameters = latticeParameters;
 
         this._flushCache = this._flushCache.bind(this);
+
+        this._globalPolarAngles = new LinearParameter({
+            start: 0, min: -12, max: 12,
+        });
+        this._globalPolarAngles.listenToIncrementButton(mixboard, mixboardButton.L_LOOP_IN);
+        this._globalPolarAngles.listenToDecrementButton(mixboard, mixboardButton.L_LOOP_MANUAL);
+        this._globalPolarAngles.addListener(this._flushCache);
+
+        this._localPolarAngles = new LinearParameter({
+            start: 0, min: -12, max: 12,
+        });
+        this._localPolarAngles.listenToIncrementButton(mixboard, mixboardButton.L_LOOP_RELOOP);
+        this._localPolarAngles.listenToDecrementButton(mixboard, mixboardButton.L_LOOP_OUT);
+        this._localPolarAngles.addListener(this._flushCache);
+
+        this._bendLocalPolarAngles = new ToggleParameter({
+            start: false,
+        });
+        this._bendLocalPolarAngles.listenToButton(mixboard, mixboardButton.L_KEYLOCK);
+        this._bendLocalPolarAngles.addListener(this._flushCache);
 
         this._subdivisionSize = new CycleParameter({
             cycleValues: [false, 1, 2, 3],
@@ -43,9 +58,10 @@ class LatticeRefreshTimer {
     _calculateRefreshOffset(row, col) {
         var total = 0;
 
-        if (NUM_GLOBAL_POLAR_ANGLES !== 0) {
+        var globalPolarAngles = this._globalPolarAngles.getValue();
+        if (globalPolarAngles !== 0) {
             var globalPolarAngle = polarAngleDeg(col, row);
-            total += globalPolarAngle * NUM_GLOBAL_POLAR_ANGLES / 360;
+            total += globalPolarAngle * globalPolarAngles / 360;
         }
 
         var subdivisionSize = this._subdivisionSize.getValue();
@@ -68,10 +84,11 @@ class LatticeRefreshTimer {
             total += distance / RIPPLE_RADIUS;
         }
 
-        if (NUM_LOCAL_POLAR_ANGLES !== 0) {
-            var sectorSize = 360 / NUM_LOCAL_POLAR_ANGLES;
+        var localPolarAngles = this._localPolarAngles.getValue();
+        if (localPolarAngles !== 0) {
+            var sectorSize = 360 / localPolarAngles;
             var localPolarAngle = polarAngleDeg(col, row);
-            if (BEND_LOCAL_POLAR_ANGLES) {
+            if (this._bendLocalPolarAngles.getValue()) {
                 localPolarAngle = posModAndBendToLowerHalf(localPolarAngle, sectorSize * 2);
             }
             total += localPolarAngle / sectorSize;
