@@ -26,7 +26,6 @@ class LatticeRefreshTimer {
     getRefreshOffset(row, col) {
         var key = `${row}|${col}`;
         if (!_.has(this._refreshOffsetCache, key)) {
-            console.log('manually computing for ' + key);
             this._refreshOffsetCache[key] = this._calculateRefreshOffset(row, col);
         }
         return this._refreshOffsetCache[key];

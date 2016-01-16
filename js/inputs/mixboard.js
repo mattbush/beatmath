@@ -34,6 +34,7 @@ class Mixboard {
         return midiAccess.inputs.values().next().value;
     }
     _onMidiMessage(e) {
+        // console.log(e.data); // uncomment to discover new event codes
         var [eventType, eventCode, rawValue] = e.data;
         if (eventType === 144) {
             this._onButtonMessage(eventCode, rawValue);

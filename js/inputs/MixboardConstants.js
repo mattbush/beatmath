@@ -9,6 +9,43 @@ var mixboardButton = {
     R_PLAY_PAUSE: 66,
     R_STUTTER: 76,
 
+    L_KEYLOCK: 81,
+    L_SCRATCH: 72,
+    L_LITTLE_CUE: 101,
+    L_LOAD: 75,
+
+    R_KEYLOCK: 82,
+    R_SCRATCH: 80,
+    R_LITTLE_CUE: 102,
+    R_LOAD: 52,
+
+    BROWSE_BACK: 105,
+
+    L_PITCH_BEND_MINUS: 67,
+    L_PITCH_BEND_PLUS: 68,
+    R_PITCH_BEND_MINUS: 69,
+    R_PITCH_BEND_PLUS: 70,
+
+    L_DELETE: 89,
+    L_HOT_CUE_1: 90,
+    L_HOT_CUE_2: 91,
+    L_HOT_CUE_3: 92,
+    L_EFFECT: 99,
+    L_LOOP_MANUAL: 97,
+    L_LOOP_IN: 83,
+    L_LOOP_OUT: 84,
+    L_LOOP_RELOOP: 85,
+
+    R_DELETE: 93,
+    R_HOT_CUE_1: 94,
+    R_HOT_CUE_2: 95,
+    R_HOT_CUE_3: 96,
+    R_EFFECT: 100,
+    R_LOOP_MANUAL: 98,
+    R_LOOP_IN: 86,
+    R_LOOP_OUT: 87,
+    R_LOOP_RELOOP: 88,
+
     L_TURNTABLE: 78,
     R_TURNTABLE: 77,
 };
