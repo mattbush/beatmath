@@ -15,6 +15,7 @@ var LatticeGrid = React.createClass({
     mixins: [ParameterBindingsMixin],
     childContextTypes: {
         latticeParameters: React.PropTypes.object,
+        influences: React.PropTypes.array,
     },
     contextTypes: {
         mixboard: React.PropTypes.object,
@@ -22,6 +23,7 @@ var LatticeGrid = React.createClass({
     getChildContext: function() {
         return {
             latticeParameters: this.state.latticeParameters,
+            influences: this.state.influences,
         };
     },
     getInitialState: function() {
@@ -56,7 +58,7 @@ var LatticeGrid = React.createClass({
         var numCols = this.getParameterValue('numCols');
         for (let row = -numRows; row <= numRows; row++) {
             for (let col = -numCols; col <= numCols; col++) {
-                children.push(<LatticePixel influences={this.state.influences} row={row} col={col} key={row + '|' + col} />);
+                children.push(<LatticePixel row={row} col={col} key={row + '|' + col} />);
             }
         }
 
