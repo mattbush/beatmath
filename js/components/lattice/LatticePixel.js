@@ -29,12 +29,12 @@ var LatticePixel = React.createClass({
             return;
         }
         var nextTick = this.context.latticeParameters.nextTick;
-        var timestamp = nextTick.getValue() + this._refreshOffset;
-        runAtTimestamp(this._update, timestamp);
-
-        // whether to oscillate (for diamonds/sectors)
-        // setTimeout(this._update, PIXEL_REFRESH_RATE * 2 - this._refreshOffset * 2);
-        // this._refreshOffset = PIXEL_REFRESH_RATE - this._refreshOffset;
+        var refreshOffset = this._refreshOffset;
+        if (nextTick.getNumTicks() % 2 &&
+            this.context.latticeParameters.oscillate.getValue()) {
+            refreshOffset = PIXEL_REFRESH_RATE - refreshOffset;
+        }
+        runAtTimestamp(this._update, nextTick.getValue() + refreshOffset);
 
         this._nextState = _.clone(this.state);
         _.each(this.context.influences, this._mixInfluenceIntoNextState);

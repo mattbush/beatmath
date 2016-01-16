@@ -30,9 +30,9 @@ var LatticeGrid = React.createClass({
         var latticeParameters = new LatticeParameters(this.context.mixboard);
 
         var influences = [
-            new ColorInfluence({latticeParameters, startCol: 0.2, startRow: 0.2, startValue: tinycolor('#800'), index: 0}),
-            new ColorInfluence({latticeParameters, startCol: 0.8, startRow: 0.2, startValue: tinycolor('#080'), index: 1}),
-            new ColorInfluence({latticeParameters, startCol: 0.5, startRow: 0.8, startValue: tinycolor('#008'), index: 2}),
+            new ColorInfluence({latticeParameters, startCol: 0.2, startRow: 0.2, startValue: tinycolor('#f00'), index: 0}),
+            new ColorInfluence({latticeParameters, startCol: 0.8, startRow: 0.2, startValue: tinycolor('#0f0'), index: 1}),
+            new ColorInfluence({latticeParameters, startCol: 0.5, startRow: 0.8, startValue: tinycolor('#00f'), index: 2}),
 
             new SizeInfluence({latticeParameters, startCol: 0.2, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
             new SizeInfluence({latticeParameters, startCol: 0.8, startRow: 0.2, startValue: MAX_SIZE * 0.5}),

@@ -26,6 +26,11 @@ class LatticeParameters {
         this.nextTick = new NextTickParameter({
             interval: PIXEL_REFRESH_RATE,
         });
+
+        this.oscillate = new ToggleParameter({
+            start: false,
+        });
+        this.oscillate.listenToButton(mixboard, mixboardButton.R_SYNC);
     }
 }
 
