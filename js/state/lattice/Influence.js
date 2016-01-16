@@ -2,22 +2,22 @@ var tinycolor = require('tinycolor2');
 var updateHue = require('js/outputs/updateHue');
 var {MovingColorParameter, MovingLinearParameter} = require('js/parameters/Parameter');
 
-const {CELL_SIZE, NUM_ROWS, NUM_COLS, INFLUENCE_REFRESH_RATE, MIX_COEFFICIENT, ENABLE_HUE, MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
+const {CELL_SIZE, INFLUENCE_REFRESH_RATE, MIX_COEFFICIENT, ENABLE_HUE, MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
 
 class Influence {
-    constructor({startRow, startCol}) {
+    constructor({latticeParameters, startRow, startCol}) {
         this._colParameter = new MovingLinearParameter({
-            min: 0,
-            max: NUM_COLS,
+            min: -latticeParameters.numCols.getValue(),
+            max: latticeParameters.numCols.getValue(),
             variance: 0.25,
-            start: startCol,
+            startLerp: startCol,
         });
 
         this._rowParameter = new MovingLinearParameter({
-            min: 0,
-            max: NUM_ROWS,
+            min: -latticeParameters.numRows.getValue(),
+            max: latticeParameters.numRows.getValue(),
             variance: 0.25,
-            start: startRow,
+            startLerp: startRow,
         });
 
         setInterval(this.update.bind(this), INFLUENCE_REFRESH_RATE);

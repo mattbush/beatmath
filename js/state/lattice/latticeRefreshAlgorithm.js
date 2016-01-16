@@ -1,13 +1,12 @@
-const {NUM_COLS, NUM_ROWS, PIXEL_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
+const {PIXEL_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
+const {posMod} = require('js/utils/math');
 
 const DIAMOND_SIZE = 10;
 const NUM_DIAMOND_SPIRALS = 0;
 var DIAMOND_REFRESH_ALGORITHM = function(row, col) {
-    var dx = col - (NUM_COLS / 2);
-    var dy = row - (NUM_ROWS / 2);
-    var polarAngle = Math.atan2(dx, dy) * 180 / Math.PI;
-    var rowMod10 = row % DIAMOND_SIZE;
-    var colMod10 = col % DIAMOND_SIZE;
+    var polarAngle = Math.atan2(col, row) * 180 / Math.PI;
+    var rowMod10 = posMod(row, DIAMOND_SIZE);
+    var colMod10 = posMod(col, DIAMOND_SIZE);
     var half = DIAMOND_SIZE / 2;
     rowMod10 = (rowMod10 > half) ? (DIAMOND_SIZE - rowMod10) : rowMod10;
     colMod10 = (colMod10 > half) ? (DIAMOND_SIZE - colMod10) : colMod10;
@@ -20,11 +19,9 @@ const RIPPLE_RADIUS = 12;
 const NUM_SPIRALS = 1;
 const MANHATTAN_COEFFICIENT = 0;
 var RIPPLE_REFRESH_ALGORITHM = function(row, col) {
-    var dx = col - (NUM_COLS / 2);
-    var dy = row - (NUM_ROWS / 2);
-    var polarAngle = Math.atan2(dx, dy) * 180 / Math.PI;
-    var manhattanDistance = Math.abs(dx) + Math.abs(dy);
-    var euclideanDistance = Math.sqrt(dx * dx + dy * dy);
+    var polarAngle = Math.atan2(col, row) * 180 / Math.PI;
+    var manhattanDistance = Math.abs(col) + Math.abs(row);
+    var euclideanDistance = Math.sqrt(col * col + row * row);
     var distance = (MANHATTAN_COEFFICIENT * manhattanDistance + (1 - MANHATTAN_COEFFICIENT) * euclideanDistance);
     return (((distance / RIPPLE_RADIUS + (polarAngle * NUM_SPIRALS / 360)) + NUM_SPIRALS) % 1) * PIXEL_REFRESH_RATE;
 //    return (((Math.log(distance / RIPPLE_RADIUS) + (polarAngle * NUM_SPIRALS / 360)) + NUM_SPIRALS + 10) % 1) * PIXEL_REFRESH_RATE;
@@ -33,9 +30,7 @@ var RIPPLE_REFRESH_ALGORITHM = function(row, col) {
 const NUM_SECTORS = 6;
 const SECTOR_SIZE = 360 / NUM_SECTORS;
 var SECTOR_REFRESH_ALGORITHM = function(row, col) {
-    var dx = col - (NUM_COLS / 2);
-    var dy = row - (NUM_ROWS / 2);
-    var polarAngle = Math.atan2(dx, dy) * 180 / Math.PI;
+    var polarAngle = Math.atan2(col, row) * 180 / Math.PI;
     polarAngle += 360;
     var polarAngleMod = polarAngle % SECTOR_SIZE;
     if (polarAngleMod > SECTOR_SIZE / 2) {

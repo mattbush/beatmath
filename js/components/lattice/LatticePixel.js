@@ -29,8 +29,8 @@ var LatticePixel = React.createClass({
     },
     render: function() {
         var rotation = Math.floor(this.state.rotation);
-        var x = this.props.col * CELL_SIZE + CELL_SIZE / 2;
-        var y = this.props.row * CELL_SIZE + CELL_SIZE / 2;
+        var x = this.props.col * CELL_SIZE;
+        var y = this.props.row * CELL_SIZE;
         var transform = `translate(${x} ${y}) rotate(${rotation})`;
         var fill = this.state.color.toHexString(true);
         var pixelOffset = -this.state.size / 2;

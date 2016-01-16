@@ -1,4 +1,4 @@
-var {lerp} = require('js/utils/math');
+var {lerp, posMod} = require('js/utils/math');
 
 class Parameter {
     constructor({start}) {
@@ -35,6 +35,9 @@ class ToggleParameter extends Parameter {
 
 class LinearParameter extends Parameter {
     constructor(params) {
+        if (params.startLerp !== undefined) {
+            params.start = lerp(params.min, params.max, params.startLerp);
+        }
         super(params);
         this._min = params.min;
         this._max = params.max;
@@ -73,7 +76,7 @@ class AngleParameter extends Parameter {
         this._spinValue(inputValue);
     }
     _spinValue(spinAmount) {
-        this._value = (this._value + spinAmount + 360) % 360;
+        this._value = posMod(this._value + spinAmount, 360);
         this._updateListeners();
     }
 }

@@ -5,16 +5,22 @@ var THROTTLE_MS = 100;
 var ParameterBindingsMixin = {
     // callers implement this, returns a mapping of string to parameter object
     // getParameterBindings: function() {},
+    _getParameterBindings: function() {
+        if (!this._parameterBindings) {
+            this._parameterBindings = this.getParameterBindings();
+        }
+        return this._parameterBindings;
+    },
     componentDidMount: function() {
         this._boundThrottledForceUpdate = _.throttle(this.forceUpdate.bind(this), THROTTLE_MS);
 
-        _.each(this.getParameterBindings(), parameter => parameter.addListener(this._boundThrottledForceUpdate));
+        _.each(this._getParameterBindings(), parameter => parameter.addListener(this._boundThrottledForceUpdate));
     },
     componentWillUnmount: function() {
-        _.each(this.getParameterBindings(), parameter => parameter.removeListener(this._boundThrottledForceUpdate));
+        _.each(this._getParameterBindings(), parameter => parameter.removeListener(this._boundThrottledForceUpdate));
     },
     getParameterValue: function(paramName) {
-        return this.getParameterBindings()[paramName].getValue();
+        return this._getParameterBindings()[paramName].getValue();
     },
 };
 

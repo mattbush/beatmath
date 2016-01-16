@@ -1,6 +1,5 @@
-var {ToggleParameter} = require('js/parameters/Parameter');
+var {ToggleParameter, LinearParameter} = require('js/parameters/Parameter');
 var {mixboardButton} = require('js/inputs/MixboardConstants');
-// const {NUM_COLS, NUM_ROWS, MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
 
 class LatticeParameters {
     constructor(mixboard) {
@@ -9,6 +8,18 @@ class LatticeParameters {
             start: false,
         });
         this.showInfluences.listenToButton(mixboard, mixboardButton.L_SYNC);
+
+        this.numCols = new LinearParameter({
+            min: 0,
+            max: 40,
+            start: 32,
+        });
+
+        this.numRows = new LinearParameter({
+            min: 0,
+            max: 25,
+            start: 20,
+        });
     }
 }
 

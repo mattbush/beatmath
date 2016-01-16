@@ -6,24 +6,10 @@ var LatticePixel = require('js/components/lattice/LatticePixel');
 var BeatmathFrame = require('js/components/BeatmathFrame');
 var ParameterBindingsMixin = require('js/components/ParameterBindingsMixin');
 
-const {NUM_COLS, NUM_ROWS, MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
+const {MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
 
 var tinycolor = require('tinycolor2');
 var {ColorInfluence, RotationInfluence, SizeInfluence} = require('js/state/lattice/Influence');
-
-var influences = [
-    new ColorInfluence({startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#800'), index: 0}),
-    new ColorInfluence({startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: tinycolor('#080'), index: 1}),
-    new ColorInfluence({startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: tinycolor('#008'), index: 2}),
-
-    new SizeInfluence({startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: MAX_SIZE * 0.5}),
-    new SizeInfluence({startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: MAX_SIZE * 0.5}),
-    new SizeInfluence({startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: MAX_SIZE * 0.5}),
-
-    new RotationInfluence({startCol: 0.2 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: 0}),
-    new RotationInfluence({startCol: 0.8 * NUM_COLS, startRow: 0.2 * NUM_ROWS, startValue: 0}),
-    new RotationInfluence({startCol: 0.5 * NUM_COLS, startRow: 0.8 * NUM_ROWS, startValue: 0}),
-];
 
 var LatticeGrid = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -39,30 +25,48 @@ var LatticeGrid = React.createClass({
         };
     },
     getInitialState: function() {
-        return {
-            latticeParameters: new LatticeParameters(this.context.mixboard),
-        };
+        var latticeParameters = new LatticeParameters(this.context.mixboard);
+
+        var influences = [
+            new ColorInfluence({latticeParameters, startCol: 0.2, startRow: 0.2, startValue: tinycolor('#800'), index: 0}),
+            new ColorInfluence({latticeParameters, startCol: 0.8, startRow: 0.2, startValue: tinycolor('#080'), index: 1}),
+            new ColorInfluence({latticeParameters, startCol: 0.5, startRow: 0.8, startValue: tinycolor('#008'), index: 2}),
+
+            new SizeInfluence({latticeParameters, startCol: 0.2, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
+            new SizeInfluence({latticeParameters, startCol: 0.8, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
+            new SizeInfluence({latticeParameters, startCol: 0.5, startRow: 0.8, startValue: MAX_SIZE * 0.5}),
+
+            new RotationInfluence({latticeParameters, startCol: 0.2, startRow: 0.2, startValue: 0}),
+            new RotationInfluence({latticeParameters, startCol: 0.8, startRow: 0.2, startValue: 0}),
+            new RotationInfluence({latticeParameters, startCol: 0.5, startRow: 0.8, startValue: 0}),
+        ];
+
+        return {latticeParameters, influences};
     },
     getParameterBindings: function() {
         return {
             showInfluences: this.state.latticeParameters.showInfluences,
+            numRows: this.state.latticeParameters.numRows,
+            numCols: this.state.latticeParameters.numCols,
         };
     },
     render: function() {
         const children = [];
-        for (let row = 0; row < NUM_ROWS; row++) {
-            for (let col = 0; col < NUM_COLS; col++) {
-                children.push(<LatticePixel influences={influences} row={row} col={col} key={row + '|' + col} />);
+        var numRows = this.getParameterValue('numRows');
+        var numCols = this.getParameterValue('numCols');
+        for (let row = -numRows; row <= numRows; row++) {
+            for (let col = -numCols; col <= numCols; col++) {
+                children.push(<LatticePixel influences={this.state.influences} row={row} col={col} key={row + '|' + col} />);
             }
         }
 
         return (
-            <BeatmathFrame disableTransform={true}>
+            <BeatmathFrame>
                 <g>
                     {children}
                 </g>
                 {this.getParameterValue('showInfluences') && <g>
-                    {_.map(influences, (influence, index) =>
+                    {_.map(this.state.influences, (influence, index) =>
                         <InfluenceCircle influence={influence} key={index} />
                     )}
                 </g>}
