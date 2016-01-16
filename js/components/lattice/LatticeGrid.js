@@ -5,6 +5,7 @@ var InfluenceCircle = require('js/components/lattice/InfluenceCircle');
 var LatticePixel = require('js/components/lattice/LatticePixel');
 var BeatmathFrame = require('js/components/BeatmathFrame');
 var ParameterBindingsMixin = require('js/components/ParameterBindingsMixin');
+var LatticeRefreshTimer = require('js/state/lattice/LatticeRefreshTimer');
 
 const {MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
 
@@ -16,6 +17,7 @@ var LatticeGrid = React.createClass({
     childContextTypes: {
         latticeParameters: React.PropTypes.object,
         influences: React.PropTypes.array,
+        refreshTimer: React.PropTypes.object,
     },
     contextTypes: {
         mixboard: React.PropTypes.object,
@@ -24,10 +26,13 @@ var LatticeGrid = React.createClass({
         return {
             latticeParameters: this.state.latticeParameters,
             influences: this.state.influences,
+            refreshTimer: this.state.refreshTimer,
         };
     },
     getInitialState: function() {
         var latticeParameters = new LatticeParameters(this.context.mixboard);
+
+        var refreshTimer = new LatticeRefreshTimer({latticeParameters});
 
         var influences = [
             new ColorInfluence({latticeParameters, startCol: 0.2, startRow: 0.2, startValue: tinycolor('#f00'), index: 0}),
@@ -43,7 +48,7 @@ var LatticeGrid = React.createClass({
             new RotationInfluence({latticeParameters, startCol: 0.5, startRow: 0.8, startValue: 0}),
         ];
 
-        return {latticeParameters, influences};
+        return {latticeParameters, influences, refreshTimer};
     },
     getParameterBindings: function() {
         return {

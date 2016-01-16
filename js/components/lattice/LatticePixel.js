@@ -1,7 +1,6 @@
 var _ = require('underscore');
 var React = require('react');
 var tinycolor = require('tinycolor2');
-var latticeRefreshAlgorithm = require('js/state/lattice/latticeRefreshAlgorithm');
 var {runAtTimestamp} = require('js/utils/time');
 
 const {CELL_SIZE, PIXEL_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
@@ -12,10 +11,11 @@ var LatticePixel = React.createClass({
     contextTypes: {
         latticeParameters: React.PropTypes.object,
         influences: React.PropTypes.array,
+        refreshTimer: React.PropTypes.object,
     },
     componentDidMount: function() {
-        this._refreshOffset = latticeRefreshAlgorithm(this.props.row, this.props.col);
-        setTimeout(this._update, this._refreshOffset);
+        var refreshOffset = this.context.refreshTimer.getRefreshOffset(this.props.row, this.props.col);
+        setTimeout(this._update, refreshOffset);
     },
     getInitialState: function() {
         return {
@@ -29,7 +29,7 @@ var LatticePixel = React.createClass({
             return;
         }
         var nextTick = this.context.latticeParameters.nextTick;
-        var refreshOffset = this._refreshOffset;
+        var refreshOffset = this.context.refreshTimer.getRefreshOffset(this.props.row, this.props.col);
         if (nextTick.getNumTicks() % 2 &&
             this.context.latticeParameters.oscillate.getValue()) {
             refreshOffset = PIXEL_REFRESH_RATE - refreshOffset;
