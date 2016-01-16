@@ -2,6 +2,7 @@ var _ = require('underscore');
 var React = require('react');
 var tinycolor = require('tinycolor2');
 var latticeRefreshAlgorithm = require('js/state/lattice/latticeRefreshAlgorithm');
+var {runAtTimestamp} = require('js/utils/time');
 
 const {CELL_SIZE, PIXEL_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
 
@@ -9,11 +10,12 @@ var gray = tinycolor('#909090');
 
 var LatticePixel = React.createClass({
     contextTypes: {
+        latticeParameters: React.PropTypes.object,
         influences: React.PropTypes.array,
     },
     componentDidMount: function() {
         this._refreshOffset = latticeRefreshAlgorithm(this.props.row, this.props.col);
-        setInterval(this._update, this._refreshOffset);
+        setTimeout(this._update, this._refreshOffset);
     },
     getInitialState: function() {
         return {
@@ -23,12 +25,23 @@ var LatticePixel = React.createClass({
         };
     },
     _update: function() {
+        if (!this.isMounted()) {
+            return;
+        }
+        var nextTick = this.context.latticeParameters.nextTick;
+        var timestamp = nextTick.getValue() + this._refreshOffset;
+        runAtTimestamp(this._update, timestamp);
+
         // whether to oscillate (for diamonds/sectors)
         // setTimeout(this._update, PIXEL_REFRESH_RATE * 2 - this._refreshOffset * 2);
-        this._refreshOffset = PIXEL_REFRESH_RATE - this._refreshOffset;
-        var state = _.clone(this.state);
-        _.each(this.context.influences, influence => influence.mix(state, this.props.row, this.props.col));
-        this.setState(state);
+        // this._refreshOffset = PIXEL_REFRESH_RATE - this._refreshOffset;
+
+        this._nextState = _.clone(this.state);
+        _.each(this.context.influences, this._mixInfluenceIntoNextState);
+        this.setState(this._nextState);
+    },
+    _mixInfluenceIntoNextState: function(influence) {
+        return influence.mix(this._nextState, this.props.row, this.props.col);
     },
     render: function() {
         var rotation = Math.floor(this.state.rotation);

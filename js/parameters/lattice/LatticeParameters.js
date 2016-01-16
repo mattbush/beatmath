@@ -1,5 +1,7 @@
-var {ToggleParameter, LinearParameter} = require('js/parameters/Parameter');
+var {ToggleParameter, LinearParameter, NextTickParameter} = require('js/parameters/Parameter');
 var {mixboardButton} = require('js/inputs/MixboardConstants');
+
+const {PIXEL_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
 
 class LatticeParameters {
     constructor(mixboard) {
@@ -19,6 +21,10 @@ class LatticeParameters {
             min: 0,
             max: 25,
             start: 20,
+        });
+
+        this.nextTick = new NextTickParameter({
+            interval: PIXEL_REFRESH_RATE,
         });
     }
 }
