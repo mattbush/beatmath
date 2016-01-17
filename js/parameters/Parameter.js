@@ -169,7 +169,7 @@ class LinearParameter extends Parameter {
 class AngleParameter extends Parameter {
     constructor(params) {
         super(params);
-        this._constrainTo360 = params.constrainTo360 !== false;
+        this._constrainTo = (params.constrainTo !== undefined) ? params.constrainTo : 360;
     }
     listenToWheel(mixboard, eventCode) {
         mixboard.addWheelListener(eventCode, this.onWheelUpdate.bind(this));
@@ -188,8 +188,8 @@ class AngleParameter extends Parameter {
     }
     _spinValue(spinAmount) {
         this._value = this._value + spinAmount;
-        if (this._constrainTo360) {
-            this._value = posMod(this._value, 360);
+        if (this._constrainTo !== false) {
+            this._value = posMod(this._value, this._constrainTo);
         }
         this._updateListeners();
     }

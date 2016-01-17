@@ -27,7 +27,7 @@ class BeatmathParameters {
 
         this.frameRotation = new AngleParameter({
             start: 0,
-            constrainTo360: false,
+            constrainTo: false,
         });
         this.frameRotation.listenToWheel(mixboard, mixboardWheel.L_TURNTABLE);
         this.frameRotation.listenToSnapButton(mixboard, mixboardButton.L_SCRATCH);

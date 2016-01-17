@@ -2,6 +2,7 @@ var _ = require('underscore');
 var React = require('react');
 var TwentySixteenParameters = require('js/parameters/twenty_sixteen/TwentySixteenParameters');
 var BeatmathFrame = require('js/components/BeatmathFrame');
+var ParameterBindingsMixin = require('js/components/ParameterBindingsMixin');
 
 const ARRANGEMENTS = require('js/state/twenty_sixteen/arrangements');
 const NUM_GOLD = 20;
@@ -21,6 +22,7 @@ const TwentySixteenPixel = React.createClass({
 });
 
 const TwentySixteen = React.createClass({
+    mixins: [ParameterBindingsMixin],
     childContextTypes: {
         twentySixteenParameters: React.PropTypes.object,
     },
@@ -35,11 +37,15 @@ const TwentySixteen = React.createClass({
     getInitialState: function() {
         return {
             twentySixteenParameters: new TwentySixteenParameters(this.context.mixboard),
-            arrangementIndex: 1,
+        };
+    },
+    getParameterBindings: function() {
+        return {
+            arrangementIndex: this.state.twentySixteenParameters.arrangementIndex,
         };
     },
     render: function() {
-        var arrangement = ARRANGEMENTS[this.state.arrangementIndex];
+        var arrangement = ARRANGEMENTS[this.getParameterValue('arrangementIndex')];
         var golds = _.times(NUM_GOLD, index =>
             <TwentySixteenPixel
                 color="gold"
