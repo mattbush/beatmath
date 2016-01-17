@@ -18,6 +18,13 @@ class BeatmathParameters {
         });
         this.height.listenToKnob(mixboard, mixboardFader.R_PITCH_BEND);
 
+        this.frameScaleLog2 = new LinearParameter({
+            min: -2,
+            max: 4,
+            start: 0,
+        });
+        this.frameScaleLog2.listenToFader(mixboard, mixboardFader.MASTER_GAIN);
+
         this.frameRotation = new AngleParameter({
             start: 0,
             constrainTo360: false,
