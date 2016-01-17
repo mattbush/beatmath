@@ -21,6 +21,24 @@ class Parameter {
     }
 }
 
+class NegatedParameter extends Parameter {
+    constructor(parameter) {
+        super({start: undefined}); // unused
+        this._parameter = parameter;
+        parameter.addListener(this._updateListeners.bind(this));
+    }
+    getValue() {
+        return -this._parameter.getValue();
+    }
+}
+
+var wrapParam = function(value) {
+    if (!(value instanceof Parameter)) {
+        value = new Parameter({start: value});
+    }
+    return value;
+};
+
 class ToggleParameter extends Parameter {
     listenToButton(mixboard, eventCode) {
         mixboard.addButtonListener(eventCode, this.onButtonUpdate.bind(this));
@@ -65,12 +83,14 @@ class CycleParameter extends Parameter {
 
 class LinearParameter extends Parameter {
     constructor(params) {
+        params.min = wrapParam(params.min);
+        params.max = wrapParam(params.max);
         if (params.startLerp !== undefined) {
-            params.start = lerp(params.min, params.max, params.startLerp);
+            params.start = lerp(params.min.getValue(), params.max.getValue(), params.startLerp);
         }
         super(params);
-        this._min = params.min;
-        this._max = params.max;
+        this._minParam = params.min;
+        this._maxParam = params.max;
         this._incrementAmount = params.incrementAmount || 1;
         this._lePassedByInput = false;
         this._gePassedByInput = false;
@@ -122,14 +142,14 @@ class LinearParameter extends Parameter {
         this._constrainToRangeAndUpdateValue(newValue);
     }
     _constrainToRangeAndUpdateValue(newValue) {
-        newValue = constrainToRange(this._min, this._max, newValue);
+        newValue = constrainToRange(this._minParam.getValue(), this._maxParam.getValue(), newValue);
         if (newValue !== this._value) {
             this._value = newValue;
             this._updateListeners();
         }
     }
     onFaderOrKnobUpdate(inputValue) {
-        var newValue = lerp(this._min, this._max, inputValue);
+        var newValue = lerp(this._minParam.getValue(), this._maxParam.getValue(), inputValue);
         // don't update from the fader or knob until you've "met" the current value
         if (!this._lePassedByInput || !this._gePassedByInput) {
             if (newValue >= this._value) {
@@ -164,11 +184,11 @@ class MovingColorParameter extends Parameter {
         super(params);
         this._variance = params.variance;
         this._speed = 0;
-        this._max = params.max;
+        this._maxSpeed = params.max;
     }
     update() {
         this._speed += (Math.random() * this._variance * 2) - this._variance;
-        if (Math.abs(this._speed) > this._max) {
+        if (Math.abs(this._speed) > this._maxSpeed) {
             this._speed *= 0.5;
         }
         this._value = this._value.spin(this._speed);
@@ -181,11 +201,11 @@ class MovingAngleParameter extends AngleParameter {
         super(params);
         this._variance = params.variance;
         this._speed = 0;
-        this._max = params.max;
+        this._maxSpeed = params.max;
     }
     update() {
         this._speed += (Math.random() * this._variance * 2) - this._variance;
-        if (Math.abs(this._speed) > this._max) {
+        if (Math.abs(this._speed) > this._maxSpeed) {
             this._speed *= 0.5;
         }
         this._spinValue(this._speed);
@@ -201,13 +221,16 @@ class MovingLinearParameter extends LinearParameter {
     update() {
         this._speed += (Math.random() * this._variance * 2) - this._variance;
 
-        var next = this._value + this._speed;
-        if (next > this._max || next < this._min) {
+        var nextOriginal = this._value + this._speed;
+        var nextConstrained = constrainToRange(this._minParam.getValue(), this._maxParam.getValue(), nextOriginal);
+
+        // if speed is positive and we're past max, or vice versa
+        if ((nextConstrained < nextOriginal && this._speed > 0) ||
+            (nextConstrained > nextOriginal && this._speed < 0)) {
             this._speed *= -0.5;
-        } else {
-            this._value += this._speed;
         }
 
+        this._value = nextConstrained;
         this._updateListeners();
     }
 }
@@ -233,6 +256,7 @@ class NextTickParameter extends Parameter {
 }
 
 module.exports = {
+    NegatedParameter,
     AngleParameter,
     LinearParameter,
     ToggleParameter,

@@ -1,21 +1,21 @@
 var tinycolor = require('tinycolor2');
 var updateHue = require('js/outputs/updateHue');
-var {MovingColorParameter, MovingLinearParameter} = require('js/parameters/Parameter');
+var {MovingColorParameter, MovingLinearParameter, NegatedParameter} = require('js/parameters/Parameter');
 
 const {CELL_SIZE, INFLUENCE_REFRESH_RATE, MIX_COEFFICIENT, ENABLE_HUE, MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
 
 class Influence {
     constructor({latticeParameters, startRow, startCol}) {
         this._colParameter = new MovingLinearParameter({
-            min: -latticeParameters.numCols.getValue(),
-            max: latticeParameters.numCols.getValue(),
+            min: new NegatedParameter(latticeParameters.numCols),
+            max: latticeParameters.numCols,
             variance: 0.25,
             startLerp: startCol,
         });
 
         this._rowParameter = new MovingLinearParameter({
-            min: -latticeParameters.numRows.getValue(),
-            max: latticeParameters.numRows.getValue(),
+            min: new NegatedParameter(latticeParameters.numRows),
+            max: latticeParameters.numRows,
             variance: 0.25,
             startLerp: startRow,
         });
