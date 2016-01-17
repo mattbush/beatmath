@@ -12,13 +12,22 @@ const TwentySixteenPixel = React.createClass({
         twentySixteenParameters: React.PropTypes.object,
     },
     getParameterBindings: function() {
+        var originalIndex = this.props.index;
+        var indexMapping;
+        if (this.props.color === 'gold') {
+            indexMapping = this.context.twentySixteenParameters.goldIndexMappings[originalIndex];
+        } else {
+            indexMapping = this.context.twentySixteenParameters.blueIndexMappings[originalIndex];
+        }
+
         return {
             arrangementIndex: this.context.twentySixteenParameters.arrangementIndex,
+            indexMapping: indexMapping,
         };
     },
     render: function() {
         var arrangement = ARRANGEMENTS[this.getParameterValue('arrangementIndex')];
-        var index = this.props.index;
+        var index = this.getParameterValue('indexMapping');
 
         var x, y;
         if (this.props.color === 'gold') {

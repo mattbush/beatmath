@@ -272,6 +272,7 @@ class NextTickParameter extends Parameter {
 }
 
 module.exports = {
+    Parameter,
     NegatedParameter,
     AngleParameter,
     LinearParameter,
