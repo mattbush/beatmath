@@ -11,20 +11,21 @@ var BeatmathFrame = React.createClass({
         return {
             width: this.context.beatmathParameters.width,
             height: this.context.beatmathParameters.height,
+            frameRotation: this.context.beatmathParameters.frameRotation,
         };
     },
     render: function() {
         var width = this.getParameterValue('width');
         var height = this.getParameterValue('height');
-        var transform = `translate(${width / 2}, ${height / 2})`;
-        if (this.props.disableTransform) {
-            transform = null;
-        }
-
+        var frameRotation = Math.floor(this.getParameterValue('frameRotation'));
+        var style = {
+            transform: `translate(${width / 2}px, ${height / 2}px) rotate(${frameRotation}deg)`,
+            transition: `transform ${0.05}s ease-out`,
+        };
         return (
             <div className="main">
                 <svg width={width} height={height}>
-                    <g transform={transform}>
+                    <g style={style}>
                         {this.props.children}
                     </g>
                 </svg>

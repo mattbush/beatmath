@@ -1,4 +1,4 @@
-var {lerp, posMod, constrainToRange} = require('js/utils/math');
+var {lerp, posMod, constrainToRange, modAndShiftToHalf} = require('js/utils/math');
 
 class Parameter {
     constructor({start}) {
@@ -167,14 +167,30 @@ class LinearParameter extends Parameter {
 }
 
 class AngleParameter extends Parameter {
+    constructor(params) {
+        super(params);
+        this._constrainTo360 = params.constrainTo360 !== false;
+    }
     listenToWheel(mixboard, eventCode) {
         mixboard.addWheelListener(eventCode, this.onWheelUpdate.bind(this));
     }
     onWheelUpdate(inputValue) {
         this._spinValue(inputValue);
     }
+    listenToSnapButton(mixboard, eventCode) {
+        mixboard.addButtonListener(eventCode, this.onSnapButton.bind(this));
+    }
+    onSnapButton(inputValue) {
+        if (inputValue) {
+            var distanceFromClosestMultipleOf15 = modAndShiftToHalf(this._value, 15);
+            this._spinValue(-distanceFromClosestMultipleOf15);
+        }
+    }
     _spinValue(spinAmount) {
-        this._value = posMod(this._value + spinAmount, 360);
+        this._value = this._value + spinAmount;
+        if (this._constrainTo360) {
+            this._value = posMod(this._value, 360);
+        }
         this._updateListeners();
     }
 }
