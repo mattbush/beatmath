@@ -1,5 +1,5 @@
 var {ToggleParameter, LinearParameter, NextTickParameter} = require('js/parameters/Parameter');
-var {mixboardButton} = require('js/inputs/MixboardConstants');
+var {mixboardButton, mixboardFader} = require('js/inputs/MixboardConstants');
 
 const {PIXEL_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
 
@@ -14,14 +14,16 @@ class LatticeParameters {
         this.numCols = new LinearParameter({
             min: 0,
             max: 40,
-            start: 32,
+            start: 12,
         });
+        this.numCols.listenToFader(mixboard, mixboardFader.L_GAIN);
 
         this.numRows = new LinearParameter({
             min: 0,
             max: 25,
-            start: 20,
+            start: 12,
         });
+        this.numRows.listenToFader(mixboard, mixboardFader.R_GAIN);
 
         this.nextTick = new NextTickParameter({
             interval: PIXEL_REFRESH_RATE,

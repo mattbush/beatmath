@@ -14,13 +14,14 @@ var LatticePixel = React.createClass({
         refreshTimer: React.PropTypes.object,
     },
     componentDidMount: function() {
+        var nextTick = this.context.latticeParameters.nextTick;
         var refreshOffset = this.context.refreshTimer.getRefreshOffset(this.props.row, this.props.col);
-        setTimeout(this._update, refreshOffset);
+        runAtTimestamp(this._update, nextTick.getValue() + refreshOffset);
     },
     getInitialState: function() {
         return {
             color: gray,
-            size: 8,
+            size: CELL_SIZE * 0.4,
             rotation: 0,
         };
     },

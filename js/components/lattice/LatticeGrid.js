@@ -60,8 +60,8 @@ var LatticeGrid = React.createClass({
     },
     render: function() {
         const children = [];
-        var numRows = this.getParameterValue('numRows');
-        var numCols = this.getParameterValue('numCols');
+        var numRows = Math.floor(this.getParameterValue('numRows'));
+        var numCols = Math.floor(this.getParameterValue('numCols'));
         for (let row = -numRows; row <= numRows; row++) {
             for (let col = -numCols; col <= numCols; col++) {
                 children.push(<LatticePixel row={row} col={col} key={row + '|' + col} />);
