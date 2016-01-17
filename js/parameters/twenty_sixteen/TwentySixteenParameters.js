@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var {AngleParameter} = require('js/parameters/Parameter');
+var {AngleParameter, ToggleParameter} = require('js/parameters/Parameter');
 var {mixboardWheel, mixboardButton} = require('js/inputs/MixboardConstants');
 var IndexMappingParameter = require('js/parameters/twenty_sixteen/IndexMappingParameter');
 
@@ -18,6 +18,12 @@ class TwentySixteenParameters {
         });
         this.arrangementIndex.listenToWheel(mixboard, mixboardWheel.L_SELECT);
 
+        this._reverseBlueIncrement = new ToggleParameter({
+            start: 0,
+            constrainTo: ARRANGEMENTS.length,
+        });
+        this._reverseBlueIncrement.listenToButton(mixboard, mixboardButton.L_KEYLOCK);
+
         mixboard.addButtonListener(mixboardButton.L_LOOP_MANUAL, this._incrementIndicesDown.bind(this));
         mixboard.addButtonListener(mixboardButton.L_LOOP_IN, this._incrementIndicesUp.bind(this));
         mixboard.addButtonListener(mixboardButton.L_LOOP_OUT, this._shiftIndicesDown.bind(this));
@@ -27,22 +33,26 @@ class TwentySixteenParameters {
         this.blueIndexMappings = _.times(NUM_BLUE, index => new IndexMappingParameter({start: index}));
     }
     _incrementIndicesUp() {
+        var reverseBlue = this._reverseBlueIncrement.getValue();
         _.map(this.goldIndexMappings, mapping => mapping.mapValue(incrementGoldUp));
-        _.map(this.blueIndexMappings, mapping => mapping.mapValue(incrementBlueUp));
+        _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? incrementBlueDown : incrementBlueUp));
     }
     _incrementIndicesDown() {
+        var reverseBlue = this._reverseBlueIncrement.getValue();
         _.map(this.goldIndexMappings, mapping => mapping.mapValue(incrementGoldDown));
-        _.map(this.blueIndexMappings, mapping => mapping.mapValue(incrementBlueDown));
+        _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? incrementBlueUp : incrementBlueDown));
     }
     _shiftIndicesUp() {
         var arrangement = ARRANGEMENTS[this.arrangementIndex.getValue()];
+        var reverseBlue = this._reverseBlueIncrement.getValue();
         _.map(this.goldIndexMappings, mapping => mapping.mapValue(arrangement.shiftGoldUp));
-        _.map(this.blueIndexMappings, mapping => mapping.mapValue(arrangement.shiftBlueUp));
+        _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? arrangement.shiftBlueDown : arrangement.shiftBlueUp));
     }
     _shiftIndicesDown() {
         var arrangement = ARRANGEMENTS[this.arrangementIndex.getValue()];
+        var reverseBlue = this._reverseBlueIncrement.getValue();
         _.map(this.goldIndexMappings, mapping => mapping.mapValue(arrangement.shiftGoldDown));
-        _.map(this.blueIndexMappings, mapping => mapping.mapValue(arrangement.shiftBlueDown));
+        _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? arrangement.shiftBlueUp : arrangement.shiftBlueDown));
     }
 }
 
