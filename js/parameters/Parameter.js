@@ -211,6 +211,9 @@ class MovingColorParameter extends Parameter {
         this._variance = params.variance;
         this._speed = 0;
         this._maxSpeed = params.max;
+        if (params.autoupdate !== undefined) {
+            setInterval(this.update.bind(this), params.autoupdate);
+        }
     }
     update() {
         this._speed += (Math.random() * this._variance * 2) - this._variance;

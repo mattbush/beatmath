@@ -1,7 +1,8 @@
 var _ = require('underscore');
-var {AngleParameter, ToggleParameter} = require('js/parameters/Parameter');
+var {AngleParameter, ToggleParameter, MovingColorParameter} = require('js/parameters/Parameter');
 var {mixboardWheel, mixboardButton} = require('js/inputs/MixboardConstants');
 var IndexMappingParameter = require('js/parameters/twenty_sixteen/IndexMappingParameter');
+var tinycolor = require('tinycolor2');
 
 var {incrementGoldUp, incrementBlueUp, incrementGoldDown, incrementBlueDown} = require('js/state/twenty_sixteen/IndexMappingFunctions');
 
@@ -17,6 +18,20 @@ class TwentySixteenParameters {
             constrainTo: ARRANGEMENTS.length,
         });
         this.arrangementIndex.listenToWheel(mixboard, mixboardWheel.L_SELECT);
+
+        this.goldColor = new MovingColorParameter({
+            max: 5,
+            variance: 1,
+            start: tinycolor('#f90'),
+            autoupdate: 1000,
+        });
+
+        this.blueColor = new MovingColorParameter({
+            max: 5,
+            variance: 1,
+            start: tinycolor('#f90').spin(180),
+            autoupdate: 1000,
+        });
 
         this._reverseBlueIncrement = new ToggleParameter({
             start: 0,
