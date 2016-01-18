@@ -1,5 +1,5 @@
 var {ToggleParameter, LinearParameter, NextTickParameter} = require('js/parameters/Parameter');
-var {mixboardButton, mixboardFader} = require('js/inputs/MixboardConstants');
+var {mixboardButton, mixboardFader, mixboardKnob} = require('js/inputs/MixboardConstants');
 
 const {PIXEL_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
 
@@ -10,6 +10,19 @@ class LatticeParameters {
             start: false,
         });
         this.showInfluences.listenToButton(mixboard, mixboardButton.L_SYNC);
+
+        this.mixCoefficient = new LinearParameter({
+            min: 0.2,
+            max: 2,
+            start: 1,
+        });
+        this.mixCoefficient.listenToKnob(mixboard, mixboardKnob.L_BASS);
+        this.distanceCoefficient = new LinearParameter({
+            min: 0.2,
+            max: 3,
+            start: 1,
+        });
+        this.distanceCoefficient.listenToKnob(mixboard, mixboardKnob.R_BASS);
 
         this.numCols = new LinearParameter({
             min: 0,

@@ -2,10 +2,12 @@ var tinycolor = require('tinycolor2');
 var updateHue = require('js/outputs/updateHue');
 var {MovingColorParameter, MovingLinearParameter, NegatedParameter} = require('js/parameters/Parameter');
 
-const {CELL_SIZE, INFLUENCE_REFRESH_RATE, MIX_COEFFICIENT, ENABLE_HUE, MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
+const {CELL_SIZE, INFLUENCE_REFRESH_RATE, ENABLE_HUE, MAX_SIZE} = require('js/parameters/lattice/LatticeConstants');
 
 class Influence {
     constructor({latticeParameters, startRow, startCol}) {
+        this._latticeParameters = latticeParameters;
+
         this._colParameter = new MovingLinearParameter({
             min: new NegatedParameter(latticeParameters.numCols),
             max: latticeParameters.numCols,
@@ -32,11 +34,14 @@ class Influence {
         return this._mainParameter;
     }
     mix(pixelState, row, col) {
+        let mixCoefficient = this._latticeParameters.mixCoefficient.getValue();
+        let distanceCoefficient = this._latticeParameters.distanceCoefficient.getValue();
+
         let dx = this._colParameter.getValue() - col;
         let dy = this._rowParameter.getValue() - row;
         let distance = Math.sqrt(dx * dx + dy * dy);
 //            let mixAmount = 500 / (distance * 5 + 5);
-        let mixAmount = ((120 - (distance * 8)) * MIX_COEFFICIENT) / 100;
+        let mixAmount = ((120 - (distance / distanceCoefficient * 8)) * mixCoefficient) / 100;
         var pixelStateKey = this._getPixelStateKey();
         if (mixAmount > 0) {
             mixAmount = Math.min(mixAmount, 1);

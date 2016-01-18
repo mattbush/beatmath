@@ -4,7 +4,6 @@ const CELL_SIZE = 20;
 
 // const BPM_CONST = 120;
 
-const MIX_COEFFICIENT = 1.0;
 const ANIMATION_TIME_COEFFICIENT = 1.0;
 
 const MAX_SIZE = CELL_SIZE * 1.0;
@@ -20,7 +19,6 @@ module.exports = {
     CELL_SIZE,
     INFLUENCE_REFRESH_RATE,
     PIXEL_REFRESH_RATE,
-    MIX_COEFFICIENT,
     ENABLE_HUE,
     MAX_SIZE,
 };
