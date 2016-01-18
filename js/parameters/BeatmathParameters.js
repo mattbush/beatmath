@@ -9,14 +9,14 @@ class BeatmathParameters {
             max: WIDTH_PX,
             start: WIDTH_PX,
         });
-        this.width.listenToKnob(mixboard, mixboardFader.L_PITCH_BEND);
+        this.width.listenToFader(mixboard, mixboardFader.L_PITCH_BEND);
 
         this.height = new LinearParameter({
             min: HEIGHT_PX / 10,
             max: HEIGHT_PX,
             start: DESIRED_HEIGHT_PX,
         });
-        this.height.listenToKnob(mixboard, mixboardFader.R_PITCH_BEND);
+        this.height.listenToFader(mixboard, mixboardFader.R_PITCH_BEND);
 
         this.frameScaleLog2 = new LinearParameter({
             min: -2,
@@ -31,6 +31,21 @@ class BeatmathParameters {
         });
         this.frameRotation.listenToWheel(mixboard, mixboardWheel.L_TURNTABLE);
         this.frameRotation.listenToSnapButton(mixboard, mixboardButton.L_SCRATCH);
+
+        this.colorSpin = new AngleParameter({
+            start: 0,
+        });
+        this.colorSpin.listenToWheel(mixboard, mixboardWheel.R_TURNTABLE);
+        this.colorSpin.listenToResetButton(mixboard, mixboardButton.R_SCRATCH);
+
+        this.brightness = new LinearParameter({
+            min: 0,
+            max: 1,
+            start: 1,
+            incrementAmount: 0.05,
+        });
+        this.brightness.listenToIncrementButton(mixboard, mixboardButton.R_CUE);
+        this.brightness.listenToDecrementButton(mixboard, mixboardButton.R_SYNC);
 
         this.pixelPointiness = new LinearParameter({
             min: 0.45,

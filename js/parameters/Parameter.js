@@ -170,6 +170,7 @@ class AngleParameter extends Parameter {
     constructor(params) {
         super(params);
         this._constrainTo = (params.constrainTo !== undefined) ? params.constrainTo : 360;
+        this._defaultOff = params.start;
     }
     listenToWheel(mixboard, eventCode) {
         mixboard.addWheelListener(eventCode, this.onWheelUpdate.bind(this));
@@ -184,6 +185,15 @@ class AngleParameter extends Parameter {
         if (inputValue) {
             var distanceFromClosestMultipleOf15 = modAndShiftToHalf(this._value, 15);
             this._spinValue(-distanceFromClosestMultipleOf15);
+        }
+    }
+    listenToResetButton(mixboard, eventCode) {
+        mixboard.addButtonListener(eventCode, this.onResetButtonPress.bind(this));
+    }
+    onResetButtonPress(inputValue) {
+        if (inputValue) {
+            this._value = this._defaultOff;
+            this._updateListeners();
         }
     }
     _spinValue(spinAmount) {

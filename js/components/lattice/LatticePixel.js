@@ -49,7 +49,7 @@ var LatticePixel = React.createClass({
         var rotation = Math.floor(this.state.rotation);
         var x = this.props.col * CELL_SIZE;
         var y = this.props.row * CELL_SIZE;
-        var fill = this.state.color.toHexString(true);
+        var fill = this.state.color;
 
         var style = {
             transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${this.state.size / 2})`,

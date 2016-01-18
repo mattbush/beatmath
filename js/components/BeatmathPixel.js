@@ -39,15 +39,26 @@ var BeatmathPixel = React.createClass({
         var pixelPointiness = this.context.beatmathParameters.pixelPointiness.getValue();
         var pixelSidedness = this.context.beatmathParameters.pixelSidedness.getValue();
         // var shouldStrokePixels = this.context.beatmathParameters.shouldStrokePixels.getValue();
+        var colorSpin = this.context.beatmathParameters.colorSpin.getValue();
+        var brightness = this.context.beatmathParameters.brightness.getValue();
+
+        var color = this.props.color;
+        if (colorSpin !== 0) {
+            color = color.spin(colorSpin);
+        }
+        if (brightness !== 1) {
+            color = color.darken((1 - brightness) * 100);
+        }
+        var fill = color.toHexString(true);
 
         if (pixelPointiness < 0.5) {
-            return <circle cx="0" cy="0" r="1" fill={this.props.color} />;
+            return <circle cx="0" cy="0" r="1" fill={fill} />;
         } else {
             var pointsArray = (pixelSidedness === 3) ? trianglePoints : rectPoints;
             var pointsIndex = Math.floor(pixelPointiness * POINTINESS_SETTINGS_PER_UNIT);
             var points = pointsArray[pointsIndex];
             return (
-                <polygon points={points} fill={this.props.color} />
+                <polygon points={points} fill={fill} />
             );
         }
     },
