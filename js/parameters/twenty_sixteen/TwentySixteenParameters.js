@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var {AngleParameter, ToggleParameter, MovingColorParameter} = require('js/parameters/Parameter');
+var {AngleParameter, ToggleParameter, MovingColorParameter, LinearParameter} = require('js/parameters/Parameter');
 var {mixboardWheel, mixboardButton} = require('js/inputs/MixboardConstants');
 var IndexMappingParameter = require('js/parameters/twenty_sixteen/IndexMappingParameter');
 var tinycolor = require('tinycolor2');
@@ -11,6 +11,8 @@ const ARRANGEMENTS = require('js/state/twenty_sixteen/arrangements');
 
 const NUM_GOLD = 20;
 const NUM_BLUE = 16;
+
+const AUTOPILOT_FREQ_MAX = 5;
 
 class TwentySixteenParameters {
     constructor(mixboard) {
@@ -46,6 +48,25 @@ class TwentySixteenParameters {
         });
         this._isAutopiloting.listenToButton(mixboard, mixboardButton.L_EFFECT);
         this._isAutopiloting.addListener(this._onAutopilotChange.bind(this));
+
+        this._autopilotArrangementFrequencyLog2 = new LinearParameter({
+            min: 0,
+            start: 2,
+            max: AUTOPILOT_FREQ_MAX,
+        });
+        this._autopilotArrangementFrequencyLog2.listenToWheel(mixboard, mixboardWheel.L_SELECT);
+        this._autopilotIncrementFrequencyLog2 = new LinearParameter({
+            min: 0,
+            start: AUTOPILOT_FREQ_MAX,
+            max: AUTOPILOT_FREQ_MAX,
+        });
+        this._autopilotIncrementFrequencyLog2.listenToWheel(mixboard, mixboardWheel.L_CONTROL_1);
+        this._autopilotShiftFrequencyLog2 = new LinearParameter({
+            min: 0,
+            start: 0,
+            max: AUTOPILOT_FREQ_MAX,
+        });
+        this._autopilotShiftFrequencyLog2.listenToWheel(mixboard, mixboardWheel.L_CONTROL_2);
 
         this._arrangements = [undefined, undefined, undefined];
         mixboard.addButtonListener(mixboardButton.L_DELETE, this._resetArrangements.bind(this));
@@ -109,12 +130,23 @@ class TwentySixteenParameters {
     _doAutopilotUpdate() {
         this._autopilotTimeout = setTimeout(this._doAutopilotUpdate, 1000);
 
-        do {
-            this._autopilotIndex = posMod(this._autopilotIndex + 1, this._arrangements.length);
-        } while (this._arrangements[this._autopilotIndex] === undefined);
+        var arrangementFreq = this._autopilotArrangementFrequencyLog2.getValue();
+        var incrementFreq = this._autopilotIncrementFrequencyLog2.getValue();
+        var shiftFreq = this._autopilotShiftFrequencyLog2.getValue();
 
-        this.arrangementIndex._value = this._arrangements[this._autopilotIndex];
-        this.arrangementIndex._updateListeners();
+        if (arrangementFreq !== AUTOPILOT_FREQ_MAX && this._ticks % Math.pow(2, arrangementFreq) === 0) {
+            do {
+                this._autopilotIndex = posMod(this._autopilotIndex + 1, this._arrangements.length);
+            } while (this._arrangements[this._autopilotIndex] === undefined);
+            this.arrangementIndex._value = this._arrangements[this._autopilotIndex];
+            this.arrangementIndex._updateListeners();
+
+        } else if (incrementFreq !== AUTOPILOT_FREQ_MAX && this._ticks % Math.pow(2, incrementFreq) === 0) {
+            this._incrementIndicesUp();
+
+        } else if (shiftFreq !== AUTOPILOT_FREQ_MAX && this._ticks % Math.pow(2, shiftFreq) === 0) {
+            this._shiftIndicesUp();
+        }
 
         this._ticks++;
     }
