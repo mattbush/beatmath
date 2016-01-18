@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var React = require('react');
 var tinycolor = require('tinycolor2');
+var BeatmathPixel = require('js/components/BeatmathPixel');
 var {runAtTimestamp} = require('js/utils/time');
 
 const {CELL_SIZE, PIXEL_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
@@ -48,11 +49,16 @@ var LatticePixel = React.createClass({
         var rotation = Math.floor(this.state.rotation);
         var x = this.props.col * CELL_SIZE;
         var y = this.props.row * CELL_SIZE;
-        var transform = `translate(${x} ${y}) rotate(${rotation})`;
         var fill = this.state.color.toHexString(true);
-        var pixelOffset = -this.state.size / 2;
+
+        var style = {
+            transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${this.state.size / 2})`,
+        };
+
         return (
-            <rect x={pixelOffset} y={pixelOffset} width={this.state.size} height={this.state.size} fill={fill} transform={transform} />
+            <g style={style}>
+                <BeatmathPixel color={fill} />
+            </g>
         );
     },
 });

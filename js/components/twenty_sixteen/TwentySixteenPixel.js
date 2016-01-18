@@ -1,5 +1,6 @@
 var React = require('react');
 var ParameterBindingsMixin = require('js/components/ParameterBindingsMixin');
+var BeatmathPixel = require('js/components/BeatmathPixel');
 const ARRANGEMENTS = require('js/state/twenty_sixteen/arrangements');
 
 const PIXEL_SPACING = 40;
@@ -42,14 +43,14 @@ const TwentySixteenPixel = React.createClass({
         var yOffset = -arrangement.height / 2 * PIXEL_SPACING;
 
         var style = {
-            transform: `translate(${xOffset + x * PIXEL_SPACING}px, ${yOffset + y * PIXEL_SPACING}px)`,
+            transform: `translate(${xOffset + x * PIXEL_SPACING}px, ${yOffset + y * PIXEL_SPACING}px) scale(${PIXEL_SIZE / 2})`,
             transition: `transform ${OFFSET_TRANSITION_TIME / 1000}s ease`,
         };
 
         var fill = this.props.color === 'gold' ? '#e90' : '#39f';
         return (
             <g style={style}>
-                <circle cx="0" cy="0" fill={fill} r={PIXEL_SIZE / 2} />
+                <BeatmathPixel color={fill} />
             </g>
         );
     },

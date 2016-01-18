@@ -1,4 +1,3 @@
-require('regenerator/runtime');
 var React = require('react');
 var BeatmathParameters = require('js/parameters/BeatmathParameters');
 

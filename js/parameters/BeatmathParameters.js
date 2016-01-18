@@ -1,4 +1,4 @@
-var {LinearParameter, AngleParameter} = require('js/parameters/Parameter');
+var {LinearParameter, AngleParameter, CycleParameter, ToggleParameter} = require('js/parameters/Parameter');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/parameters/BeatmathConstants');
 var {mixboardFader, mixboardWheel, mixboardButton} = require('js/inputs/MixboardConstants');
 
@@ -31,6 +31,25 @@ class BeatmathParameters {
         });
         this.frameRotation.listenToWheel(mixboard, mixboardWheel.L_TURNTABLE);
         this.frameRotation.listenToSnapButton(mixboard, mixboardButton.L_SCRATCH);
+
+        this.pixelPointiness = new LinearParameter({
+            min: 0.45,
+            max: 2.5,
+            start: 1,
+            incrementAmount: 0.05,
+        });
+        this.pixelPointiness.listenToWheel(mixboard, mixboardWheel.R_SELECT);
+        this.pixelPointiness.listenToResetButton(mixboard, mixboardButton.R_EFFECT);
+
+        this.pixelSidedness = new CycleParameter({
+            cycleValues: [4, 3],
+        });
+        this.pixelSidedness.listenToCycleButton(mixboard, mixboardButton.R_HOT_CUE_1);
+
+        this.shouldStrokePixels = new ToggleParameter({
+            cycleValues: [4, 3],
+        });
+        this.shouldStrokePixels.listenToButton(mixboard, mixboardButton.R_DELETE);
     }
 }
 
