@@ -113,7 +113,7 @@ class TwentySixteenParameters {
             this._autopilotIndex = posMod(this._autopilotIndex + 1, this._arrangements.length);
         } while (this._arrangements[this._autopilotIndex] === undefined);
 
-        this.arrangementIndex._value = this._autopilotIndex;
+        this.arrangementIndex._value = this._arrangements[this._autopilotIndex];
         this.arrangementIndex._updateListeners();
 
         this._ticks++;
