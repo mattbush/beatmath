@@ -1,6 +1,7 @@
 var React = require('react');
 var ParameterBindingsMixin = require('js/components/ParameterBindingsMixin');
 var BeatmathPixel = require('js/components/BeatmathPixel');
+var tinycolor = require('tinycolor2');
 const ARRANGEMENTS = require('js/state/twenty_sixteen/arrangements');
 
 const PIXEL_SPACING = 40;
@@ -50,6 +51,7 @@ const TwentySixteenPixel = React.createClass({
         var color = this.props.color === 'gold' ?
             this.context.twentySixteenParameters.goldColor.getValue() :
             this.context.twentySixteenParameters.blueColor.getValue();
+        color = tinycolor(color.toHexString()); // clone
         return (
             <g style={style}>
                 <BeatmathPixel color={color} />

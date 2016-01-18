@@ -85,7 +85,7 @@ var mixboardWheel = {
 var mixboardWheelCoefficients = {
     [mixboardWheel.R_TURNTABLE]: 0.25,
     [mixboardWheel.L_TURNTABLE]: 0.25,
-    [mixboardWheel.BROWSE]: 4,
+    [mixboardWheel.BROWSE]: 1,
     [mixboardWheel.L_SELECT]: 1,
     [mixboardWheel.L_CONTROL_1]: 1,
     [mixboardWheel.L_CONTROL_2]: 1,

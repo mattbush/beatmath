@@ -3,6 +3,7 @@ var {AngleParameter, ToggleParameter, MovingColorParameter} = require('js/parame
 var {mixboardWheel, mixboardButton} = require('js/inputs/MixboardConstants');
 var IndexMappingParameter = require('js/parameters/twenty_sixteen/IndexMappingParameter');
 var tinycolor = require('tinycolor2');
+var {posMod} = require('js/utils/math');
 
 var {incrementGoldUp, incrementBlueUp, incrementGoldDown, incrementBlueDown} = require('js/state/twenty_sixteen/IndexMappingFunctions');
 
@@ -13,11 +14,13 @@ const NUM_BLUE = 16;
 
 class TwentySixteenParameters {
     constructor(mixboard) {
+        this._doAutopilotUpdate = this._doAutopilotUpdate.bind(this);
+
         this.arrangementIndex = new AngleParameter({
             start: 0,
             constrainTo: ARRANGEMENTS.length,
         });
-        this.arrangementIndex.listenToWheel(mixboard, mixboardWheel.L_SELECT);
+        this.arrangementIndex.listenToWheel(mixboard, mixboardWheel.BROWSE);
 
         this.goldColor = new MovingColorParameter({
             max: 5,
@@ -34,10 +37,21 @@ class TwentySixteenParameters {
         });
 
         this._reverseBlueIncrement = new ToggleParameter({
-            start: 0,
-            constrainTo: ARRANGEMENTS.length,
+            start: false,
         });
         this._reverseBlueIncrement.listenToButton(mixboard, mixboardButton.L_KEYLOCK);
+
+        this._isAutopiloting = new ToggleParameter({
+            start: false,
+        });
+        this._isAutopiloting.listenToButton(mixboard, mixboardButton.L_EFFECT);
+        this._isAutopiloting.addListener(this._onAutopilotChange.bind(this));
+
+        this._arrangements = [undefined, undefined, undefined];
+        mixboard.addButtonListener(mixboardButton.L_DELETE, this._resetArrangements.bind(this));
+        mixboard.addButtonListener(mixboardButton.L_HOT_CUE_1, this._setArrangement.bind(this, 0));
+        mixboard.addButtonListener(mixboardButton.L_HOT_CUE_2, this._setArrangement.bind(this, 1));
+        mixboard.addButtonListener(mixboardButton.L_HOT_CUE_3, this._setArrangement.bind(this, 2));
 
         mixboard.addButtonListener(mixboardButton.L_LOOP_MANUAL, this._incrementIndicesDown.bind(this));
         mixboard.addButtonListener(mixboardButton.L_LOOP_IN, this._incrementIndicesUp.bind(this));
@@ -46,6 +60,16 @@ class TwentySixteenParameters {
 
         this.goldIndexMappings = _.times(NUM_GOLD, index => new IndexMappingParameter({start: index}));
         this.blueIndexMappings = _.times(NUM_BLUE, index => new IndexMappingParameter({start: index}));
+    }
+    _resetArrangements(inputValue) {
+        if (inputValue && !this._isAutopiloting.getValue()) {
+            this._arrangements = [undefined, undefined, undefined];
+        }
+    }
+    _setArrangement(index, inputValue) {
+        if (inputValue && !this._isAutopiloting.getValue()) {
+            this._arrangements[index] = this.arrangementIndex.getValue();
+        }
     }
     _incrementIndicesUp() {
         var reverseBlue = this._reverseBlueIncrement.getValue();
@@ -68,6 +92,31 @@ class TwentySixteenParameters {
         var reverseBlue = this._reverseBlueIncrement.getValue();
         _.map(this.goldIndexMappings, mapping => mapping.mapValue(arrangement.shiftGoldDown));
         _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? arrangement.shiftBlueUp : arrangement.shiftBlueDown));
+    }
+    _onAutopilotChange() {
+        if (this._isAutopiloting.getValue()) {
+            if (this._arrangements[0] === undefined && this._arrangements[1] === undefined) {
+                return;
+            }
+
+            this._ticks = 0;
+            this._autopilotIndex = 0;
+            this._doAutopilotUpdate();
+        } else {
+            clearTimeout(this._autopilotTimeout);
+        }
+    }
+    _doAutopilotUpdate() {
+        this._autopilotTimeout = setTimeout(this._doAutopilotUpdate, 1000);
+
+        do {
+            this._autopilotIndex = posMod(this._autopilotIndex + 1, this._arrangements.length);
+        } while (this._arrangements[this._autopilotIndex] === undefined);
+
+        this.arrangementIndex._value = this._autopilotIndex;
+        this.arrangementIndex._updateListeners();
+
+        this._ticks++;
     }
 }
 
