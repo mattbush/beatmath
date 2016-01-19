@@ -17,6 +17,9 @@ var getColorForLetter = function(letter) {
 };
 
 var Letter = React.createClass({
+    contextTypes: {
+        beatmathParameters: React.PropTypes.object,
+    },
     getInitialState: function() {
         return {
             tilt: 1,
@@ -42,7 +45,13 @@ var Letter = React.createClass({
     },
     render: function() {
         var color = getColorForLetter(this.props.character);
-        var degrees = 8 * this.state.tilt + 360 * this.state.revolutions;
+        var colorSpin = this.context.beatmathParameters.colorSpin.getValue();
+        color = tinycolor(color.toHexString());
+        if (colorSpin !== 0) {
+            color = color.spin(colorSpin);
+        }
+
+        var degrees = 8 * this.state.tilt * this.context.beatmathParameters.tiltCoefficient.getValue() + 360 * this.state.revolutions;
         var style = {
             fill: color.toHexString(),
             transform: `rotate(${degrees}deg) translate(0px, 20px)`,

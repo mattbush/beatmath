@@ -38,6 +38,14 @@ class BeatmathParameters {
         this.colorSpin.listenToWheel(mixboard, mixboardWheel.R_TURNTABLE);
         this.colorSpin.listenToResetButton(mixboard, mixboardButton.R_SCRATCH);
 
+        // todo move to anagramsParameters
+        this.tiltCoefficient = new LinearParameter({
+            min: 0.5,
+            max: 3,
+            start: 1,
+        });
+        this.tiltCoefficient.listenToFader(mixboard, mixboardFader.L_GAIN);
+
         this.brightness = new LinearParameter({
             min: 0,
             max: 1,

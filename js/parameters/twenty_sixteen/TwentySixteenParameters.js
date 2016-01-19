@@ -9,6 +9,8 @@ var {incrementGoldUp, incrementBlueUp, incrementGoldDown, incrementBlueDown} = r
 
 const ARRANGEMENTS = require('js/state/twenty_sixteen/arrangements');
 
+const BPM = 126.4;
+
 const NUM_GOLD = 20;
 const NUM_BLUE = 16;
 
@@ -128,7 +130,7 @@ class TwentySixteenParameters {
         }
     }
     _doAutopilotUpdate() {
-        this._autopilotTimeout = setTimeout(this._doAutopilotUpdate, 1000);
+        this._autopilotTimeout = setTimeout(this._doAutopilotUpdate, 1000 * 60 / BPM);
 
         var arrangementFreq = this._autopilotArrangementFrequencyLog2.getValue();
         var incrementFreq = this._autopilotIncrementFrequencyLog2.getValue();
