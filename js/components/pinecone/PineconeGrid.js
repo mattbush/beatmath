@@ -1,12 +1,13 @@
-// var _ = require('underscore');
+var _ = require('underscore');
 var React = require('react');
 var BeatmathFrame = require('js/components/BeatmathFrame');
 var ParameterBindingsMixin = require('js/components/ParameterBindingsMixin');
 var PineconeParameters = require('js/parameters/pinecone/PineconeParameters');
 
 var NUM_ROWS = 6;
-var NUM_COLS = 6;
+var NUM_COLS = 24;
 var TRIANGLE_SCALE = 32;
+var NUM_VERTICAL_REFLECTIONS = 3;
 const {manhattanDist, posMod} = require('js/utils/math');
 
 var shouldColor = function(x, y, isOuter) {
@@ -85,15 +86,25 @@ var PineconeGrid = React.createClass({
             }
         }
 
-        var style = {
-            transform: `scale(${TRIANGLE_SCALE}) scaleY(-1) translate(${-NUM_COLS / 2}px, ${-NUM_ROWS / 2}px)`,
-        };
+        var reflections = [];
+        _.times(NUM_VERTICAL_REFLECTIONS * 2 - 1, index => {
+            index = index - (NUM_VERTICAL_REFLECTIONS - 1);
+            var translate = index !== 0 ? ` translate(0px, ${NUM_ROWS * index * 2}px)` : '';
+            reflections.push(
+                {transform: `scale(${TRIANGLE_SCALE})${translate}`},
+                {transform: `scale(${TRIANGLE_SCALE})${translate} scaleX(-1)`},
+                {transform: `scale(${TRIANGLE_SCALE})${translate} scale(-1)`},
+                {transform: `scale(${TRIANGLE_SCALE})${translate} scaleY(-1)`},
+            );
+        });
 
         return (
             <BeatmathFrame>
-                <g style={style}>
-                    {triangles}
-                </g>
+                {_.times(reflections.length, index =>
+                    <g key={index} style={reflections[index]}>
+                        {triangles}
+                    </g>
+                )}
             </BeatmathFrame>
         );
     },
