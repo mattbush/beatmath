@@ -4,9 +4,9 @@ var BeatmathFrame = require('js/components/BeatmathFrame');
 var ParameterBindingsMixin = require('js/components/ParameterBindingsMixin');
 var PineconeParameters = require('js/parameters/pinecone/PineconeParameters');
 
-var NUM_ROWS = 4;
-var NUM_COLS = 4;
-var TRIANGLE_SCALE = 20;
+var NUM_ROWS = 6;
+var NUM_COLS = 6;
+var TRIANGLE_SCALE = 32;
 
 var PineconeTriangle = React.createClass({
     render: function() {
@@ -17,10 +17,10 @@ var PineconeTriangle = React.createClass({
 
         if (side === 'inner') {
             points = '0,0 1,0 0,1';
-            color = '#f00';
+            color = '#f80';
         } else {
             points = '1,1 0,1 1,0';
-            color = '#0f0';
+            color = '#08f';
         }
 
         var style = {
@@ -71,7 +71,7 @@ var PineconeGrid = React.createClass({
         }
 
         var style = {
-            transform: `scale(${TRIANGLE_SCALE})`,
+            transform: `scale(${TRIANGLE_SCALE}) scaleY(-1) translate(${-NUM_COLS / 2}px, ${-NUM_ROWS / 2}px)`,
         };
 
         return (
