@@ -14,11 +14,8 @@ var shouldColor = function(x, y, isOuter) {
     if (isOuter) {
         dist = dist + 1;
     }
-    var result = posMod(dist + 1, 4) >= 2;
-    // if ((dist % 2) && isOuter) {
-    //     result = !result;
-    // }
-    return result;
+    var result = posMod(dist + 1, 4) < 2;
+    return !result !== !(y % 2); // xor
 };
 
 var PineconeTriangle = React.createClass({
@@ -38,7 +35,7 @@ var PineconeTriangle = React.createClass({
         if (shouldColor(x, y, isOuter)) {
             color = '#f80';
         } else {
-            color = '#08f';
+            color = '#048';
         }
 
         var style = {
