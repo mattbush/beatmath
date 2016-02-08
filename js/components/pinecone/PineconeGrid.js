@@ -7,19 +7,37 @@ var PineconeParameters = require('js/parameters/pinecone/PineconeParameters');
 var NUM_ROWS = 6;
 var NUM_COLS = 6;
 var TRIANGLE_SCALE = 32;
+const {manhattanDist, posMod} = require('js/utils/math');
+
+var shouldColor = function(x, y, isOuter) {
+    var dist = manhattanDist(x, y);
+    if (isOuter) {
+        dist = dist + 1;
+    }
+    var result = posMod(dist + 1, 4) >= 2;
+    // if ((dist % 2) && isOuter) {
+    //     result = !result;
+    // }
+    return result;
+};
 
 var PineconeTriangle = React.createClass({
     render: function() {
         var x = this.props.x;
         var y = this.props.y;
-        var side = this.props.side;
+        var isOuter = this.props.isOuter;
         var points, color;
 
-        if (side === 'inner') {
+        if (isOuter) {
+            points = '1,1 0,1 1,0';
+        } else {
             points = '0,0 1,0 0,1';
+            color = '#08f';
+        }
+
+        if (shouldColor(x, y, isOuter)) {
             color = '#f80';
         } else {
-            points = '1,1 0,1 1,0';
             color = '#08f';
         }
 
@@ -62,10 +80,10 @@ var PineconeGrid = React.createClass({
         for (var y = 0; y < NUM_ROWS; y++) {
             for (var x = 0; x < NUM_COLS; x++) {
                 triangles.push(
-                    <PineconeTriangle key={`${x}~${y}~i`} x={x} y={y} side="inner" />
+                    <PineconeTriangle key={`${x}~${y}~i`} x={x} y={y} isOuter={false} />
                 );
                 triangles.push(
-                    <PineconeTriangle key={`${x}~${y}~o`} x={x} y={y} side="outer" />
+                    <PineconeTriangle key={`${x}~${y}~o`} x={x} y={y} isOuter={true} />
                 );
             }
         }
