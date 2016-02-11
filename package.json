@@ -5,7 +5,10 @@
   "description": "JS- & React-based, geometry-inspired music visualizations.",
   "main": "js/app.js",
   "dependencies": {
-    "tinycolor2": "^1.1.2"
+    "min-heap": "^0.2.3",
+    "react-addons-linked-state-mixin": "^0.14.7",
+    "tinycolor2": "^1.1.2",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "babel-core": "^6.3.15",
