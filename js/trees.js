@@ -1,7 +1,7 @@
 require('regenerator/runtime');
 var React = require('react');
 var ReactDOM = require('react-dom');
-var PineconeGrid = require('js/components/pinecone/PineconeGrid');
+var TreeSet = require('js/components/trees/TreeSet');
 var Mixboard = require('js/inputs/Mixboard');
 var MixboardContext = require('js/components/MixboardContext');
 
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     ReactDOM.render(
         <MixboardContext mixboard={mixboard}>
-            <PineconeGrid />
+            <TreeSet />
         </MixboardContext>,
         document.getElementById('start')
     );
