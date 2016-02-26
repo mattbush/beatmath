@@ -1,5 +1,5 @@
 var {ToggleParameter, LinearParameter, NextTickParameter} = require('js/core/parameters/Parameter');
-var {mixboardButton, mixboardFader, mixboardKnob} = require('js/core/inputs/MixboardConstants');
+var {mixboardButton, mixboardFader, mixboardKnob, mixboardWheel} = require('js/core/inputs/MixboardConstants');
 
 const {PIXEL_REFRESH_RATE} = require('js/lattice/parameters/LatticeConstants');
 
@@ -47,6 +47,11 @@ class LatticeParameters {
             start: false,
         });
         this.oscillate.listenToButton(mixboard, mixboardButton.L_PITCH_BEND_MINUS);
+
+        this.triangularGridAmount = new LinearParameter({
+            start: 0, min: 0, max: 1, incrementAmount: 0.05,
+        });
+        this.triangularGridAmount.listenToWheel(mixboard, mixboardWheel.R_CONTROL_2);
     }
 }
 

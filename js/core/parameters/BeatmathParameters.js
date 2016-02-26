@@ -52,8 +52,8 @@ class BeatmathParameters {
             start: 1,
             incrementAmount: 0.05,
         });
-        this.brightness.listenToIncrementButton(mixboard, mixboardButton.R_CUE);
-        this.brightness.listenToDecrementButton(mixboard, mixboardButton.R_SYNC);
+        this.brightness.listenToIncrementButton(mixboard, mixboardButton.R_PITCH_BEND_PLUS);
+        this.brightness.listenToDecrementButton(mixboard, mixboardButton.R_PITCH_BEND_MINUS);
 
         this.pixelPointiness = new LinearParameter({
             min: 0.45,
