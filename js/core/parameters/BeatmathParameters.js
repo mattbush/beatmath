@@ -1,4 +1,4 @@
-var {LinearParameter, AngleParameter, CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+var {LinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/core/parameters/BeatmathConstants');
 var {mixboardFader, mixboardWheel, mixboardButton} = require('js/core/inputs/MixboardConstants');
 
@@ -63,16 +63,17 @@ class BeatmathParameters {
         });
         this.pixelPointiness.listenToWheel(mixboard, mixboardWheel.R_SELECT);
         this.pixelPointiness.listenToResetButton(mixboard, mixboardButton.R_EFFECT);
+        this.pixelPointiness.addStatusLight(mixboard, mixboardButton.R_EFFECT, value => value !== 1);
 
-        this.pixelSidedness = new CycleParameter({
-            cycleValues: [4, 3],
+        this.pixelSidedness = new LinearParameter({
+            min: 2,
+            max: 5,
+            start: 4,
         });
-        this.pixelSidedness.listenToCycleButton(mixboard, mixboardButton.R_HOT_CUE_1);
-
-        this.shouldStrokePixels = new ToggleParameter({
-            cycleValues: [4, 3],
-        });
-        this.shouldStrokePixels.listenToButton(mixboard, mixboardButton.R_DELETE);
+        this.pixelSidedness.listenToIncrementButton(mixboard, mixboardButton.R_HOT_CUE_1);
+        this.pixelSidedness.listenToDecrementButton(mixboard, mixboardButton.R_DELETE);
+        this.pixelSidedness.addStatusLight(mixboard, mixboardButton.R_HOT_CUE_1, value => value >= 5 || value <= 2);
+        this.pixelSidedness.addStatusLight(mixboard, mixboardButton.R_DELETE, value => value <= 3);
     }
 }
 
