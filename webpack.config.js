@@ -6,6 +6,7 @@ module.exports = {
         lattice: "./js/lattice",
         pinecone: "./js/pinecone",
         text: "./js/text",
+        trees: "./js/trees",
         twenty_sixteen: "./js/twenty_sixteen",
         mixboard_and_hue: "./js/mixboard_and_hue",
     },
