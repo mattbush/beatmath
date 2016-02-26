@@ -1,14 +1,14 @@
 module.exports = {
     entry: {
-        anagrams: "./js/anagrams",
-        bricks: "./js/bricks",
-        honeycomb: "./js/honeycomb",
-        lattice: "./js/lattice",
-        pinecone: "./js/pinecone",
-        text: "./js/text",
-        trees: "./js/trees",
-        twenty_sixteen: "./js/twenty_sixteen",
-        mixboard_and_hue: "./js/mixboard_and_hue",
+        anagrams: "./js/anagrams/anagrams",
+        bricks: "./js/bricks/bricks",
+        honeycomb: "./js/honeycomb/honeycomb",
+        lattice: "./js/lattice/lattice",
+        pinecone: "./js/pinecone/pinecone",
+        text: "./js/text/text",
+        trees: "./js/trees/trees",
+        twenty_sixteen: "./js/twenty_sixteen/twenty_sixteen",
+        mixboard_and_hue: "./js/mixboard_and_hue/mixboard_and_hue",
     },
     output: {
         path: __dirname,
