@@ -23,6 +23,7 @@ class LatticeRefreshTimer {
         });
         this._manhattanCoefficient.listenToWheel(mixboard, mixboardWheel.L_CONTROL_1);
         this._manhattanCoefficient.listenToResetButton(mixboard, mixboardButton.L_HOT_CUE_2);
+        this._manhattanCoefficient.addStatusLight(mixboard, mixboardButton.L_HOT_CUE_2, value => value > 0);
         this._manhattanCoefficient.addListener(this._flushCache);
 
         this._logCoefficient = new LinearParameter({
@@ -30,12 +31,14 @@ class LatticeRefreshTimer {
         });
         this._logCoefficient.listenToWheel(mixboard, mixboardWheel.L_CONTROL_2);
         this._logCoefficient.listenToResetButton(mixboard, mixboardButton.L_HOT_CUE_3);
+        this._logCoefficient.addStatusLight(mixboard, mixboardButton.L_HOT_CUE_3, value => value > 0);
         this._logCoefficient.addListener(this._flushCache);
 
         this._useDistance = new ToggleParameter({
             start: true,
         });
         this._useDistance.listenToButton(mixboard, mixboardButton.L_HOT_CUE_1);
+        this._useDistance.addStatusLight(mixboard, mixboardButton.L_HOT_CUE_1);
         this._useDistance.addListener(this._flushCache);
 
         this._globalPolarAngles = new LinearParameter({
@@ -43,6 +46,8 @@ class LatticeRefreshTimer {
         });
         this._globalPolarAngles.listenToIncrementButton(mixboard, mixboardButton.L_LOOP_IN);
         this._globalPolarAngles.listenToDecrementButton(mixboard, mixboardButton.L_LOOP_MANUAL);
+        this._globalPolarAngles.addStatusLight(mixboard, mixboardButton.L_LOOP_IN, value => value > 0);
+        this._globalPolarAngles.addStatusLight(mixboard, mixboardButton.L_LOOP_MANUAL, value => value < 0);
         this._globalPolarAngles.addListener(this._flushCache);
 
         this._localPolarAngles = new LinearParameter({
@@ -50,12 +55,15 @@ class LatticeRefreshTimer {
         });
         this._localPolarAngles.listenToIncrementButton(mixboard, mixboardButton.L_LOOP_RELOOP);
         this._localPolarAngles.listenToDecrementButton(mixboard, mixboardButton.L_LOOP_OUT);
+        this._localPolarAngles.addStatusLight(mixboard, mixboardButton.L_LOOP_RELOOP, value => value > 0);
+        this._localPolarAngles.addStatusLight(mixboard, mixboardButton.L_LOOP_OUT, value => value < 0);
         this._localPolarAngles.addListener(this._flushCache);
 
         this._bendLocalPolarAngles = new ToggleParameter({
             start: false,
         });
         this._bendLocalPolarAngles.listenToButton(mixboard, mixboardButton.L_KEYLOCK);
+        this._bendLocalPolarAngles.addStatusLight(mixboard, mixboardButton.L_KEYLOCK);
         this._bendLocalPolarAngles.addListener(this._flushCache);
 
         this._subdivisionSize = new CycleParameter({
@@ -63,6 +71,7 @@ class LatticeRefreshTimer {
         });
         this._subdivisionSize.listenToCycleButton(mixboard, mixboardButton.L_EFFECT);
         this._subdivisionSize.listenToResetButton(mixboard, mixboardButton.L_DELETE);
+        this._subdivisionSize.addStatusLight(mixboard, mixboardButton.L_EFFECT);
         this._subdivisionSize.addListener(this._flushCache);
     }
     _flushCache() {

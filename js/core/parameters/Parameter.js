@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var {lerp, posMod, constrainToRange, modAndShiftToHalf} = require('js/core/utils/math');
 
 class Parameter {
@@ -18,6 +19,13 @@ class Parameter {
     }
     removeListener(fn) {
         this._listeners.filter(listener => listener !== fn);
+    }
+    addStatusLight(mixboard, eventCode, predicateFn = _.identity) {
+        var updateLight = () => {
+            mixboard.toggleLight(eventCode, predicateFn(this._value));
+        };
+        updateLight();
+        this._listeners.push(updateLight);
     }
 }
 

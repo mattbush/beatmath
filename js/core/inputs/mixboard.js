@@ -8,30 +8,38 @@ class Mixboard {
         this._onWheelListeners = {};
     }
     async initAsync() {
+        this._midiInput = null;
+        this._midiOutput = null;
+
         if (this._doesClientSupportMidi()) {
-            this._midiInput = await this._getMidiInputAsync();
-        } else {
-            this._midiInput = null;
+            await this._setupMidiIvarsAsync();
         }
 
         if (this._midiInput !== null) {
             this._midiInput.onmidimessage = this._onMidiMessage.bind(this);
         }
+        if (this._midiOutput === null) {
+            this._toggleLight = _.noop;
+        }
+        window.mixboard = this;
     }
     _doesClientSupportMidi() {
         return window.navigator
           && typeof navigator.requestMIDIAccess === 'function';
     }
-    async _getMidiInputAsync() {
+    async _setupMidiIvarsAsync() {
         var midiAccess = await navigator.requestMIDIAccess();
-        if (!midiAccess ||
-            !midiAccess.inputs ||
-            midiAccess.inputs.size === 0) {
-            return null;
+        if (!midiAccess) {
+            return;
         }
 
         // todo: work when it's not the first
-        return midiAccess.inputs.values().next().value;
+        if (midiAccess.inputs && midiAccess.inputs.size > 0) {
+            this._midiInput = midiAccess.inputs.values().next().value;
+        }
+        if (midiAccess.outputs && midiAccess.outputs.size > 0) {
+            this._midiOutput = midiAccess.outputs.values().next().value;
+        }
     }
     _onMidiMessage(e) {
         // console.log(e.data); // uncomment to discover new event codes
@@ -83,6 +91,10 @@ class Mixboard {
     }
     addWheelListener(eventCode, fn) {
         this._addListener(this._onWheelListeners, eventCode, fn);
+    }
+    toggleLight(eventCode, isLightOn) {
+        var eventType = isLightOn ? 0x90 : 0x80;
+        this._midiOutput.send([eventType, eventCode, 1]);
     }
     _addListener(listenerObj, eventCode, fn) {
         if (!_.has(listenerObj, eventCode)) {

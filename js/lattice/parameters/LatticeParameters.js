@@ -10,6 +10,7 @@ class LatticeParameters {
             start: false,
         });
         this.showInfluences.listenToButton(mixboard, mixboardButton.L_SYNC);
+        this.showInfluences.addStatusLight(mixboard, mixboardButton.L_SYNC);
 
         this.mixCoefficient = new LinearParameter({
             min: 0.2,
