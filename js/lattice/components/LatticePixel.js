@@ -22,14 +22,15 @@ var calculateColTriangular = function(row, col) {
 
 var LatticePixel = React.createClass({
     contextTypes: {
+        beatmathParameters: React.PropTypes.object,
         latticeParameters: React.PropTypes.object,
         influences: React.PropTypes.array,
         refreshTimer: React.PropTypes.object,
     },
     componentDidMount: function() {
-        var nextTick = this.context.latticeParameters.nextTick;
+        var tempo = this.context.beatmathParameters.tempo;
         var refreshOffset = this._getRefreshOffset();
-        runAtTimestamp(this._update, nextTick.getValue() + refreshOffset);
+        runAtTimestamp(this._update, tempo.getNextTick() + refreshOffset);
     },
     getInitialState: function() {
         var rowTriangular = calculateRowTriangular(this.props.row, this.props.col);
@@ -50,15 +51,15 @@ var LatticePixel = React.createClass({
         if (!this.isMounted()) {
             return;
         }
-        var nextTick = this.context.latticeParameters.nextTick;
+        var tempo = this.context.beatmathParameters.tempo;
         var triangularGridAmount = this.context.latticeParameters.triangularGridAmount.getValue();
 
         var refreshOffset = this._getRefreshOffset();
-        if (nextTick.getNumTicks() % 2 &&
+        if (tempo.getNumTicks() % 2 &&
             this.context.latticeParameters.oscillate.getValue()) {
             refreshOffset = PIXEL_REFRESH_RATE - refreshOffset;
         }
-        runAtTimestamp(this._update, nextTick.getValue() + refreshOffset);
+        runAtTimestamp(this._update, tempo.getNextTick() + refreshOffset);
 
         this._nextState = _.clone(this.state);
         if (triangularGridAmount !== this.state.triangularGridAmount) {

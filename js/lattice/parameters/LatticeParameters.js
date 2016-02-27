@@ -1,7 +1,5 @@
-var {ToggleParameter, LinearParameter, NextTickParameter} = require('js/core/parameters/Parameter');
+var {ToggleParameter, LinearParameter} = require('js/core/parameters/Parameter');
 var {mixboardButton, mixboardFader, mixboardKnob, mixboardWheel} = require('js/core/inputs/MixboardConstants');
-
-const {PIXEL_REFRESH_RATE} = require('js/lattice/parameters/LatticeConstants');
 
 class LatticeParameters {
     constructor(mixboard) {
@@ -38,10 +36,6 @@ class LatticeParameters {
             start: 12,
         });
         this.numRows.listenToFader(mixboard, mixboardFader.R_GAIN);
-
-        this.nextTick = new NextTickParameter({
-            interval: PIXEL_REFRESH_RATE,
-        });
 
         this.oscillate = new ToggleParameter({
             start: false,
