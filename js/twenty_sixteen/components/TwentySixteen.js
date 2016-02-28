@@ -14,6 +14,7 @@ const TwentySixteen = React.createClass({
     },
     contextTypes: {
         mixboard: React.PropTypes.object,
+        beatmathParameters: React.PropTypes.object,
     },
     getChildContext: function() {
         return {
@@ -22,7 +23,7 @@ const TwentySixteen = React.createClass({
     },
     getInitialState: function() {
         return {
-            twentySixteenParameters: new TwentySixteenParameters(this.context.mixboard),
+            twentySixteenParameters: new TwentySixteenParameters(this.context.mixboard, this.context.beatmathParameters),
         };
     },
     render: function() {

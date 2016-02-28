@@ -11,6 +11,7 @@ const NUM_LIGHTS = LIGHT_EVENTS.length;
 
 class BeatmathTempo {
     constructor(mixboard, params) {
+        this._listeners = [];
         this._mixboard = mixboard;
         this._bpm = params.bpm;
         this._pendingBpm = params.bpm;
@@ -28,6 +29,14 @@ class BeatmathTempo {
         mixboard.addButtonListener(BUTTON_2, this._onResetPeriodButtonPress.bind(this));
         mixboard.addButtonListener(BUTTON_4, this._onIncrementButtonPress.bind(this));
         mixboard.addButtonListener(BUTTON_3, this._onDecrementButtonPress.bind(this));
+    }
+    _updateListeners() {
+        for (let listener of this._listeners) {
+            listener();
+        }
+    }
+    addTickListener(fn) {
+        this._listeners.push(fn);
     }
     _tick() {
         if (this._pendingBpm !== this._bpm) {
@@ -49,6 +58,7 @@ class BeatmathTempo {
             this._resetMeasure = false;
         }
         this._updateLights();
+        this._updateListeners();
         runAtTimestamp(this._tick, this._nextTick);
     }
     getPeriod() {
