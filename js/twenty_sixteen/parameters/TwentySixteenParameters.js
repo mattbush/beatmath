@@ -33,13 +33,6 @@ class TwentySixteenParameters {
             autoupdate: 1000,
         });
 
-        this.blueColor = new MovingColorParameter({
-            max: 5,
-            variance: 1,
-            start: tinycolor('#f90').spin(180),
-            autoupdate: 1000,
-        });
-
         this._reverseBlueIncrement = new ToggleParameter({
             start: false,
         });

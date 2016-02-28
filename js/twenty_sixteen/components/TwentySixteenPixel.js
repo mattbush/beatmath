@@ -48,10 +48,10 @@ const TwentySixteenPixel = React.createClass({
             transition: `transform ${OFFSET_TRANSITION_TIME / 1000}s ease`,
         };
 
-        var color = this.props.color === 'gold' ?
-            this.context.twentySixteenParameters.goldColor.getValue() :
-            this.context.twentySixteenParameters.blueColor.getValue();
-        color = tinycolor(color.toHexString()); // clone
+        var goldColor = this.context.twentySixteenParameters.goldColor.getValue();
+        goldColor = tinycolor(goldColor.toHexString()); // clone
+
+        var color = this.props.color === 'gold' ? goldColor : goldColor.spin(180);
         return (
             <g style={style}>
                 <BeatmathPixel color={color} />
