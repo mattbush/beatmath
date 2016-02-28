@@ -4,10 +4,14 @@ var {mixboardWheel, mixboardButton} = require('js/core/inputs/MixboardConstants'
 var IndexMappingParameter = require('js/twenty_sixteen/parameters/IndexMappingParameter');
 var tinycolor = require('tinycolor2');
 var {posMod} = require('js/core/utils/math');
+var {setTimeoutAsync} = require('js/core/utils/time');
 
 var {incrementGoldUp, incrementBlueUp, incrementGoldDown, incrementBlueDown} = require('js/twenty_sixteen/state/IndexMappingFunctions');
 
 const ARRANGEMENTS = require('js/twenty_sixteen/state/arrangements');
+
+const SET_ARRANGEMENT_BUTTONS = [mixboardButton.L_HOT_CUE_1, mixboardButton.L_HOT_CUE_2, mixboardButton.L_HOT_CUE_3];
+const NUM_PRESET_ARRANGEMENTS = SET_ARRANGEMENT_BUTTONS.length;
 
 const BPM = 126.4;
 
@@ -18,11 +22,13 @@ const AUTOPILOT_FREQ_MAX = 5;
 
 class TwentySixteenParameters {
     constructor(mixboard) {
+        this._mixboard = mixboard;
         this._doAutopilotUpdate = this._doAutopilotUpdate.bind(this);
 
         this.arrangementIndex = new AngleParameter({
             start: 0,
             constrainTo: ARRANGEMENTS.length,
+            monitorName: 'Arrangement #',
         });
         this.arrangementIndex.listenToWheel(mixboard, mixboardWheel.BROWSE);
 
@@ -37,11 +43,13 @@ class TwentySixteenParameters {
             start: false,
         });
         this._reverseBlueIncrement.listenToButton(mixboard, mixboardButton.L_KEYLOCK);
+        this._reverseBlueIncrement.addStatusLight(mixboard, mixboardButton.L_KEYLOCK);
 
         this._isAutopiloting = new ToggleParameter({
             start: false,
         });
         this._isAutopiloting.listenToButton(mixboard, mixboardButton.L_EFFECT);
+        this._isAutopiloting.addStatusLight(mixboard, mixboardButton.L_EFFECT);
         this._isAutopiloting.addListener(this._onAutopilotChange.bind(this));
 
         this._autopilotArrangementFrequencyLog2 = new LinearParameter({
@@ -63,11 +71,11 @@ class TwentySixteenParameters {
         });
         this._autopilotShiftFrequencyLog2.listenToWheel(mixboard, mixboardWheel.L_CONTROL_2);
 
-        this._arrangements = [undefined, undefined, undefined];
+        this._resetArrangements(true);
         mixboard.addButtonListener(mixboardButton.L_DELETE, this._resetArrangements.bind(this));
-        mixboard.addButtonListener(mixboardButton.L_HOT_CUE_1, this._setArrangement.bind(this, 0));
-        mixboard.addButtonListener(mixboardButton.L_HOT_CUE_2, this._setArrangement.bind(this, 1));
-        mixboard.addButtonListener(mixboardButton.L_HOT_CUE_3, this._setArrangement.bind(this, 2));
+        _.times(NUM_PRESET_ARRANGEMENTS, index => {
+            mixboard.addButtonListener(SET_ARRANGEMENT_BUTTONS[index], this._setArrangement.bind(this, index));
+        });
 
         mixboard.addButtonListener(mixboardButton.L_LOOP_MANUAL, this._incrementIndicesDown.bind(this));
         mixboard.addButtonListener(mixboardButton.L_LOOP_IN, this._incrementIndicesUp.bind(this));
@@ -79,35 +87,50 @@ class TwentySixteenParameters {
     }
     _resetArrangements(inputValue) {
         if (inputValue && !this._isAutopiloting.getValue()) {
-            this._arrangements = [undefined, undefined, undefined];
+            this._arrangements = _.times(NUM_PRESET_ARRANGEMENTS, _.noop);
+            _.times(NUM_PRESET_ARRANGEMENTS, index => {
+                this._mixboard.toggleLight(SET_ARRANGEMENT_BUTTONS[index], false);
+            });
         }
     }
     _setArrangement(index, inputValue) {
         if (inputValue && !this._isAutopiloting.getValue()) {
             this._arrangements[index] = this.arrangementIndex.getValue();
+            this._mixboard.toggleLight(SET_ARRANGEMENT_BUTTONS[index], true);
         }
     }
     _incrementIndicesUp() {
         var reverseBlue = this._reverseBlueIncrement.getValue();
         _.map(this.goldIndexMappings, mapping => mapping.mapValue(incrementGoldUp));
         _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? incrementBlueDown : incrementBlueUp));
+        this._updateLightForShift(mixboardButton.L_LOOP_IN);
     }
     _incrementIndicesDown() {
         var reverseBlue = this._reverseBlueIncrement.getValue();
         _.map(this.goldIndexMappings, mapping => mapping.mapValue(incrementGoldDown));
         _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? incrementBlueUp : incrementBlueDown));
+        this._updateLightForShift(mixboardButton.L_LOOP_MANUAL);
     }
     _shiftIndicesUp() {
         var arrangement = ARRANGEMENTS[this.arrangementIndex.getValue()];
         var reverseBlue = this._reverseBlueIncrement.getValue();
         _.map(this.goldIndexMappings, mapping => mapping.mapValue(arrangement.shiftGoldUp));
         _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? arrangement.shiftBlueDown : arrangement.shiftBlueUp));
+        this._updateLightForShift(mixboardButton.L_LOOP_RELOOP);
     }
     _shiftIndicesDown() {
         var arrangement = ARRANGEMENTS[this.arrangementIndex.getValue()];
         var reverseBlue = this._reverseBlueIncrement.getValue();
         _.map(this.goldIndexMappings, mapping => mapping.mapValue(arrangement.shiftGoldDown));
         _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? arrangement.shiftBlueUp : arrangement.shiftBlueDown));
+        this._updateLightForShift(mixboardButton.L_LOOP_OUT);
+    }
+    async _updateLightForShift(eventCode) {
+        if (this._isAutopiloting.getValue()) {
+            this._mixboard.toggleLight(eventCode, true);
+            await setTimeoutAsync(300);
+            this._mixboard.toggleLight(eventCode, false);
+        }
     }
     _onAutopilotChange() {
         if (this._isAutopiloting.getValue()) {
@@ -135,6 +158,7 @@ class TwentySixteenParameters {
             } while (this._arrangements[this._autopilotIndex] === undefined);
             this.arrangementIndex._value = this._arrangements[this._autopilotIndex];
             this.arrangementIndex._updateListeners();
+            this._updateLightForShift(mixboardButton.L_DELETE);
 
         } else if (incrementFreq !== AUTOPILOT_FREQ_MAX && this._ticks % Math.pow(2, incrementFreq) === 0) {
             this._incrementIndicesUp();
