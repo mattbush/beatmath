@@ -43,8 +43,11 @@ const TwentySixteenPixel = React.createClass({
         var xOffset = -arrangement.width / 2 * PIXEL_SPACING;
         var yOffset = -arrangement.height / 2 * PIXEL_SPACING;
 
+        var translateX = (xOffset + x * PIXEL_SPACING) * arrangement.scale;
+        var translateY = (yOffset + y * PIXEL_SPACING) * arrangement.scale;
+
         var style = {
-            transform: `translate(${xOffset + x * PIXEL_SPACING}px, ${yOffset + y * PIXEL_SPACING}px) scale(${PIXEL_SIZE / 2})`,
+            transform: `translate(${translateX}px, ${translateY}px) scale(${PIXEL_SIZE / 2})`,
             transition: `transform ${OFFSET_TRANSITION_TIME / 1000}s ease`,
         };
 
