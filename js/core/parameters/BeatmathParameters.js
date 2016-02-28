@@ -1,10 +1,14 @@
 var {LinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
-var TempoParameter = require('js/core/parameters/TempoParameter');
+var BeatmathTempo = require('js/core/parameters/BeatmathTempo');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/core/parameters/BeatmathConstants');
 var {mixboardFader, mixboardWheel, mixboardButton} = require('js/core/inputs/MixboardConstants');
 
 class BeatmathParameters {
     constructor(mixboard) {
+        this.tempo = new BeatmathTempo(mixboard, {
+            bpm: 60,
+        });
+
         this.width = new LinearParameter({
             min: WIDTH_PX / 10,
             max: WIDTH_PX,
@@ -76,10 +80,6 @@ class BeatmathParameters {
         this.pixelSidedness.listenToDecrementButton(mixboard, mixboardButton.R_DELETE);
         this.pixelSidedness.addStatusLight(mixboard, mixboardButton.R_HOT_CUE_1, value => value >= 5 || value <= 2);
         this.pixelSidedness.addStatusLight(mixboard, mixboardButton.R_DELETE, value => value <= 3);
-
-        this.tempo = new TempoParameter({
-            bpm: 100,
-        });
     }
 }
 
