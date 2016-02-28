@@ -78,7 +78,7 @@ class BeatmathParameters {
         this.pixelSidedness.addStatusLight(mixboard, mixboardButton.R_DELETE, value => value <= 3);
 
         this.tempo = new TempoParameter({
-            interval: 1000,
+            bpm: 100,
         });
     }
 }
