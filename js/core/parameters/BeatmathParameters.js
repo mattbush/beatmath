@@ -52,6 +52,7 @@ class BeatmathParameters {
             max: 1,
             start: 1,
             incrementAmount: 0.05,
+            monitorName: 'Brightness',
         });
         this.brightness.listenToIncrementButton(mixboard, mixboardButton.R_PITCH_BEND_PLUS);
         this.brightness.listenToDecrementButton(mixboard, mixboardButton.R_PITCH_BEND_MINUS);

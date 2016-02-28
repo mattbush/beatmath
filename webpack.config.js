@@ -9,6 +9,7 @@ module.exports = {
         trees: "./js/trees/trees",
         twenty_sixteen: "./js/twenty_sixteen/twenty_sixteen",
         mixboard_and_hue: "./js/mixboard_and_hue/mixboard_and_hue",
+        monitor: "./js/core/outputs/monitor",
     },
     output: {
         path: __dirname,

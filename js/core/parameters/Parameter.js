@@ -2,9 +2,13 @@ var _ = require('underscore');
 var {lerp, posMod, constrainToRange, modAndShiftToHalf} = require('js/core/utils/math');
 
 class Parameter {
-    constructor({start}) {
+    constructor({start, monitorName}) {
         this._listeners = [];
         this._value = start;
+        this._monitorName = monitorName;
+        if (monitorName) {
+            this.addListener(this._updateMonitor.bind(this));
+        }
     }
     getValue() {
         return this._value;
@@ -26,6 +30,10 @@ class Parameter {
         };
         updateLight();
         this._listeners.push(updateLight);
+    }
+    _updateMonitor() {
+        var value = _.isNumber(this._value) ? Math.round(this._value * 1000) / 1000 : this._value;
+        window.localStorage.setItem(this._monitorName, value);
     }
 }
 
