@@ -12,6 +12,7 @@ class BeatmathTempo {
     constructor(mixboard, params) {
         this._mixboard = mixboard;
         this._bpm = params.bpm;
+        this._pendingBpm = params.bpm;
         this._period = MS_PER_MINUTE / params.bpm;
         this._numTicks = -1;
         this._nextTick = Date.now() + this._period;
@@ -19,8 +20,17 @@ class BeatmathTempo {
         setInterval(this._tick, this._period);
 
         _.times(NUM_LIGHTS, lightNum => mixboard.toggleLight(LIGHT_EVENTS[lightNum], false));
+        window.localStorage.setItem('BPM', this._bpm);
+
+        mixboard.addButtonListener(BUTTON_4, this._onIncrementButtonPress.bind(this));
+        mixboard.addButtonListener(BUTTON_3, this._onDecrementButtonPress.bind(this));
     }
     _tick() {
+        if (this._pendingBpm !== this._bpm) {
+            this._bpm = this._pendingBpm;
+            this._period = MS_PER_MINUTE / this._bpm;
+            window.localStorage.setItem('BPM', this._bpm);
+        }
         this._nextTick += this._period;
         this._numTicks++;
         this._updateLights();
@@ -39,6 +49,16 @@ class BeatmathTempo {
         var lightToTurnOn = posMod(this._numTicks, NUM_LIGHTS);
         this._mixboard.toggleLight(LIGHT_EVENTS[lightToTurnOff], false);
         this._mixboard.toggleLight(LIGHT_EVENTS[lightToTurnOn], true);
+    }
+    _onIncrementButtonPress(inputValue) {
+        if (inputValue) {
+            this._pendingBpm += 10;
+        }
+    }
+    _onDecrementButtonPress(inputValue) {
+        if (inputValue) {
+            this._pendingBpm -= 10;
+        }
     }
 }
 
