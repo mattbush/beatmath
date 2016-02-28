@@ -3,6 +3,11 @@ var runAtTimestamp = function(cb, timestamp) {
     setTimeout(cb, timeout);
 };
 
+var setTimeoutAsync = function(timeout) {
+    return new window.Promise(function(cb) { setTimeout(cb, timeout); });
+};
+
 module.exports = {
     runAtTimestamp,
+    setTimeoutAsync,
 };

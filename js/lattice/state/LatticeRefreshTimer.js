@@ -82,7 +82,8 @@ class LatticeRefreshTimer {
         if (!_.has(this._refreshOffsetCache, key)) {
             this._refreshOffsetCache[key] = this._calculateRefreshOffset(row, col);
         }
-        return this._refreshOffsetCache[key];
+        var offset = this._refreshOffsetCache[key];
+        return offset * this._beatmathParameters.tempo.getPeriod();
     }
     _calculateRefreshOffset(row, col) {
         var total = 0;
@@ -128,7 +129,7 @@ class LatticeRefreshTimer {
             total += localPolarAngle / sectorSize;
         }
 
-        return posMod(total, 1) * this._beatmathParameters.tempo.getPeriod();
+        return posMod(total, 1);
     }
 }
 

@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var {posMod} = require('js/core/utils/math');
 var {mixboardButton} = require('js/core/inputs/MixboardConstants');
+var {runAtTimestamp} = require('js/core/utils/time');
 var {R_SYNC: BUTTON_1, R_CUE: BUTTON_2, R_PLAY_PAUSE: BUTTON_3, R_STUTTER: BUTTON_4} = mixboardButton;
 
 var MS_PER_MINUTE = 60000;
@@ -17,8 +18,7 @@ class BeatmathTempo {
         this._numTicks = -1;
         this._nextTick = Date.now() + this._period;
         this._tick = this._tick.bind(this);
-        setInterval(this._tick, this._period);
-
+        runAtTimestamp(this._tick, this._nextTick);
         _.times(NUM_LIGHTS, lightNum => mixboard.toggleLight(LIGHT_EVENTS[lightNum], false));
         window.localStorage.setItem('BPM', this._bpm);
 
@@ -34,6 +34,7 @@ class BeatmathTempo {
         this._nextTick += this._period;
         this._numTicks++;
         this._updateLights();
+        runAtTimestamp(this._tick, this._nextTick);
     }
     getPeriod() {
         return this._period;

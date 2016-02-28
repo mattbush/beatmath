@@ -1,6 +1,7 @@
 var tinycolor = require('tinycolor2');
 var updateHue = require('js/core/outputs/updateHue');
 var {MovingColorParameter, MovingLinearParameter, NegatedParameter} = require('js/core/parameters/Parameter');
+var {runAtTimestamp, setTimeoutAsync} = require('js/core/utils/time');
 
 const {CELL_SIZE, ENABLE_HUE, MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
 
@@ -23,7 +24,16 @@ class Influence {
             startLerp: startRow,
         });
 
-        setInterval(this.update.bind(this), this.getRefreshRate());
+        this._updatePerEachBeat = this._updatePerEachBeat.bind(this);
+        this._updatePerEachBeat();
+    }
+    async _updatePerEachBeat() {
+        runAtTimestamp(this._updatePerEachBeat, this._beatmathParameters.tempo.getNextTick());
+        var refreshRate = this.getRefreshRate();
+        for (var i = 0; i < 5; i++) {
+            await setTimeoutAsync(refreshRate);
+            this.update();
+        }
     }
     getRefreshRate() {
         return this._beatmathParameters.tempo.getPeriod() / 5;
