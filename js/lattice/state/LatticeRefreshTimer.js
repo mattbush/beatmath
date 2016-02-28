@@ -2,12 +2,12 @@ var _ = require('underscore');
 var {LinearParameter, CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 var {mixboardButton, mixboardWheel} = require('js/core/inputs/MixboardConstants');
 
-const {PIXEL_REFRESH_RATE} = require('js/lattice/parameters/LatticeConstants');
 const {lerp, dist, manhattanDist, polarAngleDeg, posMod, modAndShiftToHalf, posModAndBendToLowerHalf} = require('js/core/utils/math');
 
 class LatticeRefreshTimer {
-    constructor({mixboard, latticeParameters}) {
+    constructor({mixboard, beatmathParameters, latticeParameters}) {
         this._refreshOffsetCache = {};
+        this._beatmathParameters = beatmathParameters;
         this._latticeParameters = latticeParameters;
 
         this._flushCache = this._flushCache.bind(this);
@@ -128,7 +128,7 @@ class LatticeRefreshTimer {
             total += localPolarAngle / sectorSize;
         }
 
-        return posMod(total, 1) * PIXEL_REFRESH_RATE;
+        return posMod(total, 1) * this._beatmathParameters.tempo.getPeriod();
     }
 }
 

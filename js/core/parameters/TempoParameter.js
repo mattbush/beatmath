@@ -14,6 +14,9 @@ class TempoParameter extends Parameter {
         this._value += this._interval;
         this._numTicks++;
     }
+    getPeriod() {
+        return this._interval;
+    }
     getNextTick() {
         return this._value;
     }

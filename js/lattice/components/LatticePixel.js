@@ -5,7 +5,7 @@ var BeatmathPixel = require('js/core/components/BeatmathPixel');
 var {runAtTimestamp} = require('js/core/utils/time');
 var {lerp} = require('js/core/utils/math');
 
-const {CELL_SIZE, PIXEL_REFRESH_RATE} = require('js/lattice/parameters/LatticeConstants');
+const {CELL_SIZE} = require('js/lattice/parameters/LatticeConstants');
 
 const SQRT_3_OVER_2 = Math.sqrt(3) / 2;
 const SQRT_SQRT_3_OVER_2 = Math.sqrt(SQRT_3_OVER_2);
@@ -57,7 +57,7 @@ var LatticePixel = React.createClass({
         var refreshOffset = this._getRefreshOffset();
         if (tempo.getNumTicks() % 2 &&
             this.context.latticeParameters.oscillate.getValue()) {
-            refreshOffset = PIXEL_REFRESH_RATE - refreshOffset;
+            refreshOffset = tempo.getPeriod() - refreshOffset;
         }
         runAtTimestamp(this._update, tempo.getNextTick() + refreshOffset);
 

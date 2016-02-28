@@ -20,6 +20,7 @@ var LatticeGrid = React.createClass({
         refreshTimer: React.PropTypes.object,
     },
     contextTypes: {
+        beatmathParameters: React.PropTypes.object,
         mixboard: React.PropTypes.object,
     },
     getChildContext: function() {
@@ -31,22 +32,23 @@ var LatticeGrid = React.createClass({
     },
     getInitialState: function() {
         var mixboard = this.context.mixboard;
+        var beatmathParameters = this.context.beatmathParameters;
         var latticeParameters = new LatticeParameters(mixboard);
 
-        var refreshTimer = new LatticeRefreshTimer({mixboard, latticeParameters});
+        var refreshTimer = new LatticeRefreshTimer({mixboard, beatmathParameters, latticeParameters});
 
         var influences = [
-            new ColorInfluence({latticeParameters, startCol: 0.2, startRow: 0.2, startValue: tinycolor('#f00'), index: 0}),
-            new ColorInfluence({latticeParameters, startCol: 0.8, startRow: 0.2, startValue: tinycolor('#0f0'), index: 1}),
-            new ColorInfluence({latticeParameters, startCol: 0.5, startRow: 0.8, startValue: tinycolor('#00f'), index: 2}),
+            new ColorInfluence({beatmathParameters, latticeParameters, startCol: 0.2, startRow: 0.2, startValue: tinycolor('#f00'), index: 0}),
+            new ColorInfluence({beatmathParameters, latticeParameters, startCol: 0.8, startRow: 0.2, startValue: tinycolor('#0f0'), index: 1}),
+            new ColorInfluence({beatmathParameters, latticeParameters, startCol: 0.5, startRow: 0.8, startValue: tinycolor('#00f'), index: 2}),
 
-            new SizeInfluence({latticeParameters, startCol: 0.2, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
-            new SizeInfluence({latticeParameters, startCol: 0.8, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
-            new SizeInfluence({latticeParameters, startCol: 0.5, startRow: 0.8, startValue: MAX_SIZE * 0.5}),
+            new SizeInfluence({beatmathParameters, latticeParameters, startCol: 0.2, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
+            new SizeInfluence({beatmathParameters, latticeParameters, startCol: 0.8, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
+            new SizeInfluence({beatmathParameters, latticeParameters, startCol: 0.5, startRow: 0.8, startValue: MAX_SIZE * 0.5}),
 
-            new RotationInfluence({latticeParameters, startCol: 0.2, startRow: 0.2, startValue: 0}),
-            new RotationInfluence({latticeParameters, startCol: 0.8, startRow: 0.2, startValue: 0}),
-            new RotationInfluence({latticeParameters, startCol: 0.5, startRow: 0.8, startValue: 0}),
+            new RotationInfluence({beatmathParameters, latticeParameters, startCol: 0.2, startRow: 0.2, startValue: 0}),
+            new RotationInfluence({beatmathParameters, latticeParameters, startCol: 0.8, startRow: 0.2, startValue: 0}),
+            new RotationInfluence({beatmathParameters, latticeParameters, startCol: 0.5, startRow: 0.8, startValue: 0}),
         ];
 
         return {latticeParameters, influences, refreshTimer};
