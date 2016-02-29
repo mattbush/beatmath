@@ -1,6 +1,6 @@
-const WIDTH_PX = 1280;
-const HEIGHT_PX = 800;
-const DESIRED_HEIGHT_PX = 800;
+const WIDTH_PX = 1920;
+const HEIGHT_PX = 1080;
+const DESIRED_HEIGHT_PX = 1080;
 
 module.exports = {
     WIDTH_PX,
