@@ -4,9 +4,10 @@ const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/core/parameters/Bea
 var {mixboardFader, mixboardWheel, mixboardButton} = require('js/core/inputs/MixboardConstants');
 
 class BeatmathParameters {
-    constructor(mixboard) {
+    constructor(mixboard, params) {
         this.tempo = new BeatmathTempo(mixboard, {
-            bpm: 60,
+            bpm: 120,
+            bpmMod: params.bpmMod,
         });
 
         this.width = new LinearParameter({
