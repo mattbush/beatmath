@@ -5,12 +5,12 @@ var tinycolor = require('tinycolor2');
 const ARRANGEMENTS = require('js/twenty_sixteen/state/arrangements');
 
 const PIXEL_SPACING = 40;
-const PIXEL_SIZE = 20;
-const OFFSET_TRANSITION_TIME = 500;
+const PIXEL_SIZE = 25;
 
 const TwentySixteenPixel = React.createClass({
     mixins: [ParameterBindingsMixin],
     contextTypes: {
+        beatmathParameters: React.PropTypes.object,
         twentySixteenParameters: React.PropTypes.object,
     },
     getParameterBindings: function() {
@@ -46,9 +46,11 @@ const TwentySixteenPixel = React.createClass({
         var translateX = (xOffset + x * PIXEL_SPACING) * arrangement.scale;
         var translateY = (yOffset + y * PIXEL_SPACING) * arrangement.scale;
 
+        var transitionTime = this.context.beatmathParameters.tempo.getPeriod() / 2;
+
         var style = {
             transform: `translate(${translateX}px, ${translateY}px) scale(${PIXEL_SIZE / 2})`,
-            transition: `transform ${OFFSET_TRANSITION_TIME / 1000}s ease`,
+            transition: `transform ${transitionTime / 1000}s ease`,
         };
 
         var goldColor = this.context.twentySixteenParameters.goldColor.getValue();

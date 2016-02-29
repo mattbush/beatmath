@@ -13,6 +13,7 @@ var BrickGrid = React.createClass({
         bricksParameters: React.PropTypes.object,
     },
     contextTypes: {
+        beatmathParameters: React.PropTypes.object,
         mixboard: React.PropTypes.object,
     },
     getChildContext: function() {
@@ -28,7 +29,7 @@ var BrickGrid = React.createClass({
         };
     },
     componentDidMount: function() {
-        setInterval(this._update, TRIANGLE_GENERATING_RATE);
+        this.context.beatmathParameters.tempo.addListener(this._update);
     },
     _update: function() {
         this.state.gridState.update();

@@ -38,7 +38,7 @@ var TreeSet = React.createClass({
 
         var transformations = _.times(numTrees, index => {
             var totalTreeSpacing = treesParameters.getTotalTreeSpacing();
-            var dx = index * treeSpacing - totalTreeSpacing / 2;
+            var dx = (index + 0.5) * treeSpacing - totalTreeSpacing / 2;
             var dy = treesParameters.getTotalLevelSpacing() / 2;
             return {
                 transform: `translate(${dx}px, ${dy}px) scaleY(-1)`,
@@ -48,8 +48,8 @@ var TreeSet = React.createClass({
         return (
             <BeatmathFrame>
                 {_.times(numTrees, index =>
-                    <g key={index} style={transformations[index]}>
-                        <Tree />
+                    <g key={index} style={transformations[index]} className="tree">
+                        <Tree index={index} />
                     </g>
                 )}
             </BeatmathFrame>

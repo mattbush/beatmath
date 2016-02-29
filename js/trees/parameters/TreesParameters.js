@@ -1,6 +1,7 @@
-var {LinearParameter, IntLinearParameter, MovingColorParameter} = require('js/core/parameters/Parameter');
+var {LinearParameter, IntLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 var {mixboardFader, mixboardKnob, mixboardButton} = require('js/core/inputs/MixboardConstants');
 var tinycolor = require('tinycolor2');
+var {posMod, lerp} = require('js/core/utils/math');
 
 class TreesParameters {
     constructor(mixboard, beatmathParameters) {
@@ -10,7 +11,7 @@ class TreesParameters {
         this.levelColor = new MovingColorParameter({
             max: 5,
             variance: 1,
-            start: tinycolor('#6ff'),
+            start: tinycolor('#5ff'),
             autoupdate: 1000,
         });
 
@@ -72,6 +73,48 @@ class TreesParameters {
         this.periodTicksLog2.listenToDecrementButton(mixboard, mixboardButton.L_LOOP_OUT);
         this.periodTicksLog2.addStatusLight(mixboard, mixboardButton.L_LOOP_RELOOP, value => value % 2 === 0);
         this.periodTicksLog2.addStatusLight(mixboard, mixboardButton.L_LOOP_OUT, value => value > 2);
+
+        this.treeColorShift = new LinearParameter({
+            min: -60,
+            max: 60,
+            start: 0,
+            incrementAmount: 2.5,
+            monitorName: 'Tree color shift',
+        });
+        this.treeColorShift.listenToIncrementButton(mixboard, mixboardButton.L_HOT_CUE_1);
+        this.treeColorShift.listenToDecrementButton(mixboard, mixboardButton.L_DELETE);
+        this.treeColorShift.addStatusLight(mixboard, mixboardButton.L_HOT_CUE_1, value => value > 0);
+        this.treeColorShift.addStatusLight(mixboard, mixboardButton.L_DELETE, value => value < 0);
+
+        this.levelColorShift = new LinearParameter({
+            min: -180,
+            max: 180,
+            start: 0,
+            incrementAmount: 5,
+            monitorName: 'Level color shift',
+        });
+        this.levelColorShift.listenToIncrementButton(mixboard, mixboardButton.L_HOT_CUE_3);
+        this.levelColorShift.listenToDecrementButton(mixboard, mixboardButton.L_HOT_CUE_2);
+        this.levelColorShift.addStatusLight(mixboard, mixboardButton.L_HOT_CUE_3, value => value > 0);
+        this.levelColorShift.addStatusLight(mixboard, mixboardButton.L_HOT_CUE_2, value => value < 0);
+
+        this.trailPercent = new LinearParameter({
+            min: 0,
+            max: 0.8,
+            start: 0,
+            incrementAmount: 0.05,
+            monitorName: 'Trail percent',
+        });
+        this.trailPercent.listenToIncrementButton(mixboard, mixboardButton.L_LOOP_IN);
+        this.trailPercent.listenToDecrementButton(mixboard, mixboardButton.L_LOOP_MANUAL);
+        this.trailPercent.addStatusLight(mixboard, mixboardButton.L_LOOP_IN, value => value > 0);
+        this.trailPercent.addStatusLight(mixboard, mixboardButton.L_LOOP_MANUAL, value => value >= 0.8);
+
+        this.staggerTrees = new ToggleParameter({
+            start: false,
+        });
+        this.staggerTrees.listenToButton(mixboard, mixboardButton.L_EFFECT);
+        this.staggerTrees.addStatusLight(mixboard, mixboardButton.L_EFFECT);
     }
     getTotalTreeSpacing() {
         return this.treeSpacing.getValue() * this.numTrees.getValue();
@@ -85,13 +128,37 @@ class TreesParameters {
     getLevelHeight() {
         return this.levelSpacing.getValue() * this.levelHeightPercent.getValue();
     }
-    isLevelIlluminated(levelNumber) {
+    _getLevelIllumination(treeIndex, levelNumber) {
         var periodTicks = Math.pow(2, this.periodTicksLog2.getValue());
         var tempoNumTicks = this._beatmathParameters.tempo.getNumTicks();
-        return levelNumber % periodTicks === tempoNumTicks % periodTicks;
+        if (this.staggerTrees.getValue() && treeIndex % 2) {
+            levelNumber += periodTicks / 2;
+        }
+        return posMod(tempoNumTicks - levelNumber, periodTicks) / (periodTicks - 1);
     }
     getBorderRadius() {
         return this.getLevelHeight() * this.borderRadiusPercent.getValue() / 2;
+    }
+    getColorForIndexAndLevel(treeIndex, levelNumber) {
+        var color = tinycolor(this.levelColor.getValue().toHexString()); // clone
+        var colorShiftPerTree = this.treeColorShift.getValue();
+        var colorShiftPerLevel = this.levelColorShift.getValue();
+        var colorShift = colorShiftPerTree * treeIndex + colorShiftPerLevel * levelNumber;
+        if (colorShift !== 0) {
+            color.spin(colorShift);
+        }
+        var levelIllumination = this._getLevelIllumination(treeIndex, levelNumber);
+        if (levelIllumination === 0) {
+            return color;
+        }
+        var trailPercent = this.trailPercent.getValue();
+        var darkenAmount = 60;
+        if (trailPercent !== 0) {
+            var trailedDarkenAmount = levelIllumination * darkenAmount;
+            darkenAmount = lerp(darkenAmount, trailedDarkenAmount, trailPercent);
+        }
+        color.darken(darkenAmount);
+        return color;
     }
 }
 

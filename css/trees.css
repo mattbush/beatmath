@@ -1,0 +1,11 @@
+.tree {
+    transition-property: transform;
+    transition-duration: 1.5s;
+    transition-timing-function: ease;
+}
+
+.treeRect {
+    transition-property: x, y, width, height;
+    transition-duration: 1.5s;
+    transition-timing-function: ease;
+}
