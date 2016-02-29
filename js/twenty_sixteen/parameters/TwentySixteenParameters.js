@@ -5,8 +5,13 @@ var IndexMappingParameter = require('js/twenty_sixteen/parameters/IndexMappingPa
 var tinycolor = require('tinycolor2');
 var {posMod} = require('js/core/utils/math');
 var {setTimeoutAsync} = require('js/core/utils/time');
+var updateHue = require('js/core/outputs/updateHue');
 
 var {incrementGoldUp, incrementBlueUp, incrementGoldDown, incrementBlueDown} = require('js/twenty_sixteen/state/IndexMappingFunctions');
+
+var SAT_COEFF = 1.5;
+var BRI_COEFF = 0.6;
+var HUE_COEFFS = {satCoeff: SAT_COEFF, briCoeff: BRI_COEFF};
 
 const ARRANGEMENTS = require('js/twenty_sixteen/state/arrangements');
 
@@ -15,6 +20,8 @@ const NUM_PRESET_ARRANGEMENTS = SET_ARRANGEMENT_BUTTONS.length;
 
 const NUM_GOLD = 20;
 const NUM_BLUE = 16;
+
+const ENABLE_HUE = false;
 
 const AUTOPILOT_FREQ_MAX = 5;
 
@@ -169,6 +176,17 @@ class TwentySixteenParameters {
                 this._shiftIndicesUp();
             }
             this._updateLightForAutopilot(mixboardButton.L_LOOP_RELOOP);
+        }
+
+        if (ENABLE_HUE) {
+            var goldColor = tinycolor(this.goldColor.getValue().toHexString()); // clone
+            var blueColor = tinycolor(goldColor.toHexString()).spin(180); // clone
+
+            if (ticks % 2) {
+                updateHue(posMod(ticks, 3), goldColor, HUE_COEFFS);
+            } else {
+                updateHue(posMod(ticks, 3), blueColor, HUE_COEFFS);
+            }
         }
     }
 }
