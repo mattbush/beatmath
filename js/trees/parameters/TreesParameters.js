@@ -56,6 +56,13 @@ class TreesParameters {
         });
         this.levelHeightPercent.listenToKnob(mixboard, mixboardKnob.R_MID);
 
+        this.borderRadiusPercent = new LinearParameter({
+            min: 0,
+            max: 1,
+            start: 0,
+        });
+        this.borderRadiusPercent.listenToKnob(mixboard, mixboardKnob.CUE_GAIN);
+
         this.periodTicksLog2 = new LinearParameter({
             min: 1,
             max: 4,
@@ -82,6 +89,9 @@ class TreesParameters {
         var periodTicks = Math.pow(2, this.periodTicksLog2.getValue());
         var tempoNumTicks = this._beatmathParameters.tempo.getNumTicks();
         return levelNumber % periodTicks === tempoNumTicks % periodTicks;
+    }
+    getBorderRadius() {
+        return this.getLevelHeight() * this.borderRadiusPercent.getValue() / 2;
     }
 }
 

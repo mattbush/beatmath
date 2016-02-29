@@ -24,6 +24,8 @@ var Tree = React.createClass({
         var brightColor = treesParameters.levelColor.getValue().toHexString(true);
         var darkColor = tinycolor(brightColor).darken(60).toHexString(true);
 
+        var borderRadius = treesParameters.getBorderRadius();
+
         return (
             <g>
                 {_.times(numLevels, levelIndex => {
@@ -36,6 +38,8 @@ var Tree = React.createClass({
                             fill={fill}
                             x={treeWidth / 2}
                             y={levelIndex * levelSpacing}
+                            rx={borderRadius}
+                            ry={borderRadius}
                             width={treeWidth}
                             height={levelHeight}
                         />
