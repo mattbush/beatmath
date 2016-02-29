@@ -2,8 +2,9 @@
 // var {mixboardFader, mixboardWheel, mixboardButton} = require('js/core/inputs/MixboardConstants');
 
 class TreesParameters {
-    constructor(mixboard) {
+    constructor(mixboard, beatmathParameters) {
         this._mixboard = mixboard; // todo
+        this._beatmathParameters = beatmathParameters;
     }
 }
 

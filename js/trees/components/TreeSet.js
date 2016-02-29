@@ -3,6 +3,7 @@ var React = require('react');
 var BeatmathFrame = require('js/core/components/BeatmathFrame');
 var ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 var TreesParameters = require('js/trees/parameters/TreesParameters');
+var Tree = require('js/trees/components/Tree');
 
 // const {manhattanDist, posMod} = require('js/core/utils/math');
 
@@ -12,26 +13,13 @@ const LEVEL_SPACING = 20;
 const NUM_LEVELS = 4;
 const TREE_HEIGHT = LEVEL_SPACING * NUM_LEVELS;
 
-var Tree = React.createClass({
-    render: function() {
-        return (
-            <g>
-                {_.times(NUM_LEVELS, levelIndex => {
-                    return (
-                        <rect fill="#0ff" x={-30} y={levelIndex * LEVEL_SPACING} width={60} height={10} />
-                    );
-                })}
-            </g>
-        );
-    },
-});
-
 var TreeSet = React.createClass({
     mixins: [ParameterBindingsMixin],
     childContextTypes: {
         treesParameters: React.PropTypes.object,
     },
     contextTypes: {
+        beatmathParameters: React.PropTypes.object,
         mixboard: React.PropTypes.object,
     },
     getChildContext: function() {
@@ -41,7 +29,7 @@ var TreeSet = React.createClass({
     },
     getInitialState: function() {
         var mixboard = this.context.mixboard;
-        var treesParameters = new TreesParameters(mixboard);
+        var treesParameters = new TreesParameters(mixboard, this.context.beatmathParameters);
         return {treesParameters};
     },
     getParameterBindings: function() {

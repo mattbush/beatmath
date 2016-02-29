@@ -19,7 +19,7 @@ class Mixboard {
             this._midiInput.onmidimessage = this._onMidiMessage.bind(this);
         }
         if (this._midiOutput === null) {
-            this._toggleLight = _.noop;
+            this.toggleLight = _.noop;
         }
         window.mixboard = this;
     }
