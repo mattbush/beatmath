@@ -26,13 +26,14 @@ class Parameter {
     }
     addStatusLight(mixboard, eventCode, predicateFn = _.identity) {
         var updateLight = () => {
-            mixboard.toggleLight(eventCode, predicateFn(this._value));
+            mixboard.toggleLight(eventCode, predicateFn(this.getValue()));
         };
         updateLight();
         this._listeners.push(updateLight);
     }
     _updateMonitor() {
-        var value = _.isNumber(this._value) ? Math.round(this._value * 1000) / 1000 : this._value;
+        var value = this.getValue();
+        value = _.isNumber(value) ? Math.round(value * 1000) / 1000 : value;
         window.localStorage.setItem(this._monitorName, value);
     }
 }
@@ -182,6 +183,19 @@ class LinearParameter extends Parameter {
     }
 }
 
+class IntLinearParameter extends LinearParameter {
+    getValue() {
+        return Math.round(super.getValue());
+    }
+    _updateListeners() {
+        if (this.getValue() === this._lastIntegerValue) {
+            return;
+        }
+        super._updateListeners();
+        this._lastIntegerValue = this.getValue();
+    }
+}
+
 class AngleParameter extends Parameter {
     constructor(params) {
         super(params);
@@ -285,6 +299,7 @@ module.exports = {
     NegatedParameter,
     AngleParameter,
     LinearParameter,
+    IntLinearParameter,
     ToggleParameter,
     CycleParameter,
     MovingAngleParameter,
