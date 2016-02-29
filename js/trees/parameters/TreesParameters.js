@@ -1,10 +1,18 @@
-var {LinearParameter} = require('js/core/parameters/Parameter');
+var {LinearParameter, MovingColorParameter} = require('js/core/parameters/Parameter');
 // var {mixboardFader, mixboardWheel, mixboardButton} = require('js/core/inputs/MixboardConstants');
+var tinycolor = require('tinycolor2');
 
 class TreesParameters {
     constructor(mixboard, beatmathParameters) {
         this._mixboard = mixboard; // todo
         this._beatmathParameters = beatmathParameters;
+
+        this.levelColor = new MovingColorParameter({
+            max: 5,
+            variance: 1,
+            start: tinycolor('#6ff'),
+            autoupdate: 1000,
+        });
 
         this.numTrees = new LinearParameter({
             min: 1,
@@ -59,6 +67,11 @@ class TreesParameters {
     }
     getLevelHeight() {
         return this.levelSpacing.getValue() * this.levelHeightPercent.getValue();
+    }
+    isLevelIlluminated(levelNumber) {
+        var periodTicks = Math.pow(2, this.periodTicksLog2.getValue());
+        var tempoNumTicks = this._beatmathParameters.tempo.getNumTicks();
+        return levelNumber % periodTicks === tempoNumTicks % periodTicks;
     }
 }
 

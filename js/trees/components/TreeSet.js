@@ -28,7 +28,7 @@ var TreeSet = React.createClass({
     },
     getParameterBindings: function() {
         return {
-//          foo: this.state.treesParameters.foo,
+            tempo: this.context.beatmathParameters.tempo,
         };
     },
     render: function() {

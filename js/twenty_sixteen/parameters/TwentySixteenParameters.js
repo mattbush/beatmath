@@ -30,7 +30,7 @@ class TwentySixteenParameters {
         this._mixboard = mixboard;
         this._beatmathParameters = beatmathParameters;
         this._onTickForAutopilot = this._onTickForAutopilot.bind(this);
-        this._beatmathParameters.tempo.addTickListener(this._onTickForAutopilot);
+        this._beatmathParameters.tempo.addListener(this._onTickForAutopilot);
 
         this.arrangementIndex = new AngleParameter({
             start: 0,

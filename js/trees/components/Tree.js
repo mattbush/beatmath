@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var React = require('react');
 var ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
+var tinycolor = require('tinycolor2');
 
 var Tree = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -20,13 +21,19 @@ var Tree = React.createClass({
         var treeWidth = treesParameters.getTreeWidth();
         var levelHeight = treesParameters.getLevelHeight();
 
+        var brightColor = treesParameters.levelColor.getValue().toHexString(true);
+        var darkColor = tinycolor(brightColor).darken(60).toHexString(true);
+
         return (
             <g>
                 {_.times(numLevels, levelIndex => {
+                    var isLevelIlluminated = treesParameters.isLevelIlluminated(levelIndex);
+                    var fill = isLevelIlluminated ? brightColor : darkColor;
+
                     return (
                         <rect
                             key={levelIndex}
-                            fill="#0ff"
+                            fill={fill}
                             x={treeWidth / 2}
                             y={levelIndex * levelSpacing}
                             width={treeWidth}

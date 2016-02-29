@@ -35,8 +35,11 @@ class BeatmathTempo {
             listener();
         }
     }
-    addTickListener(fn) {
+    addListener(fn) {
         this._listeners.push(fn);
+    }
+    removeListener(fn) {
+        this._listeners.filter(listener => listener !== fn);
     }
     _tick() {
         if (this._pendingBpm !== this._bpm) {
