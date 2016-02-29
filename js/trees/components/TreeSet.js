@@ -7,12 +7,6 @@ var Tree = require('js/trees/components/Tree');
 
 // const {manhattanDist, posMod} = require('js/core/utils/math');
 
-const NUM_TREES = 3;
-const TREE_SPACING = 100;
-const LEVEL_SPACING = 20;
-const NUM_LEVELS = 4;
-const TREE_HEIGHT = LEVEL_SPACING * NUM_LEVELS;
-
 var TreeSet = React.createClass({
     mixins: [ParameterBindingsMixin],
     childContextTypes: {
@@ -38,10 +32,14 @@ var TreeSet = React.createClass({
         };
     },
     render: function() {
-        var transformations = _.times(NUM_TREES, index => {
-            var totalTreeSpacing = (NUM_TREES - 1) * TREE_SPACING;
-            var dx = index * TREE_SPACING - totalTreeSpacing / 2;
-            var dy = -TREE_HEIGHT / 2;
+        var treesParameters = this.state.treesParameters;
+        var numTrees = treesParameters.numTrees.getValue();
+        var treeSpacing = treesParameters.treeSpacing.getValue();
+
+        var transformations = _.times(numTrees, index => {
+            var totalTreeSpacing = treesParameters.getTotalTreeSpacing();
+            var dx = index * treeSpacing - totalTreeSpacing / 2;
+            var dy = treesParameters.getTotalLevelSpacing() / 2;
             return {
                 transform: `translate(${dx}px, ${dy}px) scaleY(-1)`,
             };
@@ -49,7 +47,7 @@ var TreeSet = React.createClass({
 
         return (
             <BeatmathFrame>
-                {_.times(NUM_TREES, index =>
+                {_.times(numTrees, index =>
                     <g key={index} style={transformations[index]}>
                         <Tree />
                     </g>
