@@ -48,8 +48,13 @@ const TwentySixteenPixel = React.createClass({
 
         var transitionTime = this.context.beatmathParameters.tempo.getPeriod() / 2;
 
+        var rotation = 0;
+        if (this.context.twentySixteenParameters.reverseFrameRotationInPixels.getValue()) {
+            rotation = -Math.round(this.context.beatmathParameters.frameRotation.getValue());
+        }
+
         var style = {
-            transform: `translate(${translateX}px, ${translateY}px) scale(${PIXEL_SIZE / 2})`,
+            transform: `translate(${translateX}px, ${translateY}px) scale(${PIXEL_SIZE / 2}) rotate(${rotation}deg)`,
             transition: `transform ${transitionTime / 1000}s ease`,
         };
 

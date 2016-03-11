@@ -84,6 +84,12 @@ class TwentySixteenParameters {
             mixboard.addButtonListener(SET_ARRANGEMENT_BUTTONS[index], this._setArrangement.bind(this, index));
         });
 
+        this.reverseFrameRotationInPixels = new ToggleParameter({
+            start: false,
+        });
+        this.reverseFrameRotationInPixels.listenToButton(mixboard, mixboardButton.R_SCRATCH);
+        this.reverseFrameRotationInPixels.addStatusLight(mixboard, mixboardButton.R_SCRATCH);
+
         mixboard.addButtonListener(mixboardButton.L_LOOP_MANUAL, this._incrementIndicesDown.bind(this));
         mixboard.addButtonListener(mixboardButton.L_LOOP_IN, this._incrementIndicesUp.bind(this));
         mixboard.addButtonListener(mixboardButton.L_LOOP_OUT, this._shiftIndicesDown.bind(this));
@@ -106,27 +112,35 @@ class TwentySixteenParameters {
             this._mixboard.toggleLight(SET_ARRANGEMENT_BUTTONS[index], true);
         }
     }
-    _incrementIndicesUp() {
-        var reverseBlue = this._reverseBlueIncrement.getValue();
-        _.map(this.goldIndexMappings, mapping => mapping.mapValue(incrementGoldUp));
-        _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? incrementBlueDown : incrementBlueUp));
+    _incrementIndicesUp(value) {
+        if (value) {
+            var reverseBlue = this._reverseBlueIncrement.getValue();
+            _.map(this.goldIndexMappings, mapping => mapping.mapValue(incrementGoldUp));
+            _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? incrementBlueDown : incrementBlueUp));
+        }
     }
-    _incrementIndicesDown() {
-        var reverseBlue = this._reverseBlueIncrement.getValue();
-        _.map(this.goldIndexMappings, mapping => mapping.mapValue(incrementGoldDown));
-        _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? incrementBlueUp : incrementBlueDown));
+    _incrementIndicesDown(value) {
+        if (value) {
+            var reverseBlue = this._reverseBlueIncrement.getValue();
+            _.map(this.goldIndexMappings, mapping => mapping.mapValue(incrementGoldDown));
+            _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? incrementBlueUp : incrementBlueDown));
+        }
     }
-    _shiftIndicesUp() {
-        var arrangement = ARRANGEMENTS[this.arrangementIndex.getValue()];
-        var reverseBlue = this._reverseBlueIncrement.getValue();
-        _.map(this.goldIndexMappings, mapping => mapping.mapValue(arrangement.shiftGoldUp));
-        _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? arrangement.shiftBlueDown : arrangement.shiftBlueUp));
+    _shiftIndicesUp(value) {
+        if (value) {
+            var arrangement = ARRANGEMENTS[this.arrangementIndex.getValue()];
+            var reverseBlue = this._reverseBlueIncrement.getValue();
+            _.map(this.goldIndexMappings, mapping => mapping.mapValue(arrangement.shiftGoldUp));
+            _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? arrangement.shiftBlueDown : arrangement.shiftBlueUp));
+        }
     }
-    _shiftIndicesDown() {
-        var arrangement = ARRANGEMENTS[this.arrangementIndex.getValue()];
-        var reverseBlue = this._reverseBlueIncrement.getValue();
-        _.map(this.goldIndexMappings, mapping => mapping.mapValue(arrangement.shiftGoldDown));
-        _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? arrangement.shiftBlueUp : arrangement.shiftBlueDown));
+    _shiftIndicesDown(value) {
+        if (value) {
+            var arrangement = ARRANGEMENTS[this.arrangementIndex.getValue()];
+            var reverseBlue = this._reverseBlueIncrement.getValue();
+            _.map(this.goldIndexMappings, mapping => mapping.mapValue(arrangement.shiftGoldDown));
+            _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? arrangement.shiftBlueUp : arrangement.shiftBlueDown));
+        }
     }
     async _updateLightForAutopilot(eventCode) {
         var period = this._beatmathParameters.tempo.getPeriod();
@@ -167,13 +181,13 @@ class TwentySixteenParameters {
 
         } else if (incrementFreq !== AUTOPILOT_FREQ_MAX && ticks % Math.pow(2, incrementFreq) === 0) {
             if (this._isOnAutopilot()) {
-                this._incrementIndicesUp();
+                this._incrementIndicesUp(true);
             }
             this._updateLightForAutopilot(mixboardButton.L_LOOP_IN);
 
         } else if (shiftFreq !== AUTOPILOT_FREQ_MAX && ticks % Math.pow(2, shiftFreq) === 0) {
             if (this._isOnAutopilot()) {
-                this._shiftIndicesUp();
+                this._shiftIndicesUp(true);
             }
             this._updateLightForAutopilot(mixboardButton.L_LOOP_RELOOP);
         }
