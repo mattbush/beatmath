@@ -17,7 +17,7 @@ class TreesParameters {
 
         this.numTrees = new IntLinearParameter({
             min: 1,
-            max: 8,
+            max: 16,
             start: 1,
         });
         this.numTrees.listenToFader(mixboard, mixboardFader.L_GAIN);
@@ -30,15 +30,15 @@ class TreesParameters {
         this.numLevels.listenToFader(mixboard, mixboardFader.R_GAIN);
 
         this.treeSpacing = new LinearParameter({
-            min: 50,
-            max: 800,
+            min: 25,
+            max: 500,
             start: 400,
         });
         this.treeSpacing.listenToKnob(mixboard, mixboardKnob.L_BASS);
 
         this.levelSpacing = new LinearParameter({
-            min: 10,
-            max: 200,
+            min: 25,
+            max: 500,
             start: 100,
         });
         this.levelSpacing.listenToKnob(mixboard, mixboardKnob.R_BASS);
@@ -46,14 +46,14 @@ class TreesParameters {
         this.treeWidthPercent = new LinearParameter({
             min: 0.25,
             max: 1,
-            start: 0.5,
+            start: 0.65,
         });
         this.treeWidthPercent.listenToKnob(mixboard, mixboardKnob.L_MID);
 
         this.levelHeightPercent = new LinearParameter({
             min: 0.25,
             max: 1,
-            start: 0.5,
+            start: 0.65,
         });
         this.levelHeightPercent.listenToKnob(mixboard, mixboardKnob.R_MID);
 
@@ -100,7 +100,7 @@ class TreesParameters {
 
         this.trailPercent = new LinearParameter({
             min: 0,
-            max: 0.8,
+            max: 1.0,
             start: 0,
             incrementAmount: 0.05,
             monitorName: 'Trail percent',
@@ -152,10 +152,14 @@ class TreesParameters {
             return color;
         }
         var trailPercent = this.trailPercent.getValue();
-        var darkenAmount = 60;
+        var defaultDarkenAmount = 50;
+        var fullDarkenAmount = 65;
+        var darkenAmount;
         if (trailPercent !== 0) {
-            var trailedDarkenAmount = levelIllumination * darkenAmount;
-            darkenAmount = lerp(darkenAmount, trailedDarkenAmount, trailPercent);
+            var trailedDarkenAmount = levelIllumination * fullDarkenAmount;
+            darkenAmount = lerp(defaultDarkenAmount, trailedDarkenAmount, trailPercent);
+        } else {
+            darkenAmount = defaultDarkenAmount;
         }
         color.darken(darkenAmount);
         return color;
