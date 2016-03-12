@@ -1,7 +1,7 @@
 var {LinearParameter, IntLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 var {mixboardFader, mixboardKnob, mixboardButton} = require('js/core/inputs/MixboardConstants');
 var tinycolor = require('tinycolor2');
-var {posMod, lerp} = require('js/core/utils/math');
+var {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
 
 class TreesParameters {
     constructor(mixboard, beatmathParameters) {
@@ -110,11 +110,20 @@ class TreesParameters {
         this.trailPercent.addStatusLight(mixboard, mixboardButton.L_LOOP_IN, value => value > 0);
         this.trailPercent.addStatusLight(mixboard, mixboardButton.L_LOOP_MANUAL, value => value >= 0.8);
 
-        this.staggerTrees = new ToggleParameter({
+        this.staggerAmount = new LinearParameter({
+            min: 0,
+            max: 8,
+            start: 0,
+            monitorName: 'Stagger Amount',
+        });
+        this.staggerAmount.listenToIncrementButton(mixboard, mixboardButton.L_PITCH_BEND_PLUS);
+        this.staggerAmount.listenToDecrementButton(mixboard, mixboardButton.L_PITCH_BEND_MINUS);
+
+        this.mirrorStagger = new ToggleParameter({
             start: false,
         });
-        this.staggerTrees.listenToButton(mixboard, mixboardButton.L_EFFECT);
-        this.staggerTrees.addStatusLight(mixboard, mixboardButton.L_EFFECT);
+        this.mirrorStagger.listenToButton(mixboard, mixboardButton.L_EFFECT);
+        this.mirrorStagger.addStatusLight(mixboard, mixboardButton.L_EFFECT);
     }
     getTotalTreeSpacing() {
         return this.treeSpacing.getValue() * this.numTrees.getValue();
@@ -131,8 +140,11 @@ class TreesParameters {
     _getLevelIllumination(treeIndex, levelNumber) {
         var periodTicks = Math.pow(2, this.periodTicksLog2.getValue());
         var tempoNumTicks = this._beatmathParameters.tempo.getNumTicks();
-        if (this.staggerTrees.getValue() && treeIndex % 2) {
-            levelNumber += periodTicks / 2;
+        if (this.staggerAmount.getValue() > 0) {
+            if (this.mirrorStagger.getValue()) {
+                treeIndex = posModAndBendToLowerHalf(treeIndex, this.numTrees.getValue() - 1);
+            }
+            levelNumber -= treeIndex * this.staggerAmount.getValue();
         }
         return posMod(tempoNumTicks - levelNumber, periodTicks) / (periodTicks - 1);
     }
