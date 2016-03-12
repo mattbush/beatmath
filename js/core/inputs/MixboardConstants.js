@@ -87,11 +87,11 @@ var mixboardWheelCoefficients = {
     [mixboardWheel.L_TURNTABLE]: 0.25,
     [mixboardWheel.BROWSE]: 1,
     [mixboardWheel.L_SELECT]: 1,
-    [mixboardWheel.L_CONTROL_1]: 1,
-    [mixboardWheel.L_CONTROL_2]: 1,
+    [mixboardWheel.L_CONTROL_1]: 0.5,
+    [mixboardWheel.L_CONTROL_2]: 0.5,
     [mixboardWheel.R_SELECT]: 1,
-    [mixboardWheel.R_CONTROL_1]: 1,
-    [mixboardWheel.R_CONTROL_2]: 1,
+    [mixboardWheel.R_CONTROL_1]: 0.5,
+    [mixboardWheel.R_CONTROL_2]: 0.5,
 };
 
 module.exports = {

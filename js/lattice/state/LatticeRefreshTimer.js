@@ -14,12 +14,14 @@ class LatticeRefreshTimer {
 
         this._rippleRadius = new LinearParameter({
             start: 10, min: 2, max: 40,
+            monitorName: 'Refresh Ripple Radius',
         });
         this._rippleRadius.listenToWheel(mixboard, mixboardWheel.L_SELECT);
         this._rippleRadius.addListener(this._flushCache);
 
         this._manhattanCoefficient = new LinearParameter({
             start: 0, defaultOn: 1, min: -2, max: 3, incrementAmount: 0.25,
+            monitorName: 'Refresh Manhattan Coeff',
         });
         this._manhattanCoefficient.listenToWheel(mixboard, mixboardWheel.L_CONTROL_1);
         this._manhattanCoefficient.listenToResetButton(mixboard, mixboardButton.L_HOT_CUE_2);
@@ -28,6 +30,7 @@ class LatticeRefreshTimer {
 
         this._logCoefficient = new LinearParameter({
             start: 0, defaultOn: 1, min: -2, max: 3, incrementAmount: 0.25,
+            monitorName: 'Refresh Log Coeff',
         });
         this._logCoefficient.listenToWheel(mixboard, mixboardWheel.L_CONTROL_2);
         this._logCoefficient.listenToResetButton(mixboard, mixboardButton.L_HOT_CUE_3);
@@ -43,6 +46,7 @@ class LatticeRefreshTimer {
 
         this._globalPolarAngles = new LinearParameter({
             start: 0, min: -12, max: 12,
+            monitorName: 'Refresh # Global Polar Angles',
         });
         this._globalPolarAngles.listenToIncrementButton(mixboard, mixboardButton.L_LOOP_IN);
         this._globalPolarAngles.listenToDecrementButton(mixboard, mixboardButton.L_LOOP_MANUAL);
@@ -52,6 +56,7 @@ class LatticeRefreshTimer {
 
         this._localPolarAngles = new LinearParameter({
             start: 0, min: -12, max: 12,
+            monitorName: 'Refresh # Local Polar Angles',
         });
         this._localPolarAngles.listenToIncrementButton(mixboard, mixboardButton.L_LOOP_RELOOP);
         this._localPolarAngles.listenToDecrementButton(mixboard, mixboardButton.L_LOOP_OUT);
