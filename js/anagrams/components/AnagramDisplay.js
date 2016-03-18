@@ -66,6 +66,7 @@ var AnagramDisplay = React.createClass({
     },
     contextTypes: {
         mixboard: React.PropTypes.object,
+        beatmathParameters: React.PropTypes.object,
     },
     getChildContext: function() {
         return {
@@ -74,7 +75,7 @@ var AnagramDisplay = React.createClass({
     },
     getInitialState: function() {
         return {
-            anagramsParameters: new AnagramsParameters(this.context.mixboard),
+            anagramsParameters: new AnagramsParameters(this.context.mixboard, this.context.beatmathParameters),
             anagramSets: [
                 new AnagramSet(['MATT BUSH', 'MATHTUBS']),
                 new AnagramSet(['ANAGRAMS NEVER LIE', 'A RENAMING REVEALS']),

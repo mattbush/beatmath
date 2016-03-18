@@ -33,7 +33,7 @@ var LatticeGrid = React.createClass({
     getInitialState: function() {
         var mixboard = this.context.mixboard;
         var beatmathParameters = this.context.beatmathParameters;
-        var latticeParameters = new LatticeParameters(mixboard);
+        var latticeParameters = new LatticeParameters(mixboard, beatmathParameters);
 
         var refreshTimer = new LatticeRefreshTimer({mixboard, beatmathParameters, latticeParameters});
 

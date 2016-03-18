@@ -56,6 +56,7 @@ var PineconeGrid = React.createClass({
         pineconeParameters: React.PropTypes.object,
     },
     contextTypes: {
+        beatmathParameters: React.PropTypes.object,
         mixboard: React.PropTypes.object,
     },
     getChildContext: function() {
@@ -65,7 +66,7 @@ var PineconeGrid = React.createClass({
     },
     getInitialState: function() {
         var mixboard = this.context.mixboard;
-        var pineconeParameters = new PineconeParameters(mixboard);
+        var pineconeParameters = new PineconeParameters(mixboard, this.context.beatmathParameters);
         return {pineconeParameters};
     },
     getParameterBindings: function() {

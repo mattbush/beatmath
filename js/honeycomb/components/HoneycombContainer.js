@@ -56,6 +56,7 @@ var HoneycombContainer = React.createClass({
     },
     contextTypes: {
         mixboard: React.PropTypes.object,
+        beatmathParameters: React.PropTypes.object,
     },
     getChildContext: function() {
         return {
@@ -67,7 +68,7 @@ var HoneycombContainer = React.createClass({
     },
     getInitialState: function() {
         return {
-            honeycombParameters: new HoneycombParameters(this.context.mixboard),
+            honeycombParameters: new HoneycombParameters(this.context.mixboard, this.context.beatmathParameters),
             ticks: 0,
             bpm: BPM_CONST,
         };

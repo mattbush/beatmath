@@ -22,7 +22,7 @@ var BrickGrid = React.createClass({
         };
     },
     getInitialState: function() {
-        var bricksParameters = new BricksParameters(this.context.mixboard);
+        var bricksParameters = new BricksParameters(this.context.mixboard, this.context.beatmathParameters);
         return {
             bricksParameters: bricksParameters,
             gridState: new BrickGridState(bricksParameters),
