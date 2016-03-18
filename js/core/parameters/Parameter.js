@@ -100,14 +100,15 @@ class CycleParameter extends Parameter {
 
 class LinearParameter extends Parameter {
     constructor(params) {
-        params.min = wrapParam(params.min);
-        params.max = wrapParam(params.max);
+        var [min, max] = params.range;
+        min = wrapParam(min);
+        max = wrapParam(max);
         if (params.startLerp !== undefined) {
-            params.start = lerp(params.min.getValue(), params.max.getValue(), params.startLerp);
+            params.start = lerp(min.getValue(), max.getValue(), params.startLerp);
         }
         super(params);
-        this._minParam = params.min;
-        this._maxParam = params.max;
+        this._minParam = min;
+        this._maxParam = max;
         this._incrementAmount = params.incrementAmount || 1;
         this._lePassedByInput = false;
         this._gePassedByInput = false;

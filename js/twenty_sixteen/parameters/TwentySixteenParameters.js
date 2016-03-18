@@ -60,21 +60,18 @@ class TwentySixteenParameters {
         this._isAutopiloting.addListener(this._onAutopilotChange.bind(this));
 
         this._autopilotArrangementFrequencyLog2 = new LinearParameter({
-            min: 0,
+            range: [0, AUTOPILOT_FREQ_MAX],
             start: 2,
-            max: AUTOPILOT_FREQ_MAX,
         });
         this._autopilotArrangementFrequencyLog2.listenToWheel(mixboard, mixboardWheel.L_SELECT);
         this._autopilotIncrementFrequencyLog2 = new LinearParameter({
-            min: 0,
+            range: [0, AUTOPILOT_FREQ_MAX],
             start: AUTOPILOT_FREQ_MAX,
-            max: AUTOPILOT_FREQ_MAX,
         });
         this._autopilotIncrementFrequencyLog2.listenToWheel(mixboard, mixboardWheel.L_CONTROL_1);
         this._autopilotShiftFrequencyLog2 = new LinearParameter({
-            min: 0,
+            range: [0, AUTOPILOT_FREQ_MAX],
             start: 0,
-            max: AUTOPILOT_FREQ_MAX,
         });
         this._autopilotShiftFrequencyLog2.listenToWheel(mixboard, mixboardWheel.L_CONTROL_2);
 

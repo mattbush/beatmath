@@ -13,28 +13,24 @@ class LatticeParameters extends PieceParameters {
         this.showInfluences.addStatusLight(this._mixboard, mixboardButton.L_SYNC);
 
         this.mixCoefficient = new LinearParameter({
-            min: 0.2,
-            max: 2,
+            range: [0.2, 2],
             start: 1,
         });
         this.mixCoefficient.listenToKnob(this._mixboard, mixboardKnob.L_BASS);
         this.distanceCoefficient = new LinearParameter({
-            min: 0.2,
-            max: 3,
+            range: [0.2, 3],
             start: 1,
         });
         this.distanceCoefficient.listenToKnob(this._mixboard, mixboardKnob.R_BASS);
 
         this.numCols = new LinearParameter({
-            min: 0,
-            max: 40,
+            range: [0, 40],
             start: 12,
         });
         this.numCols.listenToFader(this._mixboard, mixboardFader.L_GAIN);
 
         this.numRows = new LinearParameter({
-            min: 0,
-            max: 25,
+            range: [0, 25],
             start: 12,
         });
         this.numRows.listenToFader(this._mixboard, mixboardFader.R_GAIN);
@@ -45,7 +41,9 @@ class LatticeParameters extends PieceParameters {
         this.oscillate.listenToButton(this._mixboard, mixboardButton.L_PITCH_BEND_MINUS);
 
         this.triangularGridAmount = new LinearParameter({
-            start: 0, min: 0, max: 1, incrementAmount: 0.05,
+            range: [0, 1],
+            start: 0,
+            incrementAmount: 0.05,
         });
         this.triangularGridAmount.listenToWheel(this._mixboard, mixboardWheel.R_CONTROL_2);
     }

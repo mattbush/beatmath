@@ -13,14 +13,18 @@ class LatticeRefreshTimer {
         this._flushCache = this._flushCache.bind(this);
 
         this._rippleRadius = new LinearParameter({
-            start: 10, min: 2, max: 40,
+            range: [2, 40],
+            start: 10,
             monitorName: 'Refresh Ripple Radius',
         });
         this._rippleRadius.listenToWheel(mixboard, mixboardWheel.L_SELECT);
         this._rippleRadius.addListener(this._flushCache);
 
         this._manhattanCoefficient = new LinearParameter({
-            start: 0, defaultOn: 1, min: -2, max: 3, incrementAmount: 0.25,
+            range: [-2, 3],
+            start: 0,
+            defaultOn: 1,
+            incrementAmount: 0.25,
             monitorName: 'Refresh Manhattan Coeff',
         });
         this._manhattanCoefficient.listenToWheel(mixboard, mixboardWheel.L_CONTROL_1);
@@ -29,7 +33,10 @@ class LatticeRefreshTimer {
         this._manhattanCoefficient.addListener(this._flushCache);
 
         this._logCoefficient = new LinearParameter({
-            start: 0, defaultOn: 1, min: -2, max: 3, incrementAmount: 0.25,
+            range: [-2, 3],
+            start: 0,
+            defaultOn: 1,
+            incrementAmount: 0.25,
             monitorName: 'Refresh Log Coeff',
         });
         this._logCoefficient.listenToWheel(mixboard, mixboardWheel.L_CONTROL_2);
@@ -45,7 +52,8 @@ class LatticeRefreshTimer {
         this._useDistance.addListener(this._flushCache);
 
         this._globalPolarAngles = new LinearParameter({
-            start: 0, min: -12, max: 12,
+            range: [-12, 12],
+            start: 0,
             monitorName: 'Refresh # Global Polar Angles',
         });
         this._globalPolarAngles.listenToIncrementButton(mixboard, mixboardButton.L_LOOP_IN);
@@ -55,7 +63,8 @@ class LatticeRefreshTimer {
         this._globalPolarAngles.addListener(this._flushCache);
 
         this._localPolarAngles = new LinearParameter({
-            start: 0, min: -12, max: 12,
+            range: [-12, 12],
+            start: 0,
             monitorName: 'Refresh # Local Polar Angles',
         });
         this._localPolarAngles.listenToIncrementButton(mixboard, mixboardButton.L_LOOP_RELOOP);

@@ -16,57 +16,49 @@ class TreesParameters extends PieceParameters {
         });
 
         this.numTrees = new IntLinearParameter({
-            min: 1,
-            max: 16,
+            range: [1, 16],
             start: 1,
         });
         this.numTrees.listenToFader(this._mixboard, mixboardFader.L_GAIN);
 
         this.numLevels = new IntLinearParameter({
-            min: 1,
-            max: 16,
+            range: [1, 16],
             start: 1,
         });
         this.numLevels.listenToFader(this._mixboard, mixboardFader.R_GAIN);
 
         this.treeSpacing = new LinearParameter({
-            min: 25,
-            max: 500,
+            range: [25, 500],
             start: 400,
         });
         this.treeSpacing.listenToKnob(this._mixboard, mixboardKnob.L_BASS);
 
         this.levelSpacing = new LinearParameter({
-            min: 25,
-            max: 500,
+            range: [25, 500],
             start: 100,
         });
         this.levelSpacing.listenToKnob(this._mixboard, mixboardKnob.R_BASS);
 
         this.treeWidthPercent = new LinearParameter({
-            min: 0.25,
-            max: 1,
+            range: [0.25, 1],
             start: 0.65,
         });
         this.treeWidthPercent.listenToKnob(this._mixboard, mixboardKnob.L_MID);
 
         this.levelHeightPercent = new LinearParameter({
-            min: 0.25,
-            max: 1,
+            range: [0.25, 1],
             start: 0.65,
         });
         this.levelHeightPercent.listenToKnob(this._mixboard, mixboardKnob.R_MID);
 
         this.borderRadiusPercent = new LinearParameter({
-            min: 0,
-            max: 1,
+            range: [0, 1],
             start: 0,
         });
         this.borderRadiusPercent.listenToKnob(this._mixboard, mixboardKnob.CUE_GAIN);
 
         this.periodTicksLog2 = new LinearParameter({
-            min: 1,
-            max: 4,
+            range: [1, 4],
             start: 1,
         });
         this.periodTicksLog2.listenToIncrementButton(this._mixboard, mixboardButton.L_LOOP_RELOOP);
@@ -75,8 +67,7 @@ class TreesParameters extends PieceParameters {
         this.periodTicksLog2.addStatusLight(this._mixboard, mixboardButton.L_LOOP_OUT, value => value > 2);
 
         this.treeColorShift = new LinearParameter({
-            min: -60,
-            max: 60,
+            range: [-180, 180],
             start: 0,
             incrementAmount: 2.5,
             monitorName: 'Tree color shift',
@@ -87,10 +78,9 @@ class TreesParameters extends PieceParameters {
         this.treeColorShift.addStatusLight(this._mixboard, mixboardButton.L_DELETE, value => value < 0);
 
         this.levelColorShift = new LinearParameter({
-            min: -180,
-            max: 180,
+            range: [-180, 180],
             start: 0,
-            incrementAmount: 5,
+            incrementAmount: 2.5,
             monitorName: 'Level color shift',
         });
         this.levelColorShift.listenToIncrementButton(this._mixboard, mixboardButton.L_HOT_CUE_3);
@@ -99,8 +89,7 @@ class TreesParameters extends PieceParameters {
         this.levelColorShift.addStatusLight(this._mixboard, mixboardButton.L_HOT_CUE_2, value => value < 0);
 
         this.trailPercent = new LinearParameter({
-            min: 0,
-            max: 1.0,
+            range: [0, 1],
             start: 0,
             incrementAmount: 0.05,
             monitorName: 'Trail percent',
@@ -111,8 +100,7 @@ class TreesParameters extends PieceParameters {
         this.trailPercent.addStatusLight(this._mixboard, mixboardButton.L_LOOP_MANUAL, value => value >= 0.8);
 
         this.staggerAmount = new LinearParameter({
-            min: 0,
-            max: 8,
+            range: [0, 8],
             start: 0,
             monitorName: 'Stagger Amount',
         });

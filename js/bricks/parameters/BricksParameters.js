@@ -15,8 +15,7 @@ class BricksParameters extends PieceParameters {
         this.motionAngle.listenToWheel(this._mixboard, mixboardWheel.BROWSE);
 
         this.brickHomogeneity = new LinearParameter({
-            min: -5,
-            max: 5,
+            range: [-5, 5],
             start: -0.4,
         });
         this.brickHomogeneity.listenToFader(this._mixboard, mixboardKnob.CUE_GAIN);

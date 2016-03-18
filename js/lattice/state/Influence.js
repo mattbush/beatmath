@@ -11,15 +11,13 @@ class Influence {
         this._latticeParameters = latticeParameters;
 
         this._colParameter = new MovingLinearParameter({
-            min: new NegatedParameter(latticeParameters.numCols),
-            max: latticeParameters.numCols,
+            range: [new NegatedParameter(latticeParameters.numCols), latticeParameters.numCols],
             variance: 0.25,
             startLerp: startCol,
         });
 
         this._rowParameter = new MovingLinearParameter({
-            min: new NegatedParameter(latticeParameters.numRows),
-            max: latticeParameters.numRows,
+            range: [new NegatedParameter(latticeParameters.numRows), latticeParameters.numRows],
             variance: 0.25,
             startLerp: startRow,
         });
@@ -101,8 +99,7 @@ class SizeInfluence extends LinearInfluence {
     constructor(params) {
         super(params);
         this._mainParameter = new MovingLinearParameter({
-            min: 1,
-            max: MAX_SIZE,
+            range: [1, MAX_SIZE],
             variance: 0.25,
             start: params.startValue,
         });
@@ -119,8 +116,7 @@ class RotationInfluence extends LinearInfluence {
     constructor(params) {
         super(params);
         this._mainParameter = new MovingLinearParameter({
-            min: -90,
-            max: 90,
+            range: [-90, 90],
             variance: 0.25,
             start: params.startValue,
         });
