@@ -1,6 +1,6 @@
 var _ = require('underscore');
 
-var MIXBOARD_LISTENER_KEYS = (value, key) => key.startsWith('listenTo') || key.startsWith('addStatusLight');
+var MIXBOARD_LISTENER_KEYS = (value, key) => key.startsWith('listenTo');
 
 class PieceParameters {
     constructor(mixboard, beatmathParameters) {
@@ -18,8 +18,8 @@ class PieceParameters {
 
             var parameter = new type(constructorProperties);
             _.each(listenerProperties, (value, listenerMethodName) => {
-                if (listenerMethodName.startsWith('addStatusLight')) {
-                    parameter.addStatusLight(this._mixboard, ...value);
+                if (_.isArray(value)) { // ugh, hack
+                    parameter[listenerMethodName](this._mixboard, ...value);
                 } else {
                     parameter[listenerMethodName](this._mixboard, value);
                 }

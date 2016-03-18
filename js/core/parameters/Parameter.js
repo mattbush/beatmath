@@ -59,6 +59,7 @@ var wrapParam = function(value) {
 class ToggleParameter extends Parameter {
     listenToButton(mixboard, eventCode) {
         mixboard.addButtonListener(eventCode, this.onButtonUpdate.bind(this));
+        this.addStatusLight(mixboard, eventCode);
     }
     onButtonUpdate(inputValue) {
         if (inputValue) { // button is pressed down, not up
@@ -126,6 +127,17 @@ class LinearParameter extends Parameter {
     }
     listenToResetButton(mixboard, eventCode) {
         mixboard.addButtonListener(eventCode, this.onResetButtonPress.bind(this));
+    }
+    listenToDecrementAndIncrementButtons(mixboard, decrementCode, incrementCode) {
+        this.listenToIncrementButton(mixboard, incrementCode);
+        this.listenToDecrementButton(mixboard, decrementCode);
+        if (this._defaultOff === this._minParam.getValue()) {
+            this.addStatusLight(mixboard, incrementCode, value => value > this._minParam.getValue());
+            this.addStatusLight(mixboard, decrementCode, value => value >= this._maxParam.getValue());
+        } else {
+            this.addStatusLight(mixboard, incrementCode, value => value > this._defaultOff);
+            this.addStatusLight(mixboard, decrementCode, value => value < this._defaultOff);
+        }
     }
     listenToIncrementButton(mixboard, eventCode) {
         mixboard.addButtonListener(eventCode, this.onIncrementButtonPress.bind(this));

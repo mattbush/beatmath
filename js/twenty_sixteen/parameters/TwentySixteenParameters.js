@@ -50,13 +50,11 @@ class TwentySixteenParameters {
             start: false,
         });
         this._reverseBlueIncrement.listenToButton(mixboard, mixboardButton.L_KEYLOCK);
-        this._reverseBlueIncrement.addStatusLight(mixboard, mixboardButton.L_KEYLOCK);
 
         this._isAutopiloting = new ToggleParameter({
             start: false,
         });
         this._isAutopiloting.listenToButton(mixboard, mixboardButton.L_EFFECT);
-        this._isAutopiloting.addStatusLight(mixboard, mixboardButton.L_EFFECT);
         this._isAutopiloting.addListener(this._onAutopilotChange.bind(this));
 
         this._autopilotArrangementFrequencyLog2 = new LinearParameter({
@@ -85,7 +83,6 @@ class TwentySixteenParameters {
             start: false,
         });
         this.reverseFrameRotationInPixels.listenToButton(mixboard, mixboardButton.R_SCRATCH);
-        this.reverseFrameRotationInPixels.addStatusLight(mixboard, mixboardButton.R_SCRATCH);
 
         mixboard.addButtonListener(mixboardButton.L_LOOP_MANUAL, this._incrementIndicesDown.bind(this));
         mixboard.addButtonListener(mixboardButton.L_LOOP_IN, this._incrementIndicesUp.bind(this));

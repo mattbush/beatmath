@@ -48,7 +48,6 @@ class LatticeRefreshTimer {
             start: true,
         });
         this._useDistance.listenToButton(mixboard, mixboardButton.L_HOT_CUE_1);
-        this._useDistance.addStatusLight(mixboard, mixboardButton.L_HOT_CUE_1);
         this._useDistance.addListener(this._flushCache);
 
         this._globalPolarAngles = new LinearParameter({
@@ -77,7 +76,6 @@ class LatticeRefreshTimer {
             start: false,
         });
         this._bendLocalPolarAngles.listenToButton(mixboard, mixboardButton.L_KEYLOCK);
-        this._bendLocalPolarAngles.addStatusLight(mixboard, mixboardButton.L_KEYLOCK);
         this._bendLocalPolarAngles.addListener(this._flushCache);
 
         this._subdivisionSize = new CycleParameter({

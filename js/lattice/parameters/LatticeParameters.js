@@ -10,7 +10,6 @@ class LatticeParameters extends PieceParameters {
             start: false,
         });
         this.showInfluences.listenToButton(this._mixboard, mixboardButton.L_SYNC);
-        this.showInfluences.addStatusLight(this._mixboard, mixboardButton.L_SYNC);
 
         this.mixCoefficient = new LinearParameter({
             range: [0.2, 2],
