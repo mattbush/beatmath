@@ -5,113 +5,109 @@ var {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
 class TreesParameters extends PieceParameters {
-    constructor() {
-        super(...arguments);
-
-        this.levelColor = new MovingColorParameter({
-            max: 5,
-            variance: 1,
-            start: tinycolor('#5ff'),
-            autoupdate: 1000,
-        });
-
-        this.numTrees = new IntLinearParameter({
-            range: [1, 16],
-            start: 1,
-        });
-        this.numTrees.listenToFader(this._mixboard, mixboardFader.L_GAIN);
-
-        this.numLevels = new IntLinearParameter({
-            range: [1, 16],
-            start: 1,
-        });
-        this.numLevels.listenToFader(this._mixboard, mixboardFader.R_GAIN);
-
-        this.treeSpacing = new LinearParameter({
-            range: [25, 500],
-            start: 400,
-        });
-        this.treeSpacing.listenToKnob(this._mixboard, mixboardKnob.L_BASS);
-
-        this.levelSpacing = new LinearParameter({
-            range: [25, 500],
-            start: 100,
-        });
-        this.levelSpacing.listenToKnob(this._mixboard, mixboardKnob.R_BASS);
-
-        this.treeWidthPercent = new LinearParameter({
-            range: [0.25, 1],
-            start: 0.65,
-        });
-        this.treeWidthPercent.listenToKnob(this._mixboard, mixboardKnob.L_MID);
-
-        this.levelHeightPercent = new LinearParameter({
-            range: [0.25, 1],
-            start: 0.65,
-        });
-        this.levelHeightPercent.listenToKnob(this._mixboard, mixboardKnob.R_MID);
-
-        this.borderRadiusPercent = new LinearParameter({
-            range: [0, 1],
-            start: 0,
-        });
-        this.borderRadiusPercent.listenToKnob(this._mixboard, mixboardKnob.CUE_GAIN);
-
-        this.periodTicksLog2 = new LinearParameter({
-            range: [1, 4],
-            start: 1,
-        });
-        this.periodTicksLog2.listenToIncrementButton(this._mixboard, mixboardButton.L_LOOP_RELOOP);
-        this.periodTicksLog2.listenToDecrementButton(this._mixboard, mixboardButton.L_LOOP_OUT);
-        this.periodTicksLog2.addStatusLight(this._mixboard, mixboardButton.L_LOOP_RELOOP, value => value % 2 === 0);
-        this.periodTicksLog2.addStatusLight(this._mixboard, mixboardButton.L_LOOP_OUT, value => value > 2);
-
-        this.treeColorShift = new LinearParameter({
-            range: [-180, 180],
-            start: 0,
-            incrementAmount: 2.5,
-            monitorName: 'Tree color shift',
-        });
-        this.treeColorShift.listenToIncrementButton(this._mixboard, mixboardButton.L_HOT_CUE_1);
-        this.treeColorShift.listenToDecrementButton(this._mixboard, mixboardButton.L_DELETE);
-        this.treeColorShift.addStatusLight(this._mixboard, mixboardButton.L_HOT_CUE_1, value => value > 0);
-        this.treeColorShift.addStatusLight(this._mixboard, mixboardButton.L_DELETE, value => value < 0);
-
-        this.levelColorShift = new LinearParameter({
-            range: [-180, 180],
-            start: 0,
-            incrementAmount: 2.5,
-            monitorName: 'Level color shift',
-        });
-        this.levelColorShift.listenToIncrementButton(this._mixboard, mixboardButton.L_HOT_CUE_3);
-        this.levelColorShift.listenToDecrementButton(this._mixboard, mixboardButton.L_HOT_CUE_2);
-        this.levelColorShift.addStatusLight(this._mixboard, mixboardButton.L_HOT_CUE_3, value => value > 0);
-        this.levelColorShift.addStatusLight(this._mixboard, mixboardButton.L_HOT_CUE_2, value => value < 0);
-
-        this.trailPercent = new LinearParameter({
-            range: [0, 1],
-            start: 0,
-            incrementAmount: 0.05,
-            monitorName: 'Trail percent',
-        });
-        this.trailPercent.listenToIncrementButton(this._mixboard, mixboardButton.L_LOOP_IN);
-        this.trailPercent.listenToDecrementButton(this._mixboard, mixboardButton.L_LOOP_MANUAL);
-        this.trailPercent.addStatusLight(this._mixboard, mixboardButton.L_LOOP_IN, value => value > 0);
-        this.trailPercent.addStatusLight(this._mixboard, mixboardButton.L_LOOP_MANUAL, value => value >= 0.8);
-
-        this.staggerAmount = new LinearParameter({
-            range: [0, 8],
-            start: 0,
-            monitorName: 'Stagger Amount',
-        });
-        this.staggerAmount.listenToIncrementButton(this._mixboard, mixboardButton.L_PITCH_BEND_PLUS);
-        this.staggerAmount.listenToDecrementButton(this._mixboard, mixboardButton.L_PITCH_BEND_MINUS);
-
-        this.mirrorStagger = new ToggleParameter({
-            start: false,
-        });
-        this.mirrorStagger.listenToButton(this._mixboard, mixboardButton.L_EFFECT);
-        this.mirrorStagger.addStatusLight(this._mixboard, mixboardButton.L_EFFECT);
+    _declareParameters() {
+        return {
+            levelColor: {
+                type: MovingColorParameter,
+                start: tinycolor('#5ff'),
+                max: 5,
+                variance: 1,
+                autoupdate: 1000,
+            },
+            numTrees: {
+                type: IntLinearParameter,
+                start: 1,
+                range: [1, 16],
+                listenToFader: mixboardFader.L_GAIN,
+            },
+            numLevels: {
+                type: IntLinearParameter,
+                range: [1, 16],
+                start: 1,
+                listenToFader: mixboardFader.R_GAIN,
+            },
+            treeSpacing: {
+                type: IntLinearParameter,
+                range: [25, 500],
+                start: 400,
+                listenToKnob: mixboardKnob.L_BASS,
+            },
+            levelSpacing: {
+                type: IntLinearParameter,
+                range: [25, 500],
+                start: 100,
+                listenToKnob: mixboardKnob.R_BASS,
+            },
+            treeWidthPercent: {type: LinearParameter,
+                range: [0.25, 1],
+                start: 0.65,
+                listenToKnob: mixboardKnob.L_MID,
+            },
+            levelHeightPercent: {type: LinearParameter,
+                range: [0.25, 1],
+                start: 0.65,
+                listenToKnob: mixboardKnob.R_MID,
+            },
+            borderRadiusPercent: {type: LinearParameter,
+                range: [0, 1],
+                start: 0,
+                listenToKnob: mixboardKnob.CUE_GAIN,
+            },
+            periodTicksLog2: {type: LinearParameter,
+                range: [1, 4],
+                start: 1,
+                listenToIncrementButton: mixboardButton.L_LOOP_RELOOP,
+                listenToDecrementButton: mixboardButton.L_LOOP_OUT,
+                addStatusLight1: [mixboardButton.L_LOOP_RELOOP, value => value % 2 === 0],
+                addStatusLight2: [mixboardButton.L_LOOP_OUT, value => value > 2],
+            },
+            treeColorShift: {type: LinearParameter,
+                range: [-180, 180],
+                start: 0,
+                incrementAmount: 2.5,
+                monitorName: 'Tree color shift',
+                listenToIncrementButton: mixboardButton.L_HOT_CUE_1,
+                listenToDecrementButton: mixboardButton.L_DELETE,
+                addStatusLight1: [mixboardButton.L_HOT_CUE_1, value => value > 0],
+                addStatusLight2: [mixboardButton.L_DELETE, value => value < 0],
+            },
+            levelColorShift: {
+                type: LinearParameter,
+                range: [-180, 180],
+                start: 0,
+                incrementAmount: 2.5,
+                monitorName: 'Level color shift',
+                listenToIncrementButton: mixboardButton.L_HOT_CUE_3,
+                listenToDecrementButton: mixboardButton.L_HOT_CUE_2,
+                addStatusLight1: [mixboardButton.L_HOT_CUE_3, value => value > 0],
+                addStatusLight2: [mixboardButton.L_HOT_CUE_2, value => value < 0],
+            },
+            trailPercent: {
+                type: LinearParameter,
+                range: [0, 1],
+                start: 0,
+                incrementAmount: 0.05,
+                monitorName: 'Trail percent',
+                listenToIncrementButton: mixboardButton.L_LOOP_IN,
+                listenToDecrementButton: mixboardButton.L_LOOP_MANUAL,
+                addStatusLight1: [mixboardButton.L_LOOP_IN, value => value > 0],
+                addStatusLight2: [mixboardButton.L_LOOP_MANUAL, value => value >= 0.8],
+            },
+            staggerAmount: {
+                type: LinearParameter,
+                range: [0, 8],
+                start: 0,
+                monitorName: 'Stagger Amount',
+                listenToIncrementButton: mixboardButton.L_PITCH_BEND_PLUS,
+                listenToDecrementButton: mixboardButton.L_PITCH_BEND_MINUS,
+            },
+            mirrorStagger: {
+                type: ToggleParameter,
+                start: false,
+                listenToButton: mixboardButton.L_EFFECT,
+                addStatusLight: [mixboardButton.L_EFFECT],
+            },
+        };
     }
     getTotalTreeSpacing() {
         return this.treeSpacing.getValue() * this.numTrees.getValue();
