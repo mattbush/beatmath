@@ -27,62 +27,69 @@ const ENABLE_HUE = false;
 const AUTOPILOT_FREQ_MAX = 5;
 
 class TwentySixteenParameters extends PieceParameters {
+    _declareParameters() {
+        return {
+            arrangementIndex: {
+                type: AngleParameter,
+                start: 0,
+                constrainTo: ARRANGEMENTS.length,
+                monitorName: 'Arrangement #',
+                listenToWheel: mixboardWheel.BROWSE,
+            },
+            goldColor: {
+                type: MovingColorParameter,
+                max: 5,
+                variance: 1,
+                start: tinycolor('#f90'),
+                autoupdate: 1000,
+            },
+            _reverseBlueIncrement: {
+                type: ToggleParameter,
+                start: false,
+                listenToButton: mixboardButton.L_KEYLOCK,
+            },
+            _isAutopiloting: {
+                type: ToggleParameter,
+                start: false,
+                listenToButton: mixboardButton.L_EFFECT,
+            },
+            _autopilotArrangementFrequencyLog2: {
+                type: LinearParameter,
+                range: [0, AUTOPILOT_FREQ_MAX],
+                start: 2,
+                listenToWheel: mixboardWheel.L_SELECT,
+            },
+            _autopilotIncrementFrequencyLog2: {
+                type: LinearParameter,
+                range: [0, AUTOPILOT_FREQ_MAX],
+                start: AUTOPILOT_FREQ_MAX,
+                listenToWheel: mixboardWheel.L_CONTROL_1,
+            },
+            _autopilotShiftFrequencyLog2: {
+                type: LinearParameter,
+                range: [0, AUTOPILOT_FREQ_MAX],
+                start: 0,
+                listenToWheel: mixboardWheel.L_CONTROL_2,
+            },
+            reverseFrameRotationInPixels: {
+                type: ToggleParameter,
+                start: false,
+                listenToButton: mixboardButton.R_KEYLOCK,
+            },
+        };
+    }
     constructor() {
         super(...arguments);
         this._onTickForAutopilot = this._onTickForAutopilot.bind(this);
         this._beatmathParameters.tempo.addListener(this._onTickForAutopilot);
 
-        this.arrangementIndex = new AngleParameter({
-            start: 0,
-            constrainTo: ARRANGEMENTS.length,
-            monitorName: 'Arrangement #',
-        });
-        this.arrangementIndex.listenToWheel(this._mixboard, mixboardWheel.BROWSE);
-
-        this.goldColor = new MovingColorParameter({
-            max: 5,
-            variance: 1,
-            start: tinycolor('#f90'),
-            autoupdate: 1000,
-        });
-
-        this._reverseBlueIncrement = new ToggleParameter({
-            start: false,
-        });
-        this._reverseBlueIncrement.listenToButton(this._mixboard, mixboardButton.L_KEYLOCK);
-
-        this._isAutopiloting = new ToggleParameter({
-            start: false,
-        });
-        this._isAutopiloting.listenToButton(this._mixboard, mixboardButton.L_EFFECT);
         this._isAutopiloting.addListener(this._onAutopilotChange.bind(this));
-
-        this._autopilotArrangementFrequencyLog2 = new LinearParameter({
-            range: [0, AUTOPILOT_FREQ_MAX],
-            start: 2,
-        });
-        this._autopilotArrangementFrequencyLog2.listenToWheel(this._mixboard, mixboardWheel.L_SELECT);
-        this._autopilotIncrementFrequencyLog2 = new LinearParameter({
-            range: [0, AUTOPILOT_FREQ_MAX],
-            start: AUTOPILOT_FREQ_MAX,
-        });
-        this._autopilotIncrementFrequencyLog2.listenToWheel(this._mixboard, mixboardWheel.L_CONTROL_1);
-        this._autopilotShiftFrequencyLog2 = new LinearParameter({
-            range: [0, AUTOPILOT_FREQ_MAX],
-            start: 0,
-        });
-        this._autopilotShiftFrequencyLog2.listenToWheel(this._mixboard, mixboardWheel.L_CONTROL_2);
 
         this._resetArrangements(true);
         this._mixboard.addButtonListener(mixboardButton.L_DELETE, this._resetArrangements.bind(this));
         _.times(NUM_PRESET_ARRANGEMENTS, index => {
             this._mixboard.addButtonListener(SET_ARRANGEMENT_BUTTONS[index], this._setArrangement.bind(this, index));
         });
-
-        this.reverseFrameRotationInPixels = new ToggleParameter({
-            start: false,
-        });
-        this.reverseFrameRotationInPixels.listenToButton(this._mixboard, mixboardButton.R_SCRATCH);
 
         this._mixboard.addButtonListener(mixboardButton.L_LOOP_MANUAL, this._incrementIndicesDown.bind(this));
         this._mixboard.addButtonListener(mixboardButton.L_LOOP_IN, this._incrementIndicesUp.bind(this));
