@@ -34,8 +34,7 @@ var LatticeGrid = React.createClass({
         var mixboard = this.context.mixboard;
         var beatmathParameters = this.context.beatmathParameters;
         var latticeParameters = new LatticeParameters(mixboard, beatmathParameters);
-
-        var refreshTimer = new LatticeRefreshTimer({mixboard, beatmathParameters, latticeParameters});
+        var refreshTimer = new LatticeRefreshTimer(mixboard, beatmathParameters);
 
         var influences = [
             new ColorInfluence({beatmathParameters, latticeParameters, startCol: 0.2, startRow: 0.2, startValue: tinycolor('#f00'), index: 0}),

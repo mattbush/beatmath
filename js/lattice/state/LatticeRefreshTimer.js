@@ -1,90 +1,79 @@
 var _ = require('underscore');
 var {LinearParameter, CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 var {mixboardButton, mixboardWheel} = require('js/core/inputs/MixboardConstants');
+const PieceParameters = require('js/core/parameters/PieceParameters');
 
 const {lerp, dist, manhattanDist, polarAngleDeg, posMod, modAndShiftToHalf, posModAndBendToLowerHalf} = require('js/core/utils/math');
 
-class LatticeRefreshTimer {
-    constructor({mixboard, beatmathParameters, latticeParameters}) {
+class LatticeRefreshTimer extends PieceParameters {
+    _declareParameters() {
+        return {
+            _rippleRadius: {
+                type: LinearParameter,
+                range: [2, 40],
+                start: 10,
+                monitorName: 'Refresh Ripple Radius',
+                listenToWheel: mixboardWheel.L_SELECT,
+            },
+            _manhattanCoefficient: {
+                type: LinearParameter,
+                range: [-2, 3],
+                start: 0,
+                defaultOn: 1,
+                incrementAmount: 0.25,
+                monitorName: 'Refresh Manhattan Coeff',
+                listenToWheel: mixboardWheel.L_CONTROL_1,
+                listenToResetButton: mixboardButton.L_HOT_CUE_2,
+            },
+            _logCoefficient: {
+                type: LinearParameter,
+                range: [-2, 3],
+                start: 0,
+                defaultOn: 1,
+                incrementAmount: 0.25,
+                monitorName: 'Refresh Log Coeff',
+                listenToWheel: mixboardWheel.L_CONTROL_2,
+                listenToResetButton: mixboardButton.L_HOT_CUE_3,
+            },
+            _useDistance: {
+                type: ToggleParameter,
+                start: true,
+                listenToButton: mixboardButton.L_HOT_CUE_1,
+            },
+            _globalPolarAngles: {
+                type: LinearParameter,
+                range: [-12, 12],
+                start: 0,
+                monitorName: 'Refresh # Global Polar Angles',
+                listenToDecrementAndIncrementButtons: [mixboardButton.L_LOOP_MANUAL, mixboardButton.L_LOOP_IN],
+            },
+            _localPolarAngles: {
+                type: LinearParameter,
+                range: [-12, 12],
+                start: 0,
+                monitorName: 'Refresh # Local Polar Angles',
+                listenToDecrementAndIncrementButtons: [mixboardButton.L_LOOP_OUT, mixboardButton.L_LOOP_RELOOP],
+            },
+            _bendLocalPolarAngles: {
+                type: ToggleParameter,
+                start: false,
+                listenToButton: mixboardButton.L_KEYLOCK,
+            },
+            _subdivisionSize: {
+                type: CycleParameter,
+                cycleValues: [false, 1, 2, 3],
+                listenToCycleAndResetButtons: [mixboardButton.L_EFFECT, mixboardButton.L_DELETE],
+            },
+        };
+    }
+    constructor() {
+        super(...arguments);
         this._refreshOffsetCache = {};
-        this._beatmathParameters = beatmathParameters;
-        this._latticeParameters = latticeParameters;
-
         this._flushCache = this._flushCache.bind(this);
 
-        this._rippleRadius = new LinearParameter({
-            range: [2, 40],
-            start: 10,
-            monitorName: 'Refresh Ripple Radius',
+        _.each(this._declareParameters(), (value, paramName) => {
+            this[paramName].addListener(this._flushCache);
         });
-        this._rippleRadius.listenToWheel(mixboard, mixboardWheel.L_SELECT);
-        this._rippleRadius.addListener(this._flushCache);
-
-        this._manhattanCoefficient = new LinearParameter({
-            range: [-2, 3],
-            start: 0,
-            defaultOn: 1,
-            incrementAmount: 0.25,
-            monitorName: 'Refresh Manhattan Coeff',
-        });
-        this._manhattanCoefficient.listenToWheel(mixboard, mixboardWheel.L_CONTROL_1);
-        this._manhattanCoefficient.listenToResetButton(mixboard, mixboardButton.L_HOT_CUE_2);
-        this._manhattanCoefficient.addStatusLight(mixboard, mixboardButton.L_HOT_CUE_2, value => value > 0);
-        this._manhattanCoefficient.addListener(this._flushCache);
-
-        this._logCoefficient = new LinearParameter({
-            range: [-2, 3],
-            start: 0,
-            defaultOn: 1,
-            incrementAmount: 0.25,
-            monitorName: 'Refresh Log Coeff',
-        });
-        this._logCoefficient.listenToWheel(mixboard, mixboardWheel.L_CONTROL_2);
-        this._logCoefficient.listenToResetButton(mixboard, mixboardButton.L_HOT_CUE_3);
-        this._logCoefficient.addStatusLight(mixboard, mixboardButton.L_HOT_CUE_3, value => value > 0);
-        this._logCoefficient.addListener(this._flushCache);
-
-        this._useDistance = new ToggleParameter({
-            start: true,
-        });
-        this._useDistance.listenToButton(mixboard, mixboardButton.L_HOT_CUE_1);
-        this._useDistance.addListener(this._flushCache);
-
-        this._globalPolarAngles = new LinearParameter({
-            range: [-12, 12],
-            start: 0,
-            monitorName: 'Refresh # Global Polar Angles',
-        });
-        this._globalPolarAngles.listenToIncrementButton(mixboard, mixboardButton.L_LOOP_IN);
-        this._globalPolarAngles.listenToDecrementButton(mixboard, mixboardButton.L_LOOP_MANUAL);
-        this._globalPolarAngles.addStatusLight(mixboard, mixboardButton.L_LOOP_IN, value => value > 0);
-        this._globalPolarAngles.addStatusLight(mixboard, mixboardButton.L_LOOP_MANUAL, value => value < 0);
-        this._globalPolarAngles.addListener(this._flushCache);
-
-        this._localPolarAngles = new LinearParameter({
-            range: [-12, 12],
-            start: 0,
-            monitorName: 'Refresh # Local Polar Angles',
-        });
-        this._localPolarAngles.listenToIncrementButton(mixboard, mixboardButton.L_LOOP_RELOOP);
-        this._localPolarAngles.listenToDecrementButton(mixboard, mixboardButton.L_LOOP_OUT);
-        this._localPolarAngles.addStatusLight(mixboard, mixboardButton.L_LOOP_RELOOP, value => value > 0);
-        this._localPolarAngles.addStatusLight(mixboard, mixboardButton.L_LOOP_OUT, value => value < 0);
-        this._localPolarAngles.addListener(this._flushCache);
-
-        this._bendLocalPolarAngles = new ToggleParameter({
-            start: false,
-        });
-        this._bendLocalPolarAngles.listenToButton(mixboard, mixboardButton.L_KEYLOCK);
-        this._bendLocalPolarAngles.addListener(this._flushCache);
-
-        this._subdivisionSize = new CycleParameter({
-            cycleValues: [false, 1, 2, 3],
-        });
-        this._subdivisionSize.listenToCycleButton(mixboard, mixboardButton.L_EFFECT);
-        this._subdivisionSize.listenToResetButton(mixboard, mixboardButton.L_DELETE);
-        this._subdivisionSize.addStatusLight(mixboard, mixboardButton.L_EFFECT);
-        this._subdivisionSize.addListener(this._flushCache);
     }
     _flushCache() {
         this._refreshOffsetCache = {};

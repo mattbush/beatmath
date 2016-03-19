@@ -77,6 +77,11 @@ class CycleParameter extends Parameter {
         this._cycleValues = params.cycleValues;
         this._valueIndex = 0;
     }
+    listenToCycleAndResetButtons(mixboard, cycleCode, resetCode) {
+        this.listenToCycleButton(mixboard, cycleCode);
+        this.listenToResetButton(mixboard, resetCode);
+        this.addStatusLight(mixboard, cycleCode, value => value !== this._cycleValues[0]);
+    }
     listenToCycleButton(mixboard, eventCode) {
         mixboard.addButtonListener(eventCode, this.onCycleButtonPress.bind(this));
     }
@@ -127,6 +132,7 @@ class LinearParameter extends Parameter {
     }
     listenToResetButton(mixboard, eventCode) {
         mixboard.addButtonListener(eventCode, this.onResetButtonPress.bind(this));
+        this.addStatusLight(mixboard, eventCode, value => value !== this._defaultOff);
     }
     listenToDecrementAndIncrementButtons(mixboard, decrementCode, incrementCode) {
         this.listenToIncrementButton(mixboard, incrementCode);
