@@ -6,6 +6,7 @@ var tinycolor = require('tinycolor2');
 var {posMod} = require('js/core/utils/math');
 var {setTimeoutAsync} = require('js/core/utils/time');
 var updateHue = require('js/core/outputs/updateHue');
+const PieceParameters = require('js/core/parameters/PieceParameters');
 
 var {incrementGoldUp, incrementBlueUp, incrementGoldDown, incrementBlueDown} = require('js/twenty_sixteen/state/IndexMappingFunctions');
 
@@ -25,10 +26,9 @@ const ENABLE_HUE = false;
 
 const AUTOPILOT_FREQ_MAX = 5;
 
-class TwentySixteenParameters {
-    constructor(mixboard, beatmathParameters) {
-        this._mixboard = mixboard;
-        this._beatmathParameters = beatmathParameters;
+class TwentySixteenParameters extends PieceParameters {
+    constructor() {
+        super(...arguments);
         this._onTickForAutopilot = this._onTickForAutopilot.bind(this);
         this._beatmathParameters.tempo.addListener(this._onTickForAutopilot);
 
@@ -37,7 +37,7 @@ class TwentySixteenParameters {
             constrainTo: ARRANGEMENTS.length,
             monitorName: 'Arrangement #',
         });
-        this.arrangementIndex.listenToWheel(mixboard, mixboardWheel.BROWSE);
+        this.arrangementIndex.listenToWheel(this._mixboard, mixboardWheel.BROWSE);
 
         this.goldColor = new MovingColorParameter({
             max: 5,
@@ -49,45 +49,45 @@ class TwentySixteenParameters {
         this._reverseBlueIncrement = new ToggleParameter({
             start: false,
         });
-        this._reverseBlueIncrement.listenToButton(mixboard, mixboardButton.L_KEYLOCK);
+        this._reverseBlueIncrement.listenToButton(this._mixboard, mixboardButton.L_KEYLOCK);
 
         this._isAutopiloting = new ToggleParameter({
             start: false,
         });
-        this._isAutopiloting.listenToButton(mixboard, mixboardButton.L_EFFECT);
+        this._isAutopiloting.listenToButton(this._mixboard, mixboardButton.L_EFFECT);
         this._isAutopiloting.addListener(this._onAutopilotChange.bind(this));
 
         this._autopilotArrangementFrequencyLog2 = new LinearParameter({
             range: [0, AUTOPILOT_FREQ_MAX],
             start: 2,
         });
-        this._autopilotArrangementFrequencyLog2.listenToWheel(mixboard, mixboardWheel.L_SELECT);
+        this._autopilotArrangementFrequencyLog2.listenToWheel(this._mixboard, mixboardWheel.L_SELECT);
         this._autopilotIncrementFrequencyLog2 = new LinearParameter({
             range: [0, AUTOPILOT_FREQ_MAX],
             start: AUTOPILOT_FREQ_MAX,
         });
-        this._autopilotIncrementFrequencyLog2.listenToWheel(mixboard, mixboardWheel.L_CONTROL_1);
+        this._autopilotIncrementFrequencyLog2.listenToWheel(this._mixboard, mixboardWheel.L_CONTROL_1);
         this._autopilotShiftFrequencyLog2 = new LinearParameter({
             range: [0, AUTOPILOT_FREQ_MAX],
             start: 0,
         });
-        this._autopilotShiftFrequencyLog2.listenToWheel(mixboard, mixboardWheel.L_CONTROL_2);
+        this._autopilotShiftFrequencyLog2.listenToWheel(this._mixboard, mixboardWheel.L_CONTROL_2);
 
         this._resetArrangements(true);
-        mixboard.addButtonListener(mixboardButton.L_DELETE, this._resetArrangements.bind(this));
+        this._mixboard.addButtonListener(mixboardButton.L_DELETE, this._resetArrangements.bind(this));
         _.times(NUM_PRESET_ARRANGEMENTS, index => {
-            mixboard.addButtonListener(SET_ARRANGEMENT_BUTTONS[index], this._setArrangement.bind(this, index));
+            this._mixboard.addButtonListener(SET_ARRANGEMENT_BUTTONS[index], this._setArrangement.bind(this, index));
         });
 
         this.reverseFrameRotationInPixels = new ToggleParameter({
             start: false,
         });
-        this.reverseFrameRotationInPixels.listenToButton(mixboard, mixboardButton.R_SCRATCH);
+        this.reverseFrameRotationInPixels.listenToButton(this._mixboard, mixboardButton.R_SCRATCH);
 
-        mixboard.addButtonListener(mixboardButton.L_LOOP_MANUAL, this._incrementIndicesDown.bind(this));
-        mixboard.addButtonListener(mixboardButton.L_LOOP_IN, this._incrementIndicesUp.bind(this));
-        mixboard.addButtonListener(mixboardButton.L_LOOP_OUT, this._shiftIndicesDown.bind(this));
-        mixboard.addButtonListener(mixboardButton.L_LOOP_RELOOP, this._shiftIndicesUp.bind(this));
+        this._mixboard.addButtonListener(mixboardButton.L_LOOP_MANUAL, this._incrementIndicesDown.bind(this));
+        this._mixboard.addButtonListener(mixboardButton.L_LOOP_IN, this._incrementIndicesUp.bind(this));
+        this._mixboard.addButtonListener(mixboardButton.L_LOOP_OUT, this._shiftIndicesDown.bind(this));
+        this._mixboard.addButtonListener(mixboardButton.L_LOOP_RELOOP, this._shiftIndicesUp.bind(this));
 
         this.goldIndexMappings = _.times(NUM_GOLD, index => new IndexMappingParameter({start: index}));
         this.blueIndexMappings = _.times(NUM_BLUE, index => new IndexMappingParameter({start: index}));
