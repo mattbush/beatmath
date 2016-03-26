@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var {lerp, posMod, constrainToRange, modAndShiftToHalf} = require('js/core/utils/math');
+var {lerp, posMod, constrainToRange, modAndShiftToHalf, nextFloat} = require('js/core/utils/math');
 
 class Parameter {
     constructor({start, monitorName}) {
@@ -217,6 +217,9 @@ class IntLinearParameter extends LinearParameter {
 
 class AngleParameter extends Parameter {
     constructor(params) {
+        if (params.start === AngleParameter.RANDOM_ANGLE) {
+            params.start = nextFloat(360);
+        }
         super(params);
         this._constrainTo = (params.constrainTo !== undefined) ? params.constrainTo : 360;
         this._defaultOff = params.start;

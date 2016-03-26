@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var {nextFloat} = require('js/core/utils/math');
 
 const POSSIBLE_ORIENTATIONS_BY_PARITY = [
     [0, 2, 4],
@@ -63,7 +64,7 @@ var addPair = function(a, b) { return a + b; };
 
 var getRandomOrientationFromArray = function(weightedPossibleOrientations) {
     var sum = _.values(weightedPossibleOrientations).reduce(addPair, 0);
-    var randomVal = Math.random() * sum;
+    var randomVal = nextFloat(sum);
     for (var orientation in weightedPossibleOrientations) {
         var weight = weightedPossibleOrientations[orientation];
         if (randomVal < weight) {

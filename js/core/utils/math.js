@@ -1,3 +1,7 @@
+var nextFloat = function(x) {
+    return Math.random() * x;
+};
+
 var lerp = function(min, max, interpolation) {
     return min + (max - min) * interpolation;
 };
@@ -36,6 +40,7 @@ var posModAndBendToLowerHalf = function(dividend, divisor) {
 };
 
 module.exports = {
+    nextFloat,
     lerp,
     constrainToRange,
     dist,
