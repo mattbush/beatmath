@@ -16,6 +16,7 @@ class FrondsParameters extends PieceParameters {
     constructor(...args) {
         super(...args);
         this.frondStates = [];
+        this.onNumFrondsChanged();
         this.numFronds.addListener(this.onNumFrondsChanged.bind(this));
     }
     onNumFrondsChanged() {

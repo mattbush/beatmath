@@ -55,6 +55,12 @@ class FrondState extends PieceParameters {
         super(mixboard, beatmathParameters);
         this._frondsParameters = frondsParameters;
     }
+    getScaleTransitionTime() {
+        return Math.pow(2, this.autoscalePeriodLog2.getValue()) * this._beatmathParameters.tempo.getPeriod();
+    }
+    getAngleTransitionTime() {
+        return Math.pow(2, this.autorotatePeriodLog2.getValue()) * this._beatmathParameters.tempo.getPeriod();
+    }
 }
 
 module.exports = FrondState;
