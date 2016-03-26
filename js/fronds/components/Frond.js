@@ -18,6 +18,7 @@ const Frond = React.createClass({
     _renderLeafAtIndex: function(leafIndex) {
         const leafAngle = 360 * (leafIndex / this.getParameterValue('numLeaves'));
         const leafRotation = {
+            opacity: 1.0,
             transform: `rotate(${leafAngle}deg)`,
             transition: `transform 2s`,
         };
@@ -34,14 +35,14 @@ const Frond = React.createClass({
         const scaleTransition = frondState.getScaleTransitionTime();
         const frondScale = {
             transform: `scale(${scale})`,
-            transition: `transform ${scaleTransition}s`,
+            transition: `transform ${scaleTransition / 1000}s ease-in-out`,
         };
 
         const angle = frondState.angle.getValue();
         const angleTransition = frondState.getAngleTransitionTime();
         const frondRotation = {
             transform: `rotate(${angle}deg)`,
-            transition: `transform ${angleTransition}s`,
+            transition: `transform ${angleTransition / 1000}s ease-in-out`,
         };
 
         return (

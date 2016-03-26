@@ -28,7 +28,7 @@ class FrondState extends PieceParameters {
             autorotateAmount: {
                 type: LinearParameter,
                 range: [0, 1],
-                start: 0,
+                start: 0.5,
                 listenToKnob: mixboardKnob.R_MID,
             },
             autorotatePeriodLog2: {
@@ -40,13 +40,13 @@ class FrondState extends PieceParameters {
             autoscaleAmount: {
                 type: LinearParameter,
                 range: [0, 1],
-                start: 0,
+                start: 0.5,
                 listenToKnob: mixboardKnob.R_BASS,
             },
             autoscalePeriodLog2: {
                 type: LinearParameter,
                 range: [0, AUTOPILOT_FREQ_MAX],
-                start: 3,
+                start: 2,
                 listenToDecrementAndIncrementButtons: [mixboardButton.R_LOOP_OUT, mixboardButton.R_LOOP_RELOOP],
             },
         };
@@ -75,7 +75,7 @@ class FrondState extends PieceParameters {
             const scaleLog2Amount = polarity * this.autoscaleAmount.getValue();
             this.scaleLog2._constrainToRangeAndUpdateValue(this.scaleLog2.getValue() + scaleLog2Amount); // HACK
         }
-        if (ticks % Math.pow(2, autorotateFreq) === 0) {
+        if (ticks % autorotateFreq === 0) {
             const polarity = (ticks % (autorotateFreq * 2) === 0) ? 1 : -1;
             const rotateAmount = polarity * this.autorotateAmount.getValue() * 360;
             this.angle._spinValue(rotateAmount);
