@@ -11,6 +11,7 @@ const Frond = React.createClass({
     },
     getParameterBindings: function() {
         return {
+            tempo: this.context.beatmathParameters.tempo,
             numLeaves: this.props.frondState.numLeaves,
         };
     },
@@ -36,7 +37,7 @@ const Frond = React.createClass({
             transition: `transform ${scaleTransition}s`,
         };
 
-        const angle = Math.pow(2, frondState.angle.getValue());
+        const angle = frondState.angle.getValue();
         const angleTransition = frondState.getAngleTransitionTime();
         const frondRotation = {
             transform: `rotate(${angle}deg)`,
