@@ -2,6 +2,7 @@ module.exports = {
     entry: {
         anagrams: "./js/anagrams/anagrams",
         bricks: "./js/bricks/bricks",
+        fronds: "./js/fronds/fronds",
         honeycomb: "./js/honeycomb/honeycomb",
         lattice: "./js/lattice/lattice",
         pinecone: "./js/pinecone/pinecone",
