@@ -1,12 +1,34 @@
-const {LinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
+const {MovingLinearParameter, MovingColorParameter, LinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
 const {mixboardWheel, mixboardKnob, mixboardButton} = require('js/core/inputs/MixboardConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
+const tinycolor = require('tinycolor2');
 
 const AUTOPILOT_FREQ_MAX = 6;
 
 class FrondState extends PieceParameters {
     _declareParameters() {
         return {
+            color: {
+                type: MovingColorParameter,
+                max: 5,
+                variance: 1,
+                start: tinycolor('#2d2'),
+                autoupdate: 1000,
+            },
+            x: {
+                type: MovingLinearParameter,
+                range: [-640, 640],
+                start: 0,
+                variance: 1.5,
+                autoupdate: 250,
+            },
+            y: {
+                type: MovingLinearParameter,
+                range: [-400, 400],
+                start: 0,
+                variance: 1.5,
+                autoupdate: 250,
+            },
             angle: {
                 type: AngleParameter,
                 start: AngleParameter.RANDOM_ANGLE,

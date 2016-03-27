@@ -12,6 +12,8 @@ const Frond = React.createClass({
     getParameterBindings: function() {
         return {
             tempo: this.context.beatmathParameters.tempo,
+            x: this.props.frondState.x,
+            y: this.props.frondState.y,
             numLeaves: this.props.frondState.numLeaves,
             leafLengthLog2: this.props.frondState.leafLengthLog2,
             leafTapering: this.props.frondState.leafTapering,
@@ -31,12 +33,17 @@ const Frond = React.createClass({
 
         return (
             <g key={leafIndex} style={leafRotation}>
-                <polygon fill="#fff" points={points} />
+                <polygon fill={this.props.frondState.color.getValue().toHexString(true)} points={points} />
             </g>
         );
     },
     render: function() {
         const frondState = this.props.frondState;
+
+        const frondTranslation = {
+            transform: `translate(${this.getParameterValue('x')}px,${this.getParameterValue('y')}px)`,
+            transition: `transform 0.25s linear`,
+        };
 
         const scale = Math.pow(2, frondState.scaleLog2.getValue());
         const scaleTransition = frondState.getScaleTransitionTime();
@@ -53,9 +60,11 @@ const Frond = React.createClass({
         };
 
         return (
-            <g style={frondScale}>
-                <g style={frondRotation}>
-                    {_.times(this.getParameterValue('numLeaves'), this._renderLeafAtIndex)}
+            <g style={frondTranslation}>
+                <g style={frondScale}>
+                    <g style={frondRotation}>
+                        {_.times(this.getParameterValue('numLeaves'), this._renderLeafAtIndex)}
+                    </g>
                 </g>
             </g>
         );

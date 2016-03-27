@@ -32,6 +32,11 @@ class PieceParameters {
         // empty, override me
         return {};
     }
+    destroy() {
+        _.each(this._declareParameters(), (value, key) => {
+            this[key].destroy();
+        });
+    }
 }
 
 module.exports = PieceParameters;

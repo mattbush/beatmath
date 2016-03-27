@@ -36,6 +36,7 @@ class Parameter {
         value = _.isNumber(value) ? Math.round(value * 1000) / 1000 : value;
         window.localStorage.setItem(this._monitorName, value);
     }
+    destroy() {}
 }
 
 class NegatedParameter extends Parameter {
@@ -264,7 +265,7 @@ class MovingColorParameter extends Parameter {
         this._speed = 0;
         this._maxSpeed = params.max;
         if (params.autoupdate !== undefined) {
-            setInterval(this.update.bind(this), params.autoupdate);
+            this._autoupdateInterval = setInterval(this.update.bind(this), params.autoupdate);
         }
     }
     update() {
@@ -274,6 +275,9 @@ class MovingColorParameter extends Parameter {
         }
         this._value = this._value.spin(this._speed);
         this._updateListeners();
+    }
+    destroy() {
+        clearInterval(this._autoupdateInterval);
     }
 }
 
@@ -298,6 +302,9 @@ class MovingLinearParameter extends LinearParameter {
         super(params);
         this._variance = params.variance;
         this._speed = 0;
+        if (params.autoupdate !== undefined) {
+            this._autoupdateInterval = setInterval(this.update.bind(this), params.autoupdate);
+        }
     }
     update() {
         this._speed += (Math.random() * this._variance * 2) - this._variance;
@@ -313,6 +320,9 @@ class MovingLinearParameter extends LinearParameter {
 
         this._value = nextConstrained;
         this._updateListeners();
+    }
+    destroy() {
+        clearInterval(this._autoupdateInterval);
     }
 }
 
