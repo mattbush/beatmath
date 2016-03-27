@@ -17,13 +17,8 @@ class FrondState extends PieceParameters {
                 type: LinearParameter,
                 range: [-3, 3],
                 start: 0,
+                incrementAmount: 0.25,
                 listenToWheel: mixboardWheel.R_CONTROL_2,
-            },
-            numLeaves: {
-                type: LinearParameter,
-                range: [2, 32],
-                start: 2,
-                listenToWheel: mixboardWheel.R_SELECT,
             },
             autorotateAmount: {
                 type: LinearParameter,
@@ -48,6 +43,28 @@ class FrondState extends PieceParameters {
                 range: [0, AUTOPILOT_FREQ_MAX],
                 start: 2,
                 listenToDecrementAndIncrementButtons: [mixboardButton.R_LOOP_OUT, mixboardButton.R_LOOP_RELOOP],
+            },
+            numLeaves: {
+                type: LinearParameter,
+                range: [2, 32],
+                start: 2,
+                listenToWheel: mixboardWheel.R_SELECT,
+            },
+            leafLengthLog2: {
+                type: LinearParameter,
+                range: [-3, 3],
+                start: 0,
+                incrementAmount: 0.25,
+                listenToWheel: mixboardWheel.R_CONTROL_1,
+                monitorName: 'Leaf Length Log2',
+            },
+            leafTapering: {
+                type: LinearParameter,
+                range: [0, 1],
+                start: 1,
+                incrementAmount: 0.1,
+                listenToDecrementAndIncrementButtons: [mixboardButton.R_DELETE, mixboardButton.R_HOT_CUE_1],
+                monitorName: 'Leaf Tapering',
             },
         };
     }

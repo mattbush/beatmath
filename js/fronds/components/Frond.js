@@ -13,6 +13,8 @@ const Frond = React.createClass({
         return {
             tempo: this.context.beatmathParameters.tempo,
             numLeaves: this.props.frondState.numLeaves,
+            leafLengthLog2: this.props.frondState.leafLengthLog2,
+            leafTapering: this.props.frondState.leafTapering,
         };
     },
     _renderLeafAtIndex: function(leafIndex) {
@@ -22,9 +24,14 @@ const Frond = React.createClass({
             transform: `rotate(${leafAngle}deg)`,
             transition: `transform 2s`,
         };
+        const leafLength = 100 * Math.pow(2, this.getParameterValue('leafLengthLog2'));
+        const halfLeafWidth = 5;
+        const halfLeafBaseWidth = halfLeafWidth * this.getParameterValue('leafTapering');
+        const points = [`${halfLeafBaseWidth},0`, `${-halfLeafBaseWidth},0`, `${-halfLeafWidth},${leafLength}`, `${halfLeafWidth},${leafLength}`].join(' ');
+
         return (
             <g key={leafIndex} style={leafRotation}>
-                <rect fill="#fff" y={0} x={-5} width={10} height={100} />
+                <polygon fill="#fff" points={points} />
             </g>
         );
     },
