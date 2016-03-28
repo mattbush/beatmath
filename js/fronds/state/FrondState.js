@@ -37,7 +37,7 @@ class FrondState extends PieceParameters {
             },
             scaleLog2: {
                 type: LinearParameter,
-                range: [-3, 3],
+                range: [-4, 5],
                 start: 0,
                 incrementAmount: 0.25,
                 listenToWheel: mixboardWheel.R_CONTROL_2,
@@ -74,7 +74,7 @@ class FrondState extends PieceParameters {
             },
             leafLengthLog2: {
                 type: LinearParameter,
-                range: [-3, 3],
+                range: [-4, 5],
                 start: 0,
                 incrementAmount: 0.25,
                 listenToWheel: mixboardWheel.R_CONTROL_1,
