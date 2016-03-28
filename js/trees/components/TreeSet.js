@@ -35,13 +35,15 @@ var TreeSet = React.createClass({
         var treesParameters = this.state.treesParameters;
         var numTrees = treesParameters.numTrees.getValue();
         var treeSpacing = treesParameters.treeSpacing.getValue();
+        var polarGridAmount = treesParameters.polarGridAmount.getValue();
 
         var transformations = _.times(numTrees, index => {
             var totalTreeSpacing = treesParameters.getTotalTreeSpacing();
-            var dx = (index + 0.5) * treeSpacing - totalTreeSpacing / 2;
-            var dy = treesParameters.getTotalLevelSpacing() / 2;
+            var dx = ((index + 0.5) * treeSpacing - totalTreeSpacing / 2) * (1 - polarGridAmount);
+            var dy = treesParameters.getTotalLevelSpacing() / 2 * (1 - polarGridAmount);
+            var rotation = ((index + 0.5) - (numTrees / 2)) * (360 / numTrees) * polarGridAmount;
             return {
-                transform: `translate(${dx}px, ${dy}px) scaleY(-1)`,
+                transform: `translate(${dx}px, ${dy}px) rotate(${rotation}deg) scaleY(-1)`,
             };
         });
 

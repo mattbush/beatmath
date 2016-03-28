@@ -1,5 +1,5 @@
 var {LinearParameter, IntLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
-var {mixboardFader, mixboardKnob, mixboardButton} = require('js/core/inputs/MixboardConstants');
+var {mixboardFader, mixboardKnob, mixboardButton, mixboardWheel} = require('js/core/inputs/MixboardConstants');
 var tinycolor = require('tinycolor2');
 var {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
 const PieceParameters = require('js/core/parameters/PieceParameters');
@@ -92,6 +92,13 @@ class TreesParameters extends PieceParameters {
                 type: ToggleParameter,
                 start: false,
                 listenToButton: mixboardButton.L_EFFECT,
+            },
+            polarGridAmount: {
+                type: LinearParameter,
+                range: [0, 1],
+                start: 0,
+                incrementAmount: 0.05,
+                listenToWheel: mixboardWheel.R_CONTROL_2,
             },
         };
     }
