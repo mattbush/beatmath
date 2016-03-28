@@ -1,5 +1,5 @@
 const {LinearParameter} = require('js/core/parameters/Parameter');
-const {mixboardButton} = require('js/core/inputs/MixboardConstants');
+const {mixboardButton, mixboardKnob} = require('js/core/inputs/MixboardConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const FrondState = require('js/fronds/state/FrondState');
 
@@ -11,7 +11,13 @@ class FrondsParameters extends PieceParameters {
                 range: [1, 3],
                 start: 1,
                 listenToDecrementAndIncrementButtons: [mixboardButton.L_PLAY_PAUSE, mixboardButton.L_STUTTER],
-            }
+            },
+            opacity: {
+                type: LinearParameter,
+                range: [0.2, 1],
+                start: 1,
+                listenToKnob: mixboardKnob.CUE_GAIN,
+            },
         };
     }
     constructor(...args) {

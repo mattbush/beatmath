@@ -34,7 +34,7 @@ const Frond = React.createClass({
     _renderLeafAtIndex: function(leafIndex, frondShape) {
         const leafAngle = 360 * (leafIndex / this.getParameterValue('numLeaves'));
         const leafRotation = {
-            opacity: 1.0,
+            opacity: this.context.frondsParameters.opacity.getValue(),
             transform: `rotate(${leafAngle}deg)`,
             transition: `transform 2s`,
         };
