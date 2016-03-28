@@ -88,6 +88,13 @@ class FrondState extends PieceParameters {
                 listenToDecrementAndIncrementButtons: [mixboardButton.R_DELETE, mixboardButton.R_HOT_CUE_1],
                 monitorName: 'Leaf Tapering',
             },
+            leafPointLength: {
+                type: LinearParameter,
+                range: [0, 1],
+                start: 0.5,
+                listenToKnob: mixboardKnob.R_TREBLE,
+                monitorName: 'Leaf Point Length',
+            },
         };
     }
     constructor(mixboard, beatmathParameters, frondsParameters) {

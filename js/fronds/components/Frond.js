@@ -17,13 +17,15 @@ const Frond = React.createClass({
             numLeaves: this.props.frondState.numLeaves,
             leafLengthLog2: this.props.frondState.leafLengthLog2,
             leafTapering: this.props.frondState.leafTapering,
+            leafPointLength: this.props.frondState.leafPointLength,
         };
     },
     _renderFrondShape: function() {
         const leafLength = 100 * Math.pow(2, this.getParameterValue('leafLengthLog2'));
+        const leafPointLength = leafLength * (1 + this.getParameterValue('leafPointLength'));
         const halfLeafWidth = 5;
         const halfLeafBaseWidth = halfLeafWidth * this.getParameterValue('leafTapering');
-        const points = [`${halfLeafBaseWidth},0`, `${-halfLeafBaseWidth},0`, `${-halfLeafWidth},${leafLength}`, `${halfLeafWidth},${leafLength}`].join(' ');
+        const points = [`${halfLeafBaseWidth},0`, `${-halfLeafBaseWidth},0`, `${-halfLeafWidth},${leafLength}`, `0,${leafPointLength}`, `${halfLeafWidth},${leafLength}`].join(' ');
 
         return (
             <polygon fill={this.props.frondState.color.getValue().toHexString(true)} points={points} />
