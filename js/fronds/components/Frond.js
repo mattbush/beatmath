@@ -19,21 +19,27 @@ const Frond = React.createClass({
             leafTapering: this.props.frondState.leafTapering,
         };
     },
-    _renderLeafAtIndex: function(leafIndex) {
-        const leafAngle = 360 * (leafIndex / this.getParameterValue('numLeaves'));
-        const leafRotation = {
-            opacity: 1.0,
-            transform: `rotate(${leafAngle}deg)`,
-            transition: `transform 2s`,
-        };
+    _renderFrondShape: function() {
         const leafLength = 100 * Math.pow(2, this.getParameterValue('leafLengthLog2'));
         const halfLeafWidth = 5;
         const halfLeafBaseWidth = halfLeafWidth * this.getParameterValue('leafTapering');
         const points = [`${halfLeafBaseWidth},0`, `${-halfLeafBaseWidth},0`, `${-halfLeafWidth},${leafLength}`, `${halfLeafWidth},${leafLength}`].join(' ');
 
         return (
+            <polygon fill={this.props.frondState.color.getValue().toHexString(true)} points={points} />
+        );
+    },
+    _renderLeafAtIndex: function(leafIndex, frondShape) {
+        const leafAngle = 360 * (leafIndex / this.getParameterValue('numLeaves'));
+        const leafRotation = {
+            opacity: 1.0,
+            transform: `rotate(${leafAngle}deg)`,
+            transition: `transform 2s`,
+        };
+
+        return (
             <g key={leafIndex} style={leafRotation}>
-                <polygon fill={this.props.frondState.color.getValue().toHexString(true)} points={points} />
+                {frondShape}
             </g>
         );
     },
@@ -59,11 +65,13 @@ const Frond = React.createClass({
             transition: `transform ${angleTransition / 1000}s ease-in-out`,
         };
 
+        const frondShape = this._renderFrondShape();
+
         return (
             <g style={frondTranslation}>
                 <g style={frondScale}>
                     <g style={frondRotation}>
-                        {_.times(this.getParameterValue('numLeaves'), this._renderLeafAtIndex)}
+                        {_.times(this.getParameterValue('numLeaves'), i => this._renderLeafAtIndex(i, frondShape))}
                     </g>
                 </g>
             </g>
