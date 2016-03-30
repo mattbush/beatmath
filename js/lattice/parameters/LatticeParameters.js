@@ -39,7 +39,7 @@ class LatticeParameters extends PieceParameters {
                 start: false,
                 listenToButton: mixboardButton.L_PITCH_BEND_MINUS,
             },
-            polarGridAmount: {
+            triangularGridAmount: {
                 type: LinearParameter,
                 range: [0, 1],
                 start: 0,
