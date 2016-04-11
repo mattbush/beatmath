@@ -1,4 +1,4 @@
-const ENABLE_HUE = false;
+const ENABLE_HUE = true;
 const ENABLE_HUE_ALTERNATING = false;
 const COLOR_REFRESH_RATE = 200;
 const POSITION_REFRESH_RATE = 50;

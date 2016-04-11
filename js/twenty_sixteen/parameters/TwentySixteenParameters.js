@@ -22,7 +22,7 @@ const NUM_PRESET_ARRANGEMENTS = SET_ARRANGEMENT_BUTTONS.length;
 const NUM_GOLD = 20;
 const NUM_BLUE = 16;
 
-const ENABLE_HUE = false;
+const ENABLE_HUE = true;
 
 const AUTOPILOT_FREQ_MAX = 5;
 

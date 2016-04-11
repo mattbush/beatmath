@@ -7,7 +7,7 @@ let AnimationControlledMixin = require('js/honeycomb/components/AnimationControl
 
 const COLORS = [tinycolor('#f00'), tinycolor('#1a1'), tinycolor('#36f')];
 
-var ENABLE_HUE = false;
+var ENABLE_HUE = true;
 var SAT_COEFF = 1.5;
 var BRI_COEFF = 0.6;
 

@@ -6,7 +6,7 @@ var {mixboardFader, mixboardWheel, mixboardButton} = require('js/core/inputs/Mix
 class BeatmathParameters {
     constructor(mixboard, params) {
         this.tempo = new BeatmathTempo(mixboard, {
-            bpm: 120,
+            bpm: 300,
             bpmMod: params.bpmMod,
         });
 
@@ -50,7 +50,7 @@ class BeatmathParameters {
 
         this.brightness = new LinearParameter({
             range: [0, 1],
-            start: 1,
+            start: 0.7,
             incrementAmount: 0.05,
             monitorName: 'Brightness',
         });

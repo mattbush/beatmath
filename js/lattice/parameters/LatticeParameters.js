@@ -25,13 +25,13 @@ class LatticeParameters extends PieceParameters {
             numCols: {
                 type: LinearParameter,
                 range: [0, 40],
-                start: 12,
+                start: 2,
                 listenToFader: mixboardFader.L_GAIN,
             },
             numRows: {
                 type: LinearParameter,
                 range: [0, 25],
-                start: 12,
+                start: 2,
                 listenToFader: mixboardFader.R_GAIN,
             },
             oscillate: {
