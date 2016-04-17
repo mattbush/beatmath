@@ -1,4 +1,4 @@
-var {LinearParameter, IntLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+var {MovingLinearParameter, LinearParameter, IntLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 var {mixboardFader, mixboardKnob, mixboardButton, mixboardWheel} = require('js/core/inputs/MixboardConstants');
 var tinycolor = require('tinycolor2');
 var {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
@@ -16,14 +16,14 @@ class TreesParameters extends PieceParameters {
             },
             numTrees: {
                 type: IntLinearParameter,
-                start: 1,
+                start: 16,
                 range: [1, 16],
                 listenToFader: mixboardFader.L_GAIN,
             },
             numLevels: {
                 type: IntLinearParameter,
-                range: [1, 16],
-                start: 1,
+                range: [1, 24],
+                start: 24,
                 listenToFader: mixboardFader.R_GAIN,
             },
             treeSpacing: {
@@ -48,45 +48,52 @@ class TreesParameters extends PieceParameters {
                 start: 0.65,
                 listenToKnob: mixboardKnob.R_MID,
             },
-            borderRadiusPercent: {type: LinearParameter,
+            borderRadiusPercent: {type: MovingLinearParameter,
                 range: [0, 1],
                 start: 0,
                 listenToKnob: mixboardKnob.CUE_GAIN,
+                variance: 0.01,
+                autoupdate: 1000,
             },
             periodTicksLog2: {type: LinearParameter,
                 range: [1, 4],
-                start: 1,
+                start: 3,
                 listenToDecrementAndIncrementButtons: [mixboardButton.L_LOOP_OUT, mixboardButton.L_LOOP_RELOOP],
             },
-            treeColorShift: {type: LinearParameter,
+            treeColorShift: {
+                type: LinearParameter,
                 range: [-180, 180],
-                start: 0,
+                start: 0, // or 360 / 16,
                 incrementAmount: 2.5,
                 monitorName: 'Tree color shift',
                 listenToDecrementAndIncrementButtons: [mixboardButton.L_DELETE, mixboardButton.L_HOT_CUE_1],
             },
             levelColorShift: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [-180, 180],
-                start: 0,
+                start: 360 / 16,
                 incrementAmount: 2.5,
                 monitorName: 'Level color shift',
                 listenToDecrementAndIncrementButtons: [mixboardButton.L_HOT_CUE_2, mixboardButton.L_HOT_CUE_3],
+                variance: 5,
+                autoupdate: 1000,
             },
             trailPercent: {
                 type: LinearParameter,
                 range: [0, 1],
-                start: 0,
+                start: 1,
                 incrementAmount: 0.05,
                 monitorName: 'Trail percent',
                 listenToDecrementAndIncrementButtons: [mixboardButton.L_LOOP_MANUAL, mixboardButton.L_LOOP_IN],
             },
             staggerAmount: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [0, 8],
-                start: 0,
+                start: 1,
                 monitorName: 'Stagger Amount',
                 listenToDecrementAndIncrementButtons: [mixboardButton.L_PITCH_BEND_MINUS, mixboardButton.L_PITCH_BEND_PLUS],
+                variance: 1.5,
+                autoupdate: 4000,
             },
             mirrorStagger: {
                 type: ToggleParameter,
@@ -94,11 +101,13 @@ class TreesParameters extends PieceParameters {
                 listenToButton: mixboardButton.L_EFFECT,
             },
             polarGridAmount: {
-                type: LinearParameter,
-                range: [0, 1],
-                start: 0,
+                type: MovingLinearParameter,
+                range: [-2, 3],
+                start: 0.5,
                 incrementAmount: 0.05,
                 listenToWheel: mixboardWheel.R_CONTROL_2,
+                variance: 0.15,
+                autoupdate: 4000,
             },
         };
     }

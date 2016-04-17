@@ -4,6 +4,7 @@ var BeatmathFrame = require('js/core/components/BeatmathFrame');
 var ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 var TreesParameters = require('js/trees/parameters/TreesParameters');
 var Tree = require('js/trees/components/Tree');
+var {constrainToRange} = require('js/core/utils/math');
 
 // const {manhattanDist, posMod} = require('js/core/utils/math');
 
@@ -35,7 +36,7 @@ var TreeSet = React.createClass({
         var treesParameters = this.state.treesParameters;
         var numTrees = treesParameters.numTrees.getValue();
         var treeSpacing = treesParameters.treeSpacing.getValue();
-        var polarGridAmount = treesParameters.polarGridAmount.getValue();
+        var polarGridAmount = constrainToRange(0, 1, treesParameters.polarGridAmount.getValue());
 
         var transformations = _.times(numTrees, index => {
             var totalTreeSpacing = treesParameters.getTotalTreeSpacing();
