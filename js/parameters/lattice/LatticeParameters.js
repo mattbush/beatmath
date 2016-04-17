@@ -27,14 +27,14 @@ class LatticeParameters {
         this.numCols = new LinearParameter({
             min: 0,
             max: 40,
-            start: 12,
+            start: 32,
         });
         this.numCols.listenToFader(mixboard, mixboardFader.L_GAIN);
 
         this.numRows = new LinearParameter({
             min: 0,
             max: 25,
-            start: 12,
+            start: 32,
         });
         this.numRows.listenToFader(mixboard, mixboardFader.R_GAIN);
 

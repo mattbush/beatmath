@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var {LinearParameter, CycleParameter, ToggleParameter} = require('js/parameters/Parameter');
+var {MovingLinearParameter, LinearParameter, CycleParameter, ToggleParameter} = require('js/parameters/Parameter');
 var {mixboardButton, mixboardWheel} = require('js/inputs/MixboardConstants');
 
 const {PIXEL_REFRESH_RATE} = require('js/parameters/lattice/LatticeConstants');
@@ -12,14 +12,18 @@ class LatticeRefreshTimer {
 
         this._flushCache = this._flushCache.bind(this);
 
-        this._rippleRadius = new LinearParameter({
-            start: 10, min: 2, max: 40,
+        this._rippleRadius = new MovingLinearParameter({
+            start: 10, min: 4, max: 12,
+            variance: 0.5,
+            autoupdate: 4000,
         });
         this._rippleRadius.listenToWheel(mixboard, mixboardWheel.L_SELECT);
         this._rippleRadius.addListener(this._flushCache);
 
-        this._manhattanCoefficient = new LinearParameter({
+        this._manhattanCoefficient = new MovingLinearParameter({
             start: 0, defaultOn: 1, min: -2, max: 3, incrementAmount: 0.25,
+            variance: 0.1,
+            autoupdate: 1000,
         });
         this._manhattanCoefficient.listenToWheel(mixboard, mixboardWheel.L_CONTROL_1);
         this._manhattanCoefficient.listenToResetButton(mixboard, mixboardButton.L_HOT_CUE_2);
@@ -45,8 +49,10 @@ class LatticeRefreshTimer {
         this._globalPolarAngles.listenToDecrementButton(mixboard, mixboardButton.L_LOOP_MANUAL);
         this._globalPolarAngles.addListener(this._flushCache);
 
-        this._localPolarAngles = new LinearParameter({
-            start: 0, min: -12, max: 12,
+        this._localPolarAngles = new MovingLinearParameter({
+            start: 0, min: -6, max: 6,
+            variance: 0.5,
+            autoupdate: 4000,
         });
         this._localPolarAngles.listenToIncrementButton(mixboard, mixboardButton.L_LOOP_RELOOP);
         this._localPolarAngles.listenToDecrementButton(mixboard, mixboardButton.L_LOOP_OUT);

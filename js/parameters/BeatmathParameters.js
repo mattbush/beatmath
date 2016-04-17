@@ -1,4 +1,4 @@
-var {LinearParameter, AngleParameter, CycleParameter, ToggleParameter} = require('js/parameters/Parameter');
+var {MovingLinearParameter, LinearParameter, AngleParameter, CycleParameter, ToggleParameter} = require('js/parameters/Parameter');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/parameters/BeatmathConstants');
 var {mixboardFader, mixboardWheel, mixboardButton} = require('js/inputs/MixboardConstants');
 
@@ -18,10 +18,12 @@ class BeatmathParameters {
         });
         this.height.listenToFader(mixboard, mixboardFader.R_PITCH_BEND);
 
-        this.frameScaleLog2 = new LinearParameter({
-            min: -2,
-            max: 4,
-            start: 0,
+        this.frameScaleLog2 = new MovingLinearParameter({
+            min: 1,
+            max: 2,
+            start: 1.5,
+            variance: 0.5,
+            autoupdate: 4000,
         });
         this.frameScaleLog2.listenToFader(mixboard, mixboardFader.MASTER_GAIN);
 
