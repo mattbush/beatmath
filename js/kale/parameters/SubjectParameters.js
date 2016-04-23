@@ -63,6 +63,13 @@ class SubjectParameters extends PieceParameters {
                 variance: 0.01,
                 autoupdateEveryNBeats: 1,
             },
+            viewpointShiftPercent: {
+                type: MovingLinearParameter,
+                range: [0, 0.6],
+                start: 0.3,
+                variance: 0.01,
+                autoupdateEveryNBeats: 1,
+            },
         };
     }
 }

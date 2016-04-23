@@ -18,6 +18,10 @@ const KaleSubject = React.createClass({
         const subjectParameters = this.context.subjectParameters;
         const tempo = this.context.beatmathParameters.tempo;
 
+        const viewpointShiftPercent = subjectParameters.viewpointShiftPercent.getValue();
+        const viewpointX = -1 * this.props.cellX * viewpointShiftPercent;
+        const viewpointY = -1 * this.props.cellY * viewpointShiftPercent;
+
         const outerScaleAmount = Math.pow(2, subjectParameters.outerScaleAmountLog2.getValue());
         const innerScaleAmount = Math.pow(2, subjectParameters.innerScaleAmountLog2.getValue());
         const driftX = subjectParameters.driftX.getValue();
@@ -27,9 +31,9 @@ const KaleSubject = React.createClass({
         // const borderRadiusPercent = subjectParameters.borderRadiusPercent.getValue();
 
         const transform = {
-            transform: `scale(${outerScaleAmount}) translate(${driftX}px, ${driftY}px) rotate(${outerRotation}deg) translate(0, 1px) scale(${innerScaleAmount}) rotate(${innerRotation}deg)`,
+            transform: `translate(${viewpointX}px, ${viewpointY}px) scale(${outerScaleAmount}) translate(${driftX}px, ${driftY}px) rotate(${outerRotation}deg) translate(0, 1px) scale(${innerScaleAmount}) rotate(${innerRotation}deg)`,
             transition: `transform ${tempo.getPeriod()}ms linear`,
-            strokeWidth: 0.5,
+            strokeWidth: 0.2,
         };
 
         return (

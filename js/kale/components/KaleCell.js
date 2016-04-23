@@ -29,27 +29,32 @@ const KaleCell = React.createClass({
 
         const x = this.props.logicalX;
         const y = this.props.logicalY * Y_AXIS_SCALE;
+        const subject = (
+            <g clipPath={clipPath}>
+                <KaleSubject cellX={x} cellY={y} />
+            </g>
+        );
 
         return (
             <g transform={`translate(${x}, ${y})`}>
                 <g>
-                    <g clipPath={clipPath}><KaleSubject /></g>
+                    {subject}
                 </g>
                 <g transform="scale(-1, 1)">
-                    <g clipPath={clipPath}><KaleSubject /></g>
+                    {subject}
                 </g>
                 {isSixCelled && [
                     <g key="2" transform="rotate(120)">
-                        <g clipPath={clipPath}><KaleSubject /></g>
+                        {subject}
                     </g>,
                     <g key="3" transform="rotate(120) scale(-1, 1)">
-                        <g clipPath={clipPath}><KaleSubject /></g>
+                        {subject}
                     </g>,
                     <g key="4" transform="rotate(240)">
-                        <g clipPath={clipPath}><KaleSubject /></g>
+                        {subject}
                     </g>,
                     <g key="5" transform="rotate(240) scale(-1, 1)">
-                        <g clipPath={clipPath}><KaleSubject /></g>
+                        {subject}
                     </g>,
                 ]}
             </g>
