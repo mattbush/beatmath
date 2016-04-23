@@ -11,7 +11,7 @@ class KaleParameters extends PieceParameters {
             },
             isSixCelled: {
                 type: ToggleParameter,
-                start: true,
+                start: false,
             },
         };
     }

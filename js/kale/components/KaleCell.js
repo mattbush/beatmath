@@ -2,6 +2,8 @@ const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const KaleSubject = require('js/kale/components/KaleSubject');
 
+const Y_AXIS_SCALE = Math.sqrt(3);
+
 const KaleCell = React.createClass({
     mixins: [ParameterBindingsMixin],
     contextTypes: {
@@ -25,8 +27,11 @@ const KaleCell = React.createClass({
             (isSixCelled ? 'sixthCell' : 'halfCell');
         const clipPath = `url(#${clipPathName})`;
 
+        const x = this.props.logicalX;
+        const y = this.props.logicalY * Y_AXIS_SCALE;
+
         return (
-            <g>
+            <g transform={`translate(${x}, ${y})`}>
                 <g>
                     <g clipPath={clipPath}><KaleSubject /></g>
                 </g>

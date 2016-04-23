@@ -24,7 +24,7 @@ const KaleSubject = React.createClass({
         const driftY = subjectParameters.driftY.getValue();
         const outerRotation = subjectParameters.outerRotation.getValue();
         const innerRotation = subjectParameters.innerRotation.getValue();
-        const borderRadiusPercent = subjectParameters.borderRadiusPercent.getValue();
+        // const borderRadiusPercent = subjectParameters.borderRadiusPercent.getValue();
 
         const transform = {
             transform: `scale(${outerScaleAmount}) translate(${driftX}px, ${driftY}px) rotate(${outerRotation}deg) translate(0, 1px) scale(${innerScaleAmount}) rotate(${innerRotation}deg)`,
@@ -34,7 +34,7 @@ const KaleSubject = React.createClass({
 
         return (
             <g style={transform}>
-                <rect x={-1} y={-1} width={2} height={2} rx={borderRadiusPercent} ry={borderRadiusPercent} stroke="#fff" />
+                <rect x={-1} y={-1} width={2} height={2} stroke="#fff" />
             </g>
         );
     },

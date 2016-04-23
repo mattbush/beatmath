@@ -30,8 +30,8 @@ class SubjectParameters extends PieceParameters {
             },
             innerScaleAmountLog2: {
                 type: MovingLinearParameter,
-                range: [0.5, 1.5],
-                start: 1,
+                range: [0.5, 1.3],
+                start: 0.9,
                 variance: 0.15,
                 autoupdateEveryNBeats: 1,
             },
