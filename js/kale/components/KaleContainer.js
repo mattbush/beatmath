@@ -2,11 +2,12 @@ const React = require('react');
 const KaleParameters = require('js/kale/parameters/KaleParameters');
 const SubjectParameters = require('js/kale/parameters/SubjectParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
-const KaleSubject = require('js/kale/parameters/KaleSubject');
+const KaleSubject = require('js/kale/components/KaleSubject');
 
 const KaleContainer = React.createClass({
     childContextTypes: {
         kaleParameters: React.PropTypes.object,
+        subjectParameters: React.PropTypes.object,
     },
     contextTypes: {
         mixboard: React.PropTypes.object,

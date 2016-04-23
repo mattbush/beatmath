@@ -40,7 +40,7 @@ class PieceParameters {
         });
     }
     autoupdateEveryNBeats(parameter, n) {
-        this._beatmathParameters.tempo.addListener(parameter, () => {
+        this._beatmathParameters.tempo.addListener(() => {
             var tick = this._beatmathParameters.tempo.getNextTick();
             if (tick % n === 0) {
                 parameter.update();
