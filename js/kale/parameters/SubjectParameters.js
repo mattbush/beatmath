@@ -23,8 +23,8 @@ class SubjectParameters extends PieceParameters {
             },
             outerScaleAmountLog2: {
                 type: MovingLinearParameter,
-                range: [4, 5],
-                start: 4.5,
+                range: [-1.8, 1.2],
+                start: -1.5,
                 variance: 0.15,
                 autoupdateEveryNBeats: 1,
             },
@@ -37,16 +37,16 @@ class SubjectParameters extends PieceParameters {
             },
             driftX: {
                 type: MovingLinearParameter,
-                range: [-10, 10],
+                range: [-2, 2],
                 start: 0,
-                variance: 0.8,
+                variance: 0.2,
                 autoupdateEveryNBeats: 1,
             },
             driftY: {
                 type: MovingLinearParameter,
-                range: [-10, 10],
+                range: [-2, 2],
                 start: 0,
-                variance: 0.8,
+                variance: 0.2,
                 autoupdateEveryNBeats: 1,
             },
             skewX: {
@@ -58,8 +58,8 @@ class SubjectParameters extends PieceParameters {
             },
             borderRadiusPercent: {
                 type: MovingLinearParameter,
-                range: [0, 0.5],
-                start: 0.25,
+                range: [0, 0.6],
+                start: 0.3,
                 variance: 0.01,
                 autoupdateEveryNBeats: 1,
             },

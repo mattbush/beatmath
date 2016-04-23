@@ -24,17 +24,17 @@ const KaleSubject = React.createClass({
         const driftY = subjectParameters.driftY.getValue();
         const outerRotation = subjectParameters.outerRotation.getValue();
         const innerRotation = subjectParameters.innerRotation.getValue();
-        const borderRadiusPercent = 5 * subjectParameters.borderRadiusPercent.getValue();
+        const borderRadiusPercent = subjectParameters.borderRadiusPercent.getValue();
 
         const transform = {
-            transform: `scale(${outerScaleAmount}) translate(${driftX}px, ${driftY}px) rotate(${outerRotation}deg) translate(0, 4px) scale(${innerScaleAmount}) rotate(${innerRotation}deg)`,
+            transform: `scale(${outerScaleAmount}) translate(${driftX}px, ${driftY}px) rotate(${outerRotation}deg) translate(0, 1px) scale(${innerScaleAmount}) rotate(${innerRotation}deg)`,
             transition: `transform ${tempo.getPeriod()}ms linear`,
-            strokeWidth: 2.5,
+            strokeWidth: 0.5,
         };
 
         return (
             <g style={transform}>
-                <rect x={-5} y={-5} width={10} height={10} rx={borderRadiusPercent} ry={borderRadiusPercent} stroke="#fff" />
+                <rect x={-1} y={-1} width={2} height={2} rx={borderRadiusPercent} ry={borderRadiusPercent} stroke="#fff" />
             </g>
         );
     },
