@@ -28,6 +28,11 @@ var BeatmathFrame = React.createClass({
             <div className="main">
                 <svg width={width} height={height}>
                     <g style={style}>
+                        {this.props.defs &&
+                            <defs>
+                                {this.props.defs}
+                            </defs>
+                        }
                         {this.props.children}
                     </g>
                 </svg>
