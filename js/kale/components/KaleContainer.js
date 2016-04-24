@@ -6,9 +6,6 @@ const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const KaleCell = require('js/kale/components/KaleCell');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 
-const NUM_ROWS = 3;
-const NUM_COLS = 8;
-
 const SQRT_3 = Math.pow(3, 0.5);
 const CLIP_PATHS = _.map([
     <clipPath id="halfInfinite" key="0">
@@ -49,6 +46,8 @@ const KaleContainer = React.createClass({
     },
     getParameterBindings: function() {
         return {
+            numRows: this.state.kaleParameters.numRows,
+            numCols: this.state.kaleParameters.numCols,
             isInfinite: this.state.kaleParameters.isInfinite,
         };
     },
@@ -58,8 +57,10 @@ const KaleContainer = React.createClass({
             kaleCells = <KaleCell logicalX={0} logicalY={0} />;
         } else {
             kaleCells = [];
-            for (let y = -NUM_ROWS; y <= NUM_ROWS; y++) {
-                for (let x = -NUM_COLS; x <= NUM_COLS; x++) {
+            const numRows = this.getParameterValue('numRows');
+            const numCols = this.getParameterValue('numCols');
+            for (let y = -numRows; y <= numRows; y++) {
+                for (let x = -numCols; x <= numCols; x++) {
                     if ((x + y) % 2 !== 0) {
                         continue;
                     }

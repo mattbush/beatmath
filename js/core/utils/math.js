@@ -27,6 +27,10 @@ var posMod = function(dividend, divisor) {
     return remainder < 0 ? remainder + divisor : remainder;
 };
 
+var ceilOfMultiple = function(x, multiple) {
+    return Math.ceil(x / multiple) * multiple;
+};
+
 var modAndShiftToHalf = function(dividend, divisor) {
     var remainder = dividend % divisor;
     var mod = remainder < 0 ? remainder + divisor : remainder;
@@ -47,6 +51,7 @@ module.exports = {
     manhattanDist,
     polarAngleDeg,
     posMod,
+    ceilOfMultiple,
     modAndShiftToHalf,
     posModAndBendToLowerHalf,
 };

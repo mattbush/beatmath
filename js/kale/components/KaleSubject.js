@@ -38,7 +38,7 @@ const KaleSubject = React.createClass({
 
         return (
             <g style={transform}>
-                <rect x={-1} y={-1} width={2} height={2} stroke="#fff" />
+                <rect x={-1} y={-1} width={2} height={2} />
             </g>
         );
     },
