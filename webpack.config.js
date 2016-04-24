@@ -4,6 +4,7 @@ module.exports = {
         bricks: "./js/bricks/bricks",
         fronds: "./js/fronds/fronds",
         honeycomb: "./js/honeycomb/honeycomb",
+        kale: "./js/kale/kale",
         lattice: "./js/lattice/lattice",
         pinecone: "./js/pinecone/pinecone",
         text: "./js/text/text",
