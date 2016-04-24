@@ -53,7 +53,9 @@ class TreesParameters extends PieceParameters {
                 start: 0,
                 listenToKnob: mixboardKnob.CUE_GAIN,
                 variance: 0.01,
+                monitorName: 'Border Radius Percent',
                 autoupdateEveryNBeats: 2,
+                autoupdateOnCue: true,
             },
             periodTicksLog2: {type: LinearParameter,
                 range: [1, 4],
@@ -77,11 +79,12 @@ class TreesParameters extends PieceParameters {
                 listenToDecrementAndIncrementButtons: [mixboardButton.L_HOT_CUE_2, mixboardButton.L_HOT_CUE_3],
                 variance: 5,
                 autoupdateEveryNBeats: 2,
+                autoupdateOnCue: true,
             },
             trailPercent: {
                 type: LinearParameter,
                 range: [0, 1],
-                start: 1,
+                start: 0.5,
                 incrementAmount: 0.05,
                 monitorName: 'Trail percent',
                 listenToDecrementAndIncrementButtons: [mixboardButton.L_LOOP_MANUAL, mixboardButton.L_LOOP_IN],
@@ -94,6 +97,7 @@ class TreesParameters extends PieceParameters {
                 listenToDecrementAndIncrementButtons: [mixboardButton.L_PITCH_BEND_MINUS, mixboardButton.L_PITCH_BEND_PLUS],
                 variance: 1.5,
                 autoupdateEveryNBeats: 8,
+                autoupdateOnCue: true,
             },
             mirrorStagger: {
                 type: ToggleParameter,
@@ -107,7 +111,9 @@ class TreesParameters extends PieceParameters {
                 incrementAmount: 0.05,
                 listenToWheel: mixboardWheel.R_CONTROL_2,
                 variance: 0.15,
+                monitorName: 'Polar Grid Amount',
                 autoupdateEveryNBeats: 8,
+                autoupdateOnCue: true,
             },
         };
     }
@@ -126,11 +132,12 @@ class TreesParameters extends PieceParameters {
     _getLevelIllumination(treeIndex, levelNumber) {
         var periodTicks = Math.pow(2, this.periodTicksLog2.getValue());
         var tempoNumTicks = this._beatmathParameters.tempo.getNumTicks();
-        if (this.staggerAmount.getValue() > 0) {
+        var staggerAmount = Math.round(this.staggerAmount.getValue());
+        if (staggerAmount !== 0) {
             if (this.mirrorStagger.getValue()) {
                 treeIndex = posModAndBendToLowerHalf(treeIndex, this.numTrees.getValue() - 1);
             }
-            levelNumber -= treeIndex * this.staggerAmount.getValue();
+            levelNumber -= treeIndex * staggerAmount;
         }
         return posMod(tempoNumTicks - levelNumber, periodTicks) / (periodTicks - 1);
     }

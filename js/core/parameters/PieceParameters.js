@@ -1,7 +1,8 @@
 var _ = require('underscore');
+var {mixboardButton} = require('js/core/inputs/MixboardConstants');
 
 const SPECIAL_KEYS = [
-    'autoupdateEveryNBeats',
+    'autoupdateEveryNBeats', 'autoupdateOnCue',
 ];
 var MIXBOARD_LISTENER_KEYS = (value, key) => key.startsWith('listenTo');
 
@@ -47,11 +48,16 @@ class PieceParameters {
     autoupdateEveryNBeats(parameter, n) {
         const tempo = this._beatmathParameters.tempo;
         tempo.addListener(() => {
-            var tick = tempo.getNextTick();
+            var tick = tempo.getNumTicks();
             if (tick % (n * tempo._bpmMod) === 0) {
                 parameter.update();
             }
         });
+    }
+    autoupdateOnCue(parameter) {
+        if (this._mixboard.isMixboardConnected()) {
+            parameter.listenForAutoupdateCue(this._mixboard, mixboardButton.L_CUE);
+        }
     }
     _declareParameters() {
         // empty, override me

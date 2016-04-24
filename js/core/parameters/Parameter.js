@@ -34,6 +34,9 @@ class Parameter {
     _updateMonitor() {
         var value = this.getValue();
         value = _.isNumber(value) ? Math.round(value * 1000) / 1000 : value;
+        if (this._isUpdatingEnabled) {
+            value = value + ' (Auto)';
+        }
         window.localStorage.setItem(this._monitorName, value);
     }
     destroy() {}
@@ -305,8 +308,12 @@ class MovingLinearParameter extends LinearParameter {
         if (params.autoupdate !== undefined) {
             this._autoupdateInterval = setInterval(this.update.bind(this), params.autoupdate);
         }
+        this._isUpdatingEnabled = true;
     }
     update() {
+        if (!this._isUpdatingEnabled) {
+            return;
+        }
         this._speed += (Math.random() * this._variance * 2) - this._variance;
 
         var nextOriginal = this._value + this._speed;
@@ -323,6 +330,54 @@ class MovingLinearParameter extends LinearParameter {
     }
     destroy() {
         clearInterval(this._autoupdateInterval);
+    }
+    listenForAutoupdateCue(mixboard, eventCode) {
+        this._isUpdatingEnabled = false;
+        console.log('listenForAutoupdateCue', mixboard, eventCode);
+        mixboard.addButtonListener(eventCode, this.onAutoupdateCuePressed.bind(this));
+    }
+    onAutoupdateCuePressed(inputValue) {
+        console.log('onAutoupdateCuePressed', inputValue);
+        this._isAutoupdateCuePressed = inputValue;
+        this._canChangeAutoupdate = inputValue;
+    }
+    _checkAutopilotToggle() {
+        console.log('_checkAutopilotToggle', this._isAutoupdateCuePressed);
+        if (this._isAutoupdateCuePressed) {
+            if (this._canChangeAutoupdate) {
+                this._isUpdatingEnabled = !this._isUpdatingEnabled;
+                this._canChangeAutoupdate = false;
+                this._updateMonitor();
+            }
+            return !this._isUpdatingEnabled;
+        }
+        return true;
+    }
+    onResetButtonPress(inputValue) {
+        if (!inputValue || this._checkAutopilotToggle()) {
+            super.onResetButtonPress(inputValue);
+        }
+    }
+    onIncrementButtonPress(inputValue) {
+        if (!inputValue || this._checkAutopilotToggle()) {
+            super.onIncrementButtonPress(inputValue);
+        }
+    }
+    onDecrementButtonPress(inputValue) {
+        if (!inputValue || this._checkAutopilotToggle()) {
+            super.onDecrementButtonPress(inputValue);
+        }
+    }
+    onWheelUpdate(inputValue) {
+        if (this._checkAutopilotToggle()) {
+            super.onWheelUpdate(inputValue);
+        }
+    }
+    onFaderOrKnobUpdate(inputValue) {
+        console.log('onFaderOrKnobUpdate', inputValue);
+        if (this._checkAutopilotToggle()) {
+            super.onFaderOrKnobUpdate(inputValue);
+        }
     }
 }
 
