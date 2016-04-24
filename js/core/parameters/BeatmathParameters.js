@@ -23,12 +23,22 @@ class BeatmathParameters {
         this.height.listenToFader(mixboard, mixboardFader.R_PITCH_BEND);
 
         this.frameScaleLog2 = new MovingLinearParameter({
-            range: [-2, -0.5],
-            start: -1.5,
+            range: [-2, 4],
+            autoupdateRange: [-2, -0.5],
+            start: 0,
             variance: 0.015,
-            autoupdate: 100,
         });
         this.frameScaleLog2.listenToFader(mixboard, mixboardFader.MASTER_GAIN);
+        if (mixboard.isMixboardConnected()) {
+            this.frameScaleLog2.listenForAutoupdateCue(mixboard, mixboardButton.L_CUE);
+        }
+        this.tempo.addListener(() => {
+            var nTicks = 1;
+            var tick = this.tempo.getNumTicks();
+            if (tick % (nTicks * this.tempo._bpmMod) === 0) {
+                this.frameScaleLog2.update();
+            }
+        });
 
         this.frameRotation = new AngleParameter({
             start: 0,

@@ -304,6 +304,7 @@ class MovingLinearParameter extends LinearParameter {
     constructor(params) {
         super(params);
         this._variance = params.variance;
+        this._autoupdateRange = params.autoupdateRange;
         this._speed = 0;
         if (params.autoupdate !== undefined) {
             this._autoupdateInterval = setInterval(this.update.bind(this), params.autoupdate);
@@ -317,7 +318,10 @@ class MovingLinearParameter extends LinearParameter {
         this._speed += (Math.random() * this._variance * 2) - this._variance;
 
         var nextOriginal = this._value + this._speed;
-        var nextConstrained = constrainToRange(this._minParam.getValue(), this._maxParam.getValue(), nextOriginal);
+        var min = this._autoupdateRange ? this._autoupdateRange[0] : this._minParam.getValue();
+        var max = this._autoupdateRange ? this._autoupdateRange[1] : this._maxParam.getValue();
+
+        var nextConstrained = constrainToRange(min, max, nextOriginal);
 
         // if speed is positive and we're past max, or vice versa
         if ((nextConstrained < nextOriginal && this._speed > 0) ||
