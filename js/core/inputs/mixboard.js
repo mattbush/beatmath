@@ -27,6 +27,9 @@ class Mixboard {
         return window.navigator
           && typeof navigator.requestMIDIAccess === 'function';
     }
+    isMixboardConnected() {
+        return this._midiInput !== null;
+    }
     async _setupMidiIvarsAsync() {
         var midiAccess = await navigator.requestMIDIAccess();
         if (!midiAccess) {

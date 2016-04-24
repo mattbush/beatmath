@@ -16,14 +16,14 @@ class TreesParameters extends PieceParameters {
             },
             numTrees: {
                 type: IntLinearParameter,
-                start: 16,
                 range: [1, 16],
+                start: 16, mixboardStart: 1,
                 listenToFader: mixboardFader.L_GAIN,
             },
             numLevels: {
                 type: IntLinearParameter,
                 range: [1, 24],
-                start: 24,
+                start: 24, mixboardStart: 1,
                 listenToFader: mixboardFader.R_GAIN,
             },
             treeSpacing: {
@@ -53,7 +53,7 @@ class TreesParameters extends PieceParameters {
                 start: 0,
                 listenToKnob: mixboardKnob.CUE_GAIN,
                 variance: 0.01,
-                autoupdate: 1000,
+                autoupdateEveryNBeats: 2,
             },
             periodTicksLog2: {type: LinearParameter,
                 range: [1, 4],
@@ -76,7 +76,7 @@ class TreesParameters extends PieceParameters {
                 monitorName: 'Level color shift',
                 listenToDecrementAndIncrementButtons: [mixboardButton.L_HOT_CUE_2, mixboardButton.L_HOT_CUE_3],
                 variance: 5,
-                autoupdate: 1000,
+                autoupdateEveryNBeats: 2,
             },
             trailPercent: {
                 type: LinearParameter,
@@ -88,12 +88,12 @@ class TreesParameters extends PieceParameters {
             },
             staggerAmount: {
                 type: MovingLinearParameter,
-                range: [0, 8],
-                start: 1,
+                range: [-8, 8],
+                start: 0,
                 monitorName: 'Stagger Amount',
                 listenToDecrementAndIncrementButtons: [mixboardButton.L_PITCH_BEND_MINUS, mixboardButton.L_PITCH_BEND_PLUS],
                 variance: 1.5,
-                autoupdate: 4000,
+                autoupdateEveryNBeats: 8,
             },
             mirrorStagger: {
                 type: ToggleParameter,
@@ -107,7 +107,7 @@ class TreesParameters extends PieceParameters {
                 incrementAmount: 0.05,
                 listenToWheel: mixboardWheel.R_CONTROL_2,
                 variance: 0.15,
-                autoupdate: 4000,
+                autoupdateEveryNBeats: 8,
             },
         };
     }

@@ -17,6 +17,11 @@ class PieceParameters {
         _.each(parameters, (properties, paramName) => {
             var {type, ...restOfProperties} = properties;
 
+            if (this._mixboard.isMixboardConnected() && _.has(restOfProperties, 'mixboardStart')) {
+                restOfProperties.start = restOfProperties.mixboardStart;
+                delete restOfProperties.mixboardStart;
+            }
+
             var specialProperties = _.pick(restOfProperties, SPECIAL_KEYS);
             restOfProperties = _.omit(restOfProperties, SPECIAL_KEYS);
             var listenerProperties = _.pick(restOfProperties, MIXBOARD_LISTENER_KEYS);
@@ -40,9 +45,10 @@ class PieceParameters {
         });
     }
     autoupdateEveryNBeats(parameter, n) {
-        this._beatmathParameters.tempo.addListener(() => {
-            var tick = this._beatmathParameters.tempo.getNextTick();
-            if (tick % n === 0) {
+        const tempo = this._beatmathParameters.tempo;
+        tempo.addListener(() => {
+            var tick = tempo.getNextTick();
+            if (tick % (n * tempo._bpmMod) === 0) {
                 parameter.update();
             }
         });
