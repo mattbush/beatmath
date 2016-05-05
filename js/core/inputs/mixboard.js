@@ -127,6 +127,15 @@ class Mixboard {
     addMixtrackWheelListener(eventCode, fn) {
         this._addListener(this._onMixtrackWheelListeners, eventCode, fn);
     }
+    addLaunchpadFaderListener(eventCode, fn) {
+        this._addListener(this._onLaunchpadFaderAndKnobListeners, eventCode, fn);
+    }
+    addLaunchpadKnobListener(eventCode, fn) {
+        this._addListener(this._onLaunchpadFaderAndKnobListeners, eventCode, fn);
+    }
+    addLaunchpadWheelListener(eventCode, fn) {
+        this._addListener(this._onLaunchpadWheelListeners, eventCode, fn);
+    }
     toggleLight(eventCode, isLightOn) {
         var eventType = isLightOn ? 0x90 : 0x80;
         this._midiOutput.send([eventType, eventCode, 1]);
