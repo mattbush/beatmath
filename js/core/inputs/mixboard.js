@@ -1,11 +1,14 @@
 var _ = require('underscore');
 var {mixboardWheel, mixboardFader, mixboardWheelCoefficients} = require('js/core/inputs/MixboardConstants');
+var {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 
 class Mixboard {
     constructor() {
-        this._onButtonListeners = {};
-        this._onFaderAndKnobListeners = {};
-        this._onWheelListeners = {};
+        this._onMixtrackButtonListeners = {};
+        this._onMixtrackFaderAndKnobListeners = {};
+        this._onMixtrackWheelListeners = {};
+        this._onLaunchpadButtonListeners = {};
+        this._onLaunchpadFaderAndKnobListeners = {};
     }
     async initAsync() {
         this._midiInput = null;
@@ -16,7 +19,11 @@ class Mixboard {
         }
 
         if (this._midiInput !== null) {
-            this._midiInput.onmidimessage = this._onMidiMessage.bind(this);
+            if (this.isLaunchpad()) {
+                this._midiInput.onmidimessage = this._onLaunchpadMidiMessage.bind(this);
+            } else {
+                this._midiInput.onmidimessage = this._onMixtrackMidiMessage.bind(this);
+            }
         }
         if (this._midiOutput === null) {
             this.toggleLight = _.noop;
@@ -29,6 +36,9 @@ class Mixboard {
     }
     isMixboardConnected() {
         return this._midiInput !== null;
+    }
+    isLaunchpad() {
+        return this.isMixboardConnected() && this._midiInput.name === 'Launch Control XL';
     }
     async _setupMidiIvarsAsync() {
         var midiAccess = await navigator.requestMIDIAccess();
@@ -44,31 +54,31 @@ class Mixboard {
             this._midiOutput = midiAccess.outputs.values().next().value;
         }
     }
-    _onMidiMessage(e) {
+    _onMixtrackMidiMessage(e) {
         // console.log(e.data); // uncomment to discover new event codes
         var [eventType, eventCode, rawValue] = e.data;
         if (eventType === 144) {
-            this._onButtonMessage(eventCode, rawValue);
+            this._onMixtrackButtonMessage(eventCode, rawValue);
         } else if (eventType === 176) {
             if (eventCode >= mixboardWheel.R_TURNTABLE) {
-                this._onWheelMessage(eventCode, rawValue);
+                this._onMixtrackWheelMessage(eventCode, rawValue);
             } else {
-                this._onFaderAndKnobMessage(eventCode, rawValue);
+                this._onMixtrackFaderAndKnobMessage(eventCode, rawValue);
             }
         }
     }
-    _onButtonMessage(eventCode, rawValue) {
+    _onMixtrackButtonMessage(eventCode, rawValue) {
         var value = (rawValue > 0);
-        this._notifyListeners(this._onButtonListeners, eventCode, value);
+        this._notifyListeners(this._onMixtrackButtonListeners, eventCode, value);
     }
-    _onFaderAndKnobMessage(eventCode, rawValue) {
+    _onMixtrackFaderAndKnobMessage(eventCode, rawValue) {
         var value = rawValue / 127;
         if (eventCode === mixboardFader.CROSSFADER) { // this one feels backwards
             value = 1 - value;
         }
-        this._notifyListeners(this._onFaderAndKnobListeners, eventCode, value);
+        this._notifyListeners(this._onMixtrackFaderAndKnobListeners, eventCode, value);
     }
-    _onWheelMessage(eventCode, rawValue) {
+    _onMixtrackWheelMessage(eventCode, rawValue) {
         var value = (rawValue >= 64) ? rawValue - 128 : rawValue;
         if (eventCode === mixboardWheel.BROWSE ||
             eventCode === mixboardWheel.L_SELECT ||
@@ -76,7 +86,29 @@ class Mixboard {
             value = -value;
         }
         value *= mixboardWheelCoefficients[eventCode];
-        this._notifyListeners(this._onWheelListeners, eventCode, value);
+        this._notifyListeners(this._onMixtrackWheelListeners, eventCode, value);
+    }
+    _onLaunchpadMidiMessage(e) {
+        // console.log(e.data); // uncomment to discover new event codes
+        var [eventType, eventCode, rawValue] = e.data;
+        if (eventType === 152 || eventType === 136) {
+            this._onLaunchpadButtonMessage(eventCode, eventType === 152 ? 1 : 0);
+        } else if (eventType === 176) {
+            if (eventCode >= LaunchpadButtons.UP) {
+                this._onLaunchpadButtonMessage(eventCode, rawValue);
+            } else {
+                this._onLaunchpadFaderAndKnobMessage(eventCode, rawValue);
+            }
+        }
+    }
+    _onLaunchpadButtonMessage(eventCode, rawValue) {
+        var value = (rawValue > 0);
+        this._notifyListeners(this._onLaunchpadButtonListeners, eventCode, value);
+    }
+    _onLaunchpadFaderAndKnobMessage(eventCode, rawValue) {
+        // make 64 map to exactly 0.5
+        var value = rawValue ? (rawValue - 1 / 126) : 0;
+        this._notifyListeners(this._onLaunchpadFaderAndKnobListeners, eventCode, value);
     }
     _notifyListeners(listenerObj, eventCode, value) {
         if (_.has(listenerObj, eventCode)) {
@@ -84,16 +116,16 @@ class Mixboard {
         }
     }
     addButtonListener(eventCode, fn) {
-        this._addListener(this._onButtonListeners, eventCode, fn);
+        this._addListener(this._onMixtrackButtonListeners, eventCode, fn);
     }
     addFaderListener(eventCode, fn) {
-        this._addListener(this._onFaderAndKnobListeners, eventCode, fn);
+        this._addListener(this._onMixtrackFaderAndKnobListeners, eventCode, fn);
     }
     addKnobListener(eventCode, fn) {
-        this._addListener(this._onFaderAndKnobListeners, eventCode, fn);
+        this._addListener(this._onMixtrackFaderAndKnobListeners, eventCode, fn);
     }
     addWheelListener(eventCode, fn) {
-        this._addListener(this._onWheelListeners, eventCode, fn);
+        this._addListener(this._onMixtrackWheelListeners, eventCode, fn);
     }
     toggleLight(eventCode, isLightOn) {
         var eventType = isLightOn ? 0x90 : 0x80;
