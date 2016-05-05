@@ -1,5 +1,7 @@
 var _ = require('underscore');
 var {lerp, posMod, constrainToRange, modAndShiftToHalf, nextFloat} = require('js/core/utils/math');
+var {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
+var {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 
 class Parameter {
     constructor({start, monitorName}) {
@@ -335,9 +337,13 @@ class MovingLinearParameter extends LinearParameter {
     destroy() {
         clearInterval(this._autoupdateInterval);
     }
-    listenForAutoupdateCue(mixboard, eventCode) {
+    listenForAutoupdateCue(mixboard) {
         this._isUpdatingEnabled = false;
-        mixboard.addMixtrackButtonListener(eventCode, this.onAutoupdateCuePressed.bind(this));
+        if (mixboard.isLaunchpad()) {
+            mixboard.addLaunchpadButtonListener(LaunchpadButtons.RECORD_ARM, this.onAutoupdateCuePressed.bind(this));
+        } else {
+            mixboard.addMixtrackButtonListener(MixtrackButtons.L_CUE, this.onAutoupdateCuePressed.bind(this));
+        }
     }
     onAutoupdateCuePressed(inputValue) {
         this._isAutoupdateCuePressed = inputValue;
