@@ -73,7 +73,7 @@ const Frond = React.createClass({
             <g style={frondTranslation}>
                 <g style={frondScale}>
                     <g style={frondRotation}>
-                        {_.times(this.getParameterValue('numLeaves'), i => this._renderLeafAtIndex(i, frondShape))}
+                        {_.times(Math.round(this.getParameterValue('numLeaves')), i => this._renderLeafAtIndex(i, frondShape))}
                     </g>
                 </g>
             </g>
