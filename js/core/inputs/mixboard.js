@@ -137,8 +137,13 @@ class Mixboard {
         this._addListener(this._onLaunchpadWheelListeners, eventCode, fn);
     }
     toggleLight(eventCode, isLightOn) {
-        var eventType = isLightOn ? 0x90 : 0x80;
-        this._midiOutput.send([eventType, eventCode, 1]);
+        if (this.isLaunchpad()) {
+            var value = isLightOn ? 0x33 : 0;
+            this._midiOutput.send([152, eventCode, value]);
+        } else {
+            var eventType = isLightOn ? 0x90 : 0x80;
+            this._midiOutput.send([eventType, eventCode, 1]);
+        }
     }
     _addListener(listenerObj, eventCode, fn) {
         if (!_.has(listenerObj, eventCode)) {
