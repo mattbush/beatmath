@@ -3,15 +3,15 @@ var _ = require('underscore');
 var tinycolor = require('tinycolor2');
 var Mixboard = require('js/core/inputs/Mixboard');
 var updateHue = require('js/core/outputs/updateHue');
-var {mixboardWheel, mixboardFader} = require('js/core/inputs/MixboardConstants');
+var {MixtrackWheels, MixtrackFaders} = require('js/core/inputs/MixtrackConstants');
 var {lerp, posMod} = require('js/core/utils/math');
 
 var startColor = {h: 60, s: 0.8, v: 0.8};
 
 var configs = [
-    {hue: mixboardWheel.BROWSE, saturation: mixboardFader.CROSSFADER, value: mixboardFader.MASTER_GAIN},
-    {hue: mixboardWheel.R_TURNTABLE, saturation: mixboardFader.R_PITCH_BEND, value: mixboardFader.R_GAIN},
-    {hue: mixboardWheel.L_TURNTABLE, saturation: mixboardFader.L_PITCH_BEND, value: mixboardFader.L_GAIN},
+    {hue: MixtrackWheels.BROWSE, saturation: MixtrackFaders.CROSSFADER, value: MixtrackFaders.MASTER_GAIN},
+    {hue: MixtrackWheels.R_TURNTABLE, saturation: MixtrackFaders.R_PITCH_BEND, value: MixtrackFaders.R_GAIN},
+    {hue: MixtrackWheels.L_TURNTABLE, saturation: MixtrackFaders.L_PITCH_BEND, value: MixtrackFaders.L_GAIN},
 ];
 
 var colors = [];

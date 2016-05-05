@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var {posMod} = require('js/core/utils/math');
-var {mixboardButton} = require('js/core/inputs/MixboardConstants');
+var {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 var {runAtTimestamp} = require('js/core/utils/time');
 var {
     R_SYNC: BUTTON_1,
@@ -8,7 +8,7 @@ var {
     R_PLAY_PAUSE: BUTTON_3,
     R_STUTTER: BUTTON_4,
     R_SCRATCH: MOD_BUTTON,
-} = mixboardButton;
+} = MixtrackButtons;
 
 var MS_PER_MINUTE = 60000;
 

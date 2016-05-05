@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var {mixboardButton} = require('js/core/inputs/MixboardConstants');
+var {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 
 const SPECIAL_KEYS = [
     'autoupdateEveryNBeats', 'autoupdateOnCue',
@@ -56,7 +56,7 @@ class PieceParameters {
     }
     autoupdateOnCue(parameter) {
         if (this._mixboard.isMixboardConnected()) {
-            parameter.listenForAutoupdateCue(this._mixboard, mixboardButton.L_CUE);
+            parameter.listenForAutoupdateCue(this._mixboard, MixtrackButtons.L_CUE);
         }
     }
     _declareParameters() {

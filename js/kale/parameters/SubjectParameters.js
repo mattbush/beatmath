@@ -1,5 +1,5 @@
 const {MovingAngleParameter, MovingLinearParameter} = require('js/core/parameters/Parameter');
-// const {mixboardKnob} = require('js/core/inputs/MixboardConstants');
+// const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
 class SubjectParameters extends PieceParameters {

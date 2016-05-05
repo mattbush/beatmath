@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var {LinearParameter, CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
-var {mixboardButton, mixboardWheel} = require('js/core/inputs/MixboardConstants');
+var {MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
 const {lerp, dist, manhattanDist, polarAngleDeg, posMod, modAndShiftToHalf, posModAndBendToLowerHalf} = require('js/core/utils/math');
@@ -13,7 +13,7 @@ class LatticeRefreshTimer extends PieceParameters {
                 range: [2, 40],
                 start: 10,
                 monitorName: 'Refresh Ripple Radius',
-                listenToWheel: mixboardWheel.L_SELECT,
+                listenToWheel: MixtrackWheels.L_SELECT,
             },
             _manhattanCoefficient: {
                 type: LinearParameter,
@@ -22,8 +22,8 @@ class LatticeRefreshTimer extends PieceParameters {
                 defaultOn: 1,
                 incrementAmount: 0.25,
                 monitorName: 'Refresh Manhattan Coeff',
-                listenToWheel: mixboardWheel.L_CONTROL_1,
-                listenToResetButton: mixboardButton.L_HOT_CUE_2,
+                listenToWheel: MixtrackWheels.L_CONTROL_1,
+                listenToResetButton: MixtrackButtons.L_HOT_CUE_2,
             },
             _logCoefficient: {
                 type: LinearParameter,
@@ -32,37 +32,37 @@ class LatticeRefreshTimer extends PieceParameters {
                 defaultOn: 1,
                 incrementAmount: 0.25,
                 monitorName: 'Refresh Log Coeff',
-                listenToWheel: mixboardWheel.L_CONTROL_2,
-                listenToResetButton: mixboardButton.L_HOT_CUE_3,
+                listenToWheel: MixtrackWheels.L_CONTROL_2,
+                listenToResetButton: MixtrackButtons.L_HOT_CUE_3,
             },
             _useDistance: {
                 type: ToggleParameter,
                 start: true,
-                listenToButton: mixboardButton.L_HOT_CUE_1,
+                listenToButton: MixtrackButtons.L_HOT_CUE_1,
             },
             _globalPolarAngles: {
                 type: LinearParameter,
                 range: [-12, 12],
                 start: 0,
                 monitorName: 'Refresh # Global Polar Angles',
-                listenToDecrementAndIncrementButtons: [mixboardButton.L_LOOP_MANUAL, mixboardButton.L_LOOP_IN],
+                listenToDecrementAndIncrementButtons: [MixtrackButtons.L_LOOP_MANUAL, MixtrackButtons.L_LOOP_IN],
             },
             _localPolarAngles: {
                 type: LinearParameter,
                 range: [-12, 12],
                 start: 0,
                 monitorName: 'Refresh # Local Polar Angles',
-                listenToDecrementAndIncrementButtons: [mixboardButton.L_LOOP_OUT, mixboardButton.L_LOOP_RELOOP],
+                listenToDecrementAndIncrementButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
             },
             _bendLocalPolarAngles: {
                 type: ToggleParameter,
                 start: false,
-                listenToButton: mixboardButton.L_KEYLOCK,
+                listenToButton: MixtrackButtons.L_KEYLOCK,
             },
             _subdivisionSize: {
                 type: CycleParameter,
                 cycleValues: [false, 1, 2, 3],
-                listenToCycleAndResetButtons: [mixboardButton.L_EFFECT, mixboardButton.L_DELETE],
+                listenToCycleAndResetButtons: [MixtrackButtons.L_EFFECT, MixtrackButtons.L_DELETE],
             },
         };
     }

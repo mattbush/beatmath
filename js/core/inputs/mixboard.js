@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var {mixboardWheel, mixboardFader, mixboardWheelCoefficients} = require('js/core/inputs/MixboardConstants');
+var {MixtrackWheels, MixtrackFaders, MixtrackWheelCoefficients} = require('js/core/inputs/MixtrackConstants');
 var {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 
 class Mixboard {
@@ -60,7 +60,7 @@ class Mixboard {
         if (eventType === 144) {
             this._onMixtrackButtonMessage(eventCode, rawValue);
         } else if (eventType === 176) {
-            if (eventCode >= mixboardWheel.R_TURNTABLE) {
+            if (eventCode >= MixtrackWheels.R_TURNTABLE) {
                 this._onMixtrackWheelMessage(eventCode, rawValue);
             } else {
                 this._onMixtrackFaderAndKnobMessage(eventCode, rawValue);
@@ -73,19 +73,19 @@ class Mixboard {
     }
     _onMixtrackFaderAndKnobMessage(eventCode, rawValue) {
         var value = rawValue / 127;
-        if (eventCode === mixboardFader.CROSSFADER) { // this one feels backwards
+        if (eventCode === MixtrackFaders.CROSSFADER) { // this one feels backwards
             value = 1 - value;
         }
         this._notifyListeners(this._onMixtrackFaderAndKnobListeners, eventCode, value);
     }
     _onMixtrackWheelMessage(eventCode, rawValue) {
         var value = (rawValue >= 64) ? rawValue - 128 : rawValue;
-        if (eventCode === mixboardWheel.BROWSE ||
-            eventCode === mixboardWheel.L_SELECT ||
-            eventCode === mixboardWheel.R_SELECT) { // these ones are definitely backwards
+        if (eventCode === MixtrackWheels.BROWSE ||
+            eventCode === MixtrackWheels.L_SELECT ||
+            eventCode === MixtrackWheels.R_SELECT) { // these ones are definitely backwards
             value = -value;
         }
-        value *= mixboardWheelCoefficients[eventCode];
+        value *= MixtrackWheelCoefficients[eventCode];
         this._notifyListeners(this._onMixtrackWheelListeners, eventCode, value);
     }
     _onLaunchpadMidiMessage(e) {

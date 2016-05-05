@@ -1,5 +1,5 @@
 var {MovingAngleParameter, LinearParameter} = require('js/core/parameters/Parameter');
-var {mixboardWheel, mixboardKnob} = require('js/core/inputs/MixboardConstants');
+var {MixtrackWheels, MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 // const {NUM_COLS, NUM_ROWS, MAX_SIZE} = require('js/bricks/parameters/BricksConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
@@ -11,13 +11,13 @@ class BricksParameters extends PieceParameters {
                 max: 1,
                 variance: 0.1,
                 start: 0,
-                listenToWheel: mixboardWheel.BROWSE,
+                listenToWheel: MixtrackWheels.BROWSE,
             },
             brickHomogeneity: {
                 type: LinearParameter,
                 range: [-5, 5],
                 start: -0.4,
-                listenToFader: mixboardKnob.CUE_GAIN,
+                listenToFader: MixtrackKnobs.CUE_GAIN,
             },
         };
     }
