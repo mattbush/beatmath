@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var {MixtrackWheels, MixtrackFaders, MixtrackWheelCoefficients} = require('js/core/inputs/MixtrackConstants');
-var {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
+var {LaunchpadFaderInputCodes, LaunchpadKnobInputCodes} = require('js/core/inputs/LaunchpadConstants');
 
 class Mixboard {
     constructor() {
@@ -94,8 +94,8 @@ class Mixboard {
         if (eventType === 152 || eventType === 136) {
             this._onLaunchpadButtonMessage(eventCode, eventType === 152 ? 1 : 0);
         } else if (eventType === 176) {
-            if (eventCode >= LaunchpadButtons.UP) {
-                this._onLaunchpadButtonMessage(eventCode, rawValue);
+            if (eventCode >= 104) { // UP
+                this._onLaunchpadButtonMessage(eventCode + 100, rawValue);
             } else {
                 this._onLaunchpadFaderAndKnobMessage(eventCode, rawValue);
             }
@@ -127,23 +127,28 @@ class Mixboard {
     addMixtrackWheelListener(eventCode, fn) {
         this._addListener(this._onMixtrackWheelListeners, eventCode, fn);
     }
-    addLaunchpadFaderListener(eventCode, fn) {
-        this._addListener(this._onLaunchpadFaderAndKnobListeners, eventCode, fn);
+    addLaunchpadButtonListener(eventCode, fn) {
+        this._addListener(this._onLaunchpadButtonListeners, eventCode, fn);
     }
-    addLaunchpadKnobListener(eventCode, fn) {
-        this._addListener(this._onLaunchpadFaderAndKnobListeners, eventCode, fn);
+    addLaunchpadFaderListener(column, fn) {
+        this._addListener(this._onLaunchpadFaderAndKnobListeners, LaunchpadFaderInputCodes[column], fn);
     }
-    addLaunchpadWheelListener(eventCode, fn) {
-        this._addListener(this._onLaunchpadWheelListeners, eventCode, fn);
+    addLaunchpadKnobListener(row, column, fn) {
+        this._addListener(this._onLaunchpadFaderAndKnobListeners, LaunchpadKnobInputCodes[row][column], fn);
     }
     toggleLight(eventCode, isLightOn) {
         if (this.isLaunchpad()) {
+            // note that this doesn't work for side buttons
             var value = isLightOn ? 0x33 : 0;
             this._midiOutput.send([152, eventCode, value]);
         } else {
             var eventType = isLightOn ? 0x90 : 0x80;
             this._midiOutput.send([eventType, eventCode, 1]);
         }
+    }
+    toggleLaunchpadDirectionalLight(eventCode, isLightOn) {
+        var value = isLightOn ? 0x33 : 0;
+        this._midiOutput.send([152, eventCode - 100, value]);
     }
     _addListener(listenerObj, eventCode, fn) {
         if (!_.has(listenerObj, eventCode)) {
