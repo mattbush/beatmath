@@ -66,8 +66,6 @@ const KaleCell = React.createClass({
     },
     _mixColors: function(...coords) {
         var colorsByCoords = this.context.kaleParameters.colorsByCoords;
-        console.log(coords);
-        console.log(require('underscore').keys(colorsByCoords));
         if (coords.length === 1) {
             return colorsByCoords[coords[0]].getValue();
         } else {

@@ -337,16 +337,13 @@ class MovingLinearParameter extends LinearParameter {
     }
     listenForAutoupdateCue(mixboard, eventCode) {
         this._isUpdatingEnabled = false;
-        console.log('listenForAutoupdateCue', mixboard, eventCode);
         mixboard.addButtonListener(eventCode, this.onAutoupdateCuePressed.bind(this));
     }
     onAutoupdateCuePressed(inputValue) {
-        console.log('onAutoupdateCuePressed', inputValue);
         this._isAutoupdateCuePressed = inputValue;
         this._canChangeAutoupdate = inputValue;
     }
     _checkAutopilotToggle() {
-        console.log('_checkAutopilotToggle', this._isAutoupdateCuePressed);
         if (this._isAutoupdateCuePressed) {
             if (this._canChangeAutoupdate) {
                 this._isUpdatingEnabled = !this._isUpdatingEnabled;
@@ -378,7 +375,6 @@ class MovingLinearParameter extends LinearParameter {
         }
     }
     onFaderOrKnobUpdate(inputValue) {
-        console.log('onFaderOrKnobUpdate', inputValue);
         if (this._checkAutopilotToggle()) {
             super.onFaderOrKnobUpdate(inputValue);
         }

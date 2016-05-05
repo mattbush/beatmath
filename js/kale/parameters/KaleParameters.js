@@ -27,7 +27,7 @@ class KaleParameters extends PieceParameters {
             },
         };
     }
-    constructor(args) {
+    constructor(...args) {
         super(...args);
 
         this.colorsByCoords = {};
