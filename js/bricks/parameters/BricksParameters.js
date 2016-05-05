@@ -11,13 +11,13 @@ class BricksParameters extends PieceParameters {
                 max: 1,
                 variance: 0.1,
                 start: 0,
-                listenToWheel: MixtrackWheels.BROWSE,
+                listenToMixtrackWheel: MixtrackWheels.BROWSE,
             },
             brickHomogeneity: {
                 type: LinearParameter,
                 range: [-5, 5],
                 start: -0.4,
-                listenToFader: MixtrackKnobs.CUE_GAIN,
+                listenToMixtrackFader: MixtrackKnobs.CUE_GAIN,
             },
         };
     }

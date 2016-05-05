@@ -61,8 +61,8 @@ var wrapParam = function(value) {
 };
 
 class ToggleParameter extends Parameter {
-    listenToButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onButtonUpdate.bind(this));
+    listenToMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onButtonUpdate.bind(this));
         this.addStatusLight(mixboard, eventCode);
     }
     onButtonUpdate(inputValue) {
@@ -81,13 +81,13 @@ class CycleParameter extends Parameter {
         this._cycleValues = params.cycleValues;
         this._valueIndex = 0;
     }
-    listenToCycleAndResetButtons(mixboard, cycleCode, resetCode) {
-        this.listenToCycleButton(mixboard, cycleCode);
-        this.listenToResetButton(mixboard, resetCode);
+    listenToCycleAndResetMixtrackButtons(mixboard, cycleCode, resetCode) {
+        this.listenToCycleMixtrackButton(mixboard, cycleCode);
+        this.listenToResetMixtrackButton(mixboard, resetCode);
         this.addStatusLight(mixboard, cycleCode, value => value !== this._cycleValues[0]);
     }
-    listenToCycleButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onCycleButtonPress.bind(this));
+    listenToCycleMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onCycleButtonPress.bind(this));
     }
     onCycleButtonPress(inputValue) {
         if (inputValue) {
@@ -96,8 +96,8 @@ class CycleParameter extends Parameter {
             this._updateListeners();
         }
     }
-    listenToResetButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onResetButtonPress.bind(this));
+    listenToResetMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onResetButtonPress.bind(this));
     }
     onResetButtonPress(inputValue) {
         if (inputValue) {
@@ -125,22 +125,22 @@ class LinearParameter extends Parameter {
         this._defaultOff = params.start;
         this._defaultOn = params.defaultOn;
     }
-    listenToFader(mixboard, eventCode) {
-        mixboard.addFaderListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
+    listenToMixtrackFader(mixboard, eventCode) {
+        mixboard.addMixtrackFaderListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
     }
-    listenToKnob(mixboard, eventCode) {
-        mixboard.addKnobListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
+    listenToMixtrackKnob(mixboard, eventCode) {
+        mixboard.addMixtrackKnobListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
     }
-    listenToWheel(mixboard, eventCode) {
-        mixboard.addWheelListener(eventCode, this.onWheelUpdate.bind(this));
+    listenToMixtrackWheel(mixboard, eventCode) {
+        mixboard.addMixtrackWheelListener(eventCode, this.onWheelUpdate.bind(this));
     }
-    listenToResetButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onResetButtonPress.bind(this));
+    listenToResetMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onResetButtonPress.bind(this));
         this.addStatusLight(mixboard, eventCode, value => value !== this._defaultOff);
     }
-    listenToDecrementAndIncrementButtons(mixboard, decrementCode, incrementCode) {
-        this.listenToIncrementButton(mixboard, incrementCode);
-        this.listenToDecrementButton(mixboard, decrementCode);
+    listenToDecrementAndIncrementMixtrackButtons(mixboard, decrementCode, incrementCode) {
+        this.listenToIncrementMixtrackButton(mixboard, incrementCode);
+        this.listenToDecrementMixtrackButton(mixboard, decrementCode);
         if (this._defaultOff === this._minParam.getValue()) {
             this.addStatusLight(mixboard, incrementCode, value => value > this._minParam.getValue());
             this.addStatusLight(mixboard, decrementCode, value => value >= this._maxParam.getValue());
@@ -149,11 +149,11 @@ class LinearParameter extends Parameter {
             this.addStatusLight(mixboard, decrementCode, value => value < this._defaultOff);
         }
     }
-    listenToIncrementButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onIncrementButtonPress.bind(this));
+    listenToIncrementMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onIncrementButtonPress.bind(this));
     }
-    listenToDecrementButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onDecrementButtonPress.bind(this));
+    listenToDecrementMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onDecrementButtonPress.bind(this));
     }
     onResetButtonPress(inputValue) {
         if (inputValue) {
@@ -228,14 +228,14 @@ class AngleParameter extends Parameter {
         this._constrainTo = (params.constrainTo !== undefined) ? params.constrainTo : 360;
         this._defaultOff = params.start;
     }
-    listenToWheel(mixboard, eventCode) {
-        mixboard.addWheelListener(eventCode, this.onWheelUpdate.bind(this));
+    listenToMixtrackWheel(mixboard, eventCode) {
+        mixboard.addMixtrackWheelListener(eventCode, this.onWheelUpdate.bind(this));
     }
     onWheelUpdate(inputValue) {
         this._spinValue(inputValue);
     }
-    listenToSnapButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onSnapButton.bind(this));
+    listenToSnapMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onSnapButton.bind(this));
     }
     onSnapButton(inputValue) {
         if (inputValue) {
@@ -243,8 +243,8 @@ class AngleParameter extends Parameter {
             this._spinValue(-distanceFromClosestMultipleOf15);
         }
     }
-    listenToResetButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onResetButtonPress.bind(this));
+    listenToResetMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onResetButtonPress.bind(this));
     }
     onResetButtonPress(inputValue) {
         if (inputValue) {
@@ -337,7 +337,7 @@ class MovingLinearParameter extends LinearParameter {
     }
     listenForAutoupdateCue(mixboard, eventCode) {
         this._isUpdatingEnabled = false;
-        mixboard.addButtonListener(eventCode, this.onAutoupdateCuePressed.bind(this));
+        mixboard.addMixtrackButtonListener(eventCode, this.onAutoupdateCuePressed.bind(this));
     }
     onAutoupdateCuePressed(inputValue) {
         this._isAutoupdateCuePressed = inputValue;

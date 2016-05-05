@@ -34,7 +34,7 @@ class TwentySixteenParameters extends PieceParameters {
                 start: 0,
                 constrainTo: ARRANGEMENTS.length,
                 monitorName: 'Arrangement #',
-                listenToWheel: MixtrackWheels.BROWSE,
+                listenToMixtrackWheel: MixtrackWheels.BROWSE,
             },
             goldColor: {
                 type: MovingColorParameter,
@@ -46,35 +46,35 @@ class TwentySixteenParameters extends PieceParameters {
             _reverseBlueIncrement: {
                 type: ToggleParameter,
                 start: false,
-                listenToButton: MixtrackButtons.L_KEYLOCK,
+                listenToMixtrackButton: MixtrackButtons.L_KEYLOCK,
             },
             _isAutopiloting: {
                 type: ToggleParameter,
                 start: false,
-                listenToButton: MixtrackButtons.L_EFFECT,
+                listenToMixtrackButton: MixtrackButtons.L_EFFECT,
             },
             _autopilotArrangementFrequencyLog2: {
                 type: LinearParameter,
                 range: [0, AUTOPILOT_FREQ_MAX],
                 start: 2,
-                listenToWheel: MixtrackWheels.L_SELECT,
+                listenToMixtrackWheel: MixtrackWheels.L_SELECT,
             },
             _autopilotIncrementFrequencyLog2: {
                 type: LinearParameter,
                 range: [0, AUTOPILOT_FREQ_MAX],
                 start: AUTOPILOT_FREQ_MAX,
-                listenToWheel: MixtrackWheels.L_CONTROL_1,
+                listenToMixtrackWheel: MixtrackWheels.L_CONTROL_1,
             },
             _autopilotShiftFrequencyLog2: {
                 type: LinearParameter,
                 range: [0, AUTOPILOT_FREQ_MAX],
                 start: 0,
-                listenToWheel: MixtrackWheels.L_CONTROL_2,
+                listenToMixtrackWheel: MixtrackWheels.L_CONTROL_2,
             },
             reverseFrameRotationInPixels: {
                 type: ToggleParameter,
                 start: false,
-                listenToButton: MixtrackButtons.R_KEYLOCK,
+                listenToMixtrackButton: MixtrackButtons.R_KEYLOCK,
             },
         };
     }
@@ -86,15 +86,15 @@ class TwentySixteenParameters extends PieceParameters {
         this._isAutopiloting.addListener(this._onAutopilotChange.bind(this));
 
         this._resetArrangements(true);
-        this._mixboard.addButtonListener(MixtrackButtons.L_DELETE, this._resetArrangements.bind(this));
+        this._mixboard.addMixtrackButtonListener(MixtrackButtons.L_DELETE, this._resetArrangements.bind(this));
         _.times(NUM_PRESET_ARRANGEMENTS, index => {
-            this._mixboard.addButtonListener(SET_ARRANGEMENT_BUTTONS[index], this._setArrangement.bind(this, index));
+            this._mixboard.addMixtrackButtonListener(SET_ARRANGEMENT_BUTTONS[index], this._setArrangement.bind(this, index));
         });
 
-        this._mixboard.addButtonListener(MixtrackButtons.L_LOOP_MANUAL, this._incrementIndicesDown.bind(this));
-        this._mixboard.addButtonListener(MixtrackButtons.L_LOOP_IN, this._incrementIndicesUp.bind(this));
-        this._mixboard.addButtonListener(MixtrackButtons.L_LOOP_OUT, this._shiftIndicesDown.bind(this));
-        this._mixboard.addButtonListener(MixtrackButtons.L_LOOP_RELOOP, this._shiftIndicesUp.bind(this));
+        this._mixboard.addMixtrackButtonListener(MixtrackButtons.L_LOOP_MANUAL, this._incrementIndicesDown.bind(this));
+        this._mixboard.addMixtrackButtonListener(MixtrackButtons.L_LOOP_IN, this._incrementIndicesUp.bind(this));
+        this._mixboard.addMixtrackButtonListener(MixtrackButtons.L_LOOP_OUT, this._shiftIndicesDown.bind(this));
+        this._mixboard.addMixtrackButtonListener(MixtrackButtons.L_LOOP_RELOOP, this._shiftIndicesUp.bind(this));
 
         this.goldIndexMappings = _.times(NUM_GOLD, index => new IndexMappingParameter({start: index}));
         this.blueIndexMappings = _.times(NUM_BLUE, index => new IndexMappingParameter({start: index}));

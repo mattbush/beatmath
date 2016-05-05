@@ -115,16 +115,16 @@ class Mixboard {
             _.each(listenerObj[eventCode], fn => fn(value));
         }
     }
-    addButtonListener(eventCode, fn) {
+    addMixtrackButtonListener(eventCode, fn) {
         this._addListener(this._onMixtrackButtonListeners, eventCode, fn);
     }
-    addFaderListener(eventCode, fn) {
+    addMixtrackFaderListener(eventCode, fn) {
         this._addListener(this._onMixtrackFaderAndKnobListeners, eventCode, fn);
     }
-    addKnobListener(eventCode, fn) {
+    addMixtrackKnobListener(eventCode, fn) {
         this._addListener(this._onMixtrackFaderAndKnobListeners, eventCode, fn);
     }
-    addWheelListener(eventCode, fn) {
+    addMixtrackWheelListener(eventCode, fn) {
         this._addListener(this._onMixtrackWheelListeners, eventCode, fn);
     }
     toggleLight(eventCode, isLightOn) {

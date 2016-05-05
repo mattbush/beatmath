@@ -37,8 +37,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     _.each(configs, (config, lightNumber) => {
         colors.push(_.clone(startColor));
         updateHue(lightNumber, tinycolor(colors[lightNumber]));
-        mixboard.addWheelListener(config.hue, onHueChange.bind(null, lightNumber));
-        mixboard.addFaderListener(config.saturation, onSaturationChange.bind(null, lightNumber));
-        mixboard.addFaderListener(config.value, onValueChange.bind(null, lightNumber));
+        mixboard.addMixtrackWheelListener(config.hue, onHueChange.bind(null, lightNumber));
+        mixboard.addMixtrackFaderListener(config.saturation, onSaturationChange.bind(null, lightNumber));
+        mixboard.addMixtrackFaderListener(config.value, onValueChange.bind(null, lightNumber));
     });
 });

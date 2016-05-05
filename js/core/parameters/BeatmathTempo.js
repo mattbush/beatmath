@@ -34,12 +34,12 @@ class BeatmathTempo {
         window.localStorage.setItem('BPM', this._bpm);
         window.localStorage.setItem('BPMMod', this._bpmMod);
 
-        mixboard.addButtonListener(BUTTON_1, this._onResetMeasureButtonPress.bind(this));
-        mixboard.addButtonListener(BUTTON_2, this._onResetPeriodButtonPress.bind(this));
-        mixboard.addButtonListener(BUTTON_4, this._onIncrementButtonPress.bind(this));
-        mixboard.addButtonListener(BUTTON_3, this._onDecrementButtonPress.bind(this));
+        mixboard.addMixtrackButtonListener(BUTTON_1, this._onResetMeasureButtonPress.bind(this));
+        mixboard.addMixtrackButtonListener(BUTTON_2, this._onResetPeriodButtonPress.bind(this));
+        mixboard.addMixtrackButtonListener(BUTTON_4, this._onIncrementButtonPress.bind(this));
+        mixboard.addMixtrackButtonListener(BUTTON_3, this._onDecrementButtonPress.bind(this));
 
-        mixboard.addButtonListener(MOD_BUTTON, this._onModButtonPress.bind(this));
+        mixboard.addMixtrackButtonListener(MOD_BUTTON, this._onModButtonPress.bind(this));
     }
     _updateListeners() {
         for (let listener of this._listeners) {

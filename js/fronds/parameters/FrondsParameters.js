@@ -10,13 +10,13 @@ class FrondsParameters extends PieceParameters {
                 type: LinearParameter,
                 range: [1, 4],
                 start: 1,
-                listenToDecrementAndIncrementButtons: [MixtrackButtons.L_PLAY_PAUSE, MixtrackButtons.L_STUTTER],
+                listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_PLAY_PAUSE, MixtrackButtons.L_STUTTER],
             },
             opacity: {
                 type: LinearParameter,
                 range: [0.2, 1],
                 start: 1,
-                listenToKnob: MixtrackKnobs.CUE_GAIN,
+                listenToMixtrackKnob: MixtrackKnobs.CUE_GAIN,
             },
         };
     }
