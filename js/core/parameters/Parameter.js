@@ -41,6 +41,12 @@ class Parameter {
         }
         window.localStorage.setItem(this._monitorName, value);
     }
+    _setMonitorCoordsFromLaunchpadFader() {
+        // TODO
+    }
+    _setMonitorCoordsFromLaunchpadKnob() {
+        // TODO
+    }
     destroy() {}
 }
 
@@ -126,6 +132,17 @@ class LinearParameter extends Parameter {
         this._gePassedByInput = false;
         this._defaultOff = params.start;
         this._defaultOn = params.defaultOn;
+        this._useStartAsMidpoint = params.useStartAsMidpoint;
+    }
+    listenToLaunchpadFader(mixboard, column) {
+        mixboard.addLaunchpadFaderListener(column, this.onFaderOrKnobUpdate.bind(this));
+        this._setMonitorCoordsFromLaunchpadFader(column);
+        // TODO: add status light?
+    }
+    listenToLaunchpadKnob(mixboard, row, column) {
+        mixboard.addLaunchpadKnobListener(row, column, this.onFaderOrKnobUpdate.bind(this));
+        this._setMonitorCoordsFromLaunchpadKnob(row, column);
+        // TODO: add status light
     }
     listenToMixtrackFader(mixboard, eventCode) {
         mixboard.addMixtrackFaderListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
@@ -191,7 +208,16 @@ class LinearParameter extends Parameter {
         }
     }
     onFaderOrKnobUpdate(inputValue) {
-        const newValue = lerp(this._minParam.getValue(), this._maxParam.getValue(), inputValue);
+        let newValue;
+        if (this._useStartAsMidpoint) {
+            if (inputValue >= 0.5) {
+                newValue = lerp(this._defaultOff, this._maxParam.getValue(), (inputValue - 0.5) * 2);
+            } else {
+                newValue = lerp(this._minParam.getValue(), this._defaultOff, inputValue * 2);
+            }
+        } else {
+            newValue = lerp(this._minParam.getValue(), this._maxParam.getValue(), inputValue);
+        }
         // don't update from the fader or knob until you've "met" the current value
         if (!this._lePassedByInput || !this._gePassedByInput) {
             if (newValue >= this._value) {
@@ -229,9 +255,29 @@ class AngleParameter extends Parameter {
         super(params);
         this._constrainTo = (params.constrainTo !== undefined) ? params.constrainTo : 360;
         this._defaultOff = params.start;
+        this._onLaunchpadKnobSpinInterval = this._onLaunchpadKnobSpinInterval.bind(this);
+    }
+    listenToLaunchpadKnob(mixboard, row, column) {
+        mixboard.addLaunchpadKnobListener(row, column, this.onLaunchpadKnobUpdate.bind(this));
+        this._setMonitorCoordsFromLaunchpadKnob(row, column);
+        // TODO: add status light
     }
     listenToMixtrackWheel(mixboard, eventCode) {
         mixboard.addMixtrackWheelListener(eventCode, this.onWheelUpdate.bind(this));
+    }
+    onLaunchpadKnobUpdate(inputValue) {
+        inputValue -= 0.5;
+        this._launchpadKnobValue = inputValue * Math.abs(inputValue) * 40;
+        if (inputValue !== 0 && !this._launchpadKnobIntervalId) {
+            this._launchpadKnobIntervalId = setInterval(this._onLaunchpadKnobSpinInterval, 20);
+            this._onLaunchpadKnobSpinInterval();
+        } else if (inputValue === 0 && this._launchpadKnobIntervalId) {
+            clearInterval(this._launchpadKnobIntervalId);
+            this._launchpadKnobIntervalId = null;
+        }
+    }
+    _onLaunchpadKnobSpinInterval() {
+        this._spinValue(this._launchpadKnobValue);
     }
     onWheelUpdate(inputValue) {
         this._spinValue(inputValue);
@@ -261,6 +307,13 @@ class AngleParameter extends Parameter {
         }
         this._updateListeners();
     }
+    destroy() {
+        super.destroy();
+        if (this._launchpadKnobIntervalId) {
+            clearInterval(this._launchpadKnobIntervalId);
+            this._launchpadKnobIntervalId = null;
+        }
+    }
 }
 
 class MovingColorParameter extends Parameter {
@@ -282,6 +335,7 @@ class MovingColorParameter extends Parameter {
         this._updateListeners();
     }
     destroy() {
+        super.destroy();
         clearInterval(this._autoupdateInterval);
     }
 }
@@ -335,6 +389,7 @@ class MovingLinearParameter extends LinearParameter {
         this._updateListeners();
     }
     destroy() {
+        super.destroy();
         clearInterval(this._autoupdateInterval);
     }
     listenForAutoupdateCue(mixboard) {

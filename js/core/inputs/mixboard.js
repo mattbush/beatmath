@@ -93,7 +93,7 @@ class Mixboard {
         const [eventType, eventCode, rawValue] = e.data;
         if (eventType === 152 || eventType === 136) {
             this._onLaunchpadButtonMessage(eventCode, eventType === 152 ? 1 : 0);
-        } else if (eventType === 176) {
+        } else if (eventType === 184) {
             if (eventCode >= 104) { // UP
                 this._onLaunchpadButtonMessage(eventCode + 100, rawValue);
             } else {
@@ -107,7 +107,7 @@ class Mixboard {
     }
     _onLaunchpadFaderAndKnobMessage(eventCode, rawValue) {
         // make 64 map to exactly 0.5
-        const value = rawValue ? (rawValue - 1 / 126) : 0;
+        const value = rawValue ? ((rawValue - 1) / 126) : 0;
         this._notifyListeners(this._onLaunchpadFaderAndKnobListeners, eventCode, value);
     }
     _notifyListeners(listenerObj, eventCode, value) {

@@ -18,7 +18,7 @@ const BeatmathFrame = React.createClass({
     render: function() {
         const width = this.getParameterValue('width');
         const height = this.getParameterValue('height');
-        const frameRotation = Math.floor(this.getParameterValue('frameRotation'));
+        const frameRotation = this.getParameterValue('frameRotation');
         const frameScale = Math.pow(2, this.getParameterValue('frameScaleLog2'));
         const style = {
             transform: `translate(${width / 2}px, ${height / 2}px) rotate(${frameRotation}deg) scale(${frameScale})`,
