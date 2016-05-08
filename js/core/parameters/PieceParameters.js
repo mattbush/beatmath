@@ -34,6 +34,9 @@ class PieceParameters {
             });
 
             _.each(listenerProperties, (value, listenerMethodName) => {
+                if (listenerMethodName.includes('Mixtrack') && this._mixboard.isLaunchpad()) {
+                    return; // continue
+                }
                 if (_.isArray(value)) { // ugh, hack
                     parameter[listenerMethodName](this._mixboard, ...value);
                 } else {
