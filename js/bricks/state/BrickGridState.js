@@ -1,6 +1,6 @@
-var _ = require('underscore');
-var MinHeap = require('min-heap');
-var getPossibleOrientation = require('js/bricks/state/getPossibleOrientation');
+const _ = require('underscore');
+const MinHeap = require('min-heap');
+const getPossibleOrientation = require('js/bricks/state/getPossibleOrientation');
 const BrickPosition = require('js/bricks/state/BrickPosition');
 
 const {BRICK_SCALE} = require('js/bricks/parameters/BricksConstants');
@@ -22,12 +22,12 @@ class BrickGridState {
         this._bricksParameters = bricksParameters;
         this._brickPosition = new BrickPosition(bricksParameters);
 
-        var startItem = {x: 0, y: 0, parity: 0};
+        const startItem = {x: 0, y: 0, parity: 0};
         this._heap = new MinHeap(function(l, r) {
             return l.heapWeight - r.heapWeight;
         });
         this._enqueued = {};
-        var startItemCoords = `${startItem.x},${startItem.y}`;
+        const startItemCoords = `${startItem.x},${startItem.y}`;
         this._enqueued[startItemCoords] = startItem;
         this._insertItemIntoHeap(startItem);
 
@@ -37,14 +37,14 @@ class BrickGridState {
         setInterval(this._flushHeap.bind(this), HEAP_FLUSH_RATE);
     }
     update() {
-        for (var i = 0; i < MAX_TRIANGLES_TO_EXTRACT; i++) {
+        for (let i = 0; i < MAX_TRIANGLES_TO_EXTRACT; i++) {
             this._extractMinAndAddNeighbors();
         }
 
-        var coordsToDelete = [];
+        const coordsToDelete = [];
 
         for (let coords in this._grid) {
-            var [x, y] = coords.split(',').map(Number);
+            const [x, y] = coords.split(',').map(Number);
             if (this._brickPosition.getDistance({x, y}) >= RENDER_DISTANCE_CUTOFF) {
                 coordsToDelete.push(coords);
             }
@@ -67,43 +67,44 @@ class BrickGridState {
     }
     _extractMinWithinRange() {
         while (this._heap.size > 0) {
-            var newItem = this._heap.removeHead();
+            const newItem = this._heap.removeHead();
 
             if (this._brickPosition.getDistance(newItem) <= newItem.heapWeight + EXTRACTION_DISTANCE_TOLERANCE) {
                 return newItem;
             } else {
-                var coords = `${newItem.x},${newItem.y}`;
+                const coords = `${newItem.x},${newItem.y}`;
                 delete this._enqueued[coords];
             }
         }
+        return null;
     }
     _extractMinAndAddNeighbors() {
-        var newItem = this._extractMinWithinRange();
+        const newItem = this._extractMinWithinRange();
 
         if (!newItem) {
             return;
         }
-        var coords = `${newItem.x},${newItem.y}`;
+        const coords = `${newItem.x},${newItem.y}`;
 
-        var possibleOrientation = getPossibleOrientation(this._bricksParameters, this._grid, newItem);
+        const possibleOrientation = getPossibleOrientation(this._bricksParameters, this._grid, newItem);
         if (possibleOrientation !== null) {
             this._grid[coords] = possibleOrientation;
         }
 
-        var neighborParity = newItem.parity ? 0 : 1;
-        for (var neighborOffset of NEIGHBOR_OFFSETS_BY_PARITY[newItem.parity]) {
-            var neighbor = {
+        const neighborParity = newItem.parity ? 0 : 1;
+        for (let neighborOffset of NEIGHBOR_OFFSETS_BY_PARITY[newItem.parity]) {
+            const neighbor = {
                 x: newItem.x + neighborOffset.x,
                 y: newItem.y + neighborOffset.y,
                 parity: neighborParity,
             };
-            var neighborCoords = `${neighbor.x},${neighbor.y}`;
+            const neighborCoords = `${neighbor.x},${neighbor.y}`;
             if (!_.has(this._enqueued, neighborCoords)) {
                 this._enqueued[neighborCoords] = neighbor;
                 this._insertItemIntoHeap(neighbor);
             } else {
-                var existingEntry = this._enqueued[neighborCoords];
-                var newNeighborDistance = this._brickPosition.getDistance(existingEntry);
+                const existingEntry = this._enqueued[neighborCoords];
+                const newNeighborDistance = this._brickPosition.getDistance(existingEntry);
                 if (newNeighborDistance < existingEntry.heapWeight - EXTRACTION_DISTANCE_TOLERANCE) {
                     this._heap.remove(existingEntry);
                     existingEntry.heapWeight = newNeighborDistance;
@@ -116,14 +117,14 @@ class BrickGridState {
         if (this._heap.size <= NUM_ITEMS_TO_SAVE_IN_FLUSH) {
             return;
         }
-        var tempArray = [];
+        const tempArray = [];
         while (this._heap.size > 0) {
-            var head = this._heap.removeHead();
+            const head = this._heap.removeHead();
             if (tempArray.length < NUM_ITEMS_TO_SAVE_IN_FLUSH) {
                 tempArray.push(head);
             }
         }
-        for (var item of tempArray) {
+        for (let item of tempArray) {
             this._heap.insert(item);
         }
     }

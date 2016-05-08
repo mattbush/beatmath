@@ -1,7 +1,7 @@
-var React = require('react');
-var BeatmathParameters = require('js/core/parameters/BeatmathParameters');
+const React = require('react');
+const BeatmathParameters = require('js/core/parameters/BeatmathParameters');
 
-var MixboardContext = React.createClass({
+const MixboardContext = React.createClass({
     getInitialState: function() {
         return {
             beatmathParameters: new BeatmathParameters(this.props.mixboard, {

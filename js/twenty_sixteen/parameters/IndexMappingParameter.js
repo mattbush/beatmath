@@ -1,4 +1,4 @@
-var {Parameter} = require('js/core/parameters/Parameter');
+const {Parameter} = require('js/core/parameters/Parameter');
 
 class IndexMappingParameter extends Parameter {
     mapValue(mapFn) {

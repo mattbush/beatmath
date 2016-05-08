@@ -1,18 +1,18 @@
-var _ = require('underscore');
-var {AngleParameter, ToggleParameter, MovingColorParameter, LinearParameter} = require('js/core/parameters/Parameter');
-var {MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
-var IndexMappingParameter = require('js/twenty_sixteen/parameters/IndexMappingParameter');
-var tinycolor = require('tinycolor2');
-var {posMod} = require('js/core/utils/math');
-var {setTimeoutAsync} = require('js/core/utils/time');
-var updateHue = require('js/core/outputs/updateHue');
+const _ = require('underscore');
+const {AngleParameter, ToggleParameter, MovingColorParameter, LinearParameter} = require('js/core/parameters/Parameter');
+const {MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
+const IndexMappingParameter = require('js/twenty_sixteen/parameters/IndexMappingParameter');
+const tinycolor = require('tinycolor2');
+const {posMod} = require('js/core/utils/math');
+const {setTimeoutAsync} = require('js/core/utils/time');
+const updateHue = require('js/core/outputs/updateHue');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
-var {incrementGoldUp, incrementBlueUp, incrementGoldDown, incrementBlueDown} = require('js/twenty_sixteen/state/IndexMappingFunctions');
+const {incrementGoldUp, incrementBlueUp, incrementGoldDown, incrementBlueDown} = require('js/twenty_sixteen/state/IndexMappingFunctions');
 
-var SAT_COEFF = 1.5;
-var BRI_COEFF = 0.6;
-var HUE_COEFFS = {satCoeff: SAT_COEFF, briCoeff: BRI_COEFF};
+const SAT_COEFF = 1.5;
+const BRI_COEFF = 0.6;
+const HUE_COEFFS = {satCoeff: SAT_COEFF, briCoeff: BRI_COEFF};
 
 const ARRANGEMENTS = require('js/twenty_sixteen/state/arrangements');
 
@@ -115,36 +115,36 @@ class TwentySixteenParameters extends PieceParameters {
     }
     _incrementIndicesUp(value) {
         if (value) {
-            var reverseBlue = this._reverseBlueIncrement.getValue();
+            const reverseBlue = this._reverseBlueIncrement.getValue();
             _.map(this.goldIndexMappings, mapping => mapping.mapValue(incrementGoldUp));
             _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? incrementBlueDown : incrementBlueUp));
         }
     }
     _incrementIndicesDown(value) {
         if (value) {
-            var reverseBlue = this._reverseBlueIncrement.getValue();
+            const reverseBlue = this._reverseBlueIncrement.getValue();
             _.map(this.goldIndexMappings, mapping => mapping.mapValue(incrementGoldDown));
             _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? incrementBlueUp : incrementBlueDown));
         }
     }
     _shiftIndicesUp(value) {
         if (value) {
-            var arrangement = ARRANGEMENTS[this.arrangementIndex.getValue()];
-            var reverseBlue = this._reverseBlueIncrement.getValue();
+            const arrangement = ARRANGEMENTS[this.arrangementIndex.getValue()];
+            const reverseBlue = this._reverseBlueIncrement.getValue();
             _.map(this.goldIndexMappings, mapping => mapping.mapValue(arrangement.shiftGoldUp));
             _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? arrangement.shiftBlueDown : arrangement.shiftBlueUp));
         }
     }
     _shiftIndicesDown(value) {
         if (value) {
-            var arrangement = ARRANGEMENTS[this.arrangementIndex.getValue()];
-            var reverseBlue = this._reverseBlueIncrement.getValue();
+            const arrangement = ARRANGEMENTS[this.arrangementIndex.getValue()];
+            const reverseBlue = this._reverseBlueIncrement.getValue();
             _.map(this.goldIndexMappings, mapping => mapping.mapValue(arrangement.shiftGoldDown));
             _.map(this.blueIndexMappings, mapping => mapping.mapValue(reverseBlue ? arrangement.shiftBlueUp : arrangement.shiftBlueDown));
         }
     }
     async _updateLightForAutopilot(eventCode) {
-        var period = this._beatmathParameters.tempo.getPeriod();
+        const period = this._beatmathParameters.tempo.getPeriod();
 
         this._mixboard.toggleLight(eventCode, true);
         await setTimeoutAsync(period / 2);
@@ -164,11 +164,11 @@ class TwentySixteenParameters extends PieceParameters {
         return this._isAutopiloting.getValue();
     }
     _onTickForAutopilot() {
-        var ticks = this._beatmathParameters.tempo.getNumTicks();
+        const ticks = this._beatmathParameters.tempo.getNumTicks();
 
-        var arrangementFreq = this._autopilotArrangementFrequencyLog2.getValue();
-        var incrementFreq = this._autopilotIncrementFrequencyLog2.getValue();
-        var shiftFreq = this._autopilotShiftFrequencyLog2.getValue();
+        const arrangementFreq = this._autopilotArrangementFrequencyLog2.getValue();
+        const incrementFreq = this._autopilotIncrementFrequencyLog2.getValue();
+        const shiftFreq = this._autopilotShiftFrequencyLog2.getValue();
 
         if (arrangementFreq !== AUTOPILOT_FREQ_MAX && ticks % Math.pow(2, arrangementFreq) === 0) {
             if (this._isOnAutopilot()) {
@@ -194,8 +194,8 @@ class TwentySixteenParameters extends PieceParameters {
         }
 
         if (ENABLE_HUE) {
-            var goldColor = tinycolor(this.goldColor.getValue().toHexString()); // clone
-            var blueColor = tinycolor(goldColor.toHexString()).spin(180); // clone
+            const goldColor = tinycolor(this.goldColor.getValue().toHexString()); // clone
+            const blueColor = tinycolor(goldColor.toHexString()).spin(180); // clone
 
             if (ticks % 2) {
                 updateHue(posMod(ticks, 3), goldColor, HUE_COEFFS);

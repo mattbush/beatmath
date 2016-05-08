@@ -1,30 +1,30 @@
-var _ = require('underscore');
-var React = require('react');
-var BeatmathFrame = require('js/core/components/BeatmathFrame');
-var ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
-var PineconeParameters = require('js/pinecone/parameters/PineconeParameters');
+const _ = require('underscore');
+const React = require('react');
+const BeatmathFrame = require('js/core/components/BeatmathFrame');
+const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
+const PineconeParameters = require('js/pinecone/parameters/PineconeParameters');
 
-var NUM_ROWS = 6;
-var NUM_COLS = 24;
-var TRIANGLE_SCALE = 32;
-var NUM_VERTICAL_REFLECTIONS = 3;
+const NUM_ROWS = 6;
+const NUM_COLS = 24;
+const TRIANGLE_SCALE = 32;
+const NUM_VERTICAL_REFLECTIONS = 3;
 const {manhattanDist, posMod} = require('js/core/utils/math');
 
-var shouldColor = function(x, y, isOuter) {
-    var dist = manhattanDist(x, y);
+const shouldColor = function(x, y, isOuter) {
+    let dist = manhattanDist(x, y);
     if (isOuter) {
         dist = dist + 1;
     }
-    var result = posMod(dist + 1, 4) < 2;
+    const result = posMod(dist + 1, 4) < 2;
     return !result !== !(y % 2); // xor
 };
 
-var PineconeTriangle = React.createClass({
+const PineconeTriangle = React.createClass({
     render: function() {
-        var x = this.props.x;
-        var y = this.props.y;
-        var isOuter = this.props.isOuter;
-        var points, color;
+        const x = this.props.x;
+        const y = this.props.y;
+        const isOuter = this.props.isOuter;
+        let points, color;
 
         if (isOuter) {
             points = '1,1 0,1 1,0';
@@ -39,7 +39,7 @@ var PineconeTriangle = React.createClass({
             color = '#048';
         }
 
-        var style = {
+        const style = {
             transform: `translate(${x}px, ${y}px)`,
             fill: color,
         };
@@ -50,7 +50,7 @@ var PineconeTriangle = React.createClass({
     },
 });
 
-var PineconeGrid = React.createClass({
+const PineconeGrid = React.createClass({
     mixins: [ParameterBindingsMixin],
     childContextTypes: {
         pineconeParameters: React.PropTypes.object,
@@ -65,8 +65,8 @@ var PineconeGrid = React.createClass({
         };
     },
     getInitialState: function() {
-        var mixboard = this.context.mixboard;
-        var pineconeParameters = new PineconeParameters(mixboard, this.context.beatmathParameters);
+        const mixboard = this.context.mixboard;
+        const pineconeParameters = new PineconeParameters(mixboard, this.context.beatmathParameters);
         return {pineconeParameters};
     },
     getParameterBindings: function() {
@@ -75,9 +75,9 @@ var PineconeGrid = React.createClass({
         };
     },
     render: function() {
-        var triangles = [];
-        for (var y = 0; y < NUM_ROWS; y++) {
-            for (var x = 0; x < NUM_COLS; x++) {
+        const triangles = [];
+        for (let y = 0; y < NUM_ROWS; y++) {
+            for (let x = 0; x < NUM_COLS; x++) {
                 triangles.push(
                     <PineconeTriangle key={`${x}~${y}~i`} x={x} y={y} isOuter={false} />
                 );
@@ -87,10 +87,10 @@ var PineconeGrid = React.createClass({
             }
         }
 
-        var reflections = [];
+        const reflections = [];
         _.times(NUM_VERTICAL_REFLECTIONS * 2 - 1, index => {
             index = index - (NUM_VERTICAL_REFLECTIONS - 1);
-            var translate = index !== 0 ? ` translate(0px, ${NUM_ROWS * index * 2}px)` : '';
+            const translate = index !== 0 ? ` translate(0px, ${NUM_ROWS * index * 2}px)` : '';
             reflections.push(
                 {transform: `scale(${TRIANGLE_SCALE})${translate}`},
                 {transform: `scale(${TRIANGLE_SCALE})${translate} scaleX(-1)`},

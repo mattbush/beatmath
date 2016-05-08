@@ -1,7 +1,7 @@
-var _ = require('underscore');
-var {lerp, posMod, constrainToRange, modAndShiftToHalf, nextFloat} = require('js/core/utils/math');
-var {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
-var {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
+const _ = require('underscore');
+const {lerp, posMod, constrainToRange, modAndShiftToHalf, nextFloat} = require('js/core/utils/math');
+const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
+const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 
 class Parameter {
     constructor({start, monitorName}) {
@@ -27,14 +27,14 @@ class Parameter {
         this._listeners.filter(listener => listener !== fn);
     }
     addStatusLight(mixboard, eventCode, predicateFn = _.identity) {
-        var updateLight = () => {
+        const updateLight = () => {
             mixboard.toggleLight(eventCode, predicateFn(this.getValue()));
         };
         updateLight();
         this._listeners.push(updateLight);
     }
     _updateMonitor() {
-        var value = this.getValue();
+        let value = this.getValue();
         value = _.isNumber(value) ? Math.round(value * 1000) / 1000 : value;
         if (this._isUpdatingEnabled) {
             value = value + ' (Auto)';
@@ -55,7 +55,7 @@ class NegatedParameter extends Parameter {
     }
 }
 
-var wrapParam = function(value) {
+const wrapParam = function(value) {
     if (!(value instanceof Parameter)) {
         value = new Parameter({start: value});
     }
@@ -112,7 +112,7 @@ class CycleParameter extends Parameter {
 
 class LinearParameter extends Parameter {
     constructor(params) {
-        var [min, max] = params.range;
+        let [min, max] = params.range;
         min = wrapParam(min);
         max = wrapParam(max);
         if (params.startLerp !== undefined) {
@@ -169,18 +169,18 @@ class LinearParameter extends Parameter {
     }
     onIncrementButtonPress(inputValue) {
         if (inputValue) {
-            var newValue = this._value + this._incrementAmount;
+            const newValue = this._value + this._incrementAmount;
             this._constrainToRangeAndUpdateValue(newValue);
         }
     }
     onDecrementButtonPress(inputValue) {
         if (inputValue) {
-            var newValue = this._value - this._incrementAmount;
+            const newValue = this._value - this._incrementAmount;
             this._constrainToRangeAndUpdateValue(newValue);
         }
     }
     onWheelUpdate(inputValue) {
-        var newValue = this._value + (inputValue * this._incrementAmount);
+        const newValue = this._value + (inputValue * this._incrementAmount);
         this._constrainToRangeAndUpdateValue(newValue);
     }
     _constrainToRangeAndUpdateValue(newValue) {
@@ -191,7 +191,7 @@ class LinearParameter extends Parameter {
         }
     }
     onFaderOrKnobUpdate(inputValue) {
-        var newValue = lerp(this._minParam.getValue(), this._maxParam.getValue(), inputValue);
+        const newValue = lerp(this._minParam.getValue(), this._maxParam.getValue(), inputValue);
         // don't update from the fader or knob until you've "met" the current value
         if (!this._lePassedByInput || !this._gePassedByInput) {
             if (newValue >= this._value) {
@@ -241,7 +241,7 @@ class AngleParameter extends Parameter {
     }
     onSnapButton(inputValue) {
         if (inputValue) {
-            var distanceFromClosestMultipleOf15 = modAndShiftToHalf(this._value, 15);
+            const distanceFromClosestMultipleOf15 = modAndShiftToHalf(this._value, 15);
             this._spinValue(-distanceFromClosestMultipleOf15);
         }
     }
@@ -319,11 +319,11 @@ class MovingLinearParameter extends LinearParameter {
         }
         this._speed += (Math.random() * this._variance * 2) - this._variance;
 
-        var nextOriginal = this._value + this._speed;
-        var min = this._autoupdateRange ? this._autoupdateRange[0] : this._minParam.getValue();
-        var max = this._autoupdateRange ? this._autoupdateRange[1] : this._maxParam.getValue();
+        const nextOriginal = this._value + this._speed;
+        const min = this._autoupdateRange ? this._autoupdateRange[0] : this._minParam.getValue();
+        const max = this._autoupdateRange ? this._autoupdateRange[1] : this._maxParam.getValue();
 
-        var nextConstrained = constrainToRange(min, max, nextOriginal);
+        const nextConstrained = constrainToRange(min, max, nextOriginal);
 
         // if speed is positive and we're past max, or vice versa
         if ((nextConstrained < nextOriginal && this._speed > 0) ||

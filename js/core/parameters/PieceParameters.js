@@ -1,9 +1,9 @@
-var _ = require('underscore');
+const _ = require('underscore');
 
 const SPECIAL_KEYS = [
     'autoupdateEveryNBeats', 'autoupdateOnCue',
 ];
-var MIXBOARD_LISTENER_KEYS = (value, key) => key.startsWith('listenTo');
+const MIXBOARD_LISTENER_KEYS = (value, key) => key.startsWith('listenTo');
 
 class PieceParameters {
     constructor(mixboard, beatmathParameters) {
@@ -13,21 +13,21 @@ class PieceParameters {
         this._initParameters();
     }
     _initParameters() {
-        var parameters = this._declareParameters();
+        const parameters = this._declareParameters();
         _.each(parameters, (properties, paramName) => {
-            var {type, ...restOfProperties} = properties;
+            let {type, ...restOfProperties} = properties;
 
             if (this._mixboard.isMixboardConnected() && _.has(restOfProperties, 'mixboardStart')) {
                 restOfProperties.start = restOfProperties.mixboardStart;
                 delete restOfProperties.mixboardStart;
             }
 
-            var specialProperties = _.pick(restOfProperties, SPECIAL_KEYS);
+            const specialProperties = _.pick(restOfProperties, SPECIAL_KEYS);
             restOfProperties = _.omit(restOfProperties, SPECIAL_KEYS);
-            var listenerProperties = _.pick(restOfProperties, MIXBOARD_LISTENER_KEYS);
-            var constructorProperties = _.omit(restOfProperties, MIXBOARD_LISTENER_KEYS);
+            const listenerProperties = _.pick(restOfProperties, MIXBOARD_LISTENER_KEYS);
+            const constructorProperties = _.omit(restOfProperties, MIXBOARD_LISTENER_KEYS);
 
-            var parameter = new type(constructorProperties);
+            const parameter = new type(constructorProperties);
 
             _.each(specialProperties, (value, specialMethodName) => {
                 this[specialMethodName](parameter, value);
@@ -47,7 +47,7 @@ class PieceParameters {
     autoupdateEveryNBeats(parameter, n) {
         const tempo = this._beatmathParameters.tempo;
         tempo.addListener(() => {
-            var tick = tempo.getNumTicks();
+            const tick = tempo.getNumTicks();
             if (tick % (n * tempo._bpmMod) === 0) {
                 parameter.update();
             }

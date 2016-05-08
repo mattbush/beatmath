@@ -1,5 +1,5 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
+const React = require('react');
+const ReactDOM = require('react-dom');
 
 // const CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZETAOINSHRDLUETAOINCMFGYPETAOINSHRDLUETAOIN😁😂😆😉😍😎😋😘😏😴💁👍🙌💀🤖🐵🐷🐥🌲🌺☀️⛅🌟🌙🔥🌎";
 const CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZETAOINSHRDLUETAOINCMFGYPETAOINSHRDLUETAOIN";
@@ -7,15 +7,15 @@ const CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZETAOINSHRDLUETAOINCMFGYPETAOINSHRD
 
 const NUM_CHARS = 80;
 
-var HEIGHT = 800;
-var WIDTH = 1280;
+const HEIGHT = 800;
+const WIDTH = 1280;
 
-var REFRESH_RATE_MS = 1000;
+const REFRESH_RATE_MS = 1000;
 
-var COLORS = ['#ff6666', '#ffff22', '#66ff22', '#33ddff', '#4477ff', '#dd44ff', '#dddddd'];
+const COLORS = ['#ff6666', '#ffff22', '#66ff22', '#33ddff', '#4477ff', '#dd44ff', '#dddddd'];
 
 function randRange(min, max) {
-    var diff = max - min;
+    const diff = max - min;
     return Math.random() * diff + min;
 }
 
@@ -62,8 +62,8 @@ let Character = React.createClass({
             return;
         }
         setTimeout(this._update, REFRESH_RATE_MS);
-        var dx = this.state.dx + randRange(-7, 7);
-        var dy = this.state.dy + randRange(-10, 0);
+        const dx = this.state.dx + randRange(-7, 7);
+        const dy = this.state.dy + randRange(-10, 0);
         this.setState({
             x: this.state.x + dx,
             y: this.state.y + dy,
@@ -74,7 +74,7 @@ let Character = React.createClass({
         });
     },
     render: function() {
-        var style = {
+        const style = {
             top: this.state.y,
             left: this.state.x,
             fontSize: this.state.fontSize,
@@ -88,10 +88,10 @@ let Character = React.createClass({
     },
 });
 
-var CharacterSet = React.createClass({
+const CharacterSet = React.createClass({
     render: function() {
-        var children = [];
-        for (var i = 0; i < NUM_CHARS; i++) {
+        const children = [];
+        for (let i = 0; i < NUM_CHARS; i++) {
             children.push(
                 <Character index={i} key={i} />
             );

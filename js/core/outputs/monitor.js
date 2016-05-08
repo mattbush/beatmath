@@ -1,9 +1,9 @@
-var _ = require('underscore');
+const _ = require('underscore');
 require('regenerator/runtime');
-var React = require('react');
-var ReactDOM = require('react-dom');
+const React = require('react');
+const ReactDOM = require('react-dom');
 
-var Monitor = React.createClass({
+const Monitor = React.createClass({
     getInitialState: function() {
         return {};
     },
@@ -16,7 +16,7 @@ var Monitor = React.createClass({
         });
     },
     render: function() {
-        var sortedKeys = _.keys(this.state).sort();
+        const sortedKeys = _.keys(this.state).sort();
 
         return (
             <div>

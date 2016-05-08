@@ -1,7 +1,7 @@
-var tinycolor = require('tinycolor2');
-var updateHue = require('js/core/outputs/updateHue');
-var {MovingColorParameter, MovingLinearParameter, NegatedParameter} = require('js/core/parameters/Parameter');
-var {runAtTimestamp, setTimeoutAsync} = require('js/core/utils/time');
+const tinycolor = require('tinycolor2');
+const updateHue = require('js/core/outputs/updateHue');
+const {MovingColorParameter, MovingLinearParameter, NegatedParameter} = require('js/core/parameters/Parameter');
+const {runAtTimestamp, setTimeoutAsync} = require('js/core/utils/time');
 
 const {CELL_SIZE, ENABLE_HUE, MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
 
@@ -27,8 +27,8 @@ class Influence {
     }
     async _updatePerEachBeat() {
         runAtTimestamp(this._updatePerEachBeat, this._beatmathParameters.tempo.getNextTick());
-        var refreshRate = this.getRefreshRate();
-        for (var i = 0; i < 5; i++) {
+        const refreshRate = this.getRefreshRate();
+        for (let i = 0; i < 5; i++) {
             await setTimeoutAsync(refreshRate);
             this.update();
         }
@@ -54,7 +54,7 @@ class Influence {
         let distance = Math.sqrt(dx * dx + dy * dy);
 //            let mixAmount = 500 / (distance * 5 + 5);
         let mixAmount = ((120 - (distance / distanceCoefficient * 8)) * mixCoefficient) / 100;
-        var pixelStateKey = this._getPixelStateKey();
+        const pixelStateKey = this._getPixelStateKey();
         if (mixAmount > 0) {
             mixAmount = Math.min(mixAmount, 1);
             pixelState[pixelStateKey] = this._mixByParameterType(pixelState[pixelStateKey], mixAmount);

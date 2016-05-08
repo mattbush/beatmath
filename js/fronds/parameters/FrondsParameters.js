@@ -27,7 +27,7 @@ class FrondsParameters extends PieceParameters {
         this.numFronds.addListener(this.onNumFrondsChanged.bind(this));
     }
     onNumFrondsChanged() {
-        var newNumFronds = this.numFronds.getValue();
+        const newNumFronds = this.numFronds.getValue();
         while (this.frondStates.length < newNumFronds) {
             this.frondStates.push(new FrondState(this._mixboard, this._beatmathParameters, this));
         }

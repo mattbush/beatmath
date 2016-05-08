@@ -1,5 +1,5 @@
-var {ToggleParameter, LinearParameter} = require('js/core/parameters/Parameter');
-var {MixtrackButtons, MixtrackFaders, MixtrackKnobs, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
+const {ToggleParameter, LinearParameter} = require('js/core/parameters/Parameter');
+const {MixtrackButtons, MixtrackFaders, MixtrackKnobs, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
 class LatticeParameters extends PieceParameters {

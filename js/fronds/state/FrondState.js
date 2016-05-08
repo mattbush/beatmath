@@ -129,7 +129,7 @@ class FrondState extends PieceParameters {
         return Math.pow(2, this.autorotatePeriodLog2.getValue()) * this._beatmathParameters.tempo.getPeriod();
     }
     _onTickForAutopilot() {
-        var ticks = this._beatmathParameters.tempo.getNumTicks();
+        const ticks = this._beatmathParameters.tempo.getNumTicks();
 
         const autoscaleFreq = Math.pow(2, this.autoscalePeriodLog2.getValue());
         const autorotateFreq = Math.pow(2, this.autorotatePeriodLog2.getValue());

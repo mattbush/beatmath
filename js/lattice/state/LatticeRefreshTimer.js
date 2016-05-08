@@ -1,6 +1,6 @@
-var _ = require('underscore');
-var {LinearParameter, CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
-var {MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
+const _ = require('underscore');
+const {LinearParameter, CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
 const {lerp, dist, manhattanDist, polarAngleDeg, posMod, modAndShiftToHalf, posModAndBendToLowerHalf} = require('js/core/utils/math');
@@ -79,51 +79,51 @@ class LatticeRefreshTimer extends PieceParameters {
         this._refreshOffsetCache = {};
     }
     getRefreshOffset(row, col) {
-        var key = `${row}|${col}`;
+        const key = `${row}|${col}`;
         if (!_.has(this._refreshOffsetCache, key)) {
             this._refreshOffsetCache[key] = this._calculateRefreshOffset(row, col);
         }
-        var offset = this._refreshOffsetCache[key];
+        const offset = this._refreshOffsetCache[key];
         return offset * this._beatmathParameters.tempo.getPeriod();
     }
     _calculateRefreshOffset(row, col) {
-        var total = 0;
+        let total = 0;
 
-        var rippleRadius = this._rippleRadius.getValue();
+        const rippleRadius = this._rippleRadius.getValue();
 
-        var globalPolarAngles = this._globalPolarAngles.getValue();
+        const globalPolarAngles = this._globalPolarAngles.getValue();
         if (globalPolarAngles !== 0) {
-            var globalPolarAngle = polarAngleDeg(col, row);
+            const globalPolarAngle = polarAngleDeg(col, row);
             total += globalPolarAngle * globalPolarAngles / 360;
         }
 
-        var subdivisionSize = this._subdivisionSize.getValue();
+        const subdivisionSize = this._subdivisionSize.getValue();
         if (subdivisionSize !== false) {
-            var subdivisionRadius = rippleRadius * subdivisionSize;
+            const subdivisionRadius = rippleRadius * subdivisionSize;
             row = modAndShiftToHalf(row, subdivisionRadius);
             col = modAndShiftToHalf(col, subdivisionRadius);
         }
 
         if (this._useDistance.getValue()) {
-            var distance = manhattanDist(col, row);
-            var manhattanCoefficient = this._manhattanCoefficient.getValue();
-            var logCoefficient = this._logCoefficient.getValue();
+            let distance = manhattanDist(col, row);
+            const manhattanCoefficient = this._manhattanCoefficient.getValue();
+            const logCoefficient = this._logCoefficient.getValue();
 
             if (manhattanCoefficient !== 1) {
-                var euclideanDistance = dist(col, row);
+                const euclideanDistance = dist(col, row);
                 distance = lerp(euclideanDistance, distance, manhattanCoefficient);
             }
             if (logCoefficient !== 0) {
-                var logDistance = Math.log(distance / rippleRadius) * rippleRadius;
+                const logDistance = Math.log(distance / rippleRadius) * rippleRadius;
                 distance = lerp(distance, logDistance, logCoefficient);
             }
             total += distance / rippleRadius;
         }
 
-        var localPolarAngles = this._localPolarAngles.getValue();
+        const localPolarAngles = this._localPolarAngles.getValue();
         if (localPolarAngles !== 0) {
-            var sectorSize = 360 / localPolarAngles;
-            var localPolarAngle = polarAngleDeg(col, row);
+            const sectorSize = 360 / localPolarAngles;
+            let localPolarAngle = polarAngleDeg(col, row);
             if (this._bendLocalPolarAngles.getValue()) {
                 localPolarAngle = posModAndBendToLowerHalf(localPolarAngle, sectorSize * 2);
             }

@@ -1,7 +1,7 @@
-var {MovingLinearParameter, LinearParameter, IntLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
-var {MixtrackFaders, MixtrackKnobs, MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
-var tinycolor = require('tinycolor2');
-var {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
+const {MovingLinearParameter, LinearParameter, IntLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {MixtrackFaders, MixtrackKnobs, MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
+const tinycolor = require('tinycolor2');
+const {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
 class TreesParameters extends PieceParameters {
@@ -130,9 +130,9 @@ class TreesParameters extends PieceParameters {
         return this.levelSpacing.getValue() * this.levelHeightPercent.getValue();
     }
     _getLevelIllumination(treeIndex, levelNumber) {
-        var periodTicks = Math.pow(2, this.periodTicksLog2.getValue());
-        var tempoNumTicks = this._beatmathParameters.tempo.getNumTicks();
-        var staggerAmount = Math.round(this.staggerAmount.getValue());
+        const periodTicks = Math.pow(2, this.periodTicksLog2.getValue());
+        const tempoNumTicks = this._beatmathParameters.tempo.getNumTicks();
+        const staggerAmount = Math.round(this.staggerAmount.getValue());
         if (staggerAmount !== 0) {
             if (this.mirrorStagger.getValue()) {
                 treeIndex = posModAndBendToLowerHalf(treeIndex, this.numTrees.getValue() - 1);
@@ -145,23 +145,23 @@ class TreesParameters extends PieceParameters {
         return this.getLevelHeight() * this.borderRadiusPercent.getValue() / 2;
     }
     getColorForIndexAndLevel(treeIndex, levelNumber) {
-        var color = tinycolor(this.levelColor.getValue().toHexString()); // clone
-        var colorShiftPerTree = this.treeColorShift.getValue();
-        var colorShiftPerLevel = this.levelColorShift.getValue();
-        var colorShift = colorShiftPerTree * treeIndex + colorShiftPerLevel * levelNumber;
+        const color = tinycolor(this.levelColor.getValue().toHexString()); // clone
+        const colorShiftPerTree = this.treeColorShift.getValue();
+        const colorShiftPerLevel = this.levelColorShift.getValue();
+        const colorShift = colorShiftPerTree * treeIndex + colorShiftPerLevel * levelNumber;
         if (colorShift !== 0) {
             color.spin(colorShift);
         }
-        var levelIllumination = this._getLevelIllumination(treeIndex, levelNumber);
+        const levelIllumination = this._getLevelIllumination(treeIndex, levelNumber);
         if (levelIllumination === 0) {
             return color;
         }
-        var trailPercent = this.trailPercent.getValue();
-        var defaultDarkenAmount = 50;
-        var fullDarkenAmount = 65;
-        var darkenAmount;
+        const trailPercent = this.trailPercent.getValue();
+        const defaultDarkenAmount = 50;
+        const fullDarkenAmount = 65;
+        let darkenAmount;
         if (trailPercent !== 0) {
-            var trailedDarkenAmount = levelIllumination * fullDarkenAmount;
+            const trailedDarkenAmount = levelIllumination * fullDarkenAmount;
             darkenAmount = lerp(defaultDarkenAmount, trailedDarkenAmount, trailPercent);
         } else {
             darkenAmount = defaultDarkenAmount;

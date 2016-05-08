@@ -1,16 +1,16 @@
-var React = require('react');
-var LinkedStateMixin = require('react-addons-linked-state-mixin');
-var AnagramsParameters = require('js/anagrams/parameters/AnagramsParameters');
-var AnagramSet = require('js/anagrams/state/AnagramSet');
-var AnagramSetComponent = require('js/anagrams/components/AnagramSet');
-var DancingText = require('js/anagrams/components/DancingText');
-var BeatmathFrame = require('js/core/components/BeatmathFrame');
+const React = require('react');
+const LinkedStateMixin = require('react-addons-linked-state-mixin');
+const AnagramsParameters = require('js/anagrams/parameters/AnagramsParameters');
+const AnagramSet = require('js/anagrams/state/AnagramSet');
+const AnagramSetComponent = require('js/anagrams/components/AnagramSet');
+const DancingText = require('js/anagrams/components/DancingText');
+const BeatmathFrame = require('js/core/components/BeatmathFrame');
 
-var timeout = duration => new Promise(cb => setTimeout(cb, duration));
+const timeout = duration => new Promise(cb => setTimeout(cb, duration));
 
 const {ANAGRAM_SET_CYCLE_TIME, LETTER_TRANSITION_TIME} = require('js/anagrams/parameters/AnagramsConstants');
 
-var AnagramSetCycler = React.createClass({
+const AnagramSetCycler = React.createClass({
     getInitialState: function() {
         return {
             prevAnagramSetIndex: -1,
@@ -25,7 +25,7 @@ var AnagramSetCycler = React.createClass({
         clearInterval(this._intervalId);
     },
     _cycleAnagramSetIndex: async function() {
-        var newAnagramSetIndex = (this.state.anagramSetIndex + 1) % this.props.anagramSets.length;
+        const newAnagramSetIndex = (this.state.anagramSetIndex + 1) % this.props.anagramSets.length;
         this.setState({
             nextAnagramSetIndex: newAnagramSetIndex,
         });
@@ -41,9 +41,9 @@ var AnagramSetCycler = React.createClass({
         });
     },
     render: function() {
-        var prev = this.props.anagramSets[this.state.prevAnagramSetIndex];
-        var cur = this.props.anagramSets[this.state.anagramSetIndex];
-        var next = this.props.anagramSets[this.state.nextAnagramSetIndex];
+        const prev = this.props.anagramSets[this.state.prevAnagramSetIndex];
+        const cur = this.props.anagramSets[this.state.anagramSetIndex];
+        const next = this.props.anagramSets[this.state.nextAnagramSetIndex];
 
         return (
             <g>
@@ -59,7 +59,7 @@ var AnagramSetCycler = React.createClass({
     },
 });
 
-var AnagramDisplay = React.createClass({
+const AnagramDisplay = React.createClass({
     mixins: [LinkedStateMixin],
     childContextTypes: {
         anagramsParameters: React.PropTypes.object,
@@ -117,7 +117,7 @@ var AnagramDisplay = React.createClass({
                         error: false,
                     });
                 } else {
-                    var anagramSet = new AnagramSet(this.state.textEntries);
+                    const anagramSet = new AnagramSet(this.state.textEntries);
                     if (anagramSet.isValid()) {
                         this.state.anagramSets.unshift(anagramSet);
                         this.setState({inputState: null});
@@ -138,7 +138,7 @@ var AnagramDisplay = React.createClass({
         if (this.state.inputState === null) {
             return <AnagramSetCycler key={this.state.anagramSets.length} anagramSets={this.state.anagramSets} />;
         } else {
-            var headerText = ['Enter your name', 'Enter your anagram'][this.state.inputState] || 'Enter another anagram';
+            let headerText = ['Enter your name', 'Enter your anagram'][this.state.inputState] || 'Enter another anagram';
             if (this.state.error) {
                 headerText = 'Invalid. Re-' + headerText;
             }

@@ -1,8 +1,8 @@
 require('regenerator/runtime');
-var React = require('react');
-var ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
+const React = require('react');
+const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 
-var BeatmathFrame = React.createClass({
+const BeatmathFrame = React.createClass({
     mixins: [ParameterBindingsMixin],
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
@@ -16,11 +16,11 @@ var BeatmathFrame = React.createClass({
         };
     },
     render: function() {
-        var width = this.getParameterValue('width');
-        var height = this.getParameterValue('height');
-        var frameRotation = Math.floor(this.getParameterValue('frameRotation'));
-        var frameScale = Math.pow(2, this.getParameterValue('frameScaleLog2'));
-        var style = {
+        const width = this.getParameterValue('width');
+        const height = this.getParameterValue('height');
+        const frameRotation = Math.floor(this.getParameterValue('frameRotation'));
+        const frameScale = Math.pow(2, this.getParameterValue('frameScaleLog2'));
+        const style = {
             transform: `translate(${width / 2}px, ${height / 2}px) rotate(${frameRotation}deg) scale(${frameScale})`,
             transition: `transform ${0.05}s ease-out`,
         };

@@ -1,5 +1,5 @@
-var {MovingAngleParameter, LinearParameter} = require('js/core/parameters/Parameter');
-var {MixtrackWheels, MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
+const {MovingAngleParameter, LinearParameter} = require('js/core/parameters/Parameter');
+const {MixtrackWheels, MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 // const {NUM_COLS, NUM_ROWS, MAX_SIZE} = require('js/bricks/parameters/BricksConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 

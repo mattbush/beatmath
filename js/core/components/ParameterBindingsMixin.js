@@ -1,8 +1,8 @@
-var _ = require('underscore');
+const _ = require('underscore');
 
-var THROTTLE_MS = 100;
+const THROTTLE_MS = 100;
 
-var ParameterBindingsMixin = {
+const ParameterBindingsMixin = {
     // callers implement this, returns a mapping of string to parameter object
     // getParameterBindings: function() {},
     _getParameterBindings: function() {

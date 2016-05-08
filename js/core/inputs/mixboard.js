@@ -1,6 +1,6 @@
-var _ = require('underscore');
-var {MixtrackWheels, MixtrackFaders, MixtrackWheelCoefficients} = require('js/core/inputs/MixtrackConstants');
-var {LaunchpadFaderInputCodes, LaunchpadKnobInputCodes} = require('js/core/inputs/LaunchpadConstants');
+const _ = require('underscore');
+const {MixtrackWheels, MixtrackFaders, MixtrackWheelCoefficients} = require('js/core/inputs/MixtrackConstants');
+const {LaunchpadFaderInputCodes, LaunchpadKnobInputCodes} = require('js/core/inputs/LaunchpadConstants');
 
 class Mixboard {
     constructor() {
@@ -41,7 +41,7 @@ class Mixboard {
         return this.isMixboardConnected() && this._midiInput.name === 'Launch Control XL';
     }
     async _setupMidiIvarsAsync() {
-        var midiAccess = await navigator.requestMIDIAccess();
+        const midiAccess = await navigator.requestMIDIAccess();
         if (!midiAccess) {
             return;
         }
@@ -56,7 +56,7 @@ class Mixboard {
     }
     _onMixtrackMidiMessage(e) {
         // console.log(e.data); // uncomment to discover new event codes
-        var [eventType, eventCode, rawValue] = e.data;
+        const [eventType, eventCode, rawValue] = e.data;
         if (eventType === 144) {
             this._onMixtrackButtonMessage(eventCode, rawValue);
         } else if (eventType === 176) {
@@ -68,18 +68,18 @@ class Mixboard {
         }
     }
     _onMixtrackButtonMessage(eventCode, rawValue) {
-        var value = (rawValue > 0);
+        const value = (rawValue > 0);
         this._notifyListeners(this._onMixtrackButtonListeners, eventCode, value);
     }
     _onMixtrackFaderAndKnobMessage(eventCode, rawValue) {
-        var value = rawValue / 127;
+        let value = rawValue / 127;
         if (eventCode === MixtrackFaders.CROSSFADER) { // this one feels backwards
             value = 1 - value;
         }
         this._notifyListeners(this._onMixtrackFaderAndKnobListeners, eventCode, value);
     }
     _onMixtrackWheelMessage(eventCode, rawValue) {
-        var value = (rawValue >= 64) ? rawValue - 128 : rawValue;
+        let value = (rawValue >= 64) ? rawValue - 128 : rawValue;
         if (eventCode === MixtrackWheels.BROWSE ||
             eventCode === MixtrackWheels.L_SELECT ||
             eventCode === MixtrackWheels.R_SELECT) { // these ones are definitely backwards
@@ -90,7 +90,7 @@ class Mixboard {
     }
     _onLaunchpadMidiMessage(e) {
         // console.log(e.data); // uncomment to discover new event codes
-        var [eventType, eventCode, rawValue] = e.data;
+        const [eventType, eventCode, rawValue] = e.data;
         if (eventType === 152 || eventType === 136) {
             this._onLaunchpadButtonMessage(eventCode, eventType === 152 ? 1 : 0);
         } else if (eventType === 176) {
@@ -102,12 +102,12 @@ class Mixboard {
         }
     }
     _onLaunchpadButtonMessage(eventCode, rawValue) {
-        var value = (rawValue > 0);
+        const value = (rawValue > 0);
         this._notifyListeners(this._onLaunchpadButtonListeners, eventCode, value);
     }
     _onLaunchpadFaderAndKnobMessage(eventCode, rawValue) {
         // make 64 map to exactly 0.5
-        var value = rawValue ? (rawValue - 1 / 126) : 0;
+        const value = rawValue ? (rawValue - 1 / 126) : 0;
         this._notifyListeners(this._onLaunchpadFaderAndKnobListeners, eventCode, value);
     }
     _notifyListeners(listenerObj, eventCode, value) {
@@ -139,15 +139,15 @@ class Mixboard {
     toggleLight(eventCode, isLightOn) {
         if (this.isLaunchpad()) {
             // note that this doesn't work for side buttons
-            var value = isLightOn ? 0x33 : 0;
+            const value = isLightOn ? 0x33 : 0;
             this._midiOutput.send([152, eventCode, value]);
         } else {
-            var eventType = isLightOn ? 0x90 : 0x80;
+            const eventType = isLightOn ? 0x90 : 0x80;
             this._midiOutput.send([eventType, eventCode, 1]);
         }
     }
     toggleLaunchpadDirectionalLight(eventCode, isLightOn) {
-        var value = isLightOn ? 0x33 : 0;
+        const value = isLightOn ? 0x33 : 0;
         this._midiOutput.send([152, eventCode - 100, value]);
     }
     _addListener(listenerObj, eventCode, fn) {
@@ -159,7 +159,7 @@ class Mixboard {
 }
 
 Mixboard.getInstanceAsync = async function() {
-    var mixboard = new Mixboard();
+    const mixboard = new Mixboard();
     await mixboard.initAsync();
     return mixboard;
 };

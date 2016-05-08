@@ -1,8 +1,8 @@
-var _ = require('underscore');
-var {posMod} = require('js/core/utils/math');
-var {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
-var {runAtTimestamp} = require('js/core/utils/time');
-var {
+const _ = require('underscore');
+const {posMod} = require('js/core/utils/math');
+const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
+const {runAtTimestamp} = require('js/core/utils/time');
+const {
     R_SYNC: BUTTON_1,
     R_CUE: BUTTON_2,
     R_PLAY_PAUSE: BUTTON_3,
@@ -10,7 +10,7 @@ var {
     R_SCRATCH: MOD_BUTTON,
 } = MixtrackButtons;
 
-var MS_PER_MINUTE = 60000;
+const MS_PER_MINUTE = 60000;
 
 const LIGHT_EVENTS = [BUTTON_1, BUTTON_2, BUTTON_3, BUTTON_4];
 const NUM_LIGHTS = LIGHT_EVENTS.length;
@@ -67,7 +67,7 @@ class BeatmathTempo {
         }
         this._numTicks++;
         if (this._resetMeasure) {
-            var numTicksMod16 = posMod(this._numTicks, 16);
+            const numTicksMod16 = posMod(this._numTicks, 16);
             if (numTicksMod16 > 0) {
                 this._numTicks += (16 - numTicksMod16);
             }
@@ -87,8 +87,8 @@ class BeatmathTempo {
         return this._numTicks;
     }
     _updateLights() {
-        var lightToTurnOff = posMod(this._numTicks - 1, NUM_LIGHTS);
-        var lightToTurnOn = posMod(this._numTicks, NUM_LIGHTS);
+        const lightToTurnOff = posMod(this._numTicks - 1, NUM_LIGHTS);
+        const lightToTurnOn = posMod(this._numTicks, NUM_LIGHTS);
         this._mixboard.toggleLight(LIGHT_EVENTS[lightToTurnOff], false);
         this._mixboard.toggleLight(LIGHT_EVENTS[lightToTurnOn], true);
     }
@@ -106,12 +106,12 @@ class BeatmathTempo {
             if (this._isModButtonPressed) {
                 this._pendingBpmMod = this._pendingBpmMod * 2;
             } else {
-                var now = Date.now();
-                var nextTick = this._nextTick;
-                var prevTick = nextTick - this._period;
-                var nextDiff = now - nextTick;
-                var prevDiff = now - prevTick;
-                var diffToUse = (Math.abs(nextDiff) < Math.abs(prevDiff)) ? nextDiff : prevDiff;
+                const now = Date.now();
+                const nextTick = this._nextTick;
+                const prevTick = nextTick - this._period;
+                const nextDiff = now - nextTick;
+                const prevDiff = now - prevTick;
+                const diffToUse = (Math.abs(nextDiff) < Math.abs(prevDiff)) ? nextDiff : prevDiff;
                 this._pendingDiff = diffToUse * 0.75;
             }
         }

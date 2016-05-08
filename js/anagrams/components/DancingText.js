@@ -1,19 +1,19 @@
-var React = require('react');
-var Letter = require('js/anagrams/components/Letter');
+const React = require('react');
+const Letter = require('js/anagrams/components/Letter');
 
 const {WIDTH_PX} = require('js/core/parameters/BeatmathConstants.js');
 const {LETTER_SPACING, WORD_TRANSITION_TIME} = require('js/anagrams/parameters/AnagramsConstants');
 
-var DancingText = React.createClass({
+const DancingText = React.createClass({
     render: function() {
-        var textLength = this.props.text.length;
-        var letterSpacing = Math.min(LETTER_SPACING, (WIDTH_PX - LETTER_SPACING) / textLength);
-        var xOffset = -1 * (textLength - 1) / 2 * letterSpacing;
+        const textLength = this.props.text.length;
+        const letterSpacing = Math.min(LETTER_SPACING, (WIDTH_PX - LETTER_SPACING) / textLength);
+        const xOffset = -1 * (textLength - 1) / 2 * letterSpacing;
 
-        var letterComponents = [];
-        for (var letterIndex = 0; letterIndex < textLength; letterIndex++) {
+        const letterComponents = [];
+        for (let letterIndex = 0; letterIndex < textLength; letterIndex++) {
             let x = letterIndex * letterSpacing;
-            style = {
+            let style = {
                 transform: `translate(${x}px, 0px)`,
             };
             letterComponents.push(
@@ -23,7 +23,7 @@ var DancingText = React.createClass({
             );
         }
 
-        var style = {
+        const style = {
             transform: `translate(${xOffset}px, 0px)`,
             transition: `transform ${WORD_TRANSITION_TIME / 2000}s ease`,
         };

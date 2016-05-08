@@ -1,4 +1,4 @@
-var MixtrackButtons = {
+const MixtrackButtons = {
     L_SYNC: 64,
     L_CUE: 51,
     L_PLAY_PAUSE: 59,
@@ -50,7 +50,7 @@ var MixtrackButtons = {
     R_TURNTABLE: 77,
 };
 
-var MixtrackFaders = {
+const MixtrackFaders = {
     L_GAIN: 8,
     R_GAIN: 9,
     CROSSFADER: 10,
@@ -59,7 +59,7 @@ var MixtrackFaders = {
     MASTER_GAIN: 23,
 };
 
-var MixtrackKnobs = {
+const MixtrackKnobs = {
     CUE_GAIN: 11,
     CUE_MIX: 12,
     L_TREBLE: 16,
@@ -70,7 +70,7 @@ var MixtrackKnobs = {
     R_BASS: 21,
 };
 
-var MixtrackWheels = {
+const MixtrackWheels = {
     R_TURNTABLE: 24,
     L_TURNTABLE: 25,
     BROWSE: 26,
@@ -82,7 +82,7 @@ var MixtrackWheels = {
     R_CONTROL_2: 32,
 };
 
-var MixtrackWheelCoefficients = {
+const MixtrackWheelCoefficients = {
     [MixtrackWheels.R_TURNTABLE]: 0.25,
     [MixtrackWheels.L_TURNTABLE]: 0.25,
     [MixtrackWheels.BROWSE]: 1,

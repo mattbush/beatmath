@@ -33,8 +33,8 @@ class KaleParameters extends PieceParameters {
         this.colorsByCoords = {};
         const numColorRows = ceilOfMultiple(this.numRows.getValue(), 3) + 3;
         const numColorCols = ceilOfMultiple(this.numCols.getValue(), 3) + 3;
-        for (var row = -numColorRows; row <= numColorRows; row += 3) {
-            for (var col = -numColorCols; col <= numColorCols; col += 3) {
+        for (let row = -numColorRows; row <= numColorRows; row += 3) {
+            for (let col = -numColorCols; col <= numColorCols; col += 3) {
                 if ((row + col) % 2 === 0) {
                     this.colorsByCoords[`${col},${row}`] = new MovingColorParameter({
                         start: tinycolor('#5ff'),

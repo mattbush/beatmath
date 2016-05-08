@@ -1,7 +1,7 @@
-var {MovingLinearParameter, LinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
-var BeatmathTempo = require('js/core/parameters/BeatmathTempo');
+const {MovingLinearParameter, LinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
+const BeatmathTempo = require('js/core/parameters/BeatmathTempo');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/core/parameters/BeatmathConstants');
-var {MixtrackFaders, MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
+const {MixtrackFaders, MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 
 class BeatmathParameters {
     constructor(mixboard, params) {
@@ -33,8 +33,8 @@ class BeatmathParameters {
             this.frameScaleLog2.listenForAutoupdateCue(mixboard, MixtrackButtons.L_CUE);
         }
         this.tempo.addListener(() => {
-            var nTicks = 1;
-            var tick = this.tempo.getNumTicks();
+            const nTicks = 1;
+            const tick = this.tempo.getNumTicks();
             if (tick % (nTicks * this.tempo._bpmMod) === 0) {
                 this.frameScaleLog2.update();
             }

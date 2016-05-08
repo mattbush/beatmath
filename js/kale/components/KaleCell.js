@@ -65,11 +65,11 @@ const KaleCell = React.createClass({
         }
     },
     _mixColors: function(...coords) {
-        var colorsByCoords = this.context.kaleParameters.colorsByCoords;
+        const colorsByCoords = this.context.kaleParameters.colorsByCoords;
         if (coords.length === 1) {
             return colorsByCoords[coords[0]].getValue();
         } else {
-            var initialMix = tinycolor.mix(
+            const initialMix = tinycolor.mix(
                 colorsByCoords[coords[0]].getValue(),
                 colorsByCoords[coords[1]].getValue(),
                 50,
