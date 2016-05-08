@@ -340,7 +340,7 @@ class MovingLinearParameter extends LinearParameter {
     listenForAutoupdateCue(mixboard) {
         this._isUpdatingEnabled = false;
         if (mixboard.isLaunchpad()) {
-            mixboard.addLaunchpadButtonListener(LaunchpadButtons.RECORD_ARM, this.onAutoupdateCuePressed.bind(this));
+            mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[7], this.onAutoupdateCuePressed.bind(this));
         } else {
             mixboard.addMixtrackButtonListener(MixtrackButtons.L_CUE, this.onAutoupdateCuePressed.bind(this));
         }

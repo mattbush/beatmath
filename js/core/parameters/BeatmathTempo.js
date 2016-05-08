@@ -1,19 +1,31 @@
 const _ = require('underscore');
 const {posMod} = require('js/core/utils/math');
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
+const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 const {runAtTimestamp} = require('js/core/utils/time');
-const {
-    R_SYNC: BUTTON_1,
-    R_CUE: BUTTON_2,
-    R_PLAY_PAUSE: BUTTON_3,
-    R_STUTTER: BUTTON_4,
-    R_SCRATCH: MOD_BUTTON,
-} = MixtrackButtons;
+
+const MixtrackMapping = {
+    BUTTONS: [
+        MixtrackButtons.R_SYNC,
+        MixtrackButtons.R_CUE,
+        MixtrackButtons.R_PLAY_PAUSE,
+        MixtrackButtons.R_STUTTER,
+    ],
+    MOD: MixtrackButtons.R_SCRATCH,
+};
+const LaunchpadMapping = {
+    BUTTONS: [
+        LaunchpadButtons.RECORD_ARM,
+        LaunchpadButtons.SOLO,
+        LaunchpadButtons.MUTE,
+        LaunchpadButtons.DEVICE,
+    ],
+    MOD: LaunchpadButtons.TRACK_CONTROL[7],
+};
 
 const MS_PER_MINUTE = 60000;
 
-const LIGHT_EVENTS = [BUTTON_1, BUTTON_2, BUTTON_3, BUTTON_4];
-const NUM_LIGHTS = LIGHT_EVENTS.length;
+const NUM_LIGHTS = 4;
 
 class BeatmathTempo {
     constructor(mixboard, params) {
@@ -29,17 +41,22 @@ class BeatmathTempo {
         this._tick = this._tick.bind(this);
         this._pendingDiff = 0;
         this._resetMeasure = false;
+
+        this._buttons = mixboard.isLaunchpad() ? LaunchpadMapping.BUTTONS : MixtrackMapping.BUTTONS;
+        this._modButton = mixboard.isLaunchpad() ? LaunchpadMapping.MOD : MixtrackMapping.MOD;
+
         runAtTimestamp(this._tick, this._nextTick);
-        _.times(NUM_LIGHTS, lightNum => mixboard.toggleLight(LIGHT_EVENTS[lightNum], false));
+        _.times(NUM_LIGHTS, lightNum => mixboard.toggleLight(this._buttons[lightNum], false));
         window.localStorage.setItem('BPM', this._bpm);
         window.localStorage.setItem('BPMMod', this._bpmMod);
 
-        mixboard.addMixtrackButtonListener(BUTTON_1, this._onResetMeasureButtonPress.bind(this));
-        mixboard.addMixtrackButtonListener(BUTTON_2, this._onResetPeriodButtonPress.bind(this));
-        mixboard.addMixtrackButtonListener(BUTTON_4, this._onIncrementButtonPress.bind(this));
-        mixboard.addMixtrackButtonListener(BUTTON_3, this._onDecrementButtonPress.bind(this));
+        const addListenerMethod = mixboard.isLaunchpad() ? 'addLaunchpadButtonListener' : 'addMixtrackButtonListener';
+        mixboard[addListenerMethod](this._buttons[0], this._onResetMeasureButtonPress.bind(this));
+        mixboard[addListenerMethod](this._buttons[1], this._onResetPeriodButtonPress.bind(this));
+        mixboard[addListenerMethod](this._buttons[3], this._onIncrementButtonPress.bind(this));
+        mixboard[addListenerMethod](this._buttons[2], this._onDecrementButtonPress.bind(this));
 
-        mixboard.addMixtrackButtonListener(MOD_BUTTON, this._onModButtonPress.bind(this));
+        mixboard[addListenerMethod](this._modButton, this._onModButtonPress.bind(this));
     }
     _updateListeners() {
         for (let listener of this._listeners) {
@@ -89,8 +106,8 @@ class BeatmathTempo {
     _updateLights() {
         const lightToTurnOff = posMod(this._numTicks - 1, NUM_LIGHTS);
         const lightToTurnOn = posMod(this._numTicks, NUM_LIGHTS);
-        this._mixboard.toggleLight(LIGHT_EVENTS[lightToTurnOff], false);
-        this._mixboard.toggleLight(LIGHT_EVENTS[lightToTurnOn], true);
+        this._mixboard.toggleLight(this._buttons[lightToTurnOff], false);
+        this._mixboard.toggleLight(this._buttons[lightToTurnOn], true);
     }
     _onResetMeasureButtonPress(inputValue) {
         if (inputValue) {
