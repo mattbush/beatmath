@@ -259,6 +259,7 @@ class AngleParameter extends Parameter {
     }
     listenToLaunchpadKnob(mixboard, row, column) {
         mixboard.addLaunchpadKnobListener(row, column, this.onLaunchpadKnobUpdate.bind(this));
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[7], value => this._isSnapButtonPressed = value);
         this._setMonitorCoordsFromLaunchpadKnob(row, column);
         // TODO: add status light
     }
@@ -277,7 +278,11 @@ class AngleParameter extends Parameter {
         }
     }
     _onLaunchpadKnobSpinInterval() {
-        this._spinValue(this._launchpadKnobValue);
+        if (this._isSnapButtonPressed) {
+            this.onSnapButton(true);
+        } else {
+            this._spinValue(this._launchpadKnobValue);
+        }
     }
     onWheelUpdate(inputValue) {
         this._spinValue(inputValue);
@@ -301,6 +306,9 @@ class AngleParameter extends Parameter {
         }
     }
     _spinValue(spinAmount) {
+        if (spinAmount === 0) {
+            return;
+        }
         this._value = this._value + spinAmount;
         if (this._constrainTo !== false) {
             this._value = posMod(this._value, this._constrainTo);
