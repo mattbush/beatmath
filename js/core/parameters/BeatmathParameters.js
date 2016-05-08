@@ -5,6 +5,11 @@ const {MixtrackFaders, MixtrackWheels, MixtrackButtons} = require('js/core/input
 
 class BeatmathParameters {
     constructor(mixboard, params) {
+        window.localStorage.clear();
+        if (mixboard.isLaunchpad()) {
+            // TODO: clear all lights
+        }
+
         this.tempo = new BeatmathTempo(mixboard, {
             bpm: 120,
             bpmMod: params.bpmMod,
@@ -119,7 +124,7 @@ class BeatmathParameters {
             monitorName: 'Pixel Sidedness',
         });
         if (mixboard.isLaunchpad()) {
-            this.pixelPointiness.listenToLaunchpadKnob(mixboard, 0, 6);
+            this.pixelSidedness.listenToLaunchpadKnob(mixboard, 0, 6);
         } else {
             this.pixelSidedness.listenToIncrementMixtrackButton(mixboard, MixtrackButtons.R_HOT_CUE_1);
             this.pixelSidedness.listenToDecrementMixtrackButton(mixboard, MixtrackButtons.R_DELETE);

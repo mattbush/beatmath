@@ -9,11 +9,3 @@ body {
     overflow: hidden;
     text-align: center;
 }
-.monitorMessage {
-    color: #eee;
-    font-size: 40px;
-    line-height: 60px;
-    text-align: center;
-    width: 100%;
-    font-family: Helvetica;
-}

@@ -1,0 +1,26 @@
+.main {
+    position: relative;
+}
+
+.monitorCell {
+    position: absolute;
+    width: 124px;
+    height: 99px;
+    border: 1px solid #999;
+    color: #eee;
+    text-align: center;
+    font-family: Helvetica;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.monitorName {
+    margin: 8px 0 0;
+    font-size: 16px;
+}
+
+.monitorValue {
+    margin: 8px 0 0;
+    font-size: 36px;
+    line-height: 36px;
+}

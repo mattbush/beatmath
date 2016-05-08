@@ -47,8 +47,7 @@ class BeatmathTempo {
 
         runAtTimestamp(this._tick, this._nextTick);
         _.times(NUM_LIGHTS, lightNum => mixboard.toggleLight(this._buttons[lightNum], false));
-        window.localStorage.setItem('BPM', this._bpm);
-        window.localStorage.setItem('BPMMod', this._bpmMod);
+        this._updateMonitor();
 
         const addListenerMethod = mixboard.isLaunchpad() ? 'addLaunchpadButtonListener' : 'addMixtrackButtonListener';
         mixboard[addListenerMethod](this._buttons[0], this._onResetMeasureButtonPress.bind(this));
@@ -74,8 +73,7 @@ class BeatmathTempo {
             this._bpm = this._pendingBpm;
             this._bpmMod = this._pendingBpmMod;
             this._period = MS_PER_MINUTE / this._bpm / this._bpmMod;
-            window.localStorage.setItem('BPM', this._bpm);
-            window.localStorage.setItem('BPMMod', this._bpmMod);
+            this._updateMonitor();
         }
         this._nextTick += this._period;
         if (this._pendingDiff !== 0) {
@@ -93,6 +91,20 @@ class BeatmathTempo {
         this._updateLights();
         this._updateListeners();
         runAtTimestamp(this._tick, this._nextTick);
+    }
+    _updateMonitor() {
+        window.localStorage.setItem('BPM', JSON.stringify({
+            name: 'BPM',
+            value: this._bpm,
+            x: 8.5,
+            y: 3.5,
+        }));
+        window.localStorage.setItem('BPM Mod', JSON.stringify({
+            name: 'BPM Mod',
+            value: this._bpmMod,
+            x: 8.5,
+            y: 4.5,
+        }));
     }
     getPeriod() {
         return this._period;

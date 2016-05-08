@@ -34,18 +34,25 @@ class Parameter {
         this._listeners.push(updateLight);
     }
     _updateMonitor() {
-        let value = this.getValue();
-        value = _.isNumber(value) ? Math.round(value * 1000) / 1000 : value;
-        if (this._isUpdatingEnabled) {
-            value = value + ' (Auto)';
-        }
-        window.localStorage.setItem(this._monitorName, value);
+        const value = this.getValue();
+        const payload = {
+            name: this._monitorName,
+            value: value,
+            x: this._monitorX,
+            y: this._monitorY,
+            isAutopilot: this._isUpdatingEnabled,
+        };
+        window.localStorage.setItem(this._monitorName, JSON.stringify(payload));
     }
-    _setMonitorCoordsFromLaunchpadFader() {
-        // TODO
+    _setMonitorCoordsFromLaunchpadFader(column) {
+        this._monitorX = column;
+        this._monitorY = 3.5;
+        this._updateMonitor();
     }
-    _setMonitorCoordsFromLaunchpadKnob() {
-        // TODO
+    _setMonitorCoordsFromLaunchpadKnob(row, column) {
+        this._monitorX = column;
+        this._monitorY = row;
+        this._updateMonitor();
     }
     destroy() {}
 }
