@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const {lerp, posMod, constrainToRange, modAndShiftToHalf, nextFloat} = require('js/core/utils/math');
+const {lerp, posMod, clamp, modAndShiftToHalf, nextFloat} = require('js/core/utils/math');
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 
@@ -184,7 +184,7 @@ class LinearParameter extends Parameter {
         this._constrainToRangeAndUpdateValue(newValue);
     }
     _constrainToRangeAndUpdateValue(newValue) {
-        newValue = constrainToRange(this._minParam.getValue(), this._maxParam.getValue(), newValue);
+        newValue = clamp(newValue, this._minParam.getValue(), this._maxParam.getValue());
         if (newValue !== this._value) {
             this._value = newValue;
             this._updateListeners();
@@ -323,7 +323,7 @@ class MovingLinearParameter extends LinearParameter {
         const min = this._autoupdateRange ? this._autoupdateRange[0] : this._minParam.getValue();
         const max = this._autoupdateRange ? this._autoupdateRange[1] : this._maxParam.getValue();
 
-        const nextConstrained = constrainToRange(min, max, nextOriginal);
+        const nextConstrained = clamp(nextOriginal, min, max);
 
         // if speed is positive and we're past max, or vice versa
         if ((nextConstrained < nextOriginal && this._speed > 0) ||

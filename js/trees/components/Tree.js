@@ -1,7 +1,7 @@
 const _ = require('underscore');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
-const {lerp, constrainToRange} = require('js/core/utils/math');
+const {lerp, clamp} = require('js/core/utils/math');
 
 const Tree = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -19,7 +19,7 @@ const Tree = React.createClass({
         const numLevels = treesParameters.numLevels.getValue();
         const levelSpacing = treesParameters.levelSpacing.getValue();
 
-        const polarGridAmount = constrainToRange(0, 1, treesParameters.polarGridAmount.getValue());
+        const polarGridAmount = clamp(treesParameters.polarGridAmount.getValue(), 0, 1);
         const baseTreeWidth = treesParameters.getTreeWidth();
 
         const levelHeight = treesParameters.getLevelHeight();

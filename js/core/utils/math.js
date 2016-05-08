@@ -6,7 +6,7 @@ const lerp = function(min, max, interpolation) {
     return min + (max - min) * interpolation;
 };
 
-const constrainToRange = function(min, max, val) {
+const clamp = function(val, min, max) {
     return Math.min(max, Math.max(min, val));
 };
 
@@ -46,7 +46,7 @@ const posModAndBendToLowerHalf = function(dividend, divisor) {
 module.exports = {
     nextFloat,
     lerp,
-    constrainToRange,
+    clamp,
     dist,
     manhattanDist,
     polarAngleDeg,
