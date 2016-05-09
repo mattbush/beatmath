@@ -1,37 +1,41 @@
 const _ = require('underscore');
-const {IntLinearParameter, LinearParameter, CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {LogarithmicParameter, IntLinearParameter, LinearParameter, CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 const {MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
 const {lerp, dist, manhattanDist, polarAngleDeg, posMod, modAndShiftToHalf, posModAndBendToLowerHalf} = require('js/core/utils/math');
+const MAX_RIPPLES_TREAT_AS_INFINITE = 40;
 
 class LatticeRefreshTimer extends PieceParameters {
     _declareParameters() {
         return {
             _rippleRadius: {
-                type: LinearParameter,
-                range: [2, 40],
+                type: LogarithmicParameter,
+                range: [2, MAX_RIPPLES_TREAT_AS_INFINITE],
                 start: 10,
-                monitorName: 'Refresh Ripple Radius',
+                monitorName: 'Ripple Radius',
+                listenToLaunchpadFader: [2, {addButtonStatusLight: true}],
                 listenToMixtrackWheel: MixtrackWheels.L_SELECT,
             },
             _manhattanCoefficient: {
                 type: LinearParameter,
-                range: [-2, 3],
+                range: [-3, 3],
                 start: 0,
                 defaultOn: 1,
                 incrementAmount: 0.25,
-                monitorName: 'Refresh Manhattan Coeff',
+                monitorName: 'Manhattan Coeff',
+                listenToLaunchpadKnob: [0, 2, {useSnapButton: true}],
                 listenToMixtrackWheel: MixtrackWheels.L_CONTROL_1,
                 listenToResetMixtrackButton: MixtrackButtons.L_HOT_CUE_2,
             },
             _logCoefficient: {
                 type: LinearParameter,
-                range: [-2, 3],
+                range: [-3, 3],
                 start: 0,
                 defaultOn: 1,
                 incrementAmount: 0.25,
-                monitorName: 'Refresh Log Coeff',
+                monitorName: 'Logarithm Coeff',
+                listenToLaunchpadKnob: [0, 3, {useSnapButton: true}],
                 listenToMixtrackWheel: MixtrackWheels.L_CONTROL_2,
                 listenToResetMixtrackButton: MixtrackButtons.L_HOT_CUE_3,
             },
@@ -44,25 +48,42 @@ class LatticeRefreshTimer extends PieceParameters {
                 type: IntLinearParameter,
                 range: [-12, 12],
                 start: 0,
-                monitorName: 'Refresh # Global Polar Angles',
+                monitorName: '# Global Spirals',
+                listenToLaunchpadKnob: [2, 2],
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_MANUAL, MixtrackButtons.L_LOOP_IN],
             },
             _localPolarAngles: {
                 type: IntLinearParameter,
                 range: [-12, 12],
                 start: 0,
-                monitorName: 'Refresh # Local Polar Angles',
+                monitorName: '# Local Spirals',
+                listenToLaunchpadKnob: [2, 3],
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
+            },
+            _bendGlobalPolarAngles: {
+                type: ToggleParameter,
+                start: false,
+                listenToLaunchpadButton: 2,
+                monitorName: 'G Spiral Bend?',
             },
             _bendLocalPolarAngles: {
                 type: ToggleParameter,
                 start: false,
                 listenToMixtrackButton: MixtrackButtons.L_KEYLOCK,
+                listenToLaunchpadButton: 3,
+                monitorName: 'L Spiral Bend?',
             },
-            _subdivisionSize: {
+            _subdivisionSizeMultiple: {
                 type: CycleParameter,
                 cycleValues: [false, 1, 2, 3],
                 listenToCycleAndResetMixtrackButtons: [MixtrackButtons.L_EFFECT, MixtrackButtons.L_DELETE],
+            },
+            _subdivisionSize: {
+                type: LogarithmicParameter,
+                range: [2, MAX_RIPPLES_TREAT_AS_INFINITE],
+                start: MAX_RIPPLES_TREAT_AS_INFINITE,
+                listenToLaunchpadFader: [3, {addButtonStatusLight: true}],
+                monitorName: 'Division Size',
             },
         };
     }
@@ -93,18 +114,31 @@ class LatticeRefreshTimer extends PieceParameters {
 
         const globalPolarAngles = this._globalPolarAngles.getValue();
         if (globalPolarAngles !== 0) {
-            const globalPolarAngle = polarAngleDeg(col, row);
-            total += globalPolarAngle * globalPolarAngles / 360;
+            const sectorSize = 360 / globalPolarAngles;
+            let globalPolarAngle = polarAngleDeg(col, row);
+            if (this._bendGlobalPolarAngles.getValue()) {
+                globalPolarAngle = posModAndBendToLowerHalf(globalPolarAngle, sectorSize * 2);
+            }
+            total += globalPolarAngle / sectorSize;
+
         }
 
-        const subdivisionSize = this._subdivisionSize.getValue();
-        if (subdivisionSize !== false) {
-            const subdivisionRadius = rippleRadius * subdivisionSize;
+        const subdivisionSizeMultiple = this._subdivisionSizeMultiple.getValue();
+        let subdivisionRadius = false;
+        if (subdivisionSizeMultiple !== false) {
+            subdivisionRadius = rippleRadius * subdivisionSizeMultiple;
+        } else {
+            const subdivisionSize = this._subdivisionSize.getValue();
+            if (subdivisionSize !== MAX_RIPPLES_TREAT_AS_INFINITE) {
+                subdivisionRadius = subdivisionSize;
+            }
+        }
+        if (subdivisionRadius !== false) {
             row = modAndShiftToHalf(row, subdivisionRadius);
             col = modAndShiftToHalf(col, subdivisionRadius);
         }
 
-        if (this._useDistance.getValue()) {
+        if (this._useDistance.getValue() && rippleRadius !== MAX_RIPPLES_TREAT_AS_INFINITE) {
             let distance = manhattanDist(col, row);
             const manhattanCoefficient = this._manhattanCoefficient.getValue();
             const logCoefficient = this._logCoefficient.getValue();

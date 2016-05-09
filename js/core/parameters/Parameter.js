@@ -199,10 +199,13 @@ class LinearParameter extends Parameter {
             this.addLaunchpadStatusLight(mixboard, LaunchpadButtons.TRACK_FOCUS[column]);
         }
     }
-    listenToLaunchpadKnob(mixboard, row, column) {
+    listenToLaunchpadKnob(mixboard, row, column, opts = {}) {
         mixboard.addLaunchpadKnobListener(row, column, this.onFaderOrKnobUpdate.bind(this));
         this._setMonitorCoordsFromLaunchpadKnob(row, column);
         this.addLaunchpadKnobStatusLight(mixboard, row, column);
+        if (opts.useSnapButton) {
+            mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[7], value => this._isSnapButtonPressed = value);
+        }
     }
     listenToDecrementAndIncrementLaunchpadButtons(mixboard, column) {
         this._lePassedByInput = true;
@@ -286,6 +289,10 @@ class LinearParameter extends Parameter {
         } else {
             newValue = this._interpolate(this._minParam.getValue(), this._maxParam.getValue(), inputValue);
         }
+        if (this._isSnapButtonPressed) {
+            newValue = Math.round(newValue);
+        }
+
         // don't update from the fader or knob until you've "met" the current value
         if (!this._lePassedByInput || !this._gePassedByInput) {
             if (newValue >= this._value) {
