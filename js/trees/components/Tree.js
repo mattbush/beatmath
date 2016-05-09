@@ -17,7 +17,7 @@ const Tree = React.createClass({
     render: function() {
         const treesParameters = this.context.treesParameters;
         const numLevels = treesParameters.numLevels.getValue();
-        const levelSpacing = treesParameters.levelSpacing.getValue();
+        const levelSpacing = treesParameters.getLevelSpacing();
 
         const polarGridAmount = clamp(treesParameters.polarGridAmount.getValue(), 0, 1);
         const baseTreeWidth = treesParameters.getTreeWidth();

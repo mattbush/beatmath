@@ -31,35 +31,35 @@ class TreesParameters extends PieceParameters {
                 listenToMixtrackFader: MixtrackFaders.R_GAIN,
                 monitorName: '# Levels',
             },
-            treeSpacing: {
+            treeWidth: {
                 type: IntLinearParameter,
-                range: [25, 500],
-                start: 400,
+                range: [10, 200],
+                start: 100,
                 listenToLaunchpadKnob: [2, 0],
                 listenToMixtrackKnob: MixtrackKnobs.L_BASS,
                 monitorName: 'Tree Width',
             },
-            levelSpacing: {
+            levelHeight: {
                 type: IntLinearParameter,
-                range: [25, 500],
-                start: 100,
+                range: [10, 200],
+                start: 30,
                 listenToLaunchpadKnob: [2, 1],
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,
                 monitorName: 'Level Height',
             },
-            treeWidthPercent: {type: LinearParameter,
-                range: [0.25, 1],
-                start: 0.65,
+            treeGap: {type: LinearParameter,
+                range: [10, 200],
+                start: 30,
                 listenToLaunchpadKnob: [1, 0],
                 listenToMixtrackKnob: MixtrackKnobs.L_MID,
-                monitorName: 'Tree Spacing',
+                monitorName: 'Tree Gap',
             },
-            levelHeightPercent: {type: LinearParameter,
-                range: [0.25, 1],
-                start: 0.65,
+            levelGap: {type: LinearParameter,
+                range: [10, 200],
+                start: 30,
                 listenToLaunchpadKnob: [1, 1],
                 listenToMixtrackKnob: MixtrackKnobs.R_MID,
-                monitorName: 'Level Spacing',
+                monitorName: 'Level Gap',
             },
             borderRadiusPercent: {type: MovingLinearParameter,
                 range: [0, 1],
@@ -136,17 +136,23 @@ class TreesParameters extends PieceParameters {
             },
         };
     }
+    getTreeSpacing() {
+        return this.treeWidth.getValue() + this.treeGap.getValue();
+    }
+    getLevelSpacing() {
+        return this.levelHeight.getValue() + this.levelGap.getValue();
+    }
     getTotalTreeSpacing() {
-        return this.treeSpacing.getValue() * this.numTrees.getValue();
+        return this.getTreeSpacing() * this.numTrees.getValue();
     }
     getTotalLevelSpacing() {
-        return this.levelSpacing.getValue() * this.numLevels.getValue();
+        return this.getLevelSpacing() * this.numLevels.getValue();
     }
     getTreeWidth() {
-        return this.treeSpacing.getValue() * this.treeWidthPercent.getValue();
+        return this.treeWidth.getValue();
     }
     getLevelHeight() {
-        return this.levelSpacing.getValue() * this.levelHeightPercent.getValue();
+        return this.levelHeight.getValue();
     }
     _getLevelIllumination(treeIndex, levelNumber) {
         const periodTicks = Math.pow(2, this.periodTicksLog2.getValue());

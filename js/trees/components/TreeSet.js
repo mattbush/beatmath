@@ -35,7 +35,7 @@ const TreeSet = React.createClass({
     render: function() {
         const treesParameters = this.state.treesParameters;
         const numTrees = treesParameters.numTrees.getValue();
-        const treeSpacing = treesParameters.treeSpacing.getValue();
+        const treeSpacing = treesParameters.getTreeSpacing();
         const polarGridAmount = clamp(treesParameters.polarGridAmount.getValue(), 0, 1);
 
         const transformations = _.times(numTrees, index => {
