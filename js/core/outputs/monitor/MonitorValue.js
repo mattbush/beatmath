@@ -16,9 +16,12 @@ const MonitorValue = React.createClass({
         if (payload.type === 'Angle') {
             value = posMod(value, 360);
         }
+
         let valueString = (_.isNumber(value) && !Number.isInteger(value)) ? value.toPrecision(4) : value;
         if (payload.type === 'Angle') {
             valueString += '°';
+        } else if (payload.type === 'Toggle') {
+            valueString = value ? 'ON' : 'OFF';
         }
 
         return (
