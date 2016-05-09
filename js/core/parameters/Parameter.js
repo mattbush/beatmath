@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const {lerp, posMod, clamp, modAndShiftToHalf, nextFloat} = require('js/core/utils/math');
+const {lerp, logerp, posMod, clamp, modAndShiftToHalf, nextFloat} = require('js/core/utils/math');
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 const ParameterStatus = require('js/core/parameters/ParameterStatus');
@@ -249,13 +249,13 @@ class LinearParameter extends Parameter {
     }
     onIncrementButtonPress(inputValue) {
         if (inputValue) {
-            const newValue = this._value + this._incrementAmount;
+            const newValue = this._increment(this._value, this._incrementAmount);
             this._constrainToRangeAndUpdateValue(newValue);
         }
     }
     onDecrementButtonPress(inputValue) {
         if (inputValue) {
-            const newValue = this._value - this._incrementAmount;
+            const newValue = this._decrement(this._value, this._incrementAmount);
             this._constrainToRangeAndUpdateValue(newValue);
         }
     }
@@ -274,12 +274,12 @@ class LinearParameter extends Parameter {
         let newValue;
         if (this._useStartAsMidpoint) {
             if (inputValue >= 0.5) {
-                newValue = lerp(this._defaultOff, this._maxParam.getValue(), (inputValue - 0.5) * 2);
+                newValue = this._interpolate(this._defaultOff, this._maxParam.getValue(), (inputValue - 0.5) * 2);
             } else {
-                newValue = lerp(this._minParam.getValue(), this._defaultOff, inputValue * 2);
+                newValue = this._interpolate(this._minParam.getValue(), this._defaultOff, inputValue * 2);
             }
         } else {
-            newValue = lerp(this._minParam.getValue(), this._maxParam.getValue(), inputValue);
+            newValue = this._interpolate(this._minParam.getValue(), this._maxParam.getValue(), inputValue);
         }
         // don't update from the fader or knob until you've "met" the current value
         if (!this._lePassedByInput || !this._gePassedByInput) {
@@ -295,6 +295,15 @@ class LinearParameter extends Parameter {
             this._updateListeners();
         }
     }
+    _increment(value) {
+        return value + this._incrementAmount;
+    }
+    _decrement(value) {
+        return value - this._incrementAmount;
+    }
+    _interpolate(min, max, interpolation) {
+        return lerp(min, max, interpolation);
+    }
     _getStatus() {
         if (!this._lePassedByInput || !this._gePassedByInput) {
             return ParameterStatus.DISENGAGED;
@@ -304,6 +313,24 @@ class LinearParameter extends Parameter {
             return ParameterStatus.STABLE_DEFAULT;
         }
         return ParameterStatus.STABLE_MODIFIED;
+    }
+}
+
+class LogarithmicParameter extends LinearParameter {
+    constructor(params) {
+        if (params.incrementAmount === undefined) {
+            params.incrementAmount = 2;
+        }
+        super(params);
+    }
+    _increment(value, amount) {
+        return value * amount;
+    }
+    _decrement(value, amount) {
+        return value / amount;
+    }
+    _interpolate(min, max, interpolation) {
+        return logerp(min, max, interpolation);
     }
 }
 
@@ -468,7 +495,7 @@ class MovingLinearParameter extends LinearParameter {
         }
         this._speed += (Math.random() * this._variance * 2) - this._variance;
 
-        const nextOriginal = this._value + this._speed;
+        const nextOriginal = this._increment(this._value, this._getSpeedAsIncrement());
         const min = this._autoupdateRange ? this._autoupdateRange[0] : this._minParam.getValue();
         const max = this._autoupdateRange ? this._autoupdateRange[1] : this._maxParam.getValue();
 
@@ -482,6 +509,9 @@ class MovingLinearParameter extends LinearParameter {
 
         this._value = nextConstrained;
         this._updateListeners();
+    }
+    _getSpeedAsIncrement() {
+        return this._speed;
     }
     destroy() {
         super.destroy();
@@ -537,15 +567,38 @@ class MovingLinearParameter extends LinearParameter {
     }
 }
 
+class MovingLogarithmicParameter extends MovingLinearParameter {
+    constructor(params) {
+        if (params.incrementAmount === undefined) {
+            params.incrementAmount = 2;
+        }
+        super(params);
+    }
+    _increment(value, amount) {
+        return value * amount;
+    }
+    _decrement(value, amount) {
+        return value / amount;
+    }
+    _interpolate(min, max, interpolation) {
+        return logerp(min, max, interpolation);
+    }
+    _getSpeedAsIncrement() {
+        return 2 ** this._speed;
+    }
+}
+
 module.exports = {
     Parameter,
     NegatedParameter,
     AngleParameter,
     LinearParameter,
+    LogarithmicParameter,
     IntLinearParameter,
     ToggleParameter,
     CycleParameter,
     MovingAngleParameter,
     MovingColorParameter,
     MovingLinearParameter,
+    MovingLogarithmicParameter,
 };

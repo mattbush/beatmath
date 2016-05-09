@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const {MovingLinearParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
+const {MovingLogarithmicParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
 const BeatmathTempo = require('js/core/parameters/BeatmathTempo');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/core/parameters/BeatmathConstants');
 const {MixtrackFaders, MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
@@ -41,26 +41,26 @@ class BeatmathParameters {
             this.height.listenToMixtrackFader(mixboard, MixtrackFaders.R_PITCH_BEND);
         }
 
-        this.frameScaleLog2 = new MovingLinearParameter({
-            range: [-2, 4],
-            autoupdateRange: [-2, -0.5],
-            start: 0,
+        this.frameScale = new MovingLogarithmicParameter({
+            range: [0.25, 16],
+            autoupdateRange: [0.25, 0.75],
+            start: 1,
             variance: 0.015,
             monitorName: 'Frame Scale',
         });
         if (mixboard.isLaunchpad()) {
-            this.frameScaleLog2.listenToLaunchpadFader(mixboard, 7, {addButtonStatusLight: true});
+            this.frameScale.listenToLaunchpadFader(mixboard, 7, {addButtonStatusLight: true});
         } else {
-            this.frameScaleLog2.listenToMixtrackFader(mixboard, MixtrackFaders.MASTER_GAIN);
+            this.frameScale.listenToMixtrackFader(mixboard, MixtrackFaders.MASTER_GAIN);
         }
         if (mixboard.isMixboardConnected()) {
-            this.frameScaleLog2.listenForAutoupdateCue(mixboard, MixtrackButtons.L_CUE);
+            this.frameScale.listenForAutoupdateCue(mixboard, MixtrackButtons.L_CUE);
         }
         this.tempo.addListener(() => {
             const nTicks = 1;
             const tick = this.tempo.getNumTicks();
             if (tick % (nTicks * this.tempo._bpmMod) === 0) {
-                this.frameScaleLog2.update();
+                this.frameScale.update();
             }
         });
 

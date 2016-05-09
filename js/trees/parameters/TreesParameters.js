@@ -1,4 +1,4 @@
-const {MovingLinearParameter, LinearParameter, IntLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {MovingLinearParameter, LogarithmicParameter, LinearParameter, IntLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 const {MixtrackFaders, MixtrackKnobs, MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const tinycolor = require('tinycolor2');
 const {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
@@ -71,9 +71,9 @@ class TreesParameters extends PieceParameters {
                 autoupdateEveryNBeats: 2,
                 autoupdateOnCue: true,
             },
-            periodTicksLog2: {type: LinearParameter,
-                range: [1, 4],
-                start: 1,
+            periodTicks: {type: LogarithmicParameter,
+                range: [2, 16],
+                start: 2,
                 listenToDecrementAndIncrementLaunchpadButtons: 0,
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
                 monitorName: 'Period Ticks',
@@ -162,7 +162,7 @@ class TreesParameters extends PieceParameters {
         return this.levelHeight.getValue();
     }
     _getLevelIllumination(treeIndex, levelNumber) {
-        const periodTicks = Math.pow(2, this.periodTicksLog2.getValue());
+        const periodTicks = this.periodTicks.getValue();
         const tempoNumTicks = this._beatmathParameters.tempo.getNumTicks();
         const staggerAmount = Math.round(this.staggerAmount.getValue());
         if (staggerAmount !== 0) {
