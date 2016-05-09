@@ -48,13 +48,13 @@ class BeatmathParameters {
             variance: 0.015,
             monitorName: 'Frame Scale',
         });
+        if (mixboard.isMixboardConnected()) {
+            this.frameScale.listenForAutoupdateCue(mixboard, MixtrackButtons.L_CUE);
+        }
         if (mixboard.isLaunchpad()) {
             this.frameScale.listenToLaunchpadFader(mixboard, 7, {addButtonStatusLight: true});
         } else {
             this.frameScale.listenToMixtrackFader(mixboard, MixtrackFaders.MASTER_GAIN);
-        }
-        if (mixboard.isMixboardConnected()) {
-            this.frameScale.listenForAutoupdateCue(mixboard, MixtrackButtons.L_CUE);
         }
         this.tempo.addListener(() => {
             const nTicks = 1;
