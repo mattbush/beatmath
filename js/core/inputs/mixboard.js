@@ -136,6 +136,12 @@ class Mixboard {
     addLaunchpadKnobListener(row, column, fn) {
         this._addListener(this._onLaunchpadFaderAndKnobListeners, LaunchpadKnobInputCodes[row][column], fn);
     }
+    clearLaunchpadLight(eventCode) {
+        this._midiOutput.send([152, eventCode, 0]);
+    }
+    setLaunchpadLightValue(eventCode, lightCode) {
+        this._midiOutput.send([152, eventCode, lightCode]);
+    }
     toggleLight(eventCode, isLightOn) {
         if (this.isLaunchpad()) {
             // note that this doesn't work for side buttons

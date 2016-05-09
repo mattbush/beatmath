@@ -1,13 +1,17 @@
+const _ = require('underscore');
 const {MovingLinearParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
 const BeatmathTempo = require('js/core/parameters/BeatmathTempo');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/core/parameters/BeatmathConstants');
 const {MixtrackFaders, MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
+const {LaunchpadKnobOutputCodes} = require('js/core/inputs/LaunchpadConstants');
 
 class BeatmathParameters {
     constructor(mixboard, params) {
         window.localStorage.clear();
         if (mixboard.isLaunchpad()) {
-            // TODO: clear all lights
+            _.times(3, row => _.times(8, column => {
+                mixboard.clearLaunchpadLight(LaunchpadKnobOutputCodes[row][column]);
+            }));
         }
 
         this.tempo = new BeatmathTempo(mixboard, {
@@ -45,7 +49,7 @@ class BeatmathParameters {
             monitorName: 'Frame Scale',
         });
         if (mixboard.isLaunchpad()) {
-            this.frameScaleLog2.listenToLaunchpadFader(mixboard, 7);
+            this.frameScaleLog2.listenToLaunchpadFader(mixboard, 7, {addButtonStatusLight: true});
         } else {
             this.frameScaleLog2.listenToMixtrackFader(mixboard, MixtrackFaders.MASTER_GAIN);
         }
@@ -115,7 +119,7 @@ class BeatmathParameters {
         } else {
             this.pixelPointiness.listenToMixtrackWheel(mixboard, MixtrackWheels.R_SELECT);
             this.pixelPointiness.listenToResetMixtrackButton(mixboard, MixtrackButtons.R_EFFECT);
-            this.pixelPointiness.addStatusLight(mixboard, MixtrackButtons.R_EFFECT, value => value !== 1);
+            this.pixelPointiness.addMixtrackStatusLight(mixboard, MixtrackButtons.R_EFFECT, value => value !== 1);
         }
 
         this.pixelSidedness = new IntLinearParameter({
@@ -128,8 +132,8 @@ class BeatmathParameters {
         } else {
             this.pixelSidedness.listenToIncrementMixtrackButton(mixboard, MixtrackButtons.R_HOT_CUE_1);
             this.pixelSidedness.listenToDecrementMixtrackButton(mixboard, MixtrackButtons.R_DELETE);
-            this.pixelSidedness.addStatusLight(mixboard, MixtrackButtons.R_HOT_CUE_1, value => value >= 5 || value <= 2);
-            this.pixelSidedness.addStatusLight(mixboard, MixtrackButtons.R_DELETE, value => value <= 3);
+            this.pixelSidedness.addMixtrackStatusLight(mixboard, MixtrackButtons.R_HOT_CUE_1, value => value >= 5 || value <= 2);
+            this.pixelSidedness.addMixtrackStatusLight(mixboard, MixtrackButtons.R_DELETE, value => value <= 3);
         }
     }
 }

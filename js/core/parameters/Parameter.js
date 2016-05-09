@@ -2,6 +2,15 @@ const _ = require('underscore');
 const {lerp, posMod, clamp, modAndShiftToHalf, nextFloat} = require('js/core/utils/math');
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
+const ParameterStatus = require('js/core/parameters/ParameterStatus');
+const {LaunchpadKnobOutputCodes} = require('js/core/inputs/LaunchpadConstants');
+
+const STATUS_TO_LIGHT_VALUE = {
+    [ParameterStatus.DISENGAGED]: 0x03,
+    [ParameterStatus.STABLE_DEFAULT]: 0x12,
+    [ParameterStatus.STABLE_MODIFIED]: 0x21,
+    [ParameterStatus.ACTIVE]: 0x30,
+};
 
 class Parameter {
     constructor({start, monitorName}) {
@@ -26,7 +35,17 @@ class Parameter {
     removeListener(fn) {
         this._listeners.filter(listener => listener !== fn);
     }
-    addStatusLight(mixboard, eventCode, predicateFn = _.identity) {
+    addLaunchpadKnobStatusLight(mixboard, row, column) {
+        this.addLaunchpadStatusLight(mixboard, LaunchpadKnobOutputCodes[row][column]);
+    }
+    addLaunchpadStatusLight(mixboard, eventCode) {
+        const updateLight = () => {
+            mixboard.setLaunchpadLightValue(eventCode, STATUS_TO_LIGHT_VALUE[this._getStatus()]);
+        };
+        updateLight();
+        this._listeners.push(updateLight);
+    }
+    addMixtrackStatusLight(mixboard, eventCode, predicateFn = _.identity) {
         const updateLight = () => {
             mixboard.toggleLight(eventCode, predicateFn(this.getValue()));
         };
@@ -41,8 +60,12 @@ class Parameter {
             x: this._monitorX,
             y: this._monitorY,
             isAutopilot: this._isUpdatingEnabled,
+            status: this._getStatus(),
         };
         window.localStorage.setItem(this._monitorName, JSON.stringify(payload));
+    }
+    _getStatus() {
+        return ParameterStatus.STABLE_DEFAULT;
     }
     _setMonitorCoordsFromLaunchpadFader(column) {
         this._monitorX = column;
@@ -78,7 +101,7 @@ const wrapParam = function(value) {
 class ToggleParameter extends Parameter {
     listenToMixtrackButton(mixboard, eventCode) {
         mixboard.addMixtrackButtonListener(eventCode, this.onButtonUpdate.bind(this));
-        this.addStatusLight(mixboard, eventCode);
+        this.addMixtrackStatusLight(mixboard, eventCode);
     }
     onButtonUpdate(inputValue) {
         if (inputValue) { // button is pressed down, not up
@@ -99,7 +122,7 @@ class CycleParameter extends Parameter {
     listenToCycleAndResetMixtrackButtons(mixboard, cycleCode, resetCode) {
         this.listenToCycleMixtrackButton(mixboard, cycleCode);
         this.listenToResetMixtrackButton(mixboard, resetCode);
-        this.addStatusLight(mixboard, cycleCode, value => value !== this._cycleValues[0]);
+        this.addMixtrackStatusLight(mixboard, cycleCode, value => value !== this._cycleValues[0]);
     }
     listenToCycleMixtrackButton(mixboard, eventCode) {
         mixboard.addMixtrackButtonListener(eventCode, this.onCycleButtonPress.bind(this));
@@ -141,15 +164,17 @@ class LinearParameter extends Parameter {
         this._defaultOn = params.defaultOn;
         this._useStartAsMidpoint = params.useStartAsMidpoint;
     }
-    listenToLaunchpadFader(mixboard, column) {
+    listenToLaunchpadFader(mixboard, column, opts = {}) {
         mixboard.addLaunchpadFaderListener(column, this.onFaderOrKnobUpdate.bind(this));
         this._setMonitorCoordsFromLaunchpadFader(column);
-        // TODO: add status light?
+        if (opts.addButtonStatusLight) {
+            this.addLaunchpadStatusLight(mixboard, LaunchpadButtons.TRACK_FOCUS[column]);
+        }
     }
     listenToLaunchpadKnob(mixboard, row, column) {
         mixboard.addLaunchpadKnobListener(row, column, this.onFaderOrKnobUpdate.bind(this));
         this._setMonitorCoordsFromLaunchpadKnob(row, column);
-        // TODO: add status light
+        this.addLaunchpadKnobStatusLight(mixboard, row, column);
     }
     listenToMixtrackFader(mixboard, eventCode) {
         mixboard.addMixtrackFaderListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
@@ -162,17 +187,17 @@ class LinearParameter extends Parameter {
     }
     listenToResetMixtrackButton(mixboard, eventCode) {
         mixboard.addMixtrackButtonListener(eventCode, this.onResetButtonPress.bind(this));
-        this.addStatusLight(mixboard, eventCode, value => value !== this._defaultOff);
+        this.addMixtrackStatusLight(mixboard, eventCode, value => value !== this._defaultOff);
     }
     listenToDecrementAndIncrementMixtrackButtons(mixboard, decrementCode, incrementCode) {
         this.listenToIncrementMixtrackButton(mixboard, incrementCode);
         this.listenToDecrementMixtrackButton(mixboard, decrementCode);
         if (this._defaultOff === this._minParam.getValue()) {
-            this.addStatusLight(mixboard, incrementCode, value => value > this._minParam.getValue());
-            this.addStatusLight(mixboard, decrementCode, value => value >= this._maxParam.getValue());
+            this.addMixtrackStatusLight(mixboard, incrementCode, value => value > this._minParam.getValue());
+            this.addMixtrackStatusLight(mixboard, decrementCode, value => value >= this._maxParam.getValue());
         } else {
-            this.addStatusLight(mixboard, incrementCode, value => value > this._defaultOff);
-            this.addStatusLight(mixboard, decrementCode, value => value < this._defaultOff);
+            this.addMixtrackStatusLight(mixboard, incrementCode, value => value > this._defaultOff);
+            this.addMixtrackStatusLight(mixboard, decrementCode, value => value < this._defaultOff);
         }
     }
     listenToIncrementMixtrackButton(mixboard, eventCode) {
@@ -239,6 +264,16 @@ class LinearParameter extends Parameter {
             this._updateListeners();
         }
     }
+    _getStatus() {
+        if (!this._lePassedByInput || !this._gePassedByInput) {
+            return ParameterStatus.DISENGAGED;
+        }
+        const value = this.getValue();
+        if (value === this._defaultOff || value === this._minParam.getValue() || value === this._maxParam.getValue()) {
+            return ParameterStatus.STABLE_DEFAULT;
+        }
+        return ParameterStatus.STABLE_MODIFIED;
+    }
 }
 
 class IntLinearParameter extends LinearParameter {
@@ -268,7 +303,7 @@ class AngleParameter extends Parameter {
         mixboard.addLaunchpadKnobListener(row, column, this.onLaunchpadKnobUpdate.bind(this));
         mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[7], value => this._isSnapButtonPressed = value);
         this._setMonitorCoordsFromLaunchpadKnob(row, column);
-        // TODO: add status light
+        this.addLaunchpadKnobStatusLight(mixboard, row, column);
     }
     listenToMixtrackWheel(mixboard, eventCode) {
         mixboard.addMixtrackWheelListener(eventCode, this.onWheelUpdate.bind(this));
@@ -282,6 +317,7 @@ class AngleParameter extends Parameter {
         } else if (inputValue === 0 && this._launchpadKnobIntervalId) {
             clearInterval(this._launchpadKnobIntervalId);
             this._launchpadKnobIntervalId = null;
+            this._updateListeners();
         }
     }
     _onLaunchpadKnobSpinInterval() {
@@ -321,6 +357,16 @@ class AngleParameter extends Parameter {
             this._value = posMod(this._value, this._constrainTo);
         }
         this._updateListeners();
+    }
+    _getStatus() {
+        if (this._launchpadKnobIntervalId) {
+            return ParameterStatus.ACTIVE;
+        }
+        const value = this.getValue();
+        if (value % 15 === 0) {
+            return ParameterStatus.STABLE_DEFAULT;
+        }
+        return ParameterStatus.STABLE_MODIFIED;
     }
     destroy() {
         super.destroy();
