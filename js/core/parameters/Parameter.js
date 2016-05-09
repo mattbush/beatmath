@@ -2,14 +2,17 @@ const _ = require('underscore');
 const {lerp, logerp, posMod, clamp, modAndShiftToHalf, nextFloat} = require('js/core/utils/math');
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
+const AutoupdateStatus = require('js/core/parameters/AutoupdateStatus');
 const ParameterStatus = require('js/core/parameters/ParameterStatus');
 const {LaunchpadKnobOutputCodes} = require('js/core/inputs/LaunchpadConstants');
 
 const STATUS_TO_LIGHT_VALUE = {
-    [ParameterStatus.DISENGAGED]: 0x03,
-    [ParameterStatus.STABLE_DEFAULT]: 0x12,
-    [ParameterStatus.STABLE_MODIFIED]: 0x21,
-    [ParameterStatus.ACTIVE]: 0x30,
+    [ParameterStatus.DETACHED]: 0x03,
+    [ParameterStatus.BASE]: 0x13,
+    [ParameterStatus.MIN]: 0x12,
+    [ParameterStatus.MAX]: 0x12,
+    [ParameterStatus.CHANGED]: 0x21,
+    [ParameterStatus.CHANGING]: 0x30,
 };
 
 class Parameter {
@@ -62,7 +65,8 @@ class Parameter {
             value: value,
             x: this._monitorX,
             y: this._monitorY,
-            isAutopilot: this._isUpdatingEnabled,
+            autoStatus: this._isUpdatingEnabled ? AutoupdateStatus.ACTIVE :
+                (this._isListeningForAutoupdateCue ? AutoupdateStatus.INACTIVE : AutoupdateStatus.NOT_APPLICABLE),
             status: this._getStatus(),
             type: this._getType(),
         };
@@ -72,7 +76,7 @@ class Parameter {
         return null;
     }
     _getStatus() {
-        return ParameterStatus.STABLE_DEFAULT;
+        return ParameterStatus.BASE;
     }
     _setMonitorCoordsFromLaunchpadFader(column) {
         this._monitorX = column;
@@ -127,7 +131,7 @@ class ToggleParameter extends Parameter {
         }
     }
     _getStatus() {
-        return this._value ? ParameterStatus.STABLE_MODIFIED : ParameterStatus.STABLE_DEFAULT;
+        return this._value ? ParameterStatus.CHANGED : ParameterStatus.BASE;
     }
     _getType() {
         return 'Toggle';
@@ -295,24 +299,29 @@ class LinearParameter extends Parameter {
             this._updateListeners();
         }
     }
-    _increment(value) {
-        return value + this._incrementAmount;
+    _increment(value, amount) {
+        return value + amount;
     }
-    _decrement(value) {
-        return value - this._incrementAmount;
+    _decrement(value, amount) {
+        return value - amount;
     }
     _interpolate(min, max, interpolation) {
         return lerp(min, max, interpolation);
     }
     _getStatus() {
         if (!this._lePassedByInput || !this._gePassedByInput) {
-            return ParameterStatus.DISENGAGED;
+            return ParameterStatus.DETACHED;
         }
         const value = this.getValue();
-        if (value === this._defaultOff || value === this._minParam.getValue() || value === this._maxParam.getValue()) {
-            return ParameterStatus.STABLE_DEFAULT;
+
+        if (value === this._minParam.getValue()) {
+            return ParameterStatus.MIN;
+        } else if (value === this._maxParam.getValue()) {
+            return ParameterStatus.MAX;
+        } else if (value === this._defaultOff) {
+            return ParameterStatus.BASE;
         }
-        return ParameterStatus.STABLE_MODIFIED;
+        return ParameterStatus.CHANGED;
     }
 }
 
@@ -418,13 +427,13 @@ class AngleParameter extends Parameter {
     }
     _getStatus() {
         if (this._launchpadKnobIntervalId) {
-            return ParameterStatus.ACTIVE;
+            return ParameterStatus.CHANGING;
         }
         const value = this.getValue();
         if (value % 15 === 0) {
-            return ParameterStatus.STABLE_DEFAULT;
+            return ParameterStatus.BASE;
         }
-        return ParameterStatus.STABLE_MODIFIED;
+        return ParameterStatus.CHANGED;
     }
     _getType() {
         return 'Angle';
@@ -519,6 +528,7 @@ class MovingLinearParameter extends LinearParameter {
     }
     listenForAutoupdateCue(mixboard) {
         this._isUpdatingEnabled = false;
+        this._isListeningForAutoupdateCue = true;
         if (mixboard.isLaunchpad()) {
             mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[7], this.onAutoupdateCuePressed.bind(this));
         } else {

@@ -1,8 +1,10 @@
 const ParameterStatus = {
-    STABLE_DEFAULT: 'STABLE_DEFAULT',
-    STABLE_MODIFIED: 'STABLE_MODIFIED',
-    ACTIVE: 'ACTIVE',
-    DISENGAGED: 'DISENGAGED',
+    BASE: 'BASE',
+    MIN: 'MIN',
+    MAX: 'MAX',
+    CHANGED: 'CHANGED',
+    CHANGING: 'CHANGING',
+    DETACHED: 'DETACHED',
 };
 
 module.exports = ParameterStatus;
