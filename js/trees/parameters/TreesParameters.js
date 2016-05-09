@@ -74,7 +74,9 @@ class TreesParameters extends PieceParameters {
             periodTicksLog2: {type: LinearParameter,
                 range: [1, 4],
                 start: 1,
+                listenToDecrementAndIncrementLaunchpadButtons: 0,
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
+                monitorName: 'Period Ticks',
             },
             treeColorShift: {
                 type: LinearParameter,
@@ -111,6 +113,7 @@ class TreesParameters extends PieceParameters {
                 range: [-8, 8],
                 start: 0,
                 monitorName: 'Stagger Amount',
+                listenToDecrementAndIncrementLaunchpadButtons: 2,
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_PITCH_BEND_MINUS, MixtrackButtons.L_PITCH_BEND_PLUS],
                 variance: 1.5,
                 autoupdateEveryNBeats: 8,
@@ -119,6 +122,7 @@ class TreesParameters extends PieceParameters {
             mirrorStagger: {
                 type: ToggleParameter,
                 start: false,
+                listenToLaunchpadButton: 1,
                 listenToMixtrackButton: MixtrackButtons.L_EFFECT,
                 monitorName: 'Mirror Stagger?',
             },

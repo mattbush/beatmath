@@ -38,6 +38,9 @@ class Parameter {
     addLaunchpadKnobStatusLight(mixboard, row, column) {
         this.addLaunchpadStatusLight(mixboard, LaunchpadKnobOutputCodes[row][column]);
     }
+    addLaunchpadButtonStatusLight(mixboard, column) {
+        this.addLaunchpadStatusLight(mixboard, LaunchpadButtons.TRACK_CONTROL[column]);
+    }
     addLaunchpadStatusLight(mixboard, eventCode) {
         const updateLight = () => {
             mixboard.setLaunchpadLightValue(eventCode, STATUS_TO_LIGHT_VALUE[this._getStatus()]);
@@ -77,6 +80,11 @@ class Parameter {
         this._monitorY = row;
         this._updateMonitor();
     }
+    _setMonitorCoordsFromLaunchpadButton(column) {
+        this._monitorX = column;
+        this._monitorY = 6;
+        this._updateMonitor();
+    }
     destroy() {}
 }
 
@@ -103,11 +111,19 @@ class ToggleParameter extends Parameter {
         mixboard.addMixtrackButtonListener(eventCode, this.onButtonUpdate.bind(this));
         this.addMixtrackStatusLight(mixboard, eventCode);
     }
+    listenToLaunchpadButton(mixboard, column) {
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[column], this.onButtonUpdate.bind(this));
+        this._setMonitorCoordsFromLaunchpadButton(column);
+        this.addLaunchpadButtonStatusLight(mixboard, column);
+    }
     onButtonUpdate(inputValue) {
         if (inputValue) { // button is pressed down, not up
             this._value = !this._value;
             this._updateListeners();
         }
+    }
+    _getStatus() {
+        return this._value ? ParameterStatus.STABLE_MODIFIED : ParameterStatus.STABLE_DEFAULT;
     }
 }
 
@@ -175,6 +191,14 @@ class LinearParameter extends Parameter {
         mixboard.addLaunchpadKnobListener(row, column, this.onFaderOrKnobUpdate.bind(this));
         this._setMonitorCoordsFromLaunchpadKnob(row, column);
         this.addLaunchpadKnobStatusLight(mixboard, row, column);
+    }
+    listenToDecrementAndIncrementLaunchpadButtons(mixboard, column) {
+        this._lePassedByInput = true;
+        this._gePassedByInput = true;
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[column], this.onIncrementButtonPress.bind(this));
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[column], this.onDecrementButtonPress.bind(this));
+        this._setMonitorCoordsFromLaunchpadButton(column);
+        this.addLaunchpadButtonStatusLight(mixboard, column);
     }
     listenToMixtrackFader(mixboard, eventCode) {
         mixboard.addMixtrackFaderListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
