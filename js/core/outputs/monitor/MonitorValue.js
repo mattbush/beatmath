@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const React = require('react');
+const {posMod} = require('js/core/utils/math');
 
 const VALUE_X_SPACING = 125;
 const VALUE_Y_SPACING = 100;
@@ -11,8 +12,14 @@ const MonitorValue = React.createClass({
             left: VALUE_X_SPACING * payload.x,
             top: VALUE_Y_SPACING * payload.y,
         } : null;
-        const value = payload.value;
-        const valueString = (_.isNumber(value) && !Number.isInteger(value)) ? value.toPrecision(4) : value;
+        let value = payload.value;
+        if (payload.type === 'Angle') {
+            value = posMod(value, 360);
+        }
+        let valueString = (_.isNumber(value) && !Number.isInteger(value)) ? value.toPrecision(4) : value;
+        if (payload.type === 'Angle') {
+            valueString += '°';
+        }
 
         return (
             <div className="monitorCell" style={style}>

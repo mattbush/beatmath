@@ -64,8 +64,12 @@ class Parameter {
             y: this._monitorY,
             isAutopilot: this._isUpdatingEnabled,
             status: this._getStatus(),
+            type: this._getType(),
         };
         window.localStorage.setItem(this._monitorName, JSON.stringify(payload));
+    }
+    _getType() {
+        return null;
     }
     _getStatus() {
         return ParameterStatus.STABLE_DEFAULT;
@@ -124,6 +128,9 @@ class ToggleParameter extends Parameter {
     }
     _getStatus() {
         return this._value ? ParameterStatus.STABLE_MODIFIED : ParameterStatus.STABLE_DEFAULT;
+    }
+    _getType() {
+        return 'Toggle';
     }
 }
 
@@ -391,6 +398,9 @@ class AngleParameter extends Parameter {
             return ParameterStatus.STABLE_DEFAULT;
         }
         return ParameterStatus.STABLE_MODIFIED;
+    }
+    _getType() {
+        return 'Angle';
     }
     destroy() {
         super.destroy();
