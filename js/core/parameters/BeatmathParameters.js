@@ -76,15 +76,17 @@ class BeatmathParameters {
             this.frameRotation.listenToSnapMixtrackButton(mixboard, MixtrackButtons.L_SCRATCH);
         }
 
-        this.colorSpin = new AngleParameter({
-            start: 0,
-            monitorName: 'Color Spin',
-        });
-        if (mixboard.isLaunchpad()) {
-            this.colorSpin.listenToLaunchpadKnob(mixboard, 2, 6);
-        } else {
-            this.colorSpin.listenToMixtrackWheel(mixboard, MixtrackWheels.R_TURNTABLE);
-            this.colorSpin.listenToResetMixtrackButton(mixboard, MixtrackButtons.R_SCRATCH);
+        if (params.useColor || params.usePixels) {
+            this.colorSpin = new AngleParameter({
+                start: 0,
+                monitorName: 'Color Spin',
+            });
+            if (mixboard.isLaunchpad()) {
+                this.colorSpin.listenToLaunchpadKnob(mixboard, 2, 6);
+            } else {
+                this.colorSpin.listenToMixtrackWheel(mixboard, MixtrackWheels.R_TURNTABLE);
+                this.colorSpin.listenToResetMixtrackButton(mixboard, MixtrackButtons.R_SCRATCH);
+            }
         }
 
         // todo move to anagramsParameters
@@ -107,33 +109,35 @@ class BeatmathParameters {
             this.brightness.listenToDecrementMixtrackButton(mixboard, MixtrackButtons.R_PITCH_BEND_MINUS);
         }
 
-        this.pixelPointiness = new LinearParameter({
-            range: [0.45, 2.5],
-            start: 1,
-            useStartAsMidpoint: true,
-            incrementAmount: 0.05,
-            monitorName: 'Pixel Pointiness',
-        });
-        if (mixboard.isLaunchpad()) {
-            this.pixelPointiness.listenToLaunchpadKnob(mixboard, 1, 6);
-        } else {
-            this.pixelPointiness.listenToMixtrackWheel(mixboard, MixtrackWheels.R_SELECT);
-            this.pixelPointiness.listenToResetMixtrackButton(mixboard, MixtrackButtons.R_EFFECT);
-            this.pixelPointiness.addMixtrackStatusLight(mixboard, MixtrackButtons.R_EFFECT, value => value !== 1);
-        }
+        if (params.usePixels) {
+            this.pixelPointiness = new LinearParameter({
+                range: [0.45, 2.5],
+                start: 1,
+                useStartAsMidpoint: true,
+                incrementAmount: 0.05,
+                monitorName: 'Pixel Pointiness',
+            });
+            if (mixboard.isLaunchpad()) {
+                this.pixelPointiness.listenToLaunchpadKnob(mixboard, 1, 6);
+            } else {
+                this.pixelPointiness.listenToMixtrackWheel(mixboard, MixtrackWheels.R_SELECT);
+                this.pixelPointiness.listenToResetMixtrackButton(mixboard, MixtrackButtons.R_EFFECT);
+                this.pixelPointiness.addMixtrackStatusLight(mixboard, MixtrackButtons.R_EFFECT, value => value !== 1);
+            }
 
-        this.pixelSidedness = new IntLinearParameter({
-            range: [2, 5],
-            start: 4,
-            monitorName: 'Pixel Sidedness',
-        });
-        if (mixboard.isLaunchpad()) {
-            this.pixelSidedness.listenToLaunchpadKnob(mixboard, 0, 6);
-        } else {
-            this.pixelSidedness.listenToIncrementMixtrackButton(mixboard, MixtrackButtons.R_HOT_CUE_1);
-            this.pixelSidedness.listenToDecrementMixtrackButton(mixboard, MixtrackButtons.R_DELETE);
-            this.pixelSidedness.addMixtrackStatusLight(mixboard, MixtrackButtons.R_HOT_CUE_1, value => value >= 5 || value <= 2);
-            this.pixelSidedness.addMixtrackStatusLight(mixboard, MixtrackButtons.R_DELETE, value => value <= 3);
+            this.pixelSidedness = new IntLinearParameter({
+                range: [2, 5],
+                start: 4,
+                monitorName: 'Pixel Sidedness',
+            });
+            if (mixboard.isLaunchpad()) {
+                this.pixelSidedness.listenToLaunchpadKnob(mixboard, 0, 6);
+            } else {
+                this.pixelSidedness.listenToIncrementMixtrackButton(mixboard, MixtrackButtons.R_HOT_CUE_1);
+                this.pixelSidedness.listenToDecrementMixtrackButton(mixboard, MixtrackButtons.R_DELETE);
+                this.pixelSidedness.addMixtrackStatusLight(mixboard, MixtrackButtons.R_HOT_CUE_1, value => value >= 5 || value <= 2);
+                this.pixelSidedness.addMixtrackStatusLight(mixboard, MixtrackButtons.R_DELETE, value => value <= 3);
+            }
         }
     }
 }

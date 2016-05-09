@@ -6,6 +6,8 @@ const MixboardContext = React.createClass({
         return {
             beatmathParameters: new BeatmathParameters(this.props.mixboard, {
                 bpmMod: this.props.bpmMod,
+                usePixels: this.props.usePixels,
+                useColor: this.props.useColor,
             }),
         };
     },
