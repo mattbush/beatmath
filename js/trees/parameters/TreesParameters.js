@@ -3,6 +3,7 @@ const {MixtrackFaders, MixtrackKnobs, MixtrackButtons, MixtrackWheels} = require
 const tinycolor = require('tinycolor2');
 const {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
 const PieceParameters = require('js/core/parameters/PieceParameters');
+const {clamp, modAndShiftToHalf} = require('js/core/utils/math');
 
 class TreesParameters extends PieceParameters {
     _declareParameters() {
@@ -78,7 +79,7 @@ class TreesParameters extends PieceParameters {
             treeColorShift: {
                 type: LinearParameter,
                 range: [-180, 180],
-                start: 0, // or 360 / 16,
+                start: 0,
                 incrementAmount: 2.5,
                 monitorName: 'Tree Color Shift',
                 listenToLaunchpadKnob: [0, 0],
@@ -87,7 +88,7 @@ class TreesParameters extends PieceParameters {
             levelColorShift: {
                 type: MovingLinearParameter,
                 range: [-180, 180],
-                start: 360 / 16,
+                start: 0,
                 incrementAmount: 2.5,
                 monitorName: 'Level Color Shift',
                 listenToLaunchpadKnob: [0, 1],
@@ -162,9 +163,19 @@ class TreesParameters extends PieceParameters {
     getBorderRadius() {
         return this.getLevelHeight() * this.borderRadiusPercent.getValue() / 2;
     }
+    _getColorShiftPerTree() {
+        const baseColorShift = this.treeColorShift.getValue();
+        const polarGridAmount = clamp(this.polarGridAmount.getValue(), 0, 1);
+        if (polarGridAmount === 0) {
+            return baseColorShift;
+        }
+        const colorShiftForAFullRotation = 360 / this.numTrees.getValue();
+        const distanceFromClosestMultiple = modAndShiftToHalf(baseColorShift, colorShiftForAFullRotation);
+        return baseColorShift - (distanceFromClosestMultiple * polarGridAmount);
+    }
     getColorForIndexAndLevel(treeIndex, levelNumber) {
         const color = tinycolor(this.levelColor.getValue().toHexString()); // clone
-        const colorShiftPerTree = this.treeColorShift.getValue();
+        const colorShiftPerTree = this._getColorShiftPerTree();
         const colorShiftPerLevel = this.levelColorShift.getValue();
         const colorShift = colorShiftPerTree * treeIndex + colorShiftPerLevel * levelNumber;
         if (colorShift !== 0) {
