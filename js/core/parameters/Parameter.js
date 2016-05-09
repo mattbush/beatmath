@@ -82,7 +82,7 @@ class Parameter {
     }
     _setMonitorCoordsFromLaunchpadButton(column) {
         this._monitorX = column;
-        this._monitorY = 6;
+        this._monitorY = 5;
         this._updateMonitor();
     }
     destroy() {}
