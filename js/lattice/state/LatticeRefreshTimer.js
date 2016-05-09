@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const {LinearParameter, CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {IntLinearParameter, LinearParameter, CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 const {MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
@@ -41,14 +41,14 @@ class LatticeRefreshTimer extends PieceParameters {
                 listenToMixtrackButton: MixtrackButtons.L_HOT_CUE_1,
             },
             _globalPolarAngles: {
-                type: LinearParameter,
+                type: IntLinearParameter,
                 range: [-12, 12],
                 start: 0,
                 monitorName: 'Refresh # Global Polar Angles',
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_MANUAL, MixtrackButtons.L_LOOP_IN],
             },
             _localPolarAngles: {
-                type: LinearParameter,
+                type: IntLinearParameter,
                 range: [-12, 12],
                 start: 0,
                 monitorName: 'Refresh # Local Polar Angles',
