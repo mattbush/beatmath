@@ -46,7 +46,8 @@ class Parameter {
     }
     addLaunchpadStatusLight(mixboard, eventCode) {
         const updateLight = () => {
-            mixboard.setLaunchpadLightValue(eventCode, STATUS_TO_LIGHT_VALUE[this._getStatus()]);
+            const lightValue = this._isUpdatingEnabled ? 0x30 : STATUS_TO_LIGHT_VALUE[this._getStatus()];
+            mixboard.setLaunchpadLightValue(eventCode, lightValue);
         };
         updateLight();
         this._listeners.push(updateLight);
@@ -544,7 +545,7 @@ class MovingLinearParameter extends LinearParameter {
             if (this._canChangeAutoupdate) {
                 this._isUpdatingEnabled = !this._isUpdatingEnabled;
                 this._canChangeAutoupdate = false;
-                this._updateMonitor();
+                this._updateListeners();
             }
             return !this._isUpdatingEnabled;
         }
