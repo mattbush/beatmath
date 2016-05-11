@@ -14,7 +14,7 @@ class LatticeRefreshTimer extends PieceParameters {
                 range: [2, MAX_RIPPLES_TREAT_AS_INFINITE],
                 start: 10,
                 monitorName: 'Ripple Radius',
-                listenToLaunchpadFader: [2, {addButtonStatusLight: true}],
+                listenToLaunchpadFader: [2, {addButtonStatusLight: true, useSnapButton: true}],
                 listenToMixtrackWheel: MixtrackWheels.L_SELECT,
             },
             _manhattanCoefficient: {
@@ -82,7 +82,7 @@ class LatticeRefreshTimer extends PieceParameters {
                 type: LogarithmicParameter,
                 range: [2, MAX_RIPPLES_TREAT_AS_INFINITE],
                 start: MAX_RIPPLES_TREAT_AS_INFINITE,
-                listenToLaunchpadFader: [3, {addButtonStatusLight: true}],
+                listenToLaunchpadFader: [3, {addButtonStatusLight: true, useSnapButton: true}],
                 monitorName: 'Division Size',
             },
         };
