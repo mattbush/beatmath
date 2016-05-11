@@ -1,7 +1,8 @@
 const tinycolor = require('tinycolor2');
 const updateHue = require('js/core/outputs/updateHue');
-const {MovingColorParameter, MovingLinearParameter, NegatedParameter} = require('js/core/parameters/Parameter');
+const {MovingColorParameter, MovingLinearParameter, MovingAngleParameter, NegatedParameter} = require('js/core/parameters/Parameter');
 const {runAtTimestamp, setTimeoutAsync} = require('js/core/utils/time');
+const {lerp, posMod, modAndShiftToHalf} = require('js/core/utils/math');
 
 const {CELL_SIZE, ENABLE_HUE, MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
 
@@ -88,14 +89,7 @@ class Influence {
     }
 }
 
-class LinearInfluence extends Influence {
-    _mixByParameterType(pixelParameter, mixAmount) {
-        const influenceParameter = this._mainParameter.getValue();
-        return mixAmount * influenceParameter + (1 - mixAmount) * pixelParameter;
-    }
-}
-
-class SizeInfluence extends LinearInfluence {
+class SizeInfluence extends Influence {
     constructor(params) {
         super(params);
         this._mainParameter = new MovingLinearParameter({
@@ -103,6 +97,10 @@ class SizeInfluence extends LinearInfluence {
             variance: 0.25,
             start: params.startValue,
         });
+    }
+    _mixByParameterType(pixelParameter, mixAmount) {
+        const influenceParameter = this._mainParameter.getValue();
+        return lerp(pixelParameter, influenceParameter, mixAmount);
     }
     getSize() {
         return this._mainParameter.getValue();
@@ -112,14 +110,20 @@ class SizeInfluence extends LinearInfluence {
     }
 }
 
-class RotationInfluence extends LinearInfluence {
+class RotationInfluence extends Influence {
     constructor(params) {
         super(params);
-        this._mainParameter = new MovingLinearParameter({
-            range: [-90, 90],
-            variance: 0.25,
+        this._mainParameter = new MovingAngleParameter({
+            max: 1,
+            variance: 0.1,
             start: params.startValue,
         });
+    }
+    _mixByParameterType(pixelParameter, mixAmount) {
+        const influenceParameter = this._mainParameter.getValue();
+        const differenceWithin180 = modAndShiftToHalf(influenceParameter - pixelParameter, 360);
+        const newAngle = lerp(pixelParameter, pixelParameter + differenceWithin180, mixAmount);
+        return posMod(newAngle, 360);
     }
     getRotation() {
         return this._mainParameter.getValue();
