@@ -355,8 +355,8 @@ class IntLinearParameter extends LinearParameter {
     getValue() {
         return Math.round(super.getValue());
     }
-    _updateListeners() {
-        if (this.getValue() === this._lastIntegerValue) {
+    _updateListeners(opts = {}) {
+        if (!opts.forceUpdate && this.getValue() === this._lastIntegerValue) {
             return;
         }
         super._updateListeners();
@@ -392,7 +392,7 @@ class AngleParameter extends Parameter {
         } else if (inputValue === 0 && this._launchpadKnobIntervalId) {
             clearInterval(this._launchpadKnobIntervalId);
             this._launchpadKnobIntervalId = null;
-            this._updateListeners();
+            this._updateListeners({forceUpdate: true});
         }
     }
     _onLaunchpadKnobSpinInterval() {
@@ -552,7 +552,7 @@ class MovingLinearParameter extends LinearParameter {
             if (this._canChangeAutoupdate) {
                 this._isUpdatingEnabled = !this._isUpdatingEnabled;
                 this._canChangeAutoupdate = false;
-                this._updateListeners();
+                this._updateListeners({forceUpdate: true});
             }
             return !this._isUpdatingEnabled;
         }
@@ -606,6 +606,19 @@ class MovingLogarithmicParameter extends MovingLinearParameter {
     }
 }
 
+class MovingIntLinearParameter extends MovingLinearParameter {
+    getValue() {
+        return Math.round(super.getValue());
+    }
+    _updateListeners(opts = {}) {
+        if (!opts.forceUpdate && this.getValue() === this._lastIntegerValue) {
+            return;
+        }
+        super._updateListeners();
+        this._lastIntegerValue = this.getValue();
+    }
+}
+
 module.exports = {
     Parameter,
     NegatedParameter,
@@ -619,4 +632,5 @@ module.exports = {
     MovingColorParameter,
     MovingLinearParameter,
     MovingLogarithmicParameter,
+    MovingIntLinearParameter,
 };

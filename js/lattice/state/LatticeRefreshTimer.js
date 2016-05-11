@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const {LogarithmicParameter, IntLinearParameter, LinearParameter, CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {MovingIntLinearParameter, MovingLogarithmicParameter, MovingLinearParameter, CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 const {MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
@@ -10,15 +10,28 @@ class LatticeRefreshTimer extends PieceParameters {
     _declareParameters() {
         return {
             _rippleRadius: {
-                type: LogarithmicParameter,
+                type: MovingLogarithmicParameter,
                 range: [2, MAX_RIPPLES_TREAT_AS_INFINITE],
                 start: 10,
                 monitorName: 'Ripple Radius',
                 listenToLaunchpadFader: [2, {addButtonStatusLight: true, useSnapButton: true}],
                 listenToMixtrackWheel: MixtrackWheels.L_SELECT,
+                variance: 0.2,
+                autoupdateEveryNBeats: 16,
+                autoupdateOnCue: true,
+            },
+            _subdivisionSize: {
+                type: MovingLogarithmicParameter,
+                range: [2, MAX_RIPPLES_TREAT_AS_INFINITE],
+                start: MAX_RIPPLES_TREAT_AS_INFINITE,
+                listenToLaunchpadFader: [3, {addButtonStatusLight: true, useSnapButton: true}],
+                monitorName: 'Division Size',
+                variance: 0.2,
+                autoupdateEveryNBeats: 16,
+                autoupdateOnCue: true,
             },
             _manhattanCoefficient: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [-3, 3],
                 start: 0,
                 defaultOn: 1,
@@ -27,9 +40,12 @@ class LatticeRefreshTimer extends PieceParameters {
                 listenToLaunchpadKnob: [0, 2, {useSnapButton: true}],
                 listenToMixtrackWheel: MixtrackWheels.L_CONTROL_1,
                 listenToResetMixtrackButton: MixtrackButtons.L_HOT_CUE_2,
+                variance: 0.05,
+                autoupdateEveryNBeats: 8,
+                autoupdateOnCue: true,
             },
             _logCoefficient: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [-3, 3],
                 start: 0,
                 defaultOn: 1,
@@ -38,6 +54,9 @@ class LatticeRefreshTimer extends PieceParameters {
                 listenToLaunchpadKnob: [0, 3, {useSnapButton: true}],
                 listenToMixtrackWheel: MixtrackWheels.L_CONTROL_2,
                 listenToResetMixtrackButton: MixtrackButtons.L_HOT_CUE_3,
+                variance: 0.05,
+                autoupdateEveryNBeats: 8,
+                autoupdateOnCue: true,
             },
             _useDistance: {
                 type: ToggleParameter,
@@ -45,20 +64,26 @@ class LatticeRefreshTimer extends PieceParameters {
                 listenToMixtrackButton: MixtrackButtons.L_HOT_CUE_1,
             },
             _globalPolarAngles: {
-                type: IntLinearParameter,
+                type: MovingIntLinearParameter,
                 range: [-12, 12],
                 start: 0,
                 monitorName: '# Global Spirals',
                 listenToLaunchpadKnob: [2, 2],
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_MANUAL, MixtrackButtons.L_LOOP_IN],
+                variance: 0.3,
+                autoupdateEveryNBeats: 16,
+                autoupdateOnCue: true,
             },
             _localPolarAngles: {
-                type: IntLinearParameter,
+                type: MovingIntLinearParameter,
                 range: [-12, 12],
                 start: 0,
                 monitorName: '# Local Spirals',
                 listenToLaunchpadKnob: [2, 3],
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
+                variance: 0.3,
+                autoupdateEveryNBeats: 16,
+                autoupdateOnCue: true,
             },
             _bendGlobalPolarAngles: {
                 type: ToggleParameter,
@@ -77,13 +102,6 @@ class LatticeRefreshTimer extends PieceParameters {
                 type: CycleParameter,
                 cycleValues: [false, 1, 2, 3],
                 listenToCycleAndResetMixtrackButtons: [MixtrackButtons.L_EFFECT, MixtrackButtons.L_DELETE],
-            },
-            _subdivisionSize: {
-                type: LogarithmicParameter,
-                range: [2, MAX_RIPPLES_TREAT_AS_INFINITE],
-                start: MAX_RIPPLES_TREAT_AS_INFINITE,
-                listenToLaunchpadFader: [3, {addButtonStatusLight: true, useSnapButton: true}],
-                monitorName: 'Division Size',
             },
         };
     }
