@@ -126,7 +126,7 @@ class BeatmathParameters {
             }
 
             this.pixelSidedness = new IntLinearParameter({
-                range: [2, 5],
+                range: [2, 6],
                 start: 4,
                 monitorName: 'Pixel Sidedness',
             });
