@@ -58,17 +58,25 @@ class SubjectParameters extends PieceParameters {
             },
             borderRadiusPercent: {
                 type: MovingLinearParameter,
-                range: [0, 0.6],
+                range: [0, 1],
+                autoupdateRange: [0, 0.6],
+                listenToLaunchpadKnob: [0, 2],
+                monitorName: 'Roundness %',
                 start: 0.3,
                 variance: 0.01,
                 autoupdateEveryNBeats: 1,
+                autoupdateOnCue: true,
             },
             viewpointShiftPercent: {
                 type: MovingLinearParameter,
-                range: [0.05, 0.55],
+                range: [0, 1],
+                autoupdateRange: [0.05, 0.55],
+                listenToLaunchpadKnob: [0, 0],
+                monitorName: 'View Shift %',
                 start: 0.3,
                 variance: 0.01,
                 autoupdateEveryNBeats: 1,
+                autoupdateOnCue: true,
             },
         };
     }
