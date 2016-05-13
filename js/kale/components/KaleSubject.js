@@ -22,10 +22,11 @@ const KaleSubject = React.createClass({
         const viewpointX = -1 * this.props.cellX * viewpointShiftPercent;
         const viewpointY = -1 * this.props.cellY * viewpointShiftPercent;
 
-        const outerScaleAmount = Math.pow(2, subjectParameters.outerScaleAmountLog2.getValue());
-        const innerScaleAmount = Math.pow(2, subjectParameters.innerScaleAmountLog2.getValue());
-        const driftX = subjectParameters.driftX.getValue();
-        const driftY = subjectParameters.driftY.getValue();
+        const outerScaleAmount = subjectParameters.outerScaleAmount.getValue();
+        const innerScaleAmount = subjectParameters.innerScaleAmount.getValue();
+        const driftPercent = subjectParameters.driftPercent.getValue();
+        const driftX = subjectParameters.driftX.getValue() * driftPercent;
+        const driftY = subjectParameters.driftY.getValue() * driftPercent;
         const outerRotation = subjectParameters.outerRotation.getValue();
         const innerRotation = subjectParameters.innerRotation.getValue();
         const borderRadiusPercent = subjectParameters.borderRadiusPercent.getValue();

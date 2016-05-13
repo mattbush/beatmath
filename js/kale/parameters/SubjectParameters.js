@@ -1,4 +1,4 @@
-const {MovingAngleParameter, MovingLinearParameter} = require('js/core/parameters/Parameter');
+const {LinearParameter, MovingAngleParameter, MovingLinearParameter, MovingLogarithmicParameter} = require('js/core/parameters/Parameter');
 // const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
@@ -27,19 +27,27 @@ class SubjectParameters extends PieceParameters {
                 monitorName: 'Inner Rotation',
                 autoupdateOnCue: true,
             },
-            outerScaleAmountLog2: {
-                type: MovingLinearParameter,
-                range: [-1.8, 1.2],
-                start: -1.5,
+            outerScaleAmount: {
+                type: MovingLogarithmicParameter,
+                range: [0.25, 4],
+                autoupdateRange: [0.3, 2.4],
+                start: 1,
+                listenToLaunchpadFader: [4, {addButtonStatusLight: true}],
+                monitorName: 'Outer Scale',
                 variance: 0.15,
                 autoupdateEveryNBeats: 1,
+                autoupdateOnCue: true,
             },
-            innerScaleAmountLog2: {
-                type: MovingLinearParameter,
-                range: [0.5, 1.3],
-                start: 0.9,
+            innerScaleAmount: {
+                type: MovingLogarithmicParameter,
+                range: [1, 4],
+                autoupdateRange: [1.25, 2.5],
+                start: 1.75,
+                listenToLaunchpadFader: [5, {addButtonStatusLight: true}],
+                monitorName: 'Inner Scale',
                 variance: 0.15,
                 autoupdateEveryNBeats: 1,
+                autoupdateOnCue: true,
             },
             driftX: {
                 type: MovingLinearParameter,
@@ -55,12 +63,12 @@ class SubjectParameters extends PieceParameters {
                 variance: 0.2,
                 autoupdateEveryNBeats: 1,
             },
-            skewX: {
-                type: MovingLinearParameter,
-                range: [-10, 10],
+            driftPercent: {
+                type: LinearParameter,
+                range: [0, 1],
                 start: 0,
-                variance: 0.8,
-                autoupdateEveryNBeats: 1,
+                listenToLaunchpadKnob: [0, 3],
+                monitorName: 'Drift %',
             },
             borderRadiusPercent: {
                 type: MovingLinearParameter,
