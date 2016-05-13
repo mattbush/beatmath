@@ -94,6 +94,30 @@ class Parameter {
         this._monitorY = 5;
         this._updateMonitor();
     }
+    listenForAutoupdateCue(mixboard) {
+        this._isUpdatingEnabled = false;
+        this._isListeningForAutoupdateCue = true;
+        if (mixboard.isLaunchpad()) {
+            mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[7], this.onAutoupdateCuePressed.bind(this));
+        } else {
+            mixboard.addMixtrackButtonListener(MixtrackButtons.L_CUE, this.onAutoupdateCuePressed.bind(this));
+        }
+    }
+    onAutoupdateCuePressed(inputValue) {
+        this._isAutoupdateCuePressed = inputValue;
+        this._canChangeAutoupdate = inputValue;
+    }
+    _checkAutopilotToggle() {
+        if (this._isAutoupdateCuePressed) {
+            if (this._canChangeAutoupdate) {
+                this._isUpdatingEnabled = !this._isUpdatingEnabled;
+                this._canChangeAutoupdate = false;
+                this._updateListeners({forceUpdate: true});
+            }
+            return !this._isUpdatingEnabled;
+        }
+        return true;
+    }
     destroy() {}
 }
 
@@ -487,11 +511,34 @@ class MovingAngleParameter extends AngleParameter {
         this._maxSpeed = params.max;
     }
     update() {
+        if (!this._isUpdatingEnabled) {
+            return;
+        }
         this._speed += (Math.random() * this._variance * 2) - this._variance;
         if (Math.abs(this._speed) > this._maxSpeed) {
             this._speed *= 0.5;
         }
         this._spinValue(this._speed);
+    }
+    onResetButtonPress(inputValue) {
+        if (!inputValue || this._checkAutopilotToggle()) {
+            super.onResetButtonPress(inputValue);
+        }
+    }
+    onSnapButton(inputValue) {
+        if (!inputValue || this._checkAutopilotToggle()) {
+            super.onSnapButton(inputValue);
+        }
+    }
+    onLaunchpadKnobUpdate(inputValue) {
+        if (this._checkAutopilotToggle()) {
+            super.onLaunchpadKnobUpdate(inputValue);
+        }
+    }
+    onWheelUpdate(inputValue) {
+        if (this._checkAutopilotToggle()) {
+            super.onWheelUpdate(inputValue);
+        }
     }
 }
 
@@ -533,30 +580,6 @@ class MovingLinearParameter extends LinearParameter {
     destroy() {
         super.destroy();
         clearInterval(this._autoupdateInterval);
-    }
-    listenForAutoupdateCue(mixboard) {
-        this._isUpdatingEnabled = false;
-        this._isListeningForAutoupdateCue = true;
-        if (mixboard.isLaunchpad()) {
-            mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[7], this.onAutoupdateCuePressed.bind(this));
-        } else {
-            mixboard.addMixtrackButtonListener(MixtrackButtons.L_CUE, this.onAutoupdateCuePressed.bind(this));
-        }
-    }
-    onAutoupdateCuePressed(inputValue) {
-        this._isAutoupdateCuePressed = inputValue;
-        this._canChangeAutoupdate = inputValue;
-    }
-    _checkAutopilotToggle() {
-        if (this._isAutoupdateCuePressed) {
-            if (this._canChangeAutoupdate) {
-                this._isUpdatingEnabled = !this._isUpdatingEnabled;
-                this._canChangeAutoupdate = false;
-                this._updateListeners({forceUpdate: true});
-            }
-            return !this._isUpdatingEnabled;
-        }
-        return true;
     }
     onResetButtonPress(inputValue) {
         if (!inputValue || this._checkAutopilotToggle()) {

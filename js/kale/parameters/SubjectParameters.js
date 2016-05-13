@@ -12,6 +12,9 @@ class SubjectParameters extends PieceParameters {
                 start: 0,
                 constrainTo: false,
                 autoupdateEveryNBeats: 1,
+                listenToLaunchpadKnob: [0, 4],
+                monitorName: 'Outer Rotation',
+                autoupdateOnCue: true,
             },
             innerRotation: {
                 type: MovingAngleParameter,
@@ -20,6 +23,9 @@ class SubjectParameters extends PieceParameters {
                 start: 0,
                 constrainTo: false,
                 autoupdateEveryNBeats: 1,
+                listenToLaunchpadKnob: [0, 5],
+                monitorName: 'Inner Rotation',
+                autoupdateOnCue: true,
             },
             outerScaleAmountLog2: {
                 type: MovingLinearParameter,
