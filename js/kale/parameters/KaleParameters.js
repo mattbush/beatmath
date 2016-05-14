@@ -34,13 +34,13 @@ class KaleParameters extends PieceParameters {
                 type: LinearParameter,
                 range: [0, 1],
                 start: 1, mixboardStart: 0,
-                listenToLaunchpadKnob: [2, 3],
+                listenToLaunchpadKnob: [2, 2],
                 monitorName: 'Triangle Grid %',
             },
             reflectionsPerCell: {
                 type: CycleParameter,
                 cycleValues: [1, 2, 4, 6],
-                listenToDecrementAndIncrementLaunchpadButtons: 3,
+                listenToDecrementAndIncrementLaunchpadButtons: 2,
                 monitorName: '# Reflections',
             },
         };
