@@ -36,7 +36,7 @@ class Parameter {
         this._listeners.push(fn);
     }
     removeListener(fn) {
-        this._listeners.filter(listener => listener !== fn);
+        this._listeners = this._listeners.filter(listener => listener !== fn);
     }
     addLaunchpadKnobStatusLight(mixboard, row, column) {
         this.addLaunchpadStatusLight(mixboard, LaunchpadKnobOutputCodes[row][column]);
