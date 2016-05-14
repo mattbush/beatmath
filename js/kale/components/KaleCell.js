@@ -86,9 +86,9 @@ const KaleCell = React.createClass({
         const isInfinite = this.getParameterValue('isInfinite');
         const isSixCelled = this.getParameterValue('isSixCelled');
         const clipPathName = isInfinite ?
-            (isSixCelled ? 'sixthInfinite' : 'halfInfinite') :
-            (isSixCelled ? 'sixthCell' : 'halfCell');
-        const clipPath = `url(#${clipPathName})`;
+            (isSixCelled ? 'I6A' : 'I2') :
+            (isSixCelled ? 'C6A' : 'C2');
+        const clipPath = `url(#${clipPathName + '~' + 1})`;
 
         const x = this.props.logicalX;
         const y = this.props.logicalY * Y_AXIS_SCALE;
