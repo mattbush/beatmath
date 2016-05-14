@@ -91,7 +91,7 @@ const KaleCell = React.createClass({
         triGridPercent = Math.round(triGridPercent * 20) / 20;
         const brickGridPercent = Math.min(triangularGridPercent * 2, 1);
         const reflectionsPerCell = this.getParameterValue('reflectionsPerCell');
-        const clipPathPrefix = (isInfinite ? 'I' : 'C') + reflectionsPerCell;
+        const clipPathPrefix = (isInfinite ? 'I' : 'F') + reflectionsPerCell;
 
         const yAxisScale = lerp(2, Y_AXIS_SCALE, triGridPercent);
 
@@ -99,14 +99,24 @@ const KaleCell = React.createClass({
         const y = this.props.logicalY * yAxisScale;
 
         const reflectionElements = _.times(reflectionsPerCell, index => {
-            const rotationDeg = Math.floor(index / 2) * (360 / (reflectionsPerCell / 2));
-            const scale = (index % 2) ? ' scale(-1, 1)' : '';
-            const clipPathPrefixFull = clipPathPrefix + ((reflectionsPerCell === 6 && index >= 2) ? 'B' : '');
+            const isBStyle = (reflectionsPerCell === 6 && index >= 2 && index < 4);
+            const isCStyle = (reflectionsPerCell === 6 && index >= 4);
+            let rotationDeg = Math.floor(index / 2) * (360 / (reflectionsPerCell / 2));
+            const scale = (index % 2) ? 'scale(-1, 1) ' : '';
+
+            let clipPathPrefixFull = clipPathPrefix;
+            if (isBStyle) {
+                rotationDeg -= lerp(7.5, 0, triGridPercent);
+                clipPathPrefixFull += 'B';
+            } else if (isCStyle) {
+                rotationDeg += lerp(7.5, 0, triGridPercent);
+                clipPathPrefixFull += 'C';
+            }
 
             const clipPath = `url(#${clipPathPrefixFull}~${triGridPercent})`;
 
             return (
-                <g key={index} transform={`rotate(${rotationDeg})${scale}`}>
+                <g key={index} transform={`${scale}rotate(${rotationDeg})`}>
                     <g clipPath={clipPath}>
                         <KaleSubject cellX={x} cellY={y} />
                     </g>

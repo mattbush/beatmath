@@ -14,6 +14,8 @@ _.times(21, index => {
     const angleForBSide = lerp(247.5, 240, interpolation);
     const cosAngle = Math.cos(angleForBSide * (Math.PI / 180));
     const sinAngle = Math.sin(angleForBSide * (Math.PI / 180));
+    const cosAngle2 = Math.cos((360 - angleForBSide) * (Math.PI / 180));
+    const sinAngle2 = Math.sin((360 - angleForBSide) * (Math.PI / 180));
 
     const pointsForInterpolation = {
         I1: [
@@ -44,7 +46,12 @@ _.times(21, index => {
             [-1000, 1000 * lerp1OverSqrt3],
             [0, 1000 * lerp2OverSqrt3],
         ],
-        C1: [
+        I6C: [
+            [0, 0],
+            [-1000, -1000 * lerp1OverSqrt3],
+            [0, -1000 * lerp2OverSqrt3],
+        ],
+        F1: [
             [-1, -lerp1OverSqrt3],
             [-1, lerp1OverSqrt3],
             [0, lerp2OverSqrt3],
@@ -52,34 +59,41 @@ _.times(21, index => {
             [1, -lerp1OverSqrt3],
             [0, -lerp2OverSqrt3],
         ],
-        C2: [
+        F2: [
             [0, 0],
             [0, lerp2OverSqrt3],
             [1, lerp1OverSqrt3],
             [1, -lerp1OverSqrt3],
             [0, -lerp2OverSqrt3],
         ],
-        C4: [
+        F4: [
             [0, 0],
             [0, lerp2OverSqrt3],
             [1, lerp1OverSqrt3],
             [1, 0],
         ],
-        C6: [
+        F6: [
             [0, 0],
             [1, lerp1OverSqrt3],
             [1, -lerp1OverSqrt3],
         ],
-        C6B: [
+        F6B: [
             [0, 0],
             [-1, lerp1OverSqrt3],
             [0, lerp2OverSqrt3],
+        ],
+        F6C: [
+            [0, 0],
+            [-1, -lerp1OverSqrt3],
+            [0, -lerp2OverSqrt3],
         ],
     };
 
     _.each(pointsForInterpolation, (points, id) => {
         if (id.includes('B')) {
             points = _.map(points, ([x, y]) => [cosAngle * x - sinAngle * y, sinAngle * x + cosAngle * y]);
+        } else if (id.includes('C')) {
+            points = _.map(points, ([x, y]) => [cosAngle2 * x - sinAngle2 * y, sinAngle2 * x + cosAngle2 * y]);
         }
         clipPaths.push(
             <clipPath id={id + '~' + interpolation}>
