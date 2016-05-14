@@ -3,8 +3,7 @@ const React = require('react');
 const KaleParameters = require('js/kale/parameters/KaleParameters');
 const SubjectParameters = require('js/kale/parameters/SubjectParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
-const KaleCell = require('js/kale/components/KaleCell');
-const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
+const KaleGrid = require('js/kale/components/KaleGrid');
 
 const SQRT_3 = Math.pow(3, 0.5);
 const CLIP_PATHS = _.map([
@@ -23,7 +22,6 @@ const CLIP_PATHS = _.map([
 ], (clipPath, i) => React.cloneElement(clipPath, {key: i}));
 
 const KaleContainer = React.createClass({
-    mixins: [ParameterBindingsMixin],
     childContextTypes: {
         kaleParameters: React.PropTypes.object,
         subjectParameters: React.PropTypes.object,
@@ -44,38 +42,10 @@ const KaleContainer = React.createClass({
             subjectParameters: new SubjectParameters(this.context.mixboard, this.context.beatmathParameters),
         };
     },
-    getParameterBindings: function() {
-        return {
-            numRows: this.state.kaleParameters.numRows,
-            numCols: this.state.kaleParameters.numCols,
-            isInfinite: this.state.kaleParameters.isInfinite,
-        };
-    },
     render: function() {
-        let kaleCells;
-        if (this.getParameterValue('isInfinite')) {
-            kaleCells = <KaleCell logicalX={0} logicalY={0} />;
-        } else {
-            kaleCells = [];
-            const numRows = this.getParameterValue('numRows');
-            const numCols = this.getParameterValue('numCols');
-            for (let y = -numRows; y <= numRows; y++) {
-                for (let x = -numCols; x <= numCols; x++) {
-                    if ((x + y) % 2 !== 0) {
-                        continue;
-                    }
-                    kaleCells.push(
-                        <KaleCell key={`${x}~${y}`} logicalX={x} logicalY={y} />
-                    );
-                }
-            }
-        }
-
         return (
             <BeatmathFrame defs={CLIP_PATHS}>
-                <g transform="scale(64)">
-                    {kaleCells}
-                </g>
+                <KaleGrid />
             </BeatmathFrame>
         );
     },
