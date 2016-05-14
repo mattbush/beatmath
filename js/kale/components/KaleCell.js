@@ -2,7 +2,7 @@ const _ = require('underscore');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const KaleSubject = require('js/kale/components/KaleSubject');
-const {posMod} = require('js/core/utils/math');
+const {lerp, posMod} = require('js/core/utils/math');
 const tinycolor = require('tinycolor2');
 
 const Y_AXIS_SCALE = Math.sqrt(3);
@@ -20,6 +20,7 @@ const KaleCell = React.createClass({
             tempo: this.context.beatmathParameters.tempo,
             isInfinite: this.context.kaleParameters.isInfinite,
             reflectionsPerCell: this.context.kaleParameters.reflectionsPerCell,
+            triangularGridPercent: this.context.kaleParameters.triangularGridPercent,
         };
     },
     _getColor: function() {
@@ -85,18 +86,24 @@ const KaleCell = React.createClass({
     },
     render: function() {
         const isInfinite = this.getParameterValue('isInfinite');
+        const triangularGridPercent = this.getParameterValue('triangularGridPercent');
+        let triGridPercent = Math.max((triangularGridPercent - 0.5) * 2, 0);
+        triGridPercent = Math.round(triGridPercent * 20) / 20;
+        const brickGridPercent = Math.min(triangularGridPercent * 2, 1);
         const reflectionsPerCell = this.getParameterValue('reflectionsPerCell');
         const clipPathPrefix = (isInfinite ? 'I' : 'C') + reflectionsPerCell;
 
-        const x = this.props.logicalX;
-        const y = this.props.logicalY * Y_AXIS_SCALE;
+        const yAxisScale = lerp(2, Y_AXIS_SCALE, triGridPercent);
+
+        const x = this.props.logicalX + (this.props.logicalY % 2 ? brickGridPercent - 1 : 0);
+        const y = this.props.logicalY * yAxisScale;
 
         const reflectionElements = _.times(reflectionsPerCell, index => {
             const rotationDeg = Math.floor(index / 2) * (360 / (reflectionsPerCell / 2));
             const scale = (index % 2) ? ' scale(-1, 1)' : '';
             const clipPathPrefixFull = clipPathPrefix + ((reflectionsPerCell === 6 && index >= 2) ? 'B' : '');
 
-            const clipPath = `url(#${clipPathPrefixFull}~1)`;
+            const clipPath = `url(#${clipPathPrefixFull}~${triGridPercent})`;
 
             return (
                 <g key={index} transform={`rotate(${rotationDeg})${scale}`}>
