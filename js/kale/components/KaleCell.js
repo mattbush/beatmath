@@ -98,6 +98,10 @@ const KaleCell = React.createClass({
             </g>
         );
 
+        // for # cells
+        // which clip path, A or B
+        // what rotation to apply
+
         return (
             <g transform={`translate(${x}, ${y})`} stroke={this._getColor().toHexString()}>
                 <g>

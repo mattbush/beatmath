@@ -3,6 +3,8 @@ const React = require('react');
 const {lerp} = require('js/core/utils/math');
 
 const SQRT_3 = 3 ** 0.5;
+const COS_240 = Math.cos(240 * (Math.PI / 180));
+const SIN_240 = Math.sin(240 * (Math.PI / 180));
 
 const clipPaths = [];
 _.times(21, index => {
@@ -36,7 +38,7 @@ _.times(21, index => {
         ],
         I6B: [
             [0, 0],
-            [1000, 1000 * lerp1OverSqrt3],
+            [-1000, 1000 * lerp1OverSqrt3],
             [0, 1000 * lerp2OverSqrt3],
         ],
         C1: [
@@ -67,12 +69,15 @@ _.times(21, index => {
         ],
         C6B: [
             [0, 0],
-            [1, lerp1OverSqrt3],
+            [-1, lerp1OverSqrt3],
             [0, lerp2OverSqrt3],
         ],
     };
 
     _.each(pointsForInterpolation, (points, id) => {
+        if (id.includes('B')) {
+            points = _.map(points, ([x, y]) => [COS_240 * x - SIN_240 * y, SIN_240 * x + COS_240 * y]);
+        }
         clipPaths.push(
             <clipPath id={id + '~' + interpolation}>
                 <polygon points={_.map(points, pair => pair.join(',')).join(' ')} />
