@@ -3,14 +3,17 @@ const React = require('react');
 const {lerp} = require('js/core/utils/math');
 
 const SQRT_3 = 3 ** 0.5;
-const COS_240 = Math.cos(240 * (Math.PI / 180));
-const SIN_240 = Math.sin(240 * (Math.PI / 180));
 
 const clipPaths = [];
 _.times(21, index => {
     const interpolation = index / 20;
-    var lerp1OverSqrt3 = lerp(1, 1 / SQRT_3, interpolation);
-    var lerp2OverSqrt3 = lerp(1, 2 / SQRT_3, interpolation);
+    const lerp1OverSqrt3 = lerp(1, 1 / SQRT_3, interpolation);
+    const lerp2OverSqrt3 = lerp(1, 2 / SQRT_3, interpolation);
+
+    // not exactly linear, but whatever
+    const angleForBSide = lerp(247.5, 240, interpolation);
+    const cosAngle = Math.cos(angleForBSide * (Math.PI / 180));
+    const sinAngle = Math.sin(angleForBSide * (Math.PI / 180));
 
     const pointsForInterpolation = {
         I1: [
@@ -31,7 +34,7 @@ _.times(21, index => {
             [1000, 1000],
             [0, 1000],
         ],
-        I6A: [
+        I6: [
             [0, 0],
             [1000, 1000 * lerp1OverSqrt3],
             [1000, -1000 * lerp1OverSqrt3],
@@ -62,7 +65,7 @@ _.times(21, index => {
             [1, lerp1OverSqrt3],
             [1, 0],
         ],
-        C6A: [
+        C6: [
             [0, 0],
             [1, lerp1OverSqrt3],
             [1, -lerp1OverSqrt3],
@@ -76,7 +79,7 @@ _.times(21, index => {
 
     _.each(pointsForInterpolation, (points, id) => {
         if (id.includes('B')) {
-            points = _.map(points, ([x, y]) => [COS_240 * x - SIN_240 * y, SIN_240 * x + COS_240 * y]);
+            points = _.map(points, ([x, y]) => [cosAngle * x - sinAngle * y, sinAngle * x + cosAngle * y]);
         }
         clipPaths.push(
             <clipPath id={id + '~' + interpolation}>

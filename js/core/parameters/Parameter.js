@@ -171,20 +171,34 @@ class CycleParameter extends Parameter {
         this._cycleValues = params.cycleValues;
         this._valueIndex = 0;
     }
+    listenToDecrementAndIncrementLaunchpadButtons(mixboard, column) {
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[column], this.onIncrementButtonPress.bind(this));
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[column], this.onDecrementButtonPress.bind(this));
+        this._setMonitorCoordsFromLaunchpadButton(column);
+        this.addLaunchpadButtonStatusLight(mixboard, column);
+    }
     listenToCycleAndResetMixtrackButtons(mixboard, cycleCode, resetCode) {
         this.listenToCycleMixtrackButton(mixboard, cycleCode);
         this.listenToResetMixtrackButton(mixboard, resetCode);
         this.addMixtrackStatusLight(mixboard, cycleCode, value => value !== this._cycleValues[0]);
     }
     listenToCycleMixtrackButton(mixboard, eventCode) {
-        mixboard.addMixtrackButtonListener(eventCode, this.onCycleButtonPress.bind(this));
+        mixboard.addMixtrackButtonListener(eventCode, this.onIncrementButtonPress.bind(this));
     }
-    onCycleButtonPress(inputValue) {
+    onIncrementButtonPress(inputValue) {
         if (inputValue) {
-            this._valueIndex = posMod(this._valueIndex + 1, this._cycleValues.length);
-            this._value = this._cycleValues[this._valueIndex];
-            this._updateListeners();
+            this._moveValueIndex(1);
         }
+    }
+    onDecrementButtonPress(inputValue) {
+        if (inputValue) {
+            this._moveValueIndex(-1);
+        }
+    }
+    _moveValueIndex(delta) {
+        this._valueIndex = posMod(this._valueIndex + delta, this._cycleValues.length);
+        this._value = this._cycleValues[this._valueIndex];
+        this._updateListeners();
     }
     listenToResetMixtrackButton(mixboard, eventCode) {
         mixboard.addMixtrackButtonListener(eventCode, this.onResetButtonPress.bind(this));

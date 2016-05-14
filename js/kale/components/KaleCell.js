@@ -1,3 +1,4 @@
+const _ = require('underscore');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const KaleSubject = require('js/kale/components/KaleSubject');
@@ -18,7 +19,7 @@ const KaleCell = React.createClass({
         return {
             tempo: this.context.beatmathParameters.tempo,
             isInfinite: this.context.kaleParameters.isInfinite,
-            isSixCelled: this.context.kaleParameters.isSixCelled,
+            reflectionsPerCell: this.context.kaleParameters.reflectionsPerCell,
         };
     },
     _getColor: function() {
@@ -84,46 +85,31 @@ const KaleCell = React.createClass({
     },
     render: function() {
         const isInfinite = this.getParameterValue('isInfinite');
-        const isSixCelled = this.getParameterValue('isSixCelled');
-        const clipPathName = isInfinite ?
-            (isSixCelled ? 'I6A' : 'I2') :
-            (isSixCelled ? 'C6A' : 'C2');
-        const clipPath = `url(#${clipPathName + '~' + 1})`;
+        const reflectionsPerCell = this.getParameterValue('reflectionsPerCell');
+        const clipPathPrefix = (isInfinite ? 'I' : 'C') + reflectionsPerCell;
 
         const x = this.props.logicalX;
         const y = this.props.logicalY * Y_AXIS_SCALE;
-        const subject = (
-            <g clipPath={clipPath}>
-                <KaleSubject cellX={x} cellY={y} />
-            </g>
-        );
 
-        // for # cells
-        // which clip path, A or B
-        // what rotation to apply
+        const reflectionElements = _.times(reflectionsPerCell, index => {
+            const rotationDeg = Math.floor(index / 2) * (360 / (reflectionsPerCell / 2));
+            const scale = (index % 2) ? ' scale(-1, 1)' : '';
+            const clipPathPrefixFull = clipPathPrefix + ((reflectionsPerCell === 6 && index >= 2) ? 'B' : '');
+
+            const clipPath = `url(#${clipPathPrefixFull}~1)`;
+
+            return (
+                <g key={index} transform={`rotate(${rotationDeg})${scale}`}>
+                    <g clipPath={clipPath}>
+                        <KaleSubject cellX={x} cellY={y} />
+                    </g>
+                </g>
+            );
+        });
 
         return (
             <g transform={`translate(${x}, ${y})`} stroke={this._getColor().toHexString()}>
-                <g>
-                    {subject}
-                </g>
-                <g transform="scale(-1, 1)">
-                    {subject}
-                </g>
-                {isSixCelled && [
-                    <g key="2" transform="rotate(120)">
-                        {subject}
-                    </g>,
-                    <g key="3" transform="rotate(120) scale(-1, 1)">
-                        {subject}
-                    </g>,
-                    <g key="4" transform="rotate(240)">
-                        {subject}
-                    </g>,
-                    <g key="5" transform="rotate(240) scale(-1, 1)">
-                        {subject}
-                    </g>,
-                ]}
+                {reflectionElements}
             </g>
         );
     },

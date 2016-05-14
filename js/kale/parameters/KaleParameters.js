@@ -1,4 +1,4 @@
-const {MovingColorParameter, LinearParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {CycleParameter, MovingColorParameter, LinearParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 // const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const {ceilOfMultiple} = require('js/core/utils/math');
@@ -21,9 +21,10 @@ class KaleParameters extends PieceParameters {
                 type: ToggleParameter,
                 start: false,
             },
-            isSixCelled: {
-                type: ToggleParameter,
-                start: false,
+            reflectionsPerCell: {
+                type: CycleParameter,
+                cycleValues: [1, 2, 4, 6],
+                listenToDecrementAndIncrementLaunchpadButtons: 3,
             },
         };
     }
