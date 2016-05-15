@@ -23,7 +23,21 @@ const KaleCell = React.createClass({
             triangularGridPercent: this.context.kaleParameters.triangularGridPercent,
         };
     },
-    _getColor: function() {
+    _getColorByShifting: function(x, y) {
+        const colorsByCoords = this.context.kaleParameters.colorsByCoords;
+        const color = tinycolor(colorsByCoords['0,0'].getValue().toHexString()); // clone
+        const colColorShift = this.context.kaleParameters.colColorShift.getValue();
+        const rowColorShift = this.context.kaleParameters.rowColorShift.getValue();
+        const colorShift = colColorShift * x + rowColorShift * y;
+        if (colorShift !== 0) {
+            color.spin(colorShift);
+        }
+        return color.toHexString();
+    },
+    _getColor: function(x, y) {
+        return this._getColorByShifting(x, y);
+    },
+    _getColorByAnchor: function() {
         const x = this.props.logicalX;
         const y = this.props.logicalY;
         let xMod6 = posMod(x, 6);
@@ -125,7 +139,7 @@ const KaleCell = React.createClass({
         });
 
         return (
-            <g transform={`translate(${x}, ${y})`} stroke={this._getColor().toHexString()}>
+            <g transform={`translate(${x}, ${y})`} stroke={this._getColor(x, y)}>
                 {reflectionElements}
             </g>
         );
