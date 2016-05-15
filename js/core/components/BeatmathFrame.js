@@ -20,9 +20,10 @@ const BeatmathFrame = React.createClass({
         const height = this.getParameterValue('height');
         const frameRotation = this.getParameterValue('frameRotation');
         const frameScale = this.getParameterValue('frameScale');
+        const transitionPeriod = this.context.beatmathParameters.tempo.getBasePeriod() / 16;
         const style = {
             transform: `translate(${width / 2}px, ${height / 2}px) rotate(${frameRotation}deg) scale(${frameScale})`,
-            transition: `transform ${0.05}s ease-out`,
+            transition: `transform ${transitionPeriod}ms linear`,
         };
         return (
             <div className="main">

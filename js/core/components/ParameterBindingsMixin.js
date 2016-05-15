@@ -1,6 +1,6 @@
 const _ = require('underscore');
 
-const THROTTLE_MS = 100;
+const THROTTLE_MS = 16;
 
 const ParameterBindingsMixin = {
     // callers implement this, returns a mapping of string to parameter object

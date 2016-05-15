@@ -68,6 +68,7 @@ class BeatmathParameters {
             start: 0,
             constrainTo: false,
             monitorName: 'Frame Rotation',
+            tempo: this.tempo,
         });
         if (mixboard.isLaunchpad()) {
             this.frameRotation.listenToLaunchpadKnob(mixboard, 2, 7);

@@ -73,6 +73,7 @@ class BeatmathTempo {
             this._bpm = this._pendingBpm;
             this._bpmMod = this._pendingBpmMod;
             this._period = MS_PER_MINUTE / this._bpm / this._bpmMod;
+            this._basePeriod = MS_PER_MINUTE / this._bpm;
             this._updateMonitor();
         }
         this._nextTick += this._period;
@@ -108,6 +109,9 @@ class BeatmathTempo {
     }
     getPeriod() {
         return this._period;
+    }
+    getBasePeriod() {
+        return this._basePeriod;
     }
     getNextTick() {
         return this._nextTick;

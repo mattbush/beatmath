@@ -410,6 +410,7 @@ class AngleParameter extends Parameter {
         super(params);
         this._constrainTo = (params.constrainTo !== undefined) ? params.constrainTo : 360;
         this._defaultOff = params.start;
+        this._tempo = params.tempo;
         this._onLaunchpadKnobSpinInterval = this._onLaunchpadKnobSpinInterval.bind(this);
     }
     listenToLaunchpadKnob(mixboard, row, column) {
@@ -423,9 +424,15 @@ class AngleParameter extends Parameter {
     }
     onLaunchpadKnobUpdate(inputValue) {
         inputValue -= 0.5;
-        this._launchpadKnobValue = inputValue * Math.abs(inputValue) * 40;
+        this._launchpadKnobValue = inputValue * Math.abs(inputValue) * 10;
         if (inputValue !== 0 && !this._launchpadKnobIntervalId) {
-            this._launchpadKnobIntervalId = setInterval(this._onLaunchpadKnobSpinInterval, 20);
+            let intervalMs;
+            if (this._tempo) {
+                intervalMs = this._tempo.getBasePeriod() / 16;
+            } else {
+                intervalMs = 20;
+            }
+            this._launchpadKnobIntervalId = setInterval(this._onLaunchpadKnobSpinInterval, intervalMs);
             this._onLaunchpadKnobSpinInterval();
         } else if (inputValue === 0 && this._launchpadKnobIntervalId) {
             clearInterval(this._launchpadKnobIntervalId);
