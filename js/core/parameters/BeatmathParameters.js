@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const {MovingLogarithmicParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
+const {LogarithmicParameter, MovingLogarithmicParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
 const BeatmathTempo = require('js/core/parameters/BeatmathTempo');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/core/parameters/BeatmathConstants');
 const {MixtrackFaders, MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
@@ -41,26 +41,35 @@ class BeatmathParameters {
             this.height.listenToMixtrackFader(mixboard, MixtrackFaders.R_PITCH_BEND);
         }
 
-        this.frameScale = new MovingLogarithmicParameter({
+        this.frameScale = new LogarithmicParameter({
             range: [0.25, 16],
-            autoupdateRange: [0.25, 0.75],
             start: 1,
             variance: 0.015,
             monitorName: 'Frame Scale',
         });
-        if (mixboard.isMixboardConnected()) {
-            this.frameScale.listenForAutoupdateCue(mixboard, MixtrackButtons.L_CUE);
-        }
         if (mixboard.isLaunchpad()) {
             this.frameScale.listenToLaunchpadFader(mixboard, 7, {addButtonStatusLight: true});
         } else {
             this.frameScale.listenToMixtrackFader(mixboard, MixtrackFaders.MASTER_GAIN);
         }
+
+        this.frameScaleAutoupdating = new MovingLogarithmicParameter({
+            range: [0.5, 2],
+            start: 1,
+            variance: 0.015,
+            monitorName: 'Scale Mod',
+        });
+        if (mixboard.isMixboardConnected()) {
+            this.frameScaleAutoupdating.listenForAutoupdateCue(mixboard);
+        }
+        if (mixboard.isLaunchpad()) {
+            this.frameScaleAutoupdating.listenToLaunchpadFader(mixboard, 6, {addButtonStatusLight: true});
+        }
         this.tempo.addListener(() => {
             const nTicks = 1;
             const tick = this.tempo.getNumTicks();
             if (tick % (nTicks * this.tempo._bpmMod) === 0) {
-                this.frameScale.update();
+                this.frameScaleAutoupdating.update();
             }
         });
 

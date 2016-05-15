@@ -424,7 +424,7 @@ class AngleParameter extends Parameter {
     }
     onLaunchpadKnobUpdate(inputValue) {
         inputValue -= 0.5;
-        this._launchpadKnobValue = inputValue * Math.abs(inputValue) * 10;
+        this._launchpadKnobValue = inputValue * Math.abs(inputValue) * 30;
         if (inputValue !== 0 && !this._launchpadKnobIntervalId) {
             let intervalMs;
             if (this._tempo) {

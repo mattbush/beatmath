@@ -13,13 +13,14 @@ const BeatmathFrame = React.createClass({
             height: this.context.beatmathParameters.height,
             frameRotation: this.context.beatmathParameters.frameRotation,
             frameScale: this.context.beatmathParameters.frameScale,
+            frameScaleAutoupdating: this.context.beatmathParameters.frameScaleAutoupdating,
         };
     },
     render: function() {
         const width = this.getParameterValue('width');
         const height = this.getParameterValue('height');
         const frameRotation = this.getParameterValue('frameRotation');
-        const frameScale = this.getParameterValue('frameScale');
+        const frameScale = this.getParameterValue('frameScale') * this.getParameterValue('frameScaleAutoupdating');
         const transitionPeriod = this.context.beatmathParameters.tempo.getBasePeriod() / 16;
         const style = {
             transform: `translate(${width / 2}px, ${height / 2}px) rotate(${frameRotation}deg) scale(${frameScale})`,
