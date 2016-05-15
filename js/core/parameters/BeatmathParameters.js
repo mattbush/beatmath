@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const {LogarithmicParameter, MovingLogarithmicParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
+const {MovingLinearParameter, LogarithmicParameter, MovingLogarithmicParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
 const BeatmathTempo = require('js/core/parameters/BeatmathTempo');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/core/parameters/BeatmathConstants');
 const {MixtrackFaders, MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
@@ -120,12 +120,14 @@ class BeatmathParameters {
         }
 
         if (params.usePixels) {
-            this.pixelPointiness = new LinearParameter({
+            this.pixelPointiness = new MovingLinearParameter({
                 range: [0.45, 2.5],
+                autoupdateRange: [0.45, 1.75],
                 start: 1,
                 useStartAsMidpoint: true,
                 incrementAmount: 0.05,
                 monitorName: 'Pixel Pointiness',
+                variance: 0.05,
             });
             if (mixboard.isLaunchpad()) {
                 this.pixelPointiness.listenToLaunchpadKnob(mixboard, 1, 6);
@@ -134,6 +136,16 @@ class BeatmathParameters {
                 this.pixelPointiness.listenToResetMixtrackButton(mixboard, MixtrackButtons.R_EFFECT);
                 this.pixelPointiness.addMixtrackStatusLight(mixboard, MixtrackButtons.R_EFFECT, value => value !== 1);
             }
+            if (mixboard.isMixboardConnected()) {
+                this.pixelPointiness.listenForAutoupdateCue(mixboard);
+            }
+            this.tempo.addListener(() => {
+                const nTicks = 1;
+                const tick = this.tempo.getNumTicks();
+                if (tick % (nTicks * this.tempo._bpmMod) === 0) {
+                    this.pixelPointiness.update();
+                }
+            });
 
             this.pixelSidedness = new IntLinearParameter({
                 range: [2, 6],
