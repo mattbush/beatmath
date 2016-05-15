@@ -1,6 +1,7 @@
 const _ = require('underscore');
-const {AngleParameter, ToggleParameter, MovingColorParameter, LinearParameter} = require('js/core/parameters/Parameter');
+const {CycleParameter, ToggleParameter, MovingColorParameter, LinearParameter} = require('js/core/parameters/Parameter');
 const {MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
+const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 const IndexMappingParameter = require('js/twenty_sixteen/parameters/IndexMappingParameter');
 const tinycolor = require('tinycolor2');
 const {posMod} = require('js/core/utils/math');
@@ -16,8 +17,8 @@ const HUE_COEFFS = {satCoeff: SAT_COEFF, briCoeff: BRI_COEFF};
 
 const ARRANGEMENTS = require('js/twenty_sixteen/state/arrangements');
 
-const SET_ARRANGEMENT_BUTTONS = [MixtrackButtons.L_HOT_CUE_1, MixtrackButtons.L_HOT_CUE_2, MixtrackButtons.L_HOT_CUE_3];
-const NUM_PRESET_ARRANGEMENTS = SET_ARRANGEMENT_BUTTONS.length;
+const MIXTRACK_SET_ARRANGEMENT_BUTTONS = [MixtrackButtons.L_HOT_CUE_1, MixtrackButtons.L_HOT_CUE_2, MixtrackButtons.L_HOT_CUE_3];
+const NUM_PRESET_ARRANGEMENTS = MIXTRACK_SET_ARRANGEMENT_BUTTONS.length;
 
 const NUM_GOLD = 20;
 const NUM_BLUE = 16;
@@ -30,11 +31,14 @@ class TwentySixteenParameters extends PieceParameters {
     _declareParameters() {
         return {
             arrangementIndex: {
-                type: AngleParameter,
-                start: 0,
-                constrainTo: ARRANGEMENTS.length,
+                // type: AngleParameter,
+                // start: 0,
+                // constrainTo: ARRANGEMENTS.length,
+                // listenToMixtrackWheel: MixtrackWheels.BROWSE,
+                type: CycleParameter,
+                cycleValues: _.times(ARRANGEMENTS.length, _.identity),
+                listenToDecrementAndIncrementLaunchpadButtons: 0,
                 monitorName: 'Arrangement #',
-                listenToMixtrackWheel: MixtrackWheels.BROWSE,
             },
             goldColor: {
                 type: MovingColorParameter,
@@ -51,7 +55,9 @@ class TwentySixteenParameters extends PieceParameters {
             _isAutopiloting: {
                 type: ToggleParameter,
                 start: false,
+                listenToLaunchpadButton: 1,
                 listenToMixtrackButton: MixtrackButtons.L_EFFECT,
+                monitorName: 'Arr Autopilot',
             },
             _autopilotArrangementFrequencyLog2: {
                 type: LinearParameter,
@@ -74,7 +80,9 @@ class TwentySixteenParameters extends PieceParameters {
             reverseFrameRotationInPixels: {
                 type: ToggleParameter,
                 start: false,
+                listenToLaunchpadButton: 6,
                 listenToMixtrackButton: MixtrackButtons.R_KEYLOCK,
+                monitorName: 'Correct angle?',
             },
         };
     }
@@ -86,10 +94,17 @@ class TwentySixteenParameters extends PieceParameters {
         this._isAutopiloting.addListener(this._onAutopilotChange.bind(this));
 
         this._resetArrangements(true);
-        this._mixboard.addMixtrackButtonListener(MixtrackButtons.L_DELETE, this._resetArrangements.bind(this));
-        _.times(NUM_PRESET_ARRANGEMENTS, index => {
-            this._mixboard.addMixtrackButtonListener(SET_ARRANGEMENT_BUTTONS[index], this._setArrangement.bind(this, index));
-        });
+        if (this._mixboard.isLaunchpad()) {
+            this._mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[2], this._resetArrangements.bind(this));
+            _.times(NUM_PRESET_ARRANGEMENTS, index => {
+                this._mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[index + 1], this._setArrangement.bind(this, index));
+            });
+        } else {
+            this._mixboard.addMixtrackButtonListener(MixtrackButtons.L_DELETE, this._resetArrangements.bind(this));
+            _.times(NUM_PRESET_ARRANGEMENTS, index => {
+                this._mixboard.addMixtrackButtonListener(MIXTRACK_SET_ARRANGEMENT_BUTTONS[index], this._setArrangement.bind(this, index));
+            });
+        }
 
         this._mixboard.addMixtrackButtonListener(MixtrackButtons.L_LOOP_MANUAL, this._incrementIndicesDown.bind(this));
         this._mixboard.addMixtrackButtonListener(MixtrackButtons.L_LOOP_IN, this._incrementIndicesUp.bind(this));
@@ -103,14 +118,22 @@ class TwentySixteenParameters extends PieceParameters {
         if (inputValue && !this._isOnAutopilot()) {
             this._arrangements = _.times(NUM_PRESET_ARRANGEMENTS, _.noop);
             _.times(NUM_PRESET_ARRANGEMENTS, index => {
-                this._mixboard.toggleLight(SET_ARRANGEMENT_BUTTONS[index], false);
+                if (this._mixboard.isLaunchpad()) {
+                    this._mixboard.toggleLight(LaunchpadButtons.TRACK_FOCUS[index + 1], false);
+                } else {
+                    this._mixboard.toggleLight(MIXTRACK_SET_ARRANGEMENT_BUTTONS[index], false);
+                }
             });
         }
     }
     _setArrangement(index, inputValue) {
         if (inputValue && !this._isOnAutopilot()) {
             this._arrangements[index] = this.arrangementIndex.getValue();
-            this._mixboard.toggleLight(SET_ARRANGEMENT_BUTTONS[index], true);
+            if (this._mixboard.isLaunchpad()) {
+                this._mixboard.toggleLight(LaunchpadButtons.TRACK_FOCUS[index + 1], true);
+            } else {
+                this._mixboard.toggleLight(MIXTRACK_SET_ARRANGEMENT_BUTTONS[index], true);
+            }
         }
     }
     _incrementIndicesUp(value) {
