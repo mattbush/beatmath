@@ -23,7 +23,7 @@ const NUM_PRESET_ARRANGEMENTS = MIXTRACK_SET_ARRANGEMENT_BUTTONS.length;
 const NUM_GOLD = 20;
 const NUM_BLUE = 16;
 
-const ENABLE_HUE = false;
+const ENABLE_HUE = true;
 
 const AUTOPILOT_FREQ_MAX = 5;
 
@@ -220,10 +220,11 @@ class TwentySixteenParameters extends PieceParameters {
             const goldColor = tinycolor(this.goldColor.getValue().toHexString()); // clone
             const blueColor = tinycolor(goldColor.toHexString()).spin(180); // clone
 
+            const hueIndices = [0, 5, 3, 4, 7, 2, 1];
             if (ticks % 2) {
-                updateHue(posMod(ticks, 3), goldColor, HUE_COEFFS);
+                updateHue(hueIndices[posMod(ticks, hueIndices.length)], goldColor, HUE_COEFFS);
             } else {
-                updateHue(posMod(ticks, 3), blueColor, HUE_COEFFS);
+                updateHue(hueIndices[posMod(ticks, hueIndices.length)], blueColor, HUE_COEFFS);
             }
         }
     }

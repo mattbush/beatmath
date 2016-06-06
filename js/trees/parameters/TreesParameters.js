@@ -73,7 +73,7 @@ class TreesParameters extends PieceParameters {
             },
             periodTicks: {type: LogarithmicParameter,
                 range: [2, 16],
-                start: 2,
+                start: 8,
                 listenToDecrementAndIncrementLaunchpadButtons: 0,
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
                 monitorName: 'Period Ticks',
@@ -105,7 +105,7 @@ class TreesParameters extends PieceParameters {
             trailPercent: {
                 type: LinearParameter,
                 range: [0, 1],
-                start: 0.5, mixboardStart: 0,
+                start: 1, mixboardStart: 0,
                 incrementAmount: 0.05,
                 monitorName: 'Trail %',
                 listenToLaunchpadKnob: [2, 2],

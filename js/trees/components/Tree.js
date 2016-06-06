@@ -2,6 +2,9 @@ const _ = require('underscore');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const {lerp, clamp} = require('js/core/utils/math');
+const updateHue = require('js/core/outputs/updateHue');
+
+const ENABLE_HUE = true;
 
 const Tree = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -25,6 +28,14 @@ const Tree = React.createClass({
         const levelHeight = treesParameters.getLevelHeight();
 
         const borderRadius = treesParameters.getBorderRadius();
+
+        if (ENABLE_HUE) {
+            const baseFill = treesParameters.getColorForIndexAndLevel(this.props.index, 0);
+            const hueIndices = [0, 5, 3, 4, 7, 2, 1];
+            if (this.props.index < hueIndices.length) {
+                updateHue(hueIndices[this.props.index], baseFill);
+            }
+        }
 
         return (
             <g>
