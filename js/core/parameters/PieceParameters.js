@@ -6,14 +6,14 @@ const SPECIAL_KEYS = [
 const MIXBOARD_LISTENER_KEYS = (value, key) => key.startsWith('listenTo');
 
 class PieceParameters {
-    constructor(mixboard, beatmathParameters) {
+    constructor(mixboard, beatmathParameters, opts) {
         this._mixboard = mixboard;
         this._beatmathParameters = beatmathParameters;
 
-        this._initParameters();
+        this._initParameters(opts);
     }
-    _initParameters() {
-        const parameters = this._declareParameters();
+    _initParameters(opts) {
+        const parameters = this._declareParameters(opts);
         _.each(parameters, (properties, paramName) => {
             let {type, ...restOfProperties} = properties;
 
@@ -65,7 +65,7 @@ class PieceParameters {
             parameter.listenForAutoupdateCue(this._mixboard);
         }
     }
-    _declareParameters() {
+    _declareParameters(/*opts*/) {
         // empty, override me
         return {};
     }
