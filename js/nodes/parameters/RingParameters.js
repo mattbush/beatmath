@@ -1,6 +1,8 @@
+const _ = require('underscore');
 const {IntLinearParameter, MovingAngleParameter, LinearParameter} = require('js/core/parameters/Parameter');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const {xyFromPolarAngleAndRadius} = require('js/core/utils/math');
+const Node = require('js/nodes/parameters/Node');
 
 class RingParameters extends PieceParameters {
     constructor(mixboard, beatmathParameters, nodesParameters, ringIndex) {
@@ -11,13 +13,15 @@ class RingParameters extends PieceParameters {
         this._onNumNodesInRingChange();
     }
     _declareParameters({nodesParameters, ringIndex}) {
+        const prettyRingIndex = (ringIndex + 1) + ' '; // put a ring on it!
+
         return {
             numNodesInRing: {
                 type: IntLinearParameter,
                 range: [0, 16],
                 start: ringIndex ? 1 : 1,
                 listenToLaunchpadFader: [ringIndex, {addButtonStatusLight: true}],
-                monitorName: '# Nodes',
+                monitorName: prettyRingIndex + '# Nodes',
             },
             ringRotation: {
                 type: MovingAngleParameter,
@@ -27,7 +31,7 @@ class RingParameters extends PieceParameters {
                 constrainTo: false,
                 autoupdateEveryNBeats: 1,
                 listenToLaunchpadKnob: [2, ringIndex],
-                monitorName: 'Ring Rotation',
+                monitorName: prettyRingIndex + 'Ring Rotation',
                 autoupdateOnCue: true,
             },
             ringScale: {
@@ -36,7 +40,7 @@ class RingParameters extends PieceParameters {
                 start: (ringIndex + 1) / nodesParameters.getNumRings(),
                 incrementAmount: 0.05,
                 listenToLaunchpadKnob: [1, ringIndex],
-                monitorName: 'Ring Scale',
+                monitorName: prettyRingIndex + 'Ring Scale',
             },
             nodeFreedomFromRingAmount: {
                 type: LinearParameter,
@@ -44,17 +48,17 @@ class RingParameters extends PieceParameters {
                 start: 0,
                 incrementAmount: 0.05,
                 listenToLaunchpadKnob: [0, ringIndex],
-                monitorName: 'Node Freedom %',
+                monitorName: prettyRingIndex + 'Node Freed %',
             },
         };
     }
     _onNumNodesInRingChange() {
         const numNodesInRing = this.numNodesInRing.getValue();
 
-        for (let i = numNodesInRing; i < this._nodesInRing.length; i++) {
+        for (let i = this._nodesInRing.length; i < numNodesInRing; i++) {
             this._nodesInRing.push(new Node(this._mixboard, this._beatmathParameters, this, i));
         }
-        for (let i = numNodesInRing; i > this._nodesInRing.length; i--) {
+        for (let i = this._nodesInRing.length; i > numNodesInRing; i--) {
             this._nodesInRing.pop();
         }
     }
@@ -64,6 +68,9 @@ class RingParameters extends PieceParameters {
         const radius = this.ringScale.getValue();
 
         return xyFromPolarAngleAndRadius(finalAngle, radius);
+    }
+    mapNodesInRing(fn) {
+        return _.map(this._nodesInRing, fn);
     }
 }
 

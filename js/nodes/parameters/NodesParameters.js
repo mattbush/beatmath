@@ -20,7 +20,7 @@ class NodesParameters extends PieceParameters {
         };
     }
     getNumRings() {
-        return this._rings.length;
+        return NUM_RINGS;
     }
     mapRings(fn) {
         return _.map(this._rings, fn);

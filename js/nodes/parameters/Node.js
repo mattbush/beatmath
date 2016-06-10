@@ -30,12 +30,12 @@ class Node extends PieceParameters {
         this._driftX.update();
         this._driftY.update();
 
-        const {ringX, ringY} = this._ringParameters.getRingCoordsForIndex(this._indexInRing);
+        const {x: ringX, y: ringY} = this._ringParameters.getRingCoordsForIndex(this._indexInRing);
 
         const nodeFreedomFromRingAmount = this._ringParameters.nodeFreedomFromRingAmount.getValue();
 
-        this._x = lerp(ringX, this._driftX, nodeFreedomFromRingAmount);
-        this._Y = lerp(ringY, this._driftY, nodeFreedomFromRingAmount);
+        this._x = lerp(ringX, this._driftX.getValue(), nodeFreedomFromRingAmount);
+        this._y = lerp(ringY, this._driftY.getValue(), nodeFreedomFromRingAmount);
     }
 }
 

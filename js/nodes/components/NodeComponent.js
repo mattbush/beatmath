@@ -6,7 +6,7 @@ const NodeComponent = React.createClass({
     },
     render: function() {
         const node = this.props.node;
-        const tempo = this.context.beatmathParameters.getTempo();
+        const tempo = this.context.beatmathParameters.tempo;
         const nodeRadius = 0.01;
         const style = {
             transform: `translate(${node._x}px, ${node._y}px))`,
@@ -15,7 +15,7 @@ const NodeComponent = React.createClass({
         };
         return (
             <g style={style}>
-                <circle cx={0} cy={0} radius={nodeRadius} />
+                <circle cx={0} cy={0} r={nodeRadius} />
             </g>
         );
     },

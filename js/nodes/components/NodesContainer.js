@@ -33,7 +33,7 @@ const NodesContainer = React.createClass({
             <BeatmathFrame>
                 <g transform="scale(400)">
                     {this.state.nodesParameters.mapRings((ring, ringIndex) =>
-                        ring.mapNodes((node, nodeIndex) =>
+                        ring.mapNodesInRing((node, nodeIndex) =>
                             <NodeComponent key={`${ringIndex}~${nodeIndex}`} node={node} />
                         )
                     )}
