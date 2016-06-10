@@ -1,8 +1,11 @@
 const React = require('react');
 const NodesParameters = require('js/nodes/parameters/NodesParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
+const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
+const NodeComponent = require('js/nodes/components/NodeComponent');
 
 const NodesContainer = React.createClass({
+    mixins: [ParameterBindingsMixin],
     childContextTypes: {
         nodesParameters: React.PropTypes.object,
     },
@@ -20,10 +23,21 @@ const NodesContainer = React.createClass({
             nodesParameters: new NodesParameters(this.context.mixboard, this.context.beatmathParameters),
         };
     },
+    getParameterBindings: function() {
+        return {
+            tempo: this.context.beatmathParameters.tempo,
+        };
+    },
     render: function() {
         return (
             <BeatmathFrame>
-                Hello world!
+                <g transform="scale(400)">
+                    {this.state.nodesParameters.mapRings((ring, ringIndex) =>
+                        ring.mapNodes((node, nodeIndex) =>
+                            <NodeComponent key={`${ringIndex}~${nodeIndex}`} node={node} />
+                        )
+                    )}
+                </g>
             </BeatmathFrame>
         );
     },

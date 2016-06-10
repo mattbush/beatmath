@@ -1,16 +1,69 @@
-// const {LinearParameter} = require('js/core/parameters/Parameter');
-// const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
+const {IntLinearParameter, MovingAngleParameter, LinearParameter} = require('js/core/parameters/Parameter');
 const PieceParameters = require('js/core/parameters/PieceParameters');
+const {xyFromPolarAngleAndRadius} = require('js/core/utils/math');
 
 class RingParameters extends PieceParameters {
     constructor(mixboard, beatmathParameters, nodesParameters, ringIndex) {
-        super(mixboard, beatmathParameters, {ringIndex})
+        super(mixboard, beatmathParameters, {nodesParameters, ringIndex});
         this._nodesParameters = nodesParameters;
+        this.numNodesInRing.addListener(this._onNumNodesInRingChange);
+        this._nodesInRing = [];
+        this._onNumNodesInRingChange();
     }
-    _declareParameters({ringIndex}) {
+    _declareParameters({nodesParameters, ringIndex}) {
         return {
-            // some different default value based on numRings
+            numNodesInRing: {
+                type: IntLinearParameter,
+                range: [0, 16],
+                start: ringIndex ? 1 : 1,
+                listenToLaunchpadFader: [ringIndex, {addButtonStatusLight: true}],
+                monitorName: '# Nodes',
+            },
+            ringRotation: {
+                type: MovingAngleParameter,
+                max: 45,
+                variance: 5,
+                start: 0,
+                constrainTo: false,
+                autoupdateEveryNBeats: 1,
+                listenToLaunchpadKnob: [2, ringIndex],
+                monitorName: 'Ring Rotation',
+                autoupdateOnCue: true,
+            },
+            ringScale: {
+                type: LinearParameter,
+                range: [0, 1],
+                start: (ringIndex + 1) / nodesParameters.getNumRings(),
+                incrementAmount: 0.05,
+                listenToLaunchpadKnob: [1, ringIndex],
+                monitorName: 'Ring Scale',
+            },
+            nodeFreedomFromRingAmount: {
+                type: LinearParameter,
+                range: [0, 1],
+                start: 0,
+                incrementAmount: 0.05,
+                listenToLaunchpadKnob: [0, ringIndex],
+                monitorName: 'Node Freedom %',
+            },
         };
+    }
+    _onNumNodesInRingChange() {
+        const numNodesInRing = this.numNodesInRing.getValue();
+
+        for (let i = numNodesInRing; i < this._nodesInRing.length; i++) {
+            this._nodesInRing.push(new Node(this._mixboard, this._beatmathParameters, this, i));
+        }
+        for (let i = numNodesInRing; i > this._nodesInRing.length; i--) {
+            this._nodesInRing.pop();
+        }
+    }
+    getRingCoordsForIndex(index) {
+        const baseAngleForIndex = index * (360 / this.numNodesInRing.getValue());
+        const finalAngle = baseAngleForIndex + this.ringRotation.getValue();
+        const radius = this.ringScale.getValue();
+
+        return xyFromPolarAngleAndRadius(finalAngle, radius);
     }
 }
 

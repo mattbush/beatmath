@@ -26,6 +26,14 @@ const polarAngleDeg = function(x, y) {
     return Math.atan2(y, x) * 180 / Math.PI;
 };
 
+const xyFromPolarAngleAndRadius = function(polarAngleInDegrees, radius) {
+    const angleInRadians = polarAngleInDegrees * Math.PI / 180;
+    return {
+        x: Math.cos(angleInRadians) * radius,
+        y: Math.sin(angleInRadians) * radius,
+    };
+};
+
 const posMod = function(dividend, divisor) {
     const remainder = dividend % divisor;
     return remainder < 0 ? remainder + divisor : remainder;
@@ -55,6 +63,7 @@ module.exports = {
     dist,
     manhattanDist,
     polarAngleDeg,
+    xyFromPolarAngleAndRadius,
     posMod,
     ceilOfMultiple,
     modAndShiftToHalf,

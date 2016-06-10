@@ -6,7 +6,7 @@ module.exports = {
         honeycomb: "./js/honeycomb/honeycomb",
         kale: "./js/kale/kale",
         lattice: "./js/lattice/lattice",
-        nodes: "./js/pinecone/nodes",
+        nodes: "./js/nodes/nodes",
         pinecone: "./js/pinecone/pinecone",
         text: "./js/text/text",
         trees: "./js/trees/trees",
