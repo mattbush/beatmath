@@ -9,7 +9,7 @@ const NodeComponent = React.createClass({
         const tempo = this.context.beatmathParameters.tempo;
         const nodeRadius = 0.01;
         const style = {
-            transform: `translate(${node._x}px, ${node._y}px)`,
+            transform: `translate(${node.x}px, ${node.y}px)`,
             transition: `transform ${tempo.getPeriod()}ms linear`,
             fill: '#ff9900',
         };

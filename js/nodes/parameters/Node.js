@@ -32,8 +32,8 @@ class Node extends PieceParameters {
     addEdgeWith(otherNode) {
         this._neighboringNodes.push(otherNode);
     }
-    forEachEdge(fn) {
-        this._neighboringNodes.forEach(otherNode => fn(otherNode, this));
+    mapEdges(fn) {
+        return this._neighboringNodes.map(otherNode => fn(otherNode, this));
     }
     recalculateLocation() {
         this._driftX.update();
@@ -43,8 +43,8 @@ class Node extends PieceParameters {
 
         const nodeFreedomFromRingAmount = this._ringParameters.nodeFreedomFromRingAmount.getValue();
 
-        this._x = lerp(ringX, this._driftX.getValue(), nodeFreedomFromRingAmount);
-        this._y = lerp(ringY, this._driftY.getValue(), nodeFreedomFromRingAmount);
+        this.x = lerp(ringX, this._driftX.getValue(), nodeFreedomFromRingAmount);
+        this.y = lerp(ringY, this._driftY.getValue(), nodeFreedomFromRingAmount);
     }
 }
 

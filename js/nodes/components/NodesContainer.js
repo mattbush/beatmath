@@ -3,6 +3,7 @@ const NodesParameters = require('js/nodes/parameters/NodesParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const NodeComponent = require('js/nodes/components/NodeComponent');
+const EdgeComponent = require('js/nodes/components/EdgeComponent');
 
 const NodesContainer = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -32,6 +33,9 @@ const NodesContainer = React.createClass({
         return (
             <BeatmathFrame>
                 <g style={{transform: 'scale(400)'}}>
+                    {this.state.nodesParameters.mapEdges((node1, node2) =>
+                        <EdgeComponent key={`${node1.getId()}~${node2.getId()}`} node1={node1} node2={node2} />
+                    )}
                     {this.state.nodesParameters.mapRings(ring =>
                         ring.mapNodesInRing(node =>
                             <NodeComponent key={node.getId()} node={node} />

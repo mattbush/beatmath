@@ -20,7 +20,8 @@ class RingParameters extends PieceParameters {
             numNodesInRing: {
                 type: IntLinearParameter,
                 range: [0, 16],
-                start: ringIndex ? 1 : 1,
+                start: (ringIndex + 1),
+                mixboardStart: ringIndex ? 1 : 1,
                 listenToLaunchpadFader: [ringIndex, {addButtonStatusLight: true}],
                 monitorName: prettyRingIndex + '# Nodes',
             },
@@ -57,8 +58,8 @@ class RingParameters extends PieceParameters {
     getId() {
         return this._id;
     }
-    forEachEdge(fn) {
-        this._nodesInRing.forEachEdge(fn);
+    mapEdges(fn) {
+        return this._nodesInRing.map(node => node.mapEdges(fn));
     }
     _onNumNodesInRingChange() {
         const numNodesInRing = this.numNodesInRing.getValue();
