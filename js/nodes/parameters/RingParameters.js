@@ -11,6 +11,7 @@ class RingParameters extends PieceParameters {
         this.numNodesInRing.addListener(this._onNumNodesInRingChange.bind(this));
         this._nodesInRing = [];
         this._onNumNodesInRingChange();
+        this._id = ringIndex;
     }
     _declareParameters({nodesParameters, ringIndex}) {
         const prettyRingIndex = (ringIndex + 1) + ' '; // put a ring on it!
@@ -53,11 +54,19 @@ class RingParameters extends PieceParameters {
             },
         };
     }
+    getId() {
+        return this._id;
+    }
+    forEachEdge(fn) {
+        this._nodesInRing.forEachEdge(fn);
+    }
     _onNumNodesInRingChange() {
         const numNodesInRing = this.numNodesInRing.getValue();
 
         for (let i = this._nodesInRing.length; i < numNodesInRing; i++) {
-            this._nodesInRing.push(new Node(this._mixboard, this._beatmathParameters, this, i));
+            const node = new Node(this._mixboard, this._beatmathParameters, this, i);
+            this._nodesInRing.push(node);
+            _.times(i, previousNodeIndex => node.addEdgeWith(this._nodesInRing[previousNodeIndex]));
         }
         for (let i = this._nodesInRing.length; i > numNodesInRing; i--) {
             this._nodesInRing.pop();

@@ -28,6 +28,9 @@ class NodesParameters extends PieceParameters {
     mapRings(fn) {
         return _.map(this._rings, fn);
     }
+    forEachEdge(fn) {
+        this._rings.forEachEdge(fn);
+    }
     _recalculateAll() {
         this._rings.forEach(ring => ring.recalculateNodeLocations());
     }

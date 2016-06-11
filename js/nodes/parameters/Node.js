@@ -7,6 +7,8 @@ class Node extends PieceParameters {
         super(mixboard, beatmathParameters);
         this._ringParameters = ringParameters;
         this._indexInRing = indexInRing;
+        this._neighboringNodes = [];
+        this._id = this._ringParameters.getId() + '~' + this._indexInRing;
     }
     _declareParameters() {
         return {
@@ -23,6 +25,15 @@ class Node extends PieceParameters {
                 variance: 0.05,
             },
         };
+    }
+    getId() {
+        return this._id;
+    }
+    addEdgeWith(otherNode) {
+        this._neighboringNodes.push(otherNode);
+    }
+    forEachEdge(fn) {
+        this._neighboringNodes.forEach(otherNode => fn(otherNode, this));
     }
     recalculateLocation() {
         this._driftX.update();
