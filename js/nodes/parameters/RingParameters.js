@@ -80,6 +80,12 @@ class RingParameters extends PieceParameters {
 
         return xyFromPolarAngleAndRadius(finalAngle, radius);
     }
+    getRingX() {
+        return (this.getId() - 1.5) * this._nodesParameters.ringSpacing.getValue();
+    }
+    getManhattanCoeff() {
+        return this._nodesParameters.manhattanCoeff.getValue();
+    }
     mapNodesInRing(fn) {
         return _.map(this._nodesInRing, fn);
     }
