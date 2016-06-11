@@ -8,6 +8,7 @@ class Node extends PieceParameters {
         this._ringParameters = ringParameters;
         this._indexInRing = indexInRing;
 
+        this._beatmathParameters.tempo.addListener(this._recalculateLocation.bind(this));
         this._recalculateLocation();
     }
     _declareParameters() {

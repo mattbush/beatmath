@@ -8,7 +8,7 @@ class RingParameters extends PieceParameters {
     constructor(mixboard, beatmathParameters, nodesParameters, ringIndex) {
         super(mixboard, beatmathParameters, {nodesParameters, ringIndex});
         this._nodesParameters = nodesParameters;
-        this.numNodesInRing.addListener(this._onNumNodesInRingChange);
+        this.numNodesInRing.addListener(this._onNumNodesInRingChange.bind(this));
         this._nodesInRing = [];
         this._onNumNodesInRingChange();
     }
