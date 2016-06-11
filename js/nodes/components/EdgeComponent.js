@@ -38,10 +38,14 @@ const EdgeComponent = React.createClass({
         el.setAttribute('y2', lerp(this._currentY2, this._nextY2, interpolation));
     },
     render() {
+        const distance = this.props.node1.distanceFrom(this.props.node2);
+        let distanceCoefficient = Math.min(0.1 / distance, 1); // if off, use 0.5
+        const distanceCutoff = 0.15;
+        distanceCoefficient = Math.max(0, (distanceCoefficient - distanceCutoff) * (1 / (1 - distanceCutoff)));
         const tempo = this.context.beatmathParameters.tempo;
         const style = {
             stroke: '#ff9900',
-            strokeWidth: '0.005',
+            strokeWidth: 0.01 * distanceCoefficient,
             transition: `strokeWidth ${tempo.getPeriod()}ms linear`,
         };
         return (

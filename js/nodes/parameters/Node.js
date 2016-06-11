@@ -1,6 +1,6 @@
 const {MovingLinearParameter} = require('js/core/parameters/Parameter');
 const PieceParameters = require('js/core/parameters/PieceParameters');
-const {lerp} = require('js/core/utils/math');
+const {lerp, dist} = require('js/core/utils/math');
 
 class Node extends PieceParameters {
     constructor(mixboard, beatmathParameters, ringParameters, indexInRing) {
@@ -45,6 +45,9 @@ class Node extends PieceParameters {
 
         this.x = lerp(ringX, this._driftX.getValue(), nodeFreedomFromRingAmount);
         this.y = lerp(ringY, this._driftY.getValue(), nodeFreedomFromRingAmount);
+    }
+    distanceFrom(otherNode) {
+        return dist(this.x - otherNode.x, this.y - otherNode.y);
     }
 }
 
