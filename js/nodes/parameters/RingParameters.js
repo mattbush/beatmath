@@ -72,6 +72,9 @@ class RingParameters extends PieceParameters {
     mapNodesInRing(fn) {
         return _.map(this._nodesInRing, fn);
     }
+    recalculateNodeLocations() {
+        this._nodesInRing.forEach(node => node.recalculateLocation());
+    }
 }
 
 module.exports = RingParameters;

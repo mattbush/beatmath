@@ -7,9 +7,6 @@ class Node extends PieceParameters {
         super(mixboard, beatmathParameters);
         this._ringParameters = ringParameters;
         this._indexInRing = indexInRing;
-
-        this._beatmathParameters.tempo.addListener(this._recalculateLocation.bind(this));
-        this._recalculateLocation();
     }
     _declareParameters() {
         return {
@@ -27,7 +24,7 @@ class Node extends PieceParameters {
             },
         };
     }
-    _recalculateLocation() {
+    recalculateLocation() {
         this._driftX.update();
         this._driftY.update();
 

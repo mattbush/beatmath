@@ -13,6 +13,9 @@ class NodesParameters extends PieceParameters {
         this._rings = _.times(NUM_RINGS, ringIndex =>
             new RingParameters(mixboard, beatmathParameters, this, ringIndex)
         );
+
+        this._beatmathParameters.tempo.addListener(this._recalculateAll.bind(this));
+        this._recalculateAll();
     }
     _declareParameters() {
         return {
@@ -24,6 +27,9 @@ class NodesParameters extends PieceParameters {
     }
     mapRings(fn) {
         return _.map(this._rings, fn);
+    }
+    _recalculateAll() {
+        this._rings.forEach(ring => ring.recalculateNodeLocations());
     }
 }
 
