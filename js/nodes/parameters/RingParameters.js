@@ -25,14 +25,15 @@ class RingParameters extends PieceParameters {
             },
             ringRotation: {
                 type: MovingAngleParameter,
-                max: 45,
-                variance: 5,
+                max: 20,
+                variance: 3,
                 start: 0,
                 constrainTo: false,
                 autoupdateEveryNBeats: 1,
                 listenToLaunchpadKnob: [2, ringIndex],
                 monitorName: prettyRingIndex + 'Ring Rotation',
                 autoupdateOnCue: true,
+                tempo: this._beatmathParameters.tempo,
             },
             ringScale: {
                 type: LinearParameter,
