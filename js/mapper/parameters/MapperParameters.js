@@ -4,7 +4,7 @@ const {Parameter, LinearParameter} = require('js/core/parameters/Parameter');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
-const MOVE_SHAPE_POLLING_RATE = 50;
+const MOVE_SHAPE_POLLING_RATE = 33;
 
 class MapperParameters extends PieceParameters {
     constructor(mixboard) {

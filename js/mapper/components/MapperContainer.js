@@ -35,6 +35,7 @@ const MapperContainer = React.createClass({
         const currentShape = mapperParameters.getCurrentShape();
         return (
             <BeatmathFrame>
+                <circle cx={0} cy={0} r={10000} fill="#0033dd" />
                 {mapperParameters.mapShapes((shape, index) => {
                     if (shape === currentShape) {
                         return null;

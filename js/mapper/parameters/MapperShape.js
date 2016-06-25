@@ -2,8 +2,8 @@ class MapperShape {
     constructor(index) {
         const offset = index * 50;
         this._vertices = [
-            [-350 + offset, -40],
             [-400 + offset, 40],
+            [-350 + offset, -40],
             [-300 + offset, 40],
         ];
     }
@@ -16,6 +16,12 @@ class MapperShape {
             return `${vertex[0]},${vertex[1]}`;
         });
         return pointsArray.join(' ');
+    }
+    getX(vertex) {
+        return this._vertices[vertex][0];
+    }
+    getY(vertex) {
+        return this._vertices[vertex][1];
     }
 }
 
