@@ -3,8 +3,10 @@ const MapperParameters = require('js/mapper/parameters/MapperParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const MapperShapeView = require('js/mapper/components/MapperShapeView');
 const MapperCurrentShapeView = require('js/mapper/components/MapperCurrentShapeView');
+const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 
 const MapperContainer = React.createClass({
+    mixins: [ParameterBindingsMixin],
     childContextTypes: {
         mapperParameters: React.PropTypes.object,
     },
@@ -20,6 +22,12 @@ const MapperContainer = React.createClass({
     getInitialState: function() {
         return {
             mapperParameters: new MapperParameters(this.context.mixboard, this.context.beatmathParameters),
+        };
+    },
+    getParameterBindings: function() {
+        return {
+            mapping: this.state.mapperParameters.mapping,
+            currentShapeIndex: this.state.mapperParameters.currentShapeIndex,
         };
     },
     render: function() {

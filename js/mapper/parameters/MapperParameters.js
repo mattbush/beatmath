@@ -1,6 +1,6 @@
 const _ = require('underscore');
 const MapperShape = require('js/mapper/parameters/MapperShape');
-const {LinearParameter} = require('js/core/parameters/Parameter');
+const {Parameter, LinearParameter} = require('js/core/parameters/Parameter');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
@@ -37,6 +37,10 @@ class MapperParameters extends PieceParameters {
     }
     _declareParameters() {
         return {
+            mapping: {
+                type: Parameter,
+                start: null,
+            },
             numShapes: {
                 type: LinearParameter,
                 range: [1, 16],
@@ -55,14 +59,14 @@ class MapperParameters extends PieceParameters {
     }
     _onDirectionButtonPressed(direction, value) {
         if (value) {
-            this._directionsPressed = true;
+            this._directionsPressed[direction] = true;
         } else {
             delete this._directionsPressed[direction];
         }
     }
     _onVertexButtonPressed(index, value) {
         if (value) {
-            this._verticesPressed = true;
+            this._verticesPressed[index] = true;
         } else {
             delete this._verticesPressed[index];
         }
@@ -120,6 +124,7 @@ class MapperParameters extends PieceParameters {
     }
     _onMappingChanged() {
         // TODO
+        this.mapping._updateListeners();
     }
 }
 
