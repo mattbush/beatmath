@@ -3,7 +3,7 @@ const React = require('react');
 const MapperShapeView = React.createClass({
     render: function() {
         return (
-            <polygon fill="#ffffff" points={this.props.shape.getPointsString()} />
+            <polygon fill="#999999" points={this.props.shape.getPointsString()} />
         );
     },
 });

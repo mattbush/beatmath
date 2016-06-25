@@ -44,7 +44,7 @@ class MapperParameters extends PieceParameters {
                 listenToDecrementAndIncrementLaunchpadButtons: 6,
                 monitorName: 'Num Shapes',
             },
-            currentShape: {
+            currentShapeIndex: {
                 type: LinearParameter,
                 range: [1, 16],
                 start: 1,
@@ -94,10 +94,10 @@ class MapperParameters extends PieceParameters {
         this._onMappingChanged();
     }
     getCurrentShape() {
-        const currentShape = this.currentShape.getValue();
+        const currentShapeIndex = this.currentShapeIndex.getValue() - 1;
         const numShapes = this.numShapes.getValue();
-        if (currentShape < numShapes) {
-            return this._shapes[currentShape];
+        if (currentShapeIndex < numShapes) {
+            return this._shapes[currentShapeIndex];
         } else {
             return null;
         }

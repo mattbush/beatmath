@@ -2,6 +2,7 @@ const React = require('react');
 const MapperParameters = require('js/mapper/parameters/MapperParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const MapperShapeView = require('js/mapper/components/MapperShapeView');
+const MapperCurrentShapeView = require('js/mapper/components/MapperCurrentShapeView');
 
 const MapperContainer = React.createClass({
     childContextTypes: {
@@ -32,7 +33,7 @@ const MapperContainer = React.createClass({
                     }
                     return <MapperShapeView key={index} shape={shape} />;
                 })}
-                {currentShape && <MapperShapeView shape={currentShape} />}
+                {currentShape && <MapperCurrentShapeView shape={currentShape} />}
             </BeatmathFrame>
         );
     },
