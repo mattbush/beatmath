@@ -1,17 +1,13 @@
-const _ = require('underscore');
 const {MovingLinearParameter, LogarithmicParameter, MovingLogarithmicParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
 const BeatmathTempo = require('js/core/parameters/BeatmathTempo');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/core/parameters/BeatmathConstants');
 const {MixtrackFaders, MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
-const {LaunchpadKnobOutputCodes} = require('js/core/inputs/LaunchpadConstants');
 
 class BeatmathParameters {
     constructor(mixboard, params) {
         window.localStorage.clear();
         if (mixboard.isLaunchpad()) {
-            _.times(3, row => _.times(8, column => {
-                mixboard.clearLaunchpadLight(LaunchpadKnobOutputCodes[row][column]);
-            }));
+            mixboard.resetLaunchpadLights();
         }
 
         this.tempo = new BeatmathTempo(mixboard, {
