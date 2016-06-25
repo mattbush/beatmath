@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const mixboard = await Mixboard.getInstanceAsync();
 
     ReactDOM.render(
-        <MixboardContext mixboard={mixboard}>
+        <MixboardContext mixboard={mixboard} useFrame={false}>
             <MapperContainer />
         </MixboardContext>,
         document.getElementById('start')
