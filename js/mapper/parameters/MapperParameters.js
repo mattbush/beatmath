@@ -7,13 +7,25 @@ const PieceParameters = require('js/core/parameters/PieceParameters');
 const MOVE_SHAPE_POLLING_RATE = 33;
 
 class MapperParameters extends PieceParameters {
-    constructor(mixboard) {
-        super(...arguments);
+    constructor(mixboard, beatmathParameters) {
+        console.log(window.localStorage.getItem('mapping'));
+        const existingMapping = JSON.parse(window.localStorage.getItem('mapping'));
+        let numShapes = existingMapping ? existingMapping.length : 1;
+
+        super(mixboard, beatmathParameters, {numShapes});
 
         this._verticesPressed = {};
         this._directionsPressed = {};
         this._shapes = [];
-        this._onNumShapesChange();
+        if (existingMapping) {
+            for (let i = 0; i < numShapes; i++) {
+                const shape = new MapperShape({existingData: existingMapping[i]});
+                this._shapes.push(shape);
+            }
+        } else {
+            const shape = new MapperShape({index: 0});
+            this._shapes.push(shape);
+        }
 
         this.numShapes.addListener(this._onNumShapesChange.bind(this));
 
@@ -35,7 +47,7 @@ class MapperParameters extends PieceParameters {
 
         setInterval(this._moveCurrentShape.bind(this), MOVE_SHAPE_POLLING_RATE);
     }
-    _declareParameters() {
+    _declareParameters({numShapes}) {
         return {
             mapping: {
                 type: Parameter,
@@ -44,7 +56,7 @@ class MapperParameters extends PieceParameters {
             numShapes: {
                 type: LinearParameter,
                 range: [1, 16],
-                start: 1,
+                start: numShapes,
                 listenToDecrementAndIncrementLaunchpadButtons: 6,
                 monitorName: 'Num Shapes',
             },
@@ -74,6 +86,9 @@ class MapperParameters extends PieceParameters {
     _moveCurrentShape() {
         const currentShape = this.getCurrentShape();
         if (!currentShape) {
+            return;
+        }
+        if (_.size(this._verticesPressed) * _.size(this._directionsPressed) === 0) {
             return;
         }
         _.each(this._verticesPressed, (ignore, vertex) => {
@@ -113,7 +128,7 @@ class MapperParameters extends PieceParameters {
         const numShapes = this.numShapes.getValue();
 
         for (let i = this._shapes.length; i < numShapes; i++) {
-            const shape = new MapperShape(i);
+            const shape = new MapperShape({index: i});
             this._shapes.push(shape);
         }
         for (let i = this._shapes.length; i > numShapes; i--) {
@@ -122,8 +137,12 @@ class MapperParameters extends PieceParameters {
 
         this._onMappingChanged();
     }
+    _getSerializedMapping() {
+        return this._shapes.map(shape => shape.serialize());
+    }
     _onMappingChanged() {
-        // TODO
+        window.localStorage.setItem('mapping', JSON.stringify(this._getSerializedMapping()));
+
         this.mapping._updateListeners();
     }
 }

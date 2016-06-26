@@ -5,7 +5,7 @@ const {MixtrackFaders, MixtrackWheels, MixtrackButtons} = require('js/core/input
 
 class BeatmathParameters {
     constructor(mixboard, params) {
-        window.localStorage.clear();
+        //         window.localStorage.clear();
         if (mixboard.isLaunchpad()) {
             mixboard.resetLaunchpadLights();
         }

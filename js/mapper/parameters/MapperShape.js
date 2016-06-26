@@ -1,11 +1,15 @@
 class MapperShape {
-    constructor(index) {
-        const offset = index * 50;
-        this._vertices = [
-            [-400 + offset, 40],
-            [-350 + offset, -40],
-            [-300 + offset, 40],
-        ];
+    constructor({index, existingData}) {
+        if (existingData) {
+            this._vertices = existingData;
+        } else {
+            const offset = index * 50;
+            this._vertices = [
+                [-400 + offset, 40],
+                [-350 + offset, -40],
+                [-300 + offset, 40],
+            ];
+        }
     }
     moveVertex(vertex, dx, dy) {
         this._vertices[vertex][0] += dx;
@@ -22,6 +26,9 @@ class MapperShape {
     }
     getY(vertex) {
         return this._vertices[vertex][1];
+    }
+    serialize() {
+        return this._vertices;
     }
 }
 

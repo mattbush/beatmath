@@ -9,6 +9,9 @@ const Monitor = React.createClass({
         window.addEventListener('storage', this._onStorage);
     },
     _onStorage: function(event) {
+        if (event.key === 'mapping') {
+            return;
+        }
         this._parsedStorage[event.key] = JSON.parse(event.newValue);
         this._throttledForceUpdate();
     },
