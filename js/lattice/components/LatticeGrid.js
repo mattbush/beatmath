@@ -73,12 +73,12 @@ const LatticeGrid = React.createClass({
             <BeatmathFrame>
                 <g>
                     {children}
+                    {this.getParameterValue('showInfluences') && <g>
+                        {_.map(this.state.influences, (influence, index) =>
+                            <InfluenceCircle influence={influence} key={index} />
+                        )}
+                    </g>}
                 </g>
-                {this.getParameterValue('showInfluences') && <g>
-                    {_.map(this.state.influences, (influence, index) =>
-                        <InfluenceCircle influence={influence} key={index} />
-                    )}
-                </g>}
             </BeatmathFrame>
         );
     },

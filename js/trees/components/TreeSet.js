@@ -8,6 +8,46 @@ const {clamp} = require('js/core/utils/math');
 
 // const {manhattanDist, posMod} = require('js/core/utils/math');
 
+const TreeFrame = React.createClass({
+    mixins: [ParameterBindingsMixin],
+    contextTypes: {
+        treesParameters: React.PropTypes.object,
+        beatmathParameters: React.PropTypes.object,
+        mixboard: React.PropTypes.object,
+    },
+    getParameterBindings: function() {
+        return {
+            tempo: this.context.beatmathParameters.tempo,
+        };
+    },
+    render: function() {
+        const treesParameters = this.context.treesParameters;
+        const numTrees = treesParameters.numTrees.getValue();
+        const treeSpacing = treesParameters.getTreeSpacing();
+        const polarGridAmount = clamp(treesParameters.polarGridAmount.getValue(), 0, 1);
+
+        const transformations = _.times(numTrees, index => {
+            const totalTreeSpacing = treesParameters.getTotalTreeSpacing();
+            const dx = ((index + 0.5) * treeSpacing - totalTreeSpacing / 2) * (1 - polarGridAmount);
+            const dy = treesParameters.getTotalLevelSpacing() / 2 * (1 - polarGridAmount);
+            const rotation = ((index + 0.5) - (numTrees / 2)) * (360 / numTrees) * polarGridAmount;
+            return {
+                transform: `translate(${dx}px, ${dy}px) rotate(${rotation}deg) scaleY(-1)`,
+            };
+        });
+
+        return (
+            <g>
+                {_.times(numTrees, index =>
+                    <g key={index} style={transformations[index]} className="tree">
+                        <Tree index={index} />
+                    </g>
+                )}
+            </g>
+        );
+    },
+});
+
 const TreeSet = React.createClass({
     mixins: [ParameterBindingsMixin],
     childContextTypes: {
@@ -33,28 +73,9 @@ const TreeSet = React.createClass({
         };
     },
     render: function() {
-        const treesParameters = this.state.treesParameters;
-        const numTrees = treesParameters.numTrees.getValue();
-        const treeSpacing = treesParameters.getTreeSpacing();
-        const polarGridAmount = clamp(treesParameters.polarGridAmount.getValue(), 0, 1);
-
-        const transformations = _.times(numTrees, index => {
-            const totalTreeSpacing = treesParameters.getTotalTreeSpacing();
-            const dx = ((index + 0.5) * treeSpacing - totalTreeSpacing / 2) * (1 - polarGridAmount);
-            const dy = treesParameters.getTotalLevelSpacing() / 2 * (1 - polarGridAmount);
-            const rotation = ((index + 0.5) - (numTrees / 2)) * (360 / numTrees) * polarGridAmount;
-            return {
-                transform: `translate(${dx}px, ${dy}px) rotate(${rotation}deg) scaleY(-1)`,
-            };
-        });
-
         return (
             <BeatmathFrame>
-                {_.times(numTrees, index =>
-                    <g key={index} style={transformations[index]} className="tree">
-                        <Tree index={index} />
-                    </g>
-                )}
+                <TreeFrame />
             </BeatmathFrame>
         );
     },

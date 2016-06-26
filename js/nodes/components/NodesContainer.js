@@ -5,8 +5,35 @@ const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixi
 const NodeComponent = require('js/nodes/components/NodeComponent');
 const EdgeComponent = require('js/nodes/components/EdgeComponent');
 
-const NodesContainer = React.createClass({
+const NodesFrame = React.createClass({
     mixins: [ParameterBindingsMixin],
+    contextTypes: {
+        mixboard: React.PropTypes.object,
+        beatmathParameters: React.PropTypes.object,
+        nodesParameters: React.PropTypes.object,
+    },
+    getParameterBindings: function() {
+        return {
+            tempo: this.context.beatmathParameters.tempo,
+        };
+    },
+    render: function() {
+        return (
+            <g style={{transform: 'scale(400)'}}>
+                {this.context.nodesParameters.mapEdges((node1, node2) =>
+                    <EdgeComponent key={`${node1.getId()}~${node2.getId()}`} node1={node1} node2={node2} />
+                )}
+                {this.context.nodesParameters.mapRings(ring =>
+                    ring.mapNodesInRing(node =>
+                        <NodeComponent key={node.getId()} node={node} />
+                    )
+                )}
+            </g>
+        );
+    },
+});
+
+const NodesContainer = React.createClass({
     childContextTypes: {
         nodesParameters: React.PropTypes.object,
     },
@@ -24,24 +51,10 @@ const NodesContainer = React.createClass({
             nodesParameters: new NodesParameters(this.context.mixboard, this.context.beatmathParameters),
         };
     },
-    getParameterBindings: function() {
-        return {
-            tempo: this.context.beatmathParameters.tempo,
-        };
-    },
     render: function() {
         return (
             <BeatmathFrame>
-                <g style={{transform: 'scale(400)'}}>
-                    {this.state.nodesParameters.mapEdges((node1, node2) =>
-                        <EdgeComponent key={`${node1.getId()}~${node2.getId()}`} node1={node1} node2={node2} />
-                    )}
-                    {this.state.nodesParameters.mapRings(ring =>
-                        ring.mapNodesInRing(node =>
-                            <NodeComponent key={node.getId()} node={node} />
-                        )
-                    )}
-                </g>
+                <NodesFrame />
             </BeatmathFrame>
         );
     },
