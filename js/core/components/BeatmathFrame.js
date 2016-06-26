@@ -26,6 +26,18 @@ const BeatmathFrame = React.createClass({
             transform: `translate(${width / 2}px, ${height / 2}px) rotate(${frameRotation}deg) scale(${frameScale})`,
             transition: `transform ${transitionPeriod}ms linear`,
         };
+
+        // From KaleCell
+        // const clipPath = `url(#${clipPathPrefixFull}~${triGridPercent})`;
+        //
+        // return (
+        //     <g key={index} transform={`${scale}rotate(${rotationDeg})`}>
+        //         <g clipPath={clipPath}>
+        //             <KaleSubject cellX={x} cellY={y} />
+        //         </g>
+        //     </g>
+        // );
+
         return (
             <div className="main">
                 <svg width={width} height={height}>
