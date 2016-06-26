@@ -1,4 +1,5 @@
 require('regenerator/runtime');
+const _ = require('underscore');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 
@@ -16,15 +17,32 @@ const BeatmathFrame = React.createClass({
             frameScaleAutoupdating: this.context.beatmathParameters.frameScaleAutoupdating,
         };
     },
-    render: function() {
-        const width = this.getParameterValue('width');
-        const height = this.getParameterValue('height');
+    _renderChildFrames() {
         const frameRotation = this.getParameterValue('frameRotation');
         const frameScale = this.getParameterValue('frameScale') * this.getParameterValue('frameScaleAutoupdating');
         const transitionPeriod = this.context.beatmathParameters.tempo.getBasePeriod() / 16;
         const style = {
-            transform: `translate(${width / 2}px, ${height / 2}px) rotate(${frameRotation}deg) scale(${frameScale})`,
+            transform: `rotate(${frameRotation}deg) scale(${frameScale})`,
             transition: `transform ${transitionPeriod}ms linear`,
+        };
+
+        return _.times(1, () => {
+            const clonedChild = React.cloneElement(React.Children.only(this.props.children), {
+
+            });
+
+            return (
+                <g style={style}>
+                    {clonedChild}
+                </g>
+            );
+        });
+    },
+    render: function() {
+        const width = this.getParameterValue('width');
+        const height = this.getParameterValue('height');
+        const style = {
+            transform: `translate(${width / 2}px, ${height / 2}px)`,
         };
 
         // From KaleCell
@@ -47,7 +65,7 @@ const BeatmathFrame = React.createClass({
                                 {this.props.defs}
                             </defs>
                         }
-                        {this.props.children}
+                        {this._renderChildFrames()}
                     </g>
                 </svg>
             </div>
