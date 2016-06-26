@@ -94,6 +94,13 @@ class Parameter {
         this._monitorY = 5;
         this._updateMonitor();
     }
+    _setMonitorCoordsFromLaunchpadSideButton(buttonCode) {
+        this._monitorX = 8.5;
+        this._monitorY = (buttonCode === LaunchpadButtons.LEFT || buttonCode === LaunchpadButtons.RIGHT)
+            ? 2
+            : 1;
+        this._updateMonitor();
+    }
     listenForAutoupdateCue(mixboard) {
         this._isUpdatingEnabled = false;
         this._isListeningForAutoupdateCue = true;
@@ -170,6 +177,11 @@ class CycleParameter extends Parameter {
 
         this._cycleValues = params.cycleValues;
         this._valueIndex = 0;
+    }
+    listenToDecrementAndIncrementLaunchpadSideButtons(mixboard, decrementCode, incrementCode) {
+        mixboard.addLaunchpadButtonListener(decrementCode, this.onDecrementButtonPress.bind(this));
+        mixboard.addLaunchpadButtonListener(incrementCode, this.onIncrementButtonPress.bind(this));
+        this._setMonitorCoordsFromLaunchpadSideButton(decrementCode);
     }
     listenToDecrementAndIncrementLaunchpadButtons(mixboard, column) {
         mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[column], this.onIncrementButtonPress.bind(this));

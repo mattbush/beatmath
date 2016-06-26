@@ -1,7 +1,8 @@
-const {Parameter, MovingLinearParameter, LogarithmicParameter, MovingLogarithmicParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
+const {Parameter, CycleParameter, MovingLinearParameter, LogarithmicParameter, MovingLogarithmicParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
 const BeatmathTempo = require('js/core/parameters/BeatmathTempo');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/core/parameters/BeatmathConstants');
 const {MixtrackFaders, MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
+const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 const MapperShape = require('js/mapper/parameters/MapperShape');
 
 class BeatmathParameters {
@@ -130,6 +131,16 @@ class BeatmathParameters {
             this.brightness.listenToIncrementMixtrackButton(mixboard, MixtrackButtons.R_PITCH_BEND_PLUS);
             this.brightness.listenToDecrementMixtrackButton(mixboard, MixtrackButtons.R_PITCH_BEND_MINUS);
         }
+
+        const mappingModeCycleValues = ['off', 'onWithOneFrame', 'onWithFrames'];
+        if (params.hasSpecialMapping) {
+            mappingModeCycleValues.push('onWithFramesSpecial');
+        }
+        this.mappingMode = new CycleParameter({
+            cycleValues: mappingModeCycleValues,
+            monitorName: 'Mapping Mode',
+        });
+        this.mappingMode.listenToDecrementAndIncrementLaunchpadSideButtons(mixboard, LaunchpadButtons.LEFT, LaunchpadButtons.RIGHT);
 
         if (params.usePixels) {
             this.pixelPointiness = new MovingLinearParameter({

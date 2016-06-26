@@ -15,6 +15,7 @@ const BeatmathFrame = React.createClass({
             frameRotation: this.context.beatmathParameters.frameRotation,
             frameScale: this.context.beatmathParameters.frameScale,
             frameScaleAutoupdating: this.context.beatmathParameters.frameScaleAutoupdating,
+            mappingMode: this.context.beatmathParameters.mappingMode,
         };
     },
     _renderDefs() {
@@ -43,17 +44,40 @@ const BeatmathFrame = React.createClass({
             transition: `transform ${transitionPeriod}ms linear`,
         };
 
-        return _.times(1, index => {
-            const clonedChild = React.cloneElement(React.Children.only(this.props.children), {
+        const mappingMode = this.getParameterValue('mappingMode');
+        if (mappingMode === 'onWithFramesSpecial') {
+            // TODO
+            return null;
+        } else if (mappingMode === 'onWithFrames') {
+            return _.times(1, index => {
+                const clonedChild = React.cloneElement(React.Children.only(this.props.children), {
 
+                });
+
+                return (
+                    <g key={index} clipPath={`url(#mapperShape0)`}>
+                        <g style={style}>
+                            {clonedChild}
+                        </g>
+                    </g>
+                );
             });
 
+        } else if (mappingMode === 'onWithOneFrame') {
             return (
-                <g key={index} style={style}>
-                    {clonedChild}
+                <g clipPath={`url(#allMapperShapes)`}>
+                    <g style={style}>
+                        {this.props.children}
+                    </g>
                 </g>
             );
-        });
+        } else { // off
+            return (
+                <g style={style}>
+                    {this.props.children}
+                </g>
+            );
+        }
     },
     render: function() {
         const width = this.getParameterValue('width');
