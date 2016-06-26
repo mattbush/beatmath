@@ -2,12 +2,22 @@ const {Parameter, MovingLinearParameter, LogarithmicParameter, MovingLogarithmic
 const BeatmathTempo = require('js/core/parameters/BeatmathTempo');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/core/parameters/BeatmathConstants');
 const {MixtrackFaders, MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
+const MapperShape = require('js/mapper/parameters/MapperShape');
 
 class BeatmathParameters {
     constructor(mixboard, params) {
         //         window.localStorage.clear();
         if (mixboard.isLaunchpad()) {
             mixboard.resetLaunchpadLights();
+        }
+
+        const existingMapping = JSON.parse(window.localStorage.getItem('mapping'));
+        if (existingMapping) {
+            this._mapperShapes = [];
+            for (let i = 0; i < existingMapping.length; i++) {
+                const shape = new MapperShape({existingData: existingMapping[i]});
+                this._mapperShapes.push(shape);
+            }
         }
 
         this.tempo = new BeatmathTempo(mixboard, {
@@ -163,6 +173,12 @@ class BeatmathParameters {
                 this.pixelSidedness.addMixtrackStatusLight(mixboard, MixtrackButtons.R_DELETE, value => value <= 3);
             }
         }
+    }
+    mapMapperShapes(fn) {
+        if (!this._mapperShapes) {
+            return [];
+        }
+        return this._mapperShapes.map(fn);
     }
 }
 

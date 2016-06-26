@@ -17,6 +17,23 @@ const BeatmathFrame = React.createClass({
             frameScaleAutoupdating: this.context.beatmathParameters.frameScaleAutoupdating,
         };
     },
+    _renderDefs() {
+        return (
+            <defs>
+                {this.props.defs}
+                <clipPath id={'allMapperShapes'}>
+                    {this.context.beatmathParameters.mapMapperShapes((mapperShape, index) =>
+                        <polygon key={index} points={mapperShape.getPointsString()} />
+                    )}
+                </clipPath>
+                {this.context.beatmathParameters.mapMapperShapes((mapperShape, index) =>
+                    <clipPath key={'mapperShape' + index} id={'mapperShape' + index}>
+                        <polygon points={mapperShape.getPointsString()} />
+                    </clipPath>
+                )}
+            </defs>
+        );
+    },
     _renderChildFrames() {
         const frameRotation = this.getParameterValue('frameRotation');
         const frameScale = this.getParameterValue('frameScale') * this.getParameterValue('frameScaleAutoupdating');
@@ -26,13 +43,13 @@ const BeatmathFrame = React.createClass({
             transition: `transform ${transitionPeriod}ms linear`,
         };
 
-        return _.times(1, () => {
+        return _.times(1, index => {
             const clonedChild = React.cloneElement(React.Children.only(this.props.children), {
 
             });
 
             return (
-                <g style={style}>
+                <g key={index} style={style}>
                     {clonedChild}
                 </g>
             );
@@ -60,11 +77,7 @@ const BeatmathFrame = React.createClass({
             <div className="main">
                 <svg width={width} height={height}>
                     <g style={style}>
-                        {this.props.defs &&
-                            <defs>
-                                {this.props.defs}
-                            </defs>
-                        }
+                        {this._renderDefs()}
                         {this._renderChildFrames()}
                     </g>
                 </svg>

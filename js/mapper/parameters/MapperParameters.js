@@ -8,7 +8,6 @@ const MOVE_SHAPE_POLLING_RATE = 33;
 
 class MapperParameters extends PieceParameters {
     constructor(mixboard, beatmathParameters) {
-        console.log(window.localStorage.getItem('mapping'));
         const existingMapping = JSON.parse(window.localStorage.getItem('mapping'));
         let numShapes = existingMapping ? existingMapping.length : 1;
 
