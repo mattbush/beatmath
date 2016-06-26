@@ -1,5 +1,5 @@
 require('regenerator/runtime');
-const _ = require('underscore');
+// const _ = require('underscore');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 
@@ -49,14 +49,19 @@ const BeatmathFrame = React.createClass({
             // TODO
             return null;
         } else if (mappingMode === 'onWithFrames') {
-            return _.times(1, index => {
+            return this.context.beatmathParameters.mapMapperShapes((mapperShape, index) => {
                 const clonedChild = React.cloneElement(React.Children.only(this.props.children), {
 
                 });
 
+                const translatedStyle = {
+                    ...style,
+                    transform: `translate(${mapperShape.getCenterX()}px, ${mapperShape.getCenterY()}px) ` + style.transform,
+                };
+
                 return (
-                    <g key={index} clipPath={`url(#mapperShape0)`}>
-                        <g style={style}>
+                    <g key={index} clipPath={`url(#mapperShape${index})`}>
+                        <g style={translatedStyle}>
                             {clonedChild}
                         </g>
                     </g>
