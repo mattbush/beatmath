@@ -1,11 +1,11 @@
-const {MovingLinearParameter, LogarithmicParameter, MovingLogarithmicParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
+const {Parameter, MovingLinearParameter, LogarithmicParameter, MovingLogarithmicParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
 const BeatmathTempo = require('js/core/parameters/BeatmathTempo');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/core/parameters/BeatmathConstants');
 const {MixtrackFaders, MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 
 class BeatmathParameters {
     constructor(mixboard, params) {
-        window.localStorage.clear();
+        //         window.localStorage.clear();
         if (mixboard.isLaunchpad()) {
             mixboard.resetLaunchpadLights();
         }
@@ -37,49 +37,55 @@ class BeatmathParameters {
             this.height.listenToMixtrackFader(mixboard, MixtrackFaders.R_PITCH_BEND);
         }
 
-        this.frameScale = new LogarithmicParameter({
-            range: [0.25, 16],
-            start: 1,
-            variance: 0.015,
-            monitorName: 'Frame Scale',
-        });
-        if (mixboard.isLaunchpad()) {
-            this.frameScale.listenToLaunchpadFader(mixboard, 7, {addButtonStatusLight: true});
-        } else {
-            this.frameScale.listenToMixtrackFader(mixboard, MixtrackFaders.MASTER_GAIN);
-        }
-
-        this.frameScaleAutoupdating = new MovingLogarithmicParameter({
-            range: [0.5, 2],
-            start: 1,
-            variance: 0.015,
-            monitorName: 'Scale Mod',
-        });
-        if (mixboard.isMixboardConnected()) {
-            this.frameScaleAutoupdating.listenForAutoupdateCue(mixboard);
-        }
-        if (mixboard.isLaunchpad()) {
-            this.frameScaleAutoupdating.listenToLaunchpadFader(mixboard, 6, {addButtonStatusLight: true});
-        }
-        this.tempo.addListener(() => {
-            const nTicks = 1;
-            const tick = this.tempo.getNumTicks();
-            if (tick % (nTicks * this.tempo._bpmMod) === 0) {
-                this.frameScaleAutoupdating.update();
+        if (params.useFrame !== false) {
+            this.frameScale = new LogarithmicParameter({
+                range: [0.25, 16],
+                start: 1,
+                variance: 0.015,
+                monitorName: 'Frame Scale',
+            });
+            if (mixboard.isLaunchpad()) {
+                this.frameScale.listenToLaunchpadFader(mixboard, 7, {addButtonStatusLight: true});
+            } else {
+                this.frameScale.listenToMixtrackFader(mixboard, MixtrackFaders.MASTER_GAIN);
             }
-        });
 
-        this.frameRotation = new AngleParameter({
-            start: 0,
-            constrainTo: false,
-            monitorName: 'Frame Rotation',
-            tempo: this.tempo,
-        });
-        if (mixboard.isLaunchpad()) {
-            this.frameRotation.listenToLaunchpadKnob(mixboard, 2, 7);
+            this.frameScaleAutoupdating = new MovingLogarithmicParameter({
+                range: [0.5, 2],
+                start: 1,
+                variance: 0.015,
+                monitorName: 'Scale Mod',
+            });
+            if (mixboard.isMixboardConnected()) {
+                this.frameScaleAutoupdating.listenForAutoupdateCue(mixboard);
+            }
+            if (mixboard.isLaunchpad()) {
+                this.frameScaleAutoupdating.listenToLaunchpadFader(mixboard, 6, {addButtonStatusLight: true});
+            }
+            this.tempo.addListener(() => {
+                const nTicks = 1;
+                const tick = this.tempo.getNumTicks();
+                if (tick % (nTicks * this.tempo._bpmMod) === 0) {
+                    this.frameScaleAutoupdating.update();
+                }
+            });
+
+            this.frameRotation = new AngleParameter({
+                start: 0,
+                constrainTo: false,
+                monitorName: 'Frame Rotation',
+                tempo: this.tempo,
+            });
+            if (mixboard.isLaunchpad()) {
+                this.frameRotation.listenToLaunchpadKnob(mixboard, 2, 7);
+            } else {
+                this.frameRotation.listenToMixtrackWheel(mixboard, MixtrackWheels.L_TURNTABLE);
+                this.frameRotation.listenToSnapMixtrackButton(mixboard, MixtrackButtons.L_SCRATCH);
+            }
         } else {
-            this.frameRotation.listenToMixtrackWheel(mixboard, MixtrackWheels.L_TURNTABLE);
-            this.frameRotation.listenToSnapMixtrackButton(mixboard, MixtrackButtons.L_SCRATCH);
+            this.frameScale = new Parameter({start: 1});
+            this.frameScaleAutoupdating = new Parameter({start: 1});
+            this.frameRotation = new Parameter({start: 0});
         }
 
         if (params.useColor || params.usePixels) {
