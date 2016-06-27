@@ -74,6 +74,9 @@ class NodesParameters extends PieceParameters {
     getNumRings() {
         return NUM_RINGS;
     }
+    getRingAtIndex(index) {
+        return this._rings[index];
+    }
     mapRings(fn) {
         return _.map(this._rings, fn);
     }

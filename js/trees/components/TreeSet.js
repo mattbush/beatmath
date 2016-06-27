@@ -23,6 +23,10 @@ const TreeFrame = React.createClass({
     render: function() {
         const treesParameters = this.context.treesParameters;
         const numTrees = treesParameters.numTrees.getValue();
+        const indexOffsetForMapperShape = this.props.mapperShapeIndex
+            ? numTrees * this.props.mapperShapeIndex
+            : 0;
+
         const treeSpacing = treesParameters.getTreeSpacing();
         const polarGridAmount = clamp(treesParameters.polarGridAmount.getValue(), 0, 1);
 
@@ -40,7 +44,7 @@ const TreeFrame = React.createClass({
             <g>
                 {_.times(numTrees, index =>
                     <g key={index} style={transformations[index]} className="tree">
-                        <Tree index={index} />
+                        <Tree index={index + indexOffsetForMapperShape} />
                     </g>
                 )}
             </g>

@@ -111,6 +111,8 @@ const KaleCell = React.createClass({
 
         const x = this.props.logicalX + (this.props.logicalY % 2 ? brickGridPercent - 1 : 0);
         const y = this.props.logicalY * yAxisScale;
+        const xWithMapperShapeOffset = x + this.props.mapperShapeXOffset;
+        const yWithMapperShapeOffset = y + this.props.mapperShapeYOffset;
 
         const reflectionElements = _.times(reflectionsPerCell, index => {
             const isBStyle = (reflectionsPerCell === 6 && index >= 2 && index < 4);
@@ -132,14 +134,14 @@ const KaleCell = React.createClass({
             return (
                 <g key={index} transform={`${scale}rotate(${rotationDeg})`}>
                     <g clipPath={clipPath}>
-                        <KaleSubject cellX={x} cellY={y} />
+                        <KaleSubject cellX={xWithMapperShapeOffset} cellY={yWithMapperShapeOffset} />
                     </g>
                 </g>
             );
         });
 
         return (
-            <g transform={`translate(${x}, ${y})`} stroke={this._getColor(x, y)}>
+            <g transform={`translate(${x}, ${y})`} stroke={this._getColor(xWithMapperShapeOffset, yWithMapperShapeOffset)}>
                 {reflectionElements}
             </g>
         );

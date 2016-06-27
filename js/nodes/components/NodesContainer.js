@@ -1,3 +1,4 @@
+const _ = require('underscore');
 const React = require('react');
 const NodesParameters = require('js/nodes/parameters/NodesParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
@@ -18,16 +19,35 @@ const NodesFrame = React.createClass({
         };
     },
     render: function() {
+        let rings;
+        if (_.has(this.props, 'mapperShapeIndex')) {
+            const mapperShapeIndex = this.props.mapperShapeIndex;
+            const ringIndex = mapperShapeIndex % this.context.nodesParameters.getNumRings();
+            const ring = this.context.nodesParameters.getRingAtIndex(ringIndex);
+            rings = [
+                ...ring.mapNodesInRing(node =>
+                    <NodeComponent key={node.getId()} node={node} />
+                ),
+                ...ring.mapEdges((node1, node2) =>
+                    <EdgeComponent key={`${node1.getId()}~${node2.getId()}`} node1={node1} node2={node2} />
+                ),
+            ];
+        } else {
+            rings = this.context.nodesParameters.mapRings(ring =>
+                [
+                    ...ring.mapNodesInRing(node =>
+                        <NodeComponent key={node.getId()} node={node} />
+                    ),
+                    ...ring.mapEdges((node1, node2) =>
+                        <EdgeComponent key={`${node1.getId()}~${node2.getId()}`} node1={node1} node2={node2} />
+                    ),
+                ]
+            );
+        }
+
         return (
             <g style={{transform: 'scale(400)'}}>
-                {this.context.nodesParameters.mapEdges((node1, node2) =>
-                    <EdgeComponent key={`${node1.getId()}~${node2.getId()}`} node1={node1} node2={node2} />
-                )}
-                {this.context.nodesParameters.mapRings(ring =>
-                    ring.mapNodesInRing(node =>
-                        <NodeComponent key={node.getId()} node={node} />
-                    )
-                )}
+                {rings}
             </g>
         );
     },

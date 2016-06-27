@@ -46,8 +46,25 @@ const BeatmathFrame = React.createClass({
 
         const mappingMode = this.getParameterValue('mappingMode');
         if (mappingMode === 'onWithFramesSpecial') {
-            // TODO
-            return null;
+            return this.context.beatmathParameters.mapMapperShapes((mapperShape, index) => {
+                const clonedChild = React.cloneElement(React.Children.only(this.props.children), {
+                    mapperShape: mapperShape,
+                    mapperShapeIndex: index,
+                });
+
+                const translatedStyle = {
+                    ...style,
+                    transform: `translate(${mapperShape.getCenterX()}px, ${mapperShape.getCenterY()}px) ` + style.transform,
+                };
+
+                return (
+                    <g key={index} clipPath={`url(#mapperShape${index})`}>
+                        <g style={translatedStyle}>
+                            {clonedChild}
+                        </g>
+                    </g>
+                );
+            });
         } else if (mappingMode === 'onWithFrames') {
             return this.context.beatmathParameters.mapMapperShapes((mapperShape, index) => {
                 const clonedChild = React.cloneElement(React.Children.only(this.props.children), {
