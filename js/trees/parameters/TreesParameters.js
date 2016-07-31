@@ -27,7 +27,7 @@ class TreesParameters extends PieceParameters {
             },
             numTrees: {
                 type: IntLinearParameter,
-                range: [1, 16],
+                range: [1, 24],
                 start: 16, mixboardStart: 1,
                 listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
                 listenToMixtrackFader: MixtrackFaders.L_GAIN,
