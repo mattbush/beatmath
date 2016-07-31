@@ -239,13 +239,14 @@ class TreesParameters extends PieceParameters {
         } else if (polarGridAmount > 0) {
             staggerAmount = this._getAdjustedStaggerAmount(periodTicks, staggerAmount, polarGridAmount);
         }
+        const numTrees = this.numTrees.getValue();
         if (staggerAmount !== 0) {
             if (this.mirrorStagger.getValue()) {
-                treeIndex = posModAndBendToLowerHalf(treeIndex, this.numTrees.getValue() - 1);
+                treeIndex = posModAndBendToLowerHalf(treeIndex, numTrees - 1);
             }
-            levelNumber -= treeIndex * staggerAmount;
+            levelNumber -= (treeIndex - numTrees / 2) * staggerAmount;
         }
-        const sineAmount = this._getSineAmount(treeIndex);
+        const sineAmount = this._getSineAmount(treeIndex - numTrees / 2);
         return posMod(this._riseNumTicks - levelNumber + sineAmount, periodTicks) / periodTicks;
     }
     getBorderRadius() {
