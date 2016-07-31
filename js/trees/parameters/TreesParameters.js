@@ -3,7 +3,7 @@ const {MixtrackFaders, MixtrackKnobs, MixtrackButtons, MixtrackWheels} = require
 const tinycolor = require('tinycolor2');
 const {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
 const PieceParameters = require('js/core/parameters/PieceParameters');
-const {clamp, modAndShiftToHalf} = require('js/core/utils/math');
+const {arclerp, clamp, modAndShiftToHalf} = require('js/core/utils/math');
 
 class TreesParameters extends PieceParameters {
     _declareParameters() {
@@ -111,6 +111,14 @@ class TreesParameters extends PieceParameters {
                 listenToLaunchpadKnob: [2, 2],
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_MANUAL, MixtrackButtons.L_LOOP_IN],
             },
+            revTrailPercent: {
+                type: LinearParameter,
+                range: [0, 1],
+                start: 0,
+                incrementAmount: 0.05,
+                monitorName: 'Rev Trail %',
+                listenToLaunchpadKnob: [1, 2],
+            },
             staggerAmount: {
                 type: MovingLinearParameter,
                 range: [-8, 8],
@@ -171,7 +179,7 @@ class TreesParameters extends PieceParameters {
             }
             levelNumber -= treeIndex * staggerAmount;
         }
-        return posMod(tempoNumTicks - levelNumber, periodTicks) / (periodTicks - 1);
+        return posMod(tempoNumTicks - levelNumber, periodTicks) / periodTicks;
     }
     getBorderRadius() {
         return this.getLevelHeight() * this.borderRadiusPercent.getValue() / 2;
@@ -194,7 +202,15 @@ class TreesParameters extends PieceParameters {
         if (colorShift !== 0) {
             color.spin(colorShift);
         }
-        const levelIllumination = this._getLevelIllumination(treeIndex, levelNumber);
+        const baseLevelIllumination = this._getLevelIllumination(treeIndex, levelNumber);
+        const revTrailPercent = 1 - this.revTrailPercent.getValue();
+        let levelIllumination;
+        if (baseLevelIllumination > revTrailPercent || revTrailPercent === 0) {
+            levelIllumination = arclerp(1, revTrailPercent, baseLevelIllumination);
+        } else {
+            levelIllumination = arclerp(0, revTrailPercent, baseLevelIllumination);
+        }
+
         if (levelIllumination === 0) {
             return color;
         }
