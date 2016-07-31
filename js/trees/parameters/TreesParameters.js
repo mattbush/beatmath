@@ -74,7 +74,7 @@ class TreesParameters extends PieceParameters {
             periodTicks: {type: LogarithmicParameter,
                 range: [2, 16],
                 start: 2,
-                listenToDecrementAndIncrementLaunchpadButtons: 0,
+                listenToDecrementAndIncrementLaunchpadButtons: 3,
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
                 monitorName: 'Period Ticks',
             },
@@ -126,8 +126,8 @@ class TreesParameters extends PieceParameters {
                 monitorName: 'Stagger Amount',
                 listenToDecrementAndIncrementLaunchpadButtons: 2,
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_PITCH_BEND_MINUS, MixtrackButtons.L_PITCH_BEND_PLUS],
-                variance: 1.5,
-                autoupdateEveryNBeats: 8,
+                variance: 0.5,
+                autoupdateEveryNBeats: 4,
                 autoupdateOnCue: true,
             },
             mirrorStagger: {
@@ -136,6 +136,12 @@ class TreesParameters extends PieceParameters {
                 listenToLaunchpadButton: 1,
                 listenToMixtrackButton: MixtrackButtons.L_EFFECT,
                 monitorName: 'Mirror Stagger?',
+            },
+            roundStagger: {
+                type: ToggleParameter,
+                start: true,
+                listenToLaunchpadButton: 0,
+                monitorName: 'Round Stagger?',
             },
             polarGridAmount: {
                 type: MovingLinearParameter,
@@ -169,10 +175,21 @@ class TreesParameters extends PieceParameters {
     getLevelHeight() {
         return this.levelHeight.getValue();
     }
+    _getAdjustedStaggerAmount(periodTicks, baseStaggerAmount, polarGridAmount) {
+        const staggerAmountForAFullRotation = periodTicks / this.numTrees.getValue();
+        const distanceFromClosestMultiple = modAndShiftToHalf(baseStaggerAmount, staggerAmountForAFullRotation);
+        return baseStaggerAmount - (distanceFromClosestMultiple * polarGridAmount);
+    }
     _getLevelIllumination(treeIndex, levelNumber) {
         const periodTicks = this.periodTicks.getValue();
         const tempoNumTicks = this._beatmathParameters.tempo.getNumTicks();
-        const staggerAmount = Math.round(this.staggerAmount.getValue());
+        let staggerAmount = this.staggerAmount.getValue();
+        const polarGridAmount = clamp(this.polarGridAmount.getValue(), 0, 1);
+        if (this.roundStagger.getValue()) {
+            staggerAmount = Math.round(staggerAmount);
+        } else if (polarGridAmount > 0) {
+            staggerAmount = this._getAdjustedStaggerAmount(periodTicks, staggerAmount, polarGridAmount);
+        }
         if (staggerAmount !== 0) {
             if (this.mirrorStagger.getValue()) {
                 treeIndex = posModAndBendToLowerHalf(treeIndex, this.numTrees.getValue() - 1);
