@@ -542,6 +542,7 @@ class MovingAngleParameter extends AngleParameter {
         this._variance = params.variance;
         this._speed = 0;
         this._maxSpeed = params.max;
+        this._isUpdatingEnabled = true;
     }
     update() {
         if (!this._isUpdatingEnabled) {
