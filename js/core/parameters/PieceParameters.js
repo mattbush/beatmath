@@ -65,7 +65,7 @@ class PieceParameters {
             parameter.listenForAutoupdateCue(this._mixboard);
         }
     }
-    _declareParameters(/*opts*/) {
+    _declareParameters(/* opts */) {
         // empty, override me
         return {};
     }

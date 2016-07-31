@@ -65,7 +65,7 @@ const addPair = function(a, b) { return a + b; };
 const getRandomOrientationFromArray = function(weightedPossibleOrientations) {
     const sum = _.values(weightedPossibleOrientations).reduce(addPair, 0);
     let randomVal = nextFloat(sum);
-    for (let orientation in weightedPossibleOrientations) {
+    for (let orientation in weightedPossibleOrientations) { // eslint-disable-line guard-for-in
         const weight = weightedPossibleOrientations[orientation];
         if (randomVal < weight) {
             return orientation;

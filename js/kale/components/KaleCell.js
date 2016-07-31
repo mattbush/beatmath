@@ -59,7 +59,7 @@ const KaleCell = React.createClass({
             yMod6 = 6 - yMod6;
             [lowerLeft, lowerRight, upperLeft, upperRight] = [upperLeft, upperRight, lowerLeft, lowerRight];
         }
-        switch(`${xMod6},${yMod6}`) {
+        switch (`${xMod6},${yMod6}`) {
             case '0,0':
                 return this._mixColors(lowerLeft);
             case '0,2':

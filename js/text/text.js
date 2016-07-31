@@ -2,7 +2,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 
 // const CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZETAOINSHRDLUETAOINCMFGYPETAOINSHRDLUETAOIN😁😂😆😉😍😎😋😘😏😴💁👍🙌💀🤖🐵🐷🐥🌲🌺☀️⛅🌟🌙🔥🌎";
-const CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZETAOINSHRDLUETAOINCMFGYPETAOINSHRDLUETAOIN";
+const CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZETAOINSHRDLUETAOINCMFGYPETAOINSHRDLUETAOIN';
 // const CHARACTERS = ['😁', '😂', '😆', '😉', '😍', '😎', '😋', '😘', '😏', '😴', '💁', '👍', '🙌', '💀', '🤖', '🐵', '🐷', '🐥', '🌲', '🌺', '⛅', '🌟', '🌙', '🔥', '🌎'];
 
 const NUM_CHARS = 80;

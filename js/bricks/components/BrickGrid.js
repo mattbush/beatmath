@@ -40,7 +40,7 @@ const BrickGrid = React.createClass({
         const brickPosition = this.state.gridState.getBrickPosition();
         const triangles = [];
         this._coordsToDelete = [];
-        for (let coords in grid) {
+        for (let coords in grid) { // eslint-disable-line guard-for-in
             const [x, y] = coords.split(',').map(Number);
             triangles.push(<BrickTriangle key={coords} x={x} y={y} orientation={grid[coords]} />);
         }

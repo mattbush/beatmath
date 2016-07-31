@@ -51,7 +51,7 @@ let HexagonGroup = React.createClass({
                 </g>
             </g>
         );
-    }
+    },
 });
 
 module.exports = HexagonGroup;

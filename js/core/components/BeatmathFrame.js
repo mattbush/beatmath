@@ -87,7 +87,7 @@ const BeatmathFrame = React.createClass({
 
         } else if (mappingMode === 'onWithOneFrame') {
             return (
-                <g clipPath={`url(#allMapperShapes)`}>
+                <g clipPath={'url(#allMapperShapes)'}>
                     <g style={style}>
                         {this.props.children}
                     </g>
