@@ -155,6 +155,13 @@ class TreesParameters extends PieceParameters {
                 autoupdateEveryNBeats: 8,
                 autoupdateOnCue: true,
             },
+            riseDirection: {
+                type: LinearParameter,
+                range: [-1, 1],
+                start: 1,
+                monitorName: 'Rise Dir',
+                listenToLaunchpadKnob: [2, 3],
+            },
         };
     }
     getTreeSpacing() {
@@ -182,7 +189,7 @@ class TreesParameters extends PieceParameters {
     }
     _getLevelIllumination(treeIndex, levelNumber) {
         const periodTicks = this.periodTicks.getValue();
-        const tempoNumTicks = this._beatmathParameters.tempo.getNumTicks();
+        const tempoNumTicks = this._beatmathParameters.tempo.getNumTicks() * this.riseDirection.getValue();
         let staggerAmount = this.staggerAmount.getValue();
         const polarGridAmount = clamp(this.polarGridAmount.getValue(), 0, 1);
         if (this.roundStagger.getValue()) {
