@@ -5,7 +5,17 @@ const {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const {arclerp, clamp, modAndShiftToHalf} = require('js/core/utils/math');
 
+const PI_TIMES_2 = Math.PI * 2;
+
 class TreesParameters extends PieceParameters {
+    constructor(mixboard, beatmathParameters) {
+        super(...arguments);
+
+        this._riseNumTicks = 0;
+        this._sineNumTicks = 0;
+
+        beatmathParameters.tempo.addListener(this._incrementNumTicks.bind(this));
+    }
     _declareParameters() {
         return {
             levelColor: {
@@ -162,7 +172,31 @@ class TreesParameters extends PieceParameters {
                 monitorName: 'Rise Dir',
                 listenToLaunchpadKnob: [2, 3],
             },
+            sineDirection: {
+                type: LinearParameter,
+                range: [-1, 1],
+                start: 1,
+                monitorName: 'Sine Dir',
+                listenToLaunchpadKnob: [2, 4],
+            },
+            sineAmplitude: {
+                type: LinearParameter,
+                range: [0, 1],
+                start: 0,
+                monitorName: 'Sine Amp',
+                listenToLaunchpadFader: [4, {addButtonStatusLight: true}],
+            },
+            sinePeriodTicks: {type: LogarithmicParameter,
+                range: [4, 64],
+                start: 16,
+                listenToDecrementAndIncrementLaunchpadButtons: 4,
+                monitorName: 'Sine Ticks',
+            },
         };
+    }
+    _incrementNumTicks() {
+        this._riseNumTicks += this.riseDirection.getValue();
+        this._sineNumTicks += this.sineDirection.getValue();
     }
     getTreeSpacing() {
         return this.treeWidth.getValue() + this.treeGap.getValue();
@@ -187,9 +221,17 @@ class TreesParameters extends PieceParameters {
         const distanceFromClosestMultiple = modAndShiftToHalf(baseStaggerAmount, staggerAmountForAFullRotation);
         return baseStaggerAmount - (distanceFromClosestMultiple * polarGridAmount);
     }
+    _getSineAmount(treeIndex) {
+        const sineAmplitude = this.sineAmplitude.getValue();
+        if (sineAmplitude === 0) {
+            return 0;
+        }
+        const sinePeriodTicks = this.sinePeriodTicks.getValue();
+        const sineWaveAngularOffsetPercent = (this._sineNumTicks + treeIndex) / sinePeriodTicks;
+        return sineAmplitude * this.numLevels.getValue() * Math.sin(sineWaveAngularOffsetPercent * PI_TIMES_2);
+    }
     _getLevelIllumination(treeIndex, levelNumber) {
         const periodTicks = this.periodTicks.getValue();
-        const tempoNumTicks = this._beatmathParameters.tempo.getNumTicks() * this.riseDirection.getValue();
         let staggerAmount = this.staggerAmount.getValue();
         const polarGridAmount = clamp(this.polarGridAmount.getValue(), 0, 1);
         if (this.roundStagger.getValue()) {
@@ -203,7 +245,8 @@ class TreesParameters extends PieceParameters {
             }
             levelNumber -= treeIndex * staggerAmount;
         }
-        return posMod(tempoNumTicks - levelNumber, periodTicks) / periodTicks;
+        const sineAmount = this._getSineAmount(treeIndex);
+        return posMod(this._riseNumTicks - levelNumber + sineAmount, periodTicks) / periodTicks;
     }
     getBorderRadius() {
         return this.getLevelHeight() * this.borderRadiusPercent.getValue() / 2;
