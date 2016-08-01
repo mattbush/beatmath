@@ -10,6 +10,10 @@ const logerp = function(min, max, interpolation) {
     return min * ((max / min) ** interpolation);
 };
 
+const arclerp = function(min, max, value) {
+    return (value - min) / (max - min);
+};
+
 const clamp = function(val, min, max) {
     return Math.min(max, Math.max(min, val));
 };
@@ -59,6 +63,7 @@ module.exports = {
     nextFloat,
     lerp,
     logerp,
+    arclerp,
     clamp,
     dist,
     manhattanDist,

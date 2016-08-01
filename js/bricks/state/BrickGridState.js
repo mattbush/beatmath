@@ -43,7 +43,7 @@ class BrickGridState {
 
         const coordsToDelete = [];
 
-        for (let coords in this._grid) {
+        for (let coords in this._grid) { // eslint-disable-line guard-for-in
             const [x, y] = coords.split(',').map(Number);
             if (this._brickPosition.getDistance({x, y}) >= RENDER_DISTANCE_CUTOFF) {
                 coordsToDelete.push(coords);

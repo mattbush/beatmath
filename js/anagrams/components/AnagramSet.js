@@ -44,7 +44,7 @@ const RearrangingLetter = React.createClass({
         } else {
             let x = this.state.nextIndex * this.props.letterSpacing;
             vertStyle = {
-                transform: `translate(0px, 0px)`,
+                transform: 'translate(0px, 0px)',
                 transition: `transform ${LETTER_TRANSITION_TIME / 2000}s ease-in`,
             };
             horizStyle = {
@@ -111,7 +111,7 @@ const AnagramSet = React.createClass({
                 {letterComponents}
             </g>
         );
-    }
+    },
 });
 
 module.exports = AnagramSet;

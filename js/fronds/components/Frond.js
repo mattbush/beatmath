@@ -36,7 +36,7 @@ const Frond = React.createClass({
         const leafRotation = {
             opacity: this.context.frondsParameters.opacity.getValue(),
             transform: `rotate(${leafAngle}deg)`,
-            transition: `transform 2s`,
+            transition: 'transform 2s',
         };
 
         return (
@@ -50,7 +50,7 @@ const Frond = React.createClass({
 
         const frondTranslation = {
             transform: `translate(${this.getParameterValue('x')}px,${this.getParameterValue('y')}px)`,
-            transition: `transform 0.25s linear`,
+            transition: 'transform 0.25s linear',
         };
 
         const scale = Math.pow(2, frondState.scaleLog2.getValue());

@@ -7,7 +7,7 @@ let Hexagon = React.createClass({
         return (
             <polygon className="line" points="1,0 0.5,.866 -0.5,.866 -1,0 -0.5,-.866 0.5,-.866" />
         );
-    }
+    },
 });
 
 let MagicCircle = React.createClass({
@@ -26,7 +26,7 @@ let MagicCircle = React.createClass({
         return (
             <circle className="magicCircle" cx="0" cy="0" r="0.2px" style={this.getStyle(this.context.ticks + 1)} />
         );
-    }
+    },
 });
 
 let MagicHexagon = React.createClass({
@@ -37,7 +37,7 @@ let MagicHexagon = React.createClass({
                 <MagicCircle index={this.props.index} order={this.props.order} />
             </g>
         );
-    }
+    },
 });
 
 module.exports = MagicHexagon;

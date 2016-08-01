@@ -1,4 +1,4 @@
-const {IntLinearParameter, ToggleParameter, LinearParameter} = require('js/core/parameters/Parameter');
+const {ManualParameter, IntLinearParameter, ToggleParameter, LinearParameter} = require('js/core/parameters/Parameter');
 const {MixtrackButtons, MixtrackFaders, MixtrackKnobs, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
@@ -32,7 +32,7 @@ class LatticeParameters extends PieceParameters {
             },
             numCols: {
                 type: IntLinearParameter,
-                range: [0, 40],
+                range: [0, 24],
                 start: 12,
                 listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
                 listenToMixtrackFader: MixtrackFaders.L_GAIN,
@@ -40,7 +40,7 @@ class LatticeParameters extends PieceParameters {
             },
             numRows: {
                 type: IntLinearParameter,
-                range: [0, 25],
+                range: [0, 15],
                 start: 12,
                 listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
                 listenToMixtrackFader: MixtrackFaders.R_GAIN,
@@ -61,6 +61,12 @@ class LatticeParameters extends PieceParameters {
                 listenToLaunchpadKnob: [0, 0],
                 listenToMixtrackWheel: MixtrackWheels.R_CONTROL_2,
                 monitorName: 'Triangle Grid %',
+            },
+            latency: {
+                type: ManualParameter,
+                start: 0,
+                monitorName: 'Latency',
+                manualMonitorCoords: {x: 5, y: 5},
             },
         };
     }

@@ -16,10 +16,14 @@ const STATUS_TO_LIGHT_VALUE = {
 };
 
 class Parameter {
-    constructor({start, monitorName}) {
+    constructor({start, monitorName, manualMonitorCoords}) {
         this._listeners = [];
         this._value = start;
         this._monitorName = monitorName;
+        if (manualMonitorCoords) {
+            this._monitorX = manualMonitorCoords.x;
+            this._monitorY = manualMonitorCoords.y;
+        }
         if (monitorName) {
             this.addListener(this._updateMonitor.bind(this));
         }
@@ -542,6 +546,7 @@ class MovingAngleParameter extends AngleParameter {
         this._variance = params.variance;
         this._speed = 0;
         this._maxSpeed = params.max;
+        this._isUpdatingEnabled = true;
     }
     update() {
         if (!this._isUpdatingEnabled) {
@@ -675,6 +680,13 @@ class MovingIntLinearParameter extends MovingLinearParameter {
     }
 }
 
+class ManualParameter extends Parameter {
+    setValue(value) {
+        this._value = value;
+        this._updateListeners();
+    }
+}
+
 module.exports = {
     Parameter,
     NegatedParameter,
@@ -689,4 +701,5 @@ module.exports = {
     MovingLinearParameter,
     MovingLogarithmicParameter,
     MovingIntLinearParameter,
+    ManualParameter,
 };

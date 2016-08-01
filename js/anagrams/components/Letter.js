@@ -64,7 +64,7 @@ const Letter = React.createClass({
                 </text>
             </g>
         );
-    }
+    },
 });
 
 module.exports = Letter;

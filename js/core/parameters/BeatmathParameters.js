@@ -7,7 +7,12 @@ const MapperShape = require('js/mapper/parameters/MapperShape');
 
 class BeatmathParameters {
     constructor(mixboard, params) {
-        //         window.localStorage.clear();
+        // clear all items except mapping
+        for (let property in window.localStorage) {
+            if (window.localStorage.hasOwnProperty(property) && property !== 'mapping') {
+                delete window.localStorage[property];
+            }
+        }
         if (mixboard.isLaunchpad()) {
             mixboard.resetLaunchpadLights();
         }
