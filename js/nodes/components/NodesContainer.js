@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const React = require('react');
 const NodesParameters = require('js/nodes/parameters/NodesParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');

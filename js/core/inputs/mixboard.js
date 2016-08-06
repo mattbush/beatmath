@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const {MixtrackWheels, MixtrackFaders, MixtrackWheelCoefficients} = require('js/core/inputs/MixtrackConstants');
 const {LaunchpadFaderInputCodes, LaunchpadKnobInputCodes, LaunchpadKnobOutputCodes, LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 

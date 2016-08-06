@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const React = require('react');
 const {posMod} = require('js/core/utils/math');
 const AutoupdateStatus = require('js/core/parameters/AutoupdateStatus');

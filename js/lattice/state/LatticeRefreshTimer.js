@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const {MovingIntLinearParameter, MovingLogarithmicParameter, MovingLinearParameter, CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 const {MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');

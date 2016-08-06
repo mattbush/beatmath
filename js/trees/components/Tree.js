@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const {lerp, clamp} = require('js/core/utils/math');

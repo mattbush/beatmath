@@ -7,14 +7,14 @@
   "dependencies": {
     "babel-core": "6.3.15",
     "babel-loader": "^6.2.0",
+    "lodash": "^4.14.1",
     "min-heap": "^0.2.3",
     "react": "15.3.0",
-    "react-dom": "15.3.0",
     "react-addons-linked-state-mixin": "15.3.0",
-    "tinycolor2": "^1.1.2",
-    "underscore": "^1.8.3",
+    "react-dom": "15.3.0",
     "regenerator": "^0.8.42",
     "regenerator-loader": "^2.0.0",
+    "tinycolor2": "^1.1.2",
     "webpack": "^1.12.9"
   },
   "devDependencies": {

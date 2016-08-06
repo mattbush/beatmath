@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const MapperShape = require('js/mapper/parameters/MapperShape');
 const {Parameter, LinearParameter} = require('js/core/parameters/Parameter');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');

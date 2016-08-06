@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const React = require('react');
 const LatticeParameters = require('js/lattice/parameters/LatticeParameters');
 const InfluenceCircle = require('js/lattice/components/InfluenceCircle');

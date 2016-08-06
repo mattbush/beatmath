@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const {LinearParameter, MovingLinearParameter} = require('js/core/parameters/Parameter');
 // const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');

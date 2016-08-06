@@ -1,5 +1,5 @@
 require('regenerator/runtime');
-const _ = require('underscore');
+const _ = require('lodash');
 const tinycolor = require('tinycolor2');
 const Mixboard = require('js/core/inputs/Mixboard');
 const updateHue = require('js/core/outputs/updateHue');
