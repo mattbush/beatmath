@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 
 const SPECIAL_KEYS = [
     'autoupdateEveryNBeats', 'autoupdateOnCue',

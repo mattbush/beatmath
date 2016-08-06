@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const MinHeap = require('min-heap');
 const getPossibleOrientation = require('js/bricks/state/getPossibleOrientation');
 const BrickPosition = require('js/bricks/state/BrickPosition');

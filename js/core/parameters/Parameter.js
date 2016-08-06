@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const {lerp, logerp, posMod, clamp, modAndShiftToHalf, nextFloat} = require('js/core/utils/math');
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');

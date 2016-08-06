@@ -1,5 +1,5 @@
 require('regenerator/runtime');
-// const _ = require('underscore');
+// const _ = require('lodash');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 

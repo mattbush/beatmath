@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const {IntLinearParameter, MovingAngleParameter, LinearParameter} = require('js/core/parameters/Parameter');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const {xyFromPolarAngleAndRadius} = require('js/core/utils/math');

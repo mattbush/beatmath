@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const {nextFloat} = require('js/core/utils/math');
 
 const POSSIBLE_ORIENTATIONS_BY_PARITY = [
