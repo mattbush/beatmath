@@ -61,7 +61,7 @@ class KaleParameters extends PieceParameters {
             },
             reflectionsPerCell: {
                 type: CycleParameter,
-                cycleValues: [2, 1, 2, 4, 6],
+                cycleValues: [1, 2, 4, 6],
                 listenToDecrementAndIncrementLaunchpadButtons: 2,
                 monitorName: '# Reflections',
             },

@@ -18,7 +18,7 @@ const Monitor = React.createClass({
     render: function() {
         return (
             <div className="main">
-                {_.map(_.compact(this._parsedStorage), (value, key) =>
+                {_.map(_.pickBy(this._parsedStorage), (value, key) =>
                     <MonitorValue
                         key={key}
                         value={value}
