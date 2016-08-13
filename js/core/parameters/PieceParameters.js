@@ -24,8 +24,8 @@ class PieceParameters {
 
             const specialProperties = _.pick(restOfProperties, SPECIAL_KEYS);
             restOfProperties = _.omit(restOfProperties, SPECIAL_KEYS);
-            const listenerProperties = _.pick(restOfProperties, MIXBOARD_LISTENER_KEYS);
-            const constructorProperties = _.omit(restOfProperties, MIXBOARD_LISTENER_KEYS);
+            const listenerProperties = _.pickBy(restOfProperties, MIXBOARD_LISTENER_KEYS);
+            const constructorProperties = _.omitBy(restOfProperties, MIXBOARD_LISTENER_KEYS);
             constructorProperties.tempo = this._beatmathParameters.tempo;
 
             const parameter = new type(constructorProperties);
