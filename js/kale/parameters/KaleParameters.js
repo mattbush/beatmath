@@ -52,6 +52,12 @@ class KaleParameters extends PieceParameters {
                 listenToLaunchpadButton: 0,
                 monitorName: 'Infinite?',
             },
+            cellSymmetry: {
+                type: ToggleParameter,
+                start: true,
+                listenToLaunchpadButton: 3,
+                monitorName: 'Cell Symmetry',
+            },
             triangularGridPercent: {
                 type: LinearParameter,
                 range: [0, 1],

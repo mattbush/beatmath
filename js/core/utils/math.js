@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 const DEG_2_RAD = Math.PI / 180;
 const RAD_2_DEG = 180 / Math.PI;
 
@@ -58,6 +60,16 @@ const xyFromPolarAngleAndRadius = function(polarAngleInDegrees, radius) {
     };
 };
 
+const xyRotatedAroundOriginWithAngle = function(x, y, angleInDegrees) {
+    const angleInRadians = angleInDegrees * DEG_2_RAD;
+    const cos = Math.cos(angleInRadians);
+    const sin = Math.sin(angleInRadians);
+    return [
+        cos * x - sin * y,
+        sin * x + cos * y,
+    ];
+};
+
 const posMod = function(dividend, divisor) {
     const remainder = dividend % divisor;
     return remainder < 0 ? remainder + divisor : remainder;
@@ -65,6 +77,15 @@ const posMod = function(dividend, divisor) {
 
 const ceilOfMultiple = function(x, multiple) {
     return Math.ceil(x / multiple) * multiple;
+};
+
+const centerOfPoints = function(points) {
+    return points[0].map((ignoreValue, index) => {
+        return _.reduce(
+            _.map(points, point => point[index]),
+            (a, b) => a + b,
+        ) / points.length;
+    });
 };
 
 module.exports = {
@@ -82,4 +103,6 @@ module.exports = {
     ceilOfMultiple,
     modAndShiftToHalf,
     posModAndBendToLowerHalf,
+    centerOfPoints,
+    xyRotatedAroundOriginWithAngle,
 };
