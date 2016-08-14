@@ -2,6 +2,8 @@ const React = require('react');
 const KaleCell = require('js/kale/components/KaleCell');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 
+const SCALE = 64;
+
 const KaleGrid = React.createClass({
     mixins: [ParameterBindingsMixin],
     contextTypes: {
@@ -18,8 +20,19 @@ const KaleGrid = React.createClass({
     },
     render: function() {
         let kaleCells;
+        const mapperShape = this.props.mapperShape;
+        const mapperShapeXOffset = mapperShape ? mapperShape.getCenterX() / SCALE : 0;
+        const mapperShapeYOffset = mapperShape ? mapperShape.getCenterY() / SCALE : 0;
+
         if (this.getParameterValue('isInfinite')) {
-            kaleCells = <KaleCell logicalX={0} logicalY={0} />;
+            kaleCells = (
+                <KaleCell
+                    logicalX={0}
+                    logicalY={0}
+                    mapperShapeXOffset={mapperShapeXOffset}
+                    mapperShapeYOffset={mapperShapeYOffset}
+                />
+            );
         } else {
             kaleCells = [];
             const numRows = this.getParameterValue('numRows');
@@ -30,14 +43,20 @@ const KaleGrid = React.createClass({
                         continue;
                     }
                     kaleCells.push(
-                        <KaleCell key={`${x}~${y}`} logicalX={x} logicalY={y} />
+                        <KaleCell
+                            key={`${x}~${y}`}
+                            logicalX={x}
+                            logicalY={y}
+                            mapperShapeXOffset={mapperShapeXOffset}
+                            mapperShapeYOffset={mapperShapeYOffset}
+                        />
                     );
                 }
             }
         }
 
         return (
-            <g transform="scale(64)">
+            <g transform={`scale(${SCALE})`}>
                 {kaleCells}
             </g>
         );

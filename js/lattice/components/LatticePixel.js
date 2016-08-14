@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const React = require('react');
 const tinycolor = require('tinycolor2');
 const BeatmathPixel = require('js/core/components/BeatmathPixel');
@@ -60,6 +60,9 @@ const LatticePixel = React.createClass({
             refreshOffset = tempo.getPeriod() - refreshOffset;
         }
         runAtTimestamp(this._update, tempo.getNextTick() + refreshOffset);
+        if (this.props.row === 0 && this.props.col === 0) {
+            this.context.latticeParameters.latency.setValue((Date.now() - tempo.getNextTick()) / 1000);
+        }
 
         this._nextState = _.clone(this.state);
         if (triangularGridAmount !== this.state.triangularGridAmount) {

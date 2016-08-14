@@ -1,17 +1,29 @@
-const _ = require('underscore');
-const {MovingLinearParameter, LogarithmicParameter, MovingLogarithmicParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
+const {Parameter, CycleParameter, MovingLinearParameter, LogarithmicParameter, MovingLogarithmicParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
 const BeatmathTempo = require('js/core/parameters/BeatmathTempo');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/core/parameters/BeatmathConstants');
 const {MixtrackFaders, MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
-const {LaunchpadKnobOutputCodes} = require('js/core/inputs/LaunchpadConstants');
+const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
+const MapperShape = require('js/mapper/parameters/MapperShape');
 
 class BeatmathParameters {
     constructor(mixboard, params) {
-        window.localStorage.clear();
+        // clear all items except mapping
+        for (let property in window.localStorage) {
+            if (window.localStorage.hasOwnProperty(property) && property !== 'mapping') {
+                delete window.localStorage[property];
+            }
+        }
         if (mixboard.isLaunchpad()) {
-            _.times(3, row => _.times(8, column => {
-                mixboard.clearLaunchpadLight(LaunchpadKnobOutputCodes[row][column]);
-            }));
+            mixboard.resetLaunchpadLights();
+        }
+
+        const existingMapping = JSON.parse(window.localStorage.getItem('mapping'));
+        if (existingMapping) {
+            this._mapperShapes = [];
+            for (let i = 0; i < existingMapping.length; i++) {
+                const shape = new MapperShape({existingData: existingMapping[i]});
+                this._mapperShapes.push(shape);
+            }
         }
 
         this.tempo = new BeatmathTempo(mixboard, {
@@ -41,49 +53,55 @@ class BeatmathParameters {
             this.height.listenToMixtrackFader(mixboard, MixtrackFaders.R_PITCH_BEND);
         }
 
-        this.frameScale = new LogarithmicParameter({
-            range: [0.25, 16],
-            start: 1,
-            variance: 0.015,
-            monitorName: 'Frame Scale',
-        });
-        if (mixboard.isLaunchpad()) {
-            this.frameScale.listenToLaunchpadFader(mixboard, 7, {addButtonStatusLight: true});
-        } else {
-            this.frameScale.listenToMixtrackFader(mixboard, MixtrackFaders.MASTER_GAIN);
-        }
-
-        this.frameScaleAutoupdating = new MovingLogarithmicParameter({
-            range: [0.5, 2],
-            start: 1,
-            variance: 0.015,
-            monitorName: 'Scale Mod',
-        });
-        if (mixboard.isMixboardConnected()) {
-            this.frameScaleAutoupdating.listenForAutoupdateCue(mixboard);
-        }
-        if (mixboard.isLaunchpad()) {
-            this.frameScaleAutoupdating.listenToLaunchpadFader(mixboard, 6, {addButtonStatusLight: true});
-        }
-        this.tempo.addListener(() => {
-            const nTicks = 1;
-            const tick = this.tempo.getNumTicks();
-            if (tick % (nTicks * this.tempo._bpmMod) === 0) {
-                this.frameScaleAutoupdating.update();
+        if (params.useFrame !== false) {
+            this.frameScale = new LogarithmicParameter({
+                range: [0.25, 16],
+                start: 1,
+                variance: 0.015,
+                monitorName: 'Frame Scale',
+            });
+            if (mixboard.isLaunchpad()) {
+                this.frameScale.listenToLaunchpadFader(mixboard, 7, {addButtonStatusLight: true});
+            } else {
+                this.frameScale.listenToMixtrackFader(mixboard, MixtrackFaders.MASTER_GAIN);
             }
-        });
 
-        this.frameRotation = new AngleParameter({
-            start: 0,
-            constrainTo: false,
-            monitorName: 'Frame Rotation',
-            tempo: this.tempo,
-        });
-        if (mixboard.isLaunchpad()) {
-            this.frameRotation.listenToLaunchpadKnob(mixboard, 2, 7);
+            this.frameScaleAutoupdating = new MovingLogarithmicParameter({
+                range: [0.5, 2],
+                start: 1,
+                variance: 0.015,
+                monitorName: 'Scale Mod',
+            });
+            if (mixboard.isMixboardConnected()) {
+                this.frameScaleAutoupdating.listenForAutoupdateCue(mixboard);
+            }
+            if (mixboard.isLaunchpad()) {
+                this.frameScaleAutoupdating.listenToLaunchpadFader(mixboard, 6, {addButtonStatusLight: true});
+            }
+            this.tempo.addListener(() => {
+                const nTicks = 1;
+                const tick = this.tempo.getNumTicks();
+                if (tick % (nTicks * this.tempo._bpmMod) === 0) {
+                    this.frameScaleAutoupdating.update();
+                }
+            });
+
+            this.frameRotation = new AngleParameter({
+                start: 0,
+                constrainTo: false,
+                monitorName: 'Frame Rotation',
+                tempo: this.tempo,
+            });
+            if (mixboard.isLaunchpad()) {
+                this.frameRotation.listenToLaunchpadKnob(mixboard, 2, 7);
+            } else {
+                this.frameRotation.listenToMixtrackWheel(mixboard, MixtrackWheels.L_TURNTABLE);
+                this.frameRotation.listenToSnapMixtrackButton(mixboard, MixtrackButtons.L_SCRATCH);
+            }
         } else {
-            this.frameRotation.listenToMixtrackWheel(mixboard, MixtrackWheels.L_TURNTABLE);
-            this.frameRotation.listenToSnapMixtrackButton(mixboard, MixtrackButtons.L_SCRATCH);
+            this.frameScale = new Parameter({start: 1});
+            this.frameScaleAutoupdating = new Parameter({start: 1});
+            this.frameRotation = new Parameter({start: 0});
         }
 
         if (params.useColor || params.usePixels) {
@@ -118,6 +136,16 @@ class BeatmathParameters {
             this.brightness.listenToIncrementMixtrackButton(mixboard, MixtrackButtons.R_PITCH_BEND_PLUS);
             this.brightness.listenToDecrementMixtrackButton(mixboard, MixtrackButtons.R_PITCH_BEND_MINUS);
         }
+
+        const mappingModeCycleValues = ['off', 'onWithOneFrame', 'onWithFrames'];
+        if (params.hasSpecialMapping) {
+            mappingModeCycleValues.push('onWithFramesSpecial');
+        }
+        this.mappingMode = new CycleParameter({
+            cycleValues: mappingModeCycleValues,
+            monitorName: 'Mapping Mode',
+        });
+        this.mappingMode.listenToDecrementAndIncrementLaunchpadSideButtons(mixboard, LaunchpadButtons.LEFT, LaunchpadButtons.RIGHT);
 
         if (params.usePixels) {
             this.pixelPointiness = new MovingLinearParameter({
@@ -161,6 +189,12 @@ class BeatmathParameters {
                 this.pixelSidedness.addMixtrackStatusLight(mixboard, MixtrackButtons.R_DELETE, value => value <= 3);
             }
         }
+    }
+    mapMapperShapes(fn) {
+        if (!this._mapperShapes) {
+            return [];
+        }
+        return this._mapperShapes.map(fn);
     }
 }
 

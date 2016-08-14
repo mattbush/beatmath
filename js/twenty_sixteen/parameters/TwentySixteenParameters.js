@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const {CycleParameter, ToggleParameter, MovingColorParameter, LinearParameter} = require('js/core/parameters/Parameter');
 const {MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');

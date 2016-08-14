@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const {lerp, logerp, posMod, clamp, modAndShiftToHalf, nextFloat} = require('js/core/utils/math');
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
@@ -16,10 +16,14 @@ const STATUS_TO_LIGHT_VALUE = {
 };
 
 class Parameter {
-    constructor({start, monitorName}) {
+    constructor({start, monitorName, manualMonitorCoords}) {
         this._listeners = [];
         this._value = start;
         this._monitorName = monitorName;
+        if (manualMonitorCoords) {
+            this._monitorX = manualMonitorCoords.x;
+            this._monitorY = manualMonitorCoords.y;
+        }
         if (monitorName) {
             this.addListener(this._updateMonitor.bind(this));
         }
@@ -92,6 +96,13 @@ class Parameter {
     _setMonitorCoordsFromLaunchpadButton(column) {
         this._monitorX = column;
         this._monitorY = 5;
+        this._updateMonitor();
+    }
+    _setMonitorCoordsFromLaunchpadSideButton(buttonCode) {
+        this._monitorX = 8.5;
+        this._monitorY = (buttonCode === LaunchpadButtons.LEFT || buttonCode === LaunchpadButtons.RIGHT)
+            ? 2
+            : 1;
         this._updateMonitor();
     }
     listenForAutoupdateCue(mixboard) {
@@ -170,6 +181,11 @@ class CycleParameter extends Parameter {
 
         this._cycleValues = params.cycleValues;
         this._valueIndex = 0;
+    }
+    listenToDecrementAndIncrementLaunchpadSideButtons(mixboard, decrementCode, incrementCode) {
+        mixboard.addLaunchpadButtonListener(decrementCode, this.onDecrementButtonPress.bind(this));
+        mixboard.addLaunchpadButtonListener(incrementCode, this.onIncrementButtonPress.bind(this));
+        this._setMonitorCoordsFromLaunchpadSideButton(decrementCode);
     }
     listenToDecrementAndIncrementLaunchpadButtons(mixboard, column) {
         mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[column], this.onIncrementButtonPress.bind(this));
@@ -412,6 +428,7 @@ class AngleParameter extends Parameter {
         this._defaultOff = params.start;
         this._tempo = params.tempo;
         this._onLaunchpadKnobSpinInterval = this._onLaunchpadKnobSpinInterval.bind(this);
+        this._knobSensitivity = params.knobSensitivity || 1;
     }
     listenToLaunchpadKnob(mixboard, row, column) {
         mixboard.addLaunchpadKnobListener(row, column, this.onLaunchpadKnobUpdate.bind(this));
@@ -424,7 +441,7 @@ class AngleParameter extends Parameter {
     }
     onLaunchpadKnobUpdate(inputValue) {
         inputValue -= 0.5;
-        this._launchpadKnobValue = inputValue * Math.abs(inputValue) * 30;
+        this._launchpadKnobValue = inputValue * Math.abs(inputValue) * 30 * this._knobSensitivity;
         if (inputValue !== 0 && !this._launchpadKnobIntervalId) {
             let intervalMs;
             if (this._tempo) {
@@ -530,6 +547,7 @@ class MovingAngleParameter extends AngleParameter {
         this._variance = params.variance;
         this._speed = 0;
         this._maxSpeed = params.max;
+        this._isUpdatingEnabled = true;
     }
     update() {
         if (!this._isUpdatingEnabled) {
@@ -663,6 +681,13 @@ class MovingIntLinearParameter extends MovingLinearParameter {
     }
 }
 
+class ManualParameter extends Parameter {
+    setValue(value) {
+        this._value = value;
+        this._updateListeners();
+    }
+}
+
 module.exports = {
     Parameter,
     NegatedParameter,
@@ -677,4 +702,5 @@ module.exports = {
     MovingLinearParameter,
     MovingLogarithmicParameter,
     MovingIntLinearParameter,
+    ManualParameter,
 };

@@ -26,24 +26,24 @@ class KaleParameters extends PieceParameters {
             },
             colColorShift: {
                 type: MovingLinearParameter,
-                range: [-180, 180],
+                range: [-45, 45],
                 start: 0,
                 incrementAmount: 2.5,
                 monitorName: 'Column Color Shift',
                 listenToLaunchpadKnob: [0, 0],
-                variance: 5,
-                autoupdateEveryNBeats: 8,
+                variance: 1,
+                autoupdateEveryNBeats: 1, // TODO
                 autoupdateOnCue: true,
             },
             rowColorShift: {
                 type: MovingLinearParameter,
-                range: [-180, 180],
+                range: [-45, 45],
                 start: 0,
                 incrementAmount: 2.5,
                 monitorName: 'Row Color Shift',
                 listenToLaunchpadKnob: [0, 1],
-                variance: 5,
-                autoupdateEveryNBeats: 2,
+                variance: 1,
+                autoupdateEveryNBeats: 1, // TODO
                 autoupdateOnCue: true,
             },
             isInfinite: {
@@ -51,6 +51,12 @@ class KaleParameters extends PieceParameters {
                 start: false,
                 listenToLaunchpadButton: 0,
                 monitorName: 'Infinite?',
+            },
+            cellSymmetry: {
+                type: ToggleParameter,
+                start: true,
+                listenToLaunchpadButton: 3,
+                monitorName: 'Cell Symmetry',
             },
             triangularGridPercent: {
                 type: LinearParameter,

@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const React = require('react');
 
 let HoneycombParameters = require('js/honeycomb/parameters/HoneycombParameters');

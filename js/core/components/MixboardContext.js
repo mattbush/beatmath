@@ -3,12 +3,9 @@ const BeatmathParameters = require('js/core/parameters/BeatmathParameters');
 
 const MixboardContext = React.createClass({
     getInitialState: function() {
+        const {mixboard, ...restOfProps} = this.props;
         return {
-            beatmathParameters: new BeatmathParameters(this.props.mixboard, {
-                bpmMod: this.props.bpmMod,
-                usePixels: this.props.usePixels,
-                useColor: this.props.useColor,
-            }),
+            beatmathParameters: new BeatmathParameters(mixboard, restOfProps),
         };
     },
     childContextTypes: {

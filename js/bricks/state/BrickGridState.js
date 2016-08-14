@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const MinHeap = require('min-heap');
 const getPossibleOrientation = require('js/bricks/state/getPossibleOrientation');
 const BrickPosition = require('js/bricks/state/BrickPosition');
@@ -43,7 +43,7 @@ class BrickGridState {
 
         const coordsToDelete = [];
 
-        for (let coords in this._grid) {
+        for (let coords in this._grid) { // eslint-disable-line guard-for-in
             const [x, y] = coords.split(',').map(Number);
             if (this._brickPosition.getDistance({x, y}) >= RENDER_DISTANCE_CUTOFF) {
                 coordsToDelete.push(coords);

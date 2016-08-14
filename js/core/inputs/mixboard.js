@@ -1,6 +1,6 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const {MixtrackWheels, MixtrackFaders, MixtrackWheelCoefficients} = require('js/core/inputs/MixtrackConstants');
-const {LaunchpadFaderInputCodes, LaunchpadKnobInputCodes} = require('js/core/inputs/LaunchpadConstants');
+const {LaunchpadFaderInputCodes, LaunchpadKnobInputCodes, LaunchpadKnobOutputCodes, LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 
 class Mixboard {
     constructor() {
@@ -136,7 +136,7 @@ class Mixboard {
     addLaunchpadKnobListener(row, column, fn) {
         this._addListener(this._onLaunchpadFaderAndKnobListeners, LaunchpadKnobInputCodes[row][column], fn);
     }
-    clearLaunchpadLight(eventCode) {
+    _clearLaunchpadLight(eventCode) {
         this._midiOutput.send([152, eventCode, 0]);
     }
     setLaunchpadLightValue(eventCode, lightCode) {
@@ -155,6 +155,19 @@ class Mixboard {
     toggleLaunchpadDirectionalLight(eventCode, isLightOn) {
         const value = isLightOn ? 0x33 : 0;
         this._midiOutput.send([152, eventCode - 100, value]);
+    }
+    resetLaunchpadLights() {
+        _.times(8, column => {
+            _.times(3, row => {
+                this._clearLaunchpadLight(LaunchpadKnobOutputCodes[row][column]);
+            });
+            this._clearLaunchpadLight(LaunchpadButtons.TRACK_FOCUS[column]);
+            this._clearLaunchpadLight(LaunchpadButtons.TRACK_CONTROL[column]);
+        });
+        this._clearLaunchpadLight(LaunchpadButtons.DEVICE);
+        this._clearLaunchpadLight(LaunchpadButtons.MUTE);
+        this._clearLaunchpadLight(LaunchpadButtons.SOLO);
+        this._clearLaunchpadLight(LaunchpadButtons.RECORD_ARM);
     }
     _addListener(listenerObj, eventCode, fn) {
         if (!_.has(listenerObj, eventCode)) {

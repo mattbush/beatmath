@@ -3,7 +3,7 @@ const KaleParameters = require('js/kale/parameters/KaleParameters');
 const SubjectParameters = require('js/kale/parameters/SubjectParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const KaleGrid = require('js/kale/components/KaleGrid');
-const KaleClipPaths = require('js/kale/components/KaleClipPaths');
+const {KaleClipPaths} = require('js/kale/components/KaleClipPaths');
 
 const KaleContainer = React.createClass({
     childContextTypes: {

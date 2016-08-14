@@ -1,6 +1,6 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const React = require('react');
-const {lerp} = require('js/core/utils/math');
+const {lerp, centerOfPoints} = require('js/core/utils/math');
 
 const SQRT_3 = 3 ** 0.5;
 
@@ -95,17 +95,30 @@ _.times(21, index => {
         } else if (id.includes('C')) {
             points = _.map(points, ([x, y]) => [cosAngle2 * x - sinAngle2 * y, sinAngle2 * x + cosAngle2 * y]);
         }
-        clipPaths.push(
-            <clipPath id={id + '~' + interpolation}>
-                <polygon points={_.map(points, pair => pair.join(',')).join(' ')} />
-            </clipPath>
-        );
+
+        const [centerX, centerY] = centerOfPoints(points);
+
+        const clipPathKey = id + '~' + interpolation;
+
+        clipPaths.push({
+            key: clipPathKey,
+            centerX: centerX,
+            centerY: centerY,
+            jsx: (
+                <clipPath id={clipPathKey}>
+                    <polygon points={_.map(points, pair => pair.join(',')).join(' ')} />
+                </clipPath>,
+            ),
+        });
     });
 });
 
-const clipPathsWithKeys = _.map(
+const KaleClipPaths = _.map(
     clipPaths,
-    (clipPath, i) => React.cloneElement(clipPath, {key: i})
+    (clipPath, i) => React.cloneElement(clipPath.jsx, {key: i})
 );
 
-module.exports = clipPathsWithKeys;
+const clipPathXCenters = _.zipObject(_.map(clipPaths, 'key'), _.map(clipPaths, 'centerX'));
+const clipPathYCenters = _.zipObject(_.map(clipPaths, 'key'), _.map(clipPaths, 'centerY'));
+
+module.exports = {KaleClipPaths, clipPathXCenters, clipPathYCenters};

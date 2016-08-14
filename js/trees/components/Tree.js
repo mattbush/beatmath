@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const {lerp, clamp} = require('js/core/utils/math');
@@ -52,7 +52,7 @@ const Tree = React.createClass({
                             key={levelIndex}
                             fill={fill}
                             x={-(treeWidth / 2)}
-                            y={levelIndex * levelSpacing}
+                            y={levelIndex * levelSpacing + levelHeight / 2}
                             rx={borderRadius}
                             ry={borderRadius}
                             width={treeWidth}

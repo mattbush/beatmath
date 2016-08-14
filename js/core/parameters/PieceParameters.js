@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 
 const SPECIAL_KEYS = [
     'autoupdateEveryNBeats', 'autoupdateOnCue',
@@ -6,14 +6,14 @@ const SPECIAL_KEYS = [
 const MIXBOARD_LISTENER_KEYS = (value, key) => key.startsWith('listenTo');
 
 class PieceParameters {
-    constructor(mixboard, beatmathParameters) {
+    constructor(mixboard, beatmathParameters, opts) {
         this._mixboard = mixboard;
         this._beatmathParameters = beatmathParameters;
 
-        this._initParameters();
+        this._initParameters(opts);
     }
-    _initParameters() {
-        const parameters = this._declareParameters();
+    _initParameters(opts) {
+        const parameters = this._declareParameters(opts);
         _.each(parameters, (properties, paramName) => {
             let {type, ...restOfProperties} = properties;
 
@@ -24,8 +24,8 @@ class PieceParameters {
 
             const specialProperties = _.pick(restOfProperties, SPECIAL_KEYS);
             restOfProperties = _.omit(restOfProperties, SPECIAL_KEYS);
-            const listenerProperties = _.pick(restOfProperties, MIXBOARD_LISTENER_KEYS);
-            const constructorProperties = _.omit(restOfProperties, MIXBOARD_LISTENER_KEYS);
+            const listenerProperties = _.pickBy(restOfProperties, MIXBOARD_LISTENER_KEYS);
+            const constructorProperties = _.omitBy(restOfProperties, MIXBOARD_LISTENER_KEYS);
             constructorProperties.tempo = this._beatmathParameters.tempo;
 
             const parameter = new type(constructorProperties);
@@ -65,7 +65,7 @@ class PieceParameters {
             parameter.listenForAutoupdateCue(this._mixboard);
         }
     }
-    _declareParameters() {
+    _declareParameters(/* opts */) {
         // empty, override me
         return {};
     }

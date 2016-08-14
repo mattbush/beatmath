@@ -33,7 +33,7 @@ const DancingText = React.createClass({
                 {letterComponents}
             </g>
         );
-    }
+    },
 });
 
 module.exports = DancingText;

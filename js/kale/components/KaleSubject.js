@@ -34,7 +34,7 @@ const KaleSubject = React.createClass({
         const transform = {
             transform: `translate(${viewpointX}px, ${viewpointY}px) scale(${outerScaleAmount}) translate(${driftX}px, ${driftY}px) rotate(${outerRotation}deg) translate(0, 1px) scale(${innerScaleAmount}) rotate(${innerRotation}deg)`,
             transition: `transform ${tempo.getPeriod()}ms linear`,
-            strokeWidth: 0.2,
+            strokeWidth: 0.33,
         };
 
         return (

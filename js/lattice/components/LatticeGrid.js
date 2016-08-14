@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const React = require('react');
 const LatticeParameters = require('js/lattice/parameters/LatticeParameters');
 const InfluenceCircle = require('js/lattice/components/InfluenceCircle');
@@ -34,7 +34,7 @@ const LatticeGrid = React.createClass({
         const mixboard = this.context.mixboard;
         const beatmathParameters = this.context.beatmathParameters;
         const latticeParameters = new LatticeParameters(mixboard, beatmathParameters);
-        const refreshTimer = new LatticeRefreshTimer(mixboard, beatmathParameters);
+        const refreshTimer = new LatticeRefreshTimer(mixboard, beatmathParameters, {latticeParameters});
 
         const influences = [
             new ColorInfluence({beatmathParameters, latticeParameters, startCol: 0.2, startRow: 0.2, startValue: tinycolor('#f00'), index: 0}),
@@ -73,12 +73,12 @@ const LatticeGrid = React.createClass({
             <BeatmathFrame>
                 <g>
                     {children}
+                    {this.getParameterValue('showInfluences') && <g>
+                        {_.map(this.state.influences, (influence, index) =>
+                            <InfluenceCircle influence={influence} key={index} />
+                        )}
+                    </g>}
                 </g>
-                {this.getParameterValue('showInfluences') && <g>
-                    {_.map(this.state.influences, (influence, index) =>
-                        <InfluenceCircle influence={influence} key={index} />
-                    )}
-                </g>}
             </BeatmathFrame>
         );
     },

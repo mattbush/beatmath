@@ -1,9 +1,9 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const {MovingIntLinearParameter, MovingLogarithmicParameter, MovingLinearParameter, CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 const {MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
-const {lerp, dist, manhattanDist, polarAngleDeg, posMod, modAndShiftToHalf, posModAndBendToLowerHalf} = require('js/core/utils/math');
+const {lerp, dist, manhattanDist, triangularDist, polarAngleDeg, posMod, modAndShiftToHalf, posModAndBendToLowerHalf} = require('js/core/utils/math');
 const MAX_RIPPLES_TREAT_AS_INFINITE = 40;
 
 class LatticeRefreshTimer extends PieceParameters {
@@ -105,14 +105,26 @@ class LatticeRefreshTimer extends PieceParameters {
             },
         };
     }
-    constructor() {
-        super(...arguments);
+    constructor(mixboard, beatmathParameters, {latticeParameters}) {
+        super(mixboard, beatmathParameters);
         this._refreshOffsetCache = {};
+        this._latticeParameters = latticeParameters;
+        this._flushCacheIfNewGrid();
         this._flushCache = this._flushCache.bind(this);
 
         _.each(this._declareParameters(), (value, paramName) => {
             this[paramName].addListener(this._flushCache);
         });
+        this._latticeParameters.triangularGridAmount.addListener(this._flushCacheIfNewGrid.bind(this));
+    }
+    _isTriangularGrid() {
+        return this._latticeParameters.triangularGridAmount.getValue() >= 0.5;
+    }
+    _flushCacheIfNewGrid() {
+        if (this._cachedIsTriangularGrid !== this._isTriangularGrid()) {
+            this._cachedIsTriangularGrid = this._isTriangularGrid();
+            this._flushCache();
+        }
     }
     _flushCache() {
         this._refreshOffsetCache = {};
@@ -157,7 +169,9 @@ class LatticeRefreshTimer extends PieceParameters {
         }
 
         if (this._useDistance.getValue() && rippleRadius !== MAX_RIPPLES_TREAT_AS_INFINITE) {
-            let distance = manhattanDist(col, row);
+            let distance = this._cachedIsTriangularGrid
+                ? triangularDist(col, row)
+                : manhattanDist(col, row);
             const manhattanCoefficient = this._manhattanCoefficient.getValue();
             const logCoefficient = this._logCoefficient.getValue();
 

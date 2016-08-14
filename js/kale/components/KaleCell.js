@@ -1,9 +1,10 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const KaleSubject = require('js/kale/components/KaleSubject');
-const {lerp, posMod} = require('js/core/utils/math');
+const {lerp, posMod, xyRotatedAroundOriginWithAngle} = require('js/core/utils/math');
 const tinycolor = require('tinycolor2');
+const {clipPathXCenters, clipPathYCenters} = require('js/kale/components/KaleClipPaths');
 
 const Y_AXIS_SCALE = Math.sqrt(3);
 
@@ -21,6 +22,7 @@ const KaleCell = React.createClass({
             isInfinite: this.context.kaleParameters.isInfinite,
             reflectionsPerCell: this.context.kaleParameters.reflectionsPerCell,
             triangularGridPercent: this.context.kaleParameters.triangularGridPercent,
+            cellSymmetry: this.context.kaleParameters.cellSymmetry,
         };
     },
     _getColorByShifting: function(x, y) {
@@ -59,7 +61,7 @@ const KaleCell = React.createClass({
             yMod6 = 6 - yMod6;
             [lowerLeft, lowerRight, upperLeft, upperRight] = [upperLeft, upperRight, lowerLeft, lowerRight];
         }
-        switch(`${xMod6},${yMod6}`) {
+        switch (`${xMod6},${yMod6}`) {
             case '0,0':
                 return this._mixColors(lowerLeft);
             case '0,2':
@@ -109,8 +111,8 @@ const KaleCell = React.createClass({
 
         const yAxisScale = lerp(2, Y_AXIS_SCALE, triGridPercent);
 
-        const x = this.props.logicalX + (this.props.logicalY % 2 ? brickGridPercent - 1 : 0);
-        const y = this.props.logicalY * yAxisScale;
+        const centerX = this.props.logicalX + (this.props.logicalY % 2 ? brickGridPercent - 1 : 0);
+        const centerY = this.props.logicalY * yAxisScale;
 
         const reflectionElements = _.times(reflectionsPerCell, index => {
             const isBStyle = (reflectionsPerCell === 6 && index >= 2 && index < 4);
@@ -127,19 +129,35 @@ const KaleCell = React.createClass({
                 clipPathPrefixFull += 'C';
             }
 
-            const clipPath = `url(#${clipPathPrefixFull}~${triGridPercent})`;
+            const clipPathKey = `${clipPathPrefixFull}~${triGridPercent}`;
+            const clipPath = `url(#${clipPathKey})`;
+
+            let x = centerX;
+            let y = centerY;
+            if (!this.getParameterValue('cellSymmetry')) {
+                const [clipPathXCenter, clipPathYCenter] = xyRotatedAroundOriginWithAngle(
+                    clipPathXCenters[clipPathKey],
+                    clipPathYCenters[clipPathKey],
+                    rotationDeg,
+                );
+                x += clipPathXCenter * ((index % 2) ? -1 : 1);
+                y += clipPathYCenter;
+            }
+
+            const xWithMapperShapeOffset = x + this.props.mapperShapeXOffset;
+            const yWithMapperShapeOffset = y + this.props.mapperShapeYOffset;
 
             return (
-                <g key={index} transform={`${scale}rotate(${rotationDeg})`}>
+                <g key={index} transform={`${scale}rotate(${rotationDeg})`} stroke={this._getColor(xWithMapperShapeOffset, yWithMapperShapeOffset)}>
                     <g clipPath={clipPath}>
-                        <KaleSubject cellX={x} cellY={y} />
+                        <KaleSubject cellX={xWithMapperShapeOffset} cellY={yWithMapperShapeOffset} />
                     </g>
                 </g>
             );
         });
 
         return (
-            <g transform={`translate(${x}, ${y})`} stroke={this._getColor(x, y)}>
+            <g transform={`translate(${centerX}, ${centerY})`}>
                 {reflectionElements}
             </g>
         );
