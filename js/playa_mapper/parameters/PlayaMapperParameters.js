@@ -47,10 +47,17 @@ class PlayaMapperParameters extends PieceParameters {
             },
             scale: {
                 type: LogarithmicParameter,
-                range: [1, 100],
+                range: [10, 1000],
                 start: savedParams.scale || 10,
                 listenToLaunchpadKnob: [0, 2],
                 monitorName: 'scale',
+            },
+            projectorPitchAngle: {
+                type: LinearParameter,
+                range: [-90, 90],
+                start: savedParams.projectorPitchAngle || 0,
+                listenToLaunchpadKnob: [0, 3],
+                monitorName: 'projectorPitchAngle',
             },
         };
     }
@@ -58,8 +65,9 @@ class PlayaMapperParameters extends PieceParameters {
         const baseMapping = [
             {
                 transforms: [
+                    {rotateX: this.projectorPitchAngle.getValue()},
                     {translate: [this.xOffset.getValue(), this.yOffset.getValue()]},
-                    {scale: this.scale.getValue()},
+                    {scale: this.scale.getValue() / 21.18},
                     {translate: [10 * Math.cos(this.triangleYawAngle.getValue() * DEG_2_RAD), 0]},
                     {rotateY: this.triangleYawAngle.getValue()},
                     {rotateX: this.trianglePitchAngle.getValue()},
@@ -73,8 +81,9 @@ class PlayaMapperParameters extends PieceParameters {
             },
             {
                 transforms: [
+                    {rotateX: this.projectorPitchAngle.getValue()},
                     {translate: [this.xOffset.getValue(), this.yOffset.getValue()]},
-                    {scale: this.scale.getValue()},
+                    {scale: this.scale.getValue() / 21.18},
                     {translate: [-10 * Math.cos(this.triangleYawAngle.getValue() * DEG_2_RAD), 0]},
                     {rotateY: -this.triangleYawAngle.getValue()},
                     {rotateX: this.trianglePitchAngle.getValue()},
@@ -84,6 +93,16 @@ class PlayaMapperParameters extends PieceParameters {
                     [[0, 0], [-7.692, -4.213], [0, -18.26]],
                     [[0, 0], [7.692, -4.213], [10, 0]],
                     [[0, 0], [7.692, -4.213], [0, -18.26]],
+                ],
+            },
+            {
+                transforms: [
+                    {rotateX: this.projectorPitchAngle.getValue()},
+                    {translate: [this.xOffset.getValue(), this.yOffset.getValue()]},
+                    {scale: this.scale.getValue() / 13.76},
+                ],
+                shapes: [
+                    [[-0.5, 4], [0.5, 4], [0.5, -12], [-0.5, -12]],
                 ],
             },
         ];

@@ -31,6 +31,7 @@ const PlayaMapperContainer = React.createClass({
             triangleYawAngle: this.state.playaMapperParameters.triangleYawAngle,
             trianglePitchAngle: this.state.playaMapperParameters.trianglePitchAngle,
             scale: this.state.playaMapperParameters.scale,
+            projectorPitchAngle: this.state.playaMapperParameters.projectorPitchAngle,
         };
     },
     _serializeTransforms(transforms) {
