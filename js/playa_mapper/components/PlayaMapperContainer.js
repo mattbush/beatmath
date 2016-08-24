@@ -28,8 +28,8 @@ const PlayaMapperContainer = React.createClass({
         return {
             xOffset: this.state.playaMapperParameters.xOffset,
             yOffset: this.state.playaMapperParameters.yOffset,
-            rotateX: this.state.playaMapperParameters.rotateX,
-            rotateY: this.state.playaMapperParameters.rotateY,
+            triangleYawAngle: this.state.playaMapperParameters.triangleYawAngle,
+            trianglePitchAngle: this.state.playaMapperParameters.trianglePitchAngle,
             scale: this.state.playaMapperParameters.scale,
         };
     },

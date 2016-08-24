@@ -31,26 +31,26 @@ class PlayaMapperParameters extends PieceParameters {
                 listenToLaunchpadKnob: [0, 1],
                 monitorName: 'yOffset',
             },
-            rotateX: {
+            triangleYawAngle: {
                 type: LinearParameter,
-                range: [-90, 90],
-                start: savedParams.rotateX || 0,
+                range: [0, 72],
+                start: savedParams.triangleYawAngle || 36,
                 listenToLaunchpadKnob: [2, 0],
-                monitorName: 'rotateX',
+                monitorName: 'triangleYawAngle',
             },
-            rotateY: {
+            trianglePitchAngle: {
                 type: LinearParameter,
-                range: [-90, 90],
-                start: savedParams.rotateY || 0,
+                range: [38.92, 58.92],
+                start: savedParams.trianglePitchAngle || 48.92,
                 listenToLaunchpadKnob: [2, 1],
-                monitorName: 'rotateY',
+                monitorName: 'trianglePitchAngle',
             },
             scale: {
                 type: LogarithmicParameter,
                 range: [1, 100],
                 start: savedParams.scale || 10,
-                listenToLaunchpadKnob: [2, 3],
-                monitorName: 'rotateY',
+                listenToLaunchpadKnob: [0, 2],
+                monitorName: 'scale',
             },
         };
     }
@@ -58,10 +58,11 @@ class PlayaMapperParameters extends PieceParameters {
         const baseMapping = [
             {
                 transforms: [
+                    {translate: [this.xOffset.getValue(), this.yOffset.getValue()]},
                     {scale: this.scale.getValue()},
-                    {translate: [10 * Math.cos(this.rotateY.getValue() * DEG_2_RAD), 0]},
-                    {rotateY: this.rotateY.getValue()},
-                    {rotateX: this.rotateX.getValue()},
+                    {translate: [10 * Math.cos(this.triangleYawAngle.getValue() * DEG_2_RAD), 0]},
+                    {rotateY: this.triangleYawAngle.getValue()},
+                    {rotateX: this.trianglePitchAngle.getValue()},
                 ],
                 shapes: [
                     [[0, 0], [-7.692, -4.213], [-10, 0]],
@@ -72,10 +73,11 @@ class PlayaMapperParameters extends PieceParameters {
             },
             {
                 transforms: [
+                    {translate: [this.xOffset.getValue(), this.yOffset.getValue()]},
                     {scale: this.scale.getValue()},
-                    {translate: [-10 * Math.cos(this.rotateY.getValue() * DEG_2_RAD), 0]},
-                    {rotateY: this.rotateY.getValue()},
-                    {rotateX: -this.rotateX.getValue()},
+                    {translate: [-10 * Math.cos(this.triangleYawAngle.getValue() * DEG_2_RAD), 0]},
+                    {rotateY: -this.triangleYawAngle.getValue()},
+                    {rotateX: this.trianglePitchAngle.getValue()},
                 ],
                 shapes: [
                     [[0, 0], [-7.692, -4.213], [-10, 0]],
