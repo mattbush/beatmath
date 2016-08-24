@@ -2,7 +2,6 @@ const React = require('react');
 const PlayaMapperParameters = require('js/playa_mapper/parameters/PlayaMapperParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const PlayaMapperShapeView = require('js/playa_mapper/components/PlayaMapperShapeView');
-const PlayaMapperCurrentShapeView = require('js/playa_mapper/components/PlayaMapperCurrentShapeView');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 
 const PlayaMapperContainer = React.createClass({
@@ -26,24 +25,19 @@ const PlayaMapperContainer = React.createClass({
     },
     getParameterBindings: function() {
         return {
-            mapping: this.state.playaMapperParameters.mapping,
-            currentShapeIndex: this.state.playaMapperParameters.currentShapeIndex,
+            xOffset: this.state.playaMapperParameters.xOffset,
+            yOffset: this.state.playaMapperParameters.yOffset,
         };
     },
     render: function() {
         const playaMapperParameters = this.state.playaMapperParameters;
-        const currentShape = playaMapperParameters.getCurrentShape();
         return (
             <BeatmathFrame>
                 <g>
-                    <circle cx={0} cy={0} r={10000} fill="#0033dd" />
+                    <circle cx={0} cy={0} r={10000} fill="#0044aa" />
                     {playaMapperParameters.mapShapes((shape, index) => {
-                        if (shape === currentShape) {
-                            return null;
-                        }
-                        return <PlayaMapperShapeView key={index} shape={shape} />;
+                        return <PlayaMapperShapeView key={index} index={index} shape={shape} />;
                     })}
-                    {currentShape && <PlayaMapperCurrentShapeView shape={currentShape} />}
                 </g>
             </BeatmathFrame>
         );

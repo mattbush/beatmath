@@ -5,11 +5,13 @@ const {MixtrackFaders, MixtrackWheels, MixtrackButtons} = require('js/core/input
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 const MapperShape = require('js/mapper/parameters/MapperShape');
 
+const BLESSED_LOCAL_STORAGE_KEYS = ['mapping', 'playaMapping', 'playaMapperParams'];
+
 class BeatmathParameters {
     constructor(mixboard, params) {
         // clear all items except mapping
         for (let property in window.localStorage) {
-            if (window.localStorage.hasOwnProperty(property) && property !== 'mapping') {
+            if (window.localStorage.hasOwnProperty(property) && !BLESSED_LOCAL_STORAGE_KEYS.includes(property)) {
                 delete window.localStorage[property];
             }
         }

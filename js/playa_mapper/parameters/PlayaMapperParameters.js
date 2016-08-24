@@ -1,150 +1,70 @@
 const _ = require('lodash');
-const PlayaMapperShape = require('js/playa_mapper/parameters/PlayaMapperShape');
-const {Parameter, LinearParameter} = require('js/core/parameters/Parameter');
-const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
+const {LinearParameter} = require('js/core/parameters/Parameter');
 const PieceParameters = require('js/core/parameters/PieceParameters');
-
-const MOVE_SHAPE_POLLING_RATE = 33;
 
 class PlayaMapperParameters extends PieceParameters {
     constructor(mixboard, beatmathParameters) {
-        const existingMapping = JSON.parse(window.localStorage.getItem('mapping'));
-        let numShapes = existingMapping ? existingMapping.length : 1;
+        const playaMapperRawParams = window.localStorage.getItem('playaMapperParams');
+        const playaMapperParams = playaMapperRawParams ? JSON.parse(playaMapperRawParams) : {};
 
-        super(mixboard, beatmathParameters, {numShapes});
+        super(mixboard, beatmathParameters, playaMapperParams);
 
-        this._verticesPressed = {};
-        this._directionsPressed = {};
-        this._shapes = [];
-        if (existingMapping) {
-            for (let i = 0; i < numShapes; i++) {
-                const shape = new PlayaMapperShape({existingData: existingMapping[i]});
-                this._shapes.push(shape);
-            }
-        } else {
-            const shape = new PlayaMapperShape({index: 0});
-            this._shapes.push(shape);
-        }
-
-        this.numShapes.addListener(this._onNumShapesChange.bind(this));
-
-        if (mixboard.isLaunchpad()) {
-            mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[4], this._onDirectionButtonPressed.bind(this, 'up'));
-            mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[3], this._onDirectionButtonPressed.bind(this, 'left'));
-            mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[4], this._onDirectionButtonPressed.bind(this, 'down'));
-            mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[5], this._onDirectionButtonPressed.bind(this, 'right'));
-
-            mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_FOCUS[4], 0x12);
-            mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_CONTROL[3], 0x12);
-            mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_CONTROL[4], 0x12);
-            mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_CONTROL[5], 0x12);
-
-            const lightValues = [0x03, 0x22, 0x30];
-            _.times(3, column => {
-                mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[column], this._onVertexButtonPressed.bind(this, column));
-                mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_CONTROL[column], lightValues[column]);
-            });
-        }
-
-        setInterval(this._moveCurrentShape.bind(this), MOVE_SHAPE_POLLING_RATE);
+        this._onMappingChanged = this._onMappingChanged.bind(this);
+        _.each(this._declareParameters(), (value, paramName) => {
+            this[paramName].addListener(this._onMappingChanged);
+        });
     }
-    _declareParameters({numShapes}) {
+    _declareParameters(savedParams = {}) {
         return {
-            mapping: {
-                type: Parameter,
-                start: null,
-            },
-            numShapes: {
+            xOffset: {
                 type: LinearParameter,
-                range: [1, 16],
-                start: numShapes,
-                listenToDecrementAndIncrementLaunchpadButtons: 6,
-                monitorName: 'Num Shapes',
+                range: [-200, 200],
+                start: savedParams.xOffset || 0,
+                listenToLaunchpadKnob: [0, 0],
+                monitorName: 'xOffset',
             },
-            currentShapeIndex: {
+            yOffset: {
                 type: LinearParameter,
-                range: [1, 16],
-                start: 1,
-                listenToDecrementAndIncrementLaunchpadButtons: 7,
-                monitorName: 'Current Shape',
+                range: [-200, 200],
+                start: savedParams.yOffset || 0,
+                listenToLaunchpadKnob: [0, 1],
+                monitorName: 'yOffset',
             },
         };
     }
-    _onDirectionButtonPressed(direction, value) {
-        if (value) {
-            this._directionsPressed[direction] = true;
-        } else {
-            delete this._directionsPressed[direction];
-        }
-    }
-    _onVertexButtonPressed(index, value) {
-        if (value) {
-            this._verticesPressed[index] = true;
-        } else {
-            delete this._verticesPressed[index];
-        }
-    }
-    _moveCurrentShape() {
-        const currentShape = this.getCurrentShape();
-        if (!currentShape) {
-            return;
-        }
-        if (_.size(this._verticesPressed) * _.size(this._directionsPressed) === 0) {
-            return;
-        }
-        _.each(this._verticesPressed, (ignore, vertex) => {
-            _.each(this._directionsPressed, (ignore2, direction) => {
-                switch (direction) {
-                    case 'up':
-                        currentShape.moveVertex(vertex, 0, -1);
-                        break;
-                    case 'down':
-                        currentShape.moveVertex(vertex, 0, 1);
-                        break;
-                    case 'left':
-                        currentShape.moveVertex(vertex, -1, 0);
-                        break;
-                    case 'right':
-                        currentShape.moveVertex(vertex, 1, 0);
-                        break;
-                    default:
-                }
-            });
-        });
-        this._onMappingChanged();
-    }
-    getCurrentShape() {
-        const currentShapeIndex = this.currentShapeIndex.getValue() - 1;
-        const numShapes = this.numShapes.getValue();
-        if (currentShapeIndex < numShapes) {
-            return this._shapes[currentShapeIndex];
-        } else {
-            return null;
-        }
+    getPlayaMapping() {
+        const baseMapping = [
+            {
+                transforms: [],
+                shapes: [
+                    [[0, 0], [-7.692, -4.213], [-10, 0]],
+                    [[0, 0], [-7.692, -4.213], [0, -18.26]],
+                    [[0, 0], [7.692, -4.213], [10, 0]],
+                    [[0, 0], [7.692, -4.213], [0, -18.26]],
+                ],
+            },
+        ];
+        baseMapping.forEach(group => group.shapes.forEach(shape => shape.forEach(point => {
+            point[0] = 0 + point[0] * 10 + this.xOffset.getValue();
+            point[1] = 0 + point[1] * 10 + this.yOffset.getValue();
+        })));
+
+        return baseMapping;
     }
     mapShapes(fn) {
-        return this._shapes.map(fn);
-    }
-    _onNumShapesChange() {
-        const numShapes = this.numShapes.getValue();
-
-        for (let i = this._shapes.length; i < numShapes; i++) {
-            const shape = new PlayaMapperShape({index: i});
-            this._shapes.push(shape);
-        }
-        for (let i = this._shapes.length; i > numShapes; i--) {
-            this._shapes.pop();
-        }
-
-        this._onMappingChanged();
+        const mapping = this.getPlayaMapping();
+        const shapes = _.flatten(mapping.map(group => group.shapes));
+        return shapes.map(fn);
     }
     _getSerializedMapping() {
         return this._shapes.map(shape => shape.serialize());
     }
+    _getSerializedPlayaParams() {
+        return _.mapValues(this._declareParameters(), (ignore, paramName) => this[paramName].getValue());
+    }
     _onMappingChanged() {
-        window.localStorage.setItem('mapping', JSON.stringify(this._getSerializedMapping()));
-
-        this.mapping._updateListeners();
+        // window.localStorage.setItem('playaMapping', JSON.stringify(this._getSerializedMapping()));
+        window.localStorage.setItem('playaMapperParams', JSON.stringify(this._getSerializedPlayaParams()));
     }
 }
 
