@@ -105,4 +105,6 @@ module.exports = {
     posModAndBendToLowerHalf,
     centerOfPoints,
     xyRotatedAroundOriginWithAngle,
+    DEG_2_RAD,
+    RAD_2_DEG,
 };

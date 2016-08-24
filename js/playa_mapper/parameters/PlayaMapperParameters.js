@@ -1,6 +1,7 @@
 const _ = require('lodash');
-const {LinearParameter} = require('js/core/parameters/Parameter');
+const {LinearParameter, LogarithmicParameter} = require('js/core/parameters/Parameter');
 const PieceParameters = require('js/core/parameters/PieceParameters');
+const {DEG_2_RAD} = require('js/core/utils/math');
 
 class PlayaMapperParameters extends PieceParameters {
     constructor(mixboard, beatmathParameters) {
@@ -30,12 +31,52 @@ class PlayaMapperParameters extends PieceParameters {
                 listenToLaunchpadKnob: [0, 1],
                 monitorName: 'yOffset',
             },
+            rotateX: {
+                type: LinearParameter,
+                range: [-90, 90],
+                start: savedParams.rotateX || 0,
+                listenToLaunchpadKnob: [2, 0],
+                monitorName: 'rotateX',
+            },
+            rotateY: {
+                type: LinearParameter,
+                range: [-90, 90],
+                start: savedParams.rotateY || 0,
+                listenToLaunchpadKnob: [2, 1],
+                monitorName: 'rotateY',
+            },
+            scale: {
+                type: LogarithmicParameter,
+                range: [1, 100],
+                start: savedParams.scale || 10,
+                listenToLaunchpadKnob: [2, 3],
+                monitorName: 'rotateY',
+            },
         };
     }
     getPlayaMapping() {
         const baseMapping = [
             {
-                transforms: [],
+                transforms: [
+                    {scale: this.scale.getValue()},
+                    {translate: [10 * Math.cos(this.rotateY.getValue() * DEG_2_RAD), 0]},
+                    {rotateY: this.rotateY.getValue()},
+                    {rotateX: this.rotateX.getValue()},
+                ],
+                shapes: [
+                    [[0, 0], [-7.692, -4.213], [-10, 0]],
+                    [[0, 0], [-7.692, -4.213], [0, -18.26]],
+                    [[0, 0], [7.692, -4.213], [10, 0]],
+                    [[0, 0], [7.692, -4.213], [0, -18.26]],
+                ],
+            },
+            {
+                transforms: [
+                    {scale: this.scale.getValue()},
+                    {translate: [-10 * Math.cos(this.rotateY.getValue() * DEG_2_RAD), 0]},
+                    {rotateY: this.rotateY.getValue()},
+                    {rotateX: -this.rotateX.getValue()},
+                ],
                 shapes: [
                     [[0, 0], [-7.692, -4.213], [-10, 0]],
                     [[0, 0], [-7.692, -4.213], [0, -18.26]],
@@ -44,17 +85,8 @@ class PlayaMapperParameters extends PieceParameters {
                 ],
             },
         ];
-        baseMapping.forEach(group => group.shapes.forEach(shape => shape.forEach(point => {
-            point[0] = 0 + point[0] * 10 + this.xOffset.getValue();
-            point[1] = 0 + point[1] * 10 + this.yOffset.getValue();
-        })));
 
         return baseMapping;
-    }
-    mapShapes(fn) {
-        const mapping = this.getPlayaMapping();
-        const shapes = _.flatten(mapping.map(group => group.shapes));
-        return shapes.map(fn);
     }
     _getSerializedMapping() {
         return this._shapes.map(shape => shape.serialize());
