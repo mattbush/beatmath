@@ -28,6 +28,8 @@ class BeatmathParameters {
             }
         }
 
+        this._playaMapping = JSON.parse(window.localStorage.getItem('playaMapping'));
+
         this.tempo = new BeatmathTempo(mixboard, {
             bpm: 120,
             bpmMod: params.bpmMod,
@@ -139,10 +141,11 @@ class BeatmathParameters {
             this.brightness.listenToDecrementMixtrackButton(mixboard, MixtrackButtons.R_PITCH_BEND_MINUS);
         }
 
-        const mappingModeCycleValues = ['off', 'onWithOneFrame', 'onWithFrames'];
-        if (params.hasSpecialMapping) {
-            mappingModeCycleValues.push('onWithFramesSpecial');
-        }
+        // const mappingModeCycleValues = ['off', 'onWithOneFrame', 'onWithFrames'];
+        // if (params.hasSpecialMapping) {
+        //     mappingModeCycleValues.push('onWithFramesSpecial');
+        // }
+        const mappingModeCycleValues = ['off', 'oneFramePerGroup'];
         this.mappingMode = new CycleParameter({
             cycleValues: mappingModeCycleValues,
             monitorName: 'Mapping Mode',
@@ -197,6 +200,21 @@ class BeatmathParameters {
             return [];
         }
         return this._mapperShapes.map(fn);
+    }
+    mapPlayaMapperGroups(fn) {
+        if (!this._playaMapping) {
+            return [];
+        }
+        return this._playaMapping.groups.map(fn);
+    }
+    getPlayaMapperProjectionOffset() {
+        if (!this._playaMapping) {
+            return 0.5;
+        }
+        return this._playaMapping.projectorOffset;
+    }
+    mapMapperShapesInGroup(groupIndex, fn) {
+        return this._playaMapping.groups[groupIndex].shapes.map(fn);
     }
 }
 

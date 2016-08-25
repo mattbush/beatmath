@@ -147,7 +147,7 @@ class PlayaMapperParameters extends PieceParameters {
         return _.mapValues(this._declareParameters(), (ignore, paramName) => this[paramName].getValue());
     }
     _onMappingChanged() {
-        // window.localStorage.setItem('playaMapping', JSON.stringify(this._getSerializedMapping()));
+        window.localStorage.setItem('playaMapping', JSON.stringify(this.getPlayaMapping()));
         window.localStorage.setItem('playaMapperParams', JSON.stringify(this._getSerializedPlayaParams()));
     }
 }
