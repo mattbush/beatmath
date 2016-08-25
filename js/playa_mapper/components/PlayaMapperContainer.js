@@ -1,9 +1,10 @@
 const _ = require('lodash');
 const React = require('react');
 const PlayaMapperParameters = require('js/playa_mapper/parameters/PlayaMapperParameters');
-const BeatmathFrame = require('js/core/components/BeatmathFrame');
+// const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const PlayaMapperShapeView = require('js/playa_mapper/components/PlayaMapperShapeView');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
+const {WIDTH_PX, HEIGHT_PX} = require('js/core/parameters/BeatmathConstants.js');
 
 const PlayaMapperContainer = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -48,18 +49,30 @@ const PlayaMapperContainer = React.createClass({
         const playaMapperParameters = this.state.playaMapperParameters;
         const playaMapping = playaMapperParameters.getPlayaMapping();
         return (
-            <BeatmathFrame>
-                <g>
-                    <circle cx={0} cy={0} r={10000} fill="#0044aa" />
-                    {playaMapping.map((group, groupIndex) =>
-                        <g key={groupIndex} style={{transform: this._serializeTransforms(group.transforms)}}>
-                            {group.shapes.map((shape, index) => {
-                                return <PlayaMapperShapeView key={index} index={index} shape={shape} />;
-                            })}
-                        </g>
-                    )}
-                </g>
-            </BeatmathFrame>
+            <div style={{backgroundColor: '#0044aa', width: WIDTH_PX, height: HEIGHT_PX}}>
+                <div style={{transform: `translate(${WIDTH_PX / 2}px, ${HEIGHT_PX / 2}px)`}}>
+                    {playaMapping.map((group, groupIndex) => {
+                        const width = group.width * group.scaleFactor;
+                        const height = group.height * group.scaleFactor;
+                        const style = {
+                            backgroundColor: '#4400aa',
+                            top: -height / 2,
+                            left: -width / 2,
+                            transform: this._serializeTransforms(group.transforms),
+                            position: 'absolute',
+                        };
+                        return (
+                            <svg key={groupIndex} style={style} width={width} height={height}>
+                                <g style={{transform: `scale(${group.scaleFactor}) translate(${group.width / 2}px, ${group.height / 2}px)`}}>
+                                    {group.shapes.map((shape, index) => {
+                                        return <PlayaMapperShapeView key={index} index={index} shape={shape} />;
+                                    })}
+                                </g>
+                            </svg>
+                        );
+                    })}
+                </div>
+            </div>
         );
     },
 });
