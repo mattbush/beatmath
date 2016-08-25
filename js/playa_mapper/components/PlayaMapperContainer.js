@@ -33,6 +33,7 @@ const PlayaMapperContainer = React.createClass({
             trianglePitchAngle: this.state.playaMapperParameters.trianglePitchAngle,
             scale: this.state.playaMapperParameters.scale,
             projectorPitchAngle: this.state.playaMapperParameters.projectorPitchAngle,
+            projectorOffset: this.state.playaMapperParameters.projectorOffset,
         };
     },
     _serializeTransforms(transforms) {
@@ -50,12 +51,12 @@ const PlayaMapperContainer = React.createClass({
         const playaMapping = playaMapperParameters.getPlayaMapping();
         return (
             <div style={{backgroundColor: '#0044aa', width: WIDTH_PX, height: HEIGHT_PX}}>
-                <div style={{transform: `translate(${WIDTH_PX / 2}px, ${HEIGHT_PX / 2}px)`}}>
-                    {playaMapping.map((group, groupIndex) => {
+                <div style={{transform: `translate(${WIDTH_PX / 2}px, ${HEIGHT_PX * playaMapping.projectorOffset}px)`}}>
+                    {playaMapping.groups.map((group, groupIndex) => {
                         const width = group.width * group.scaleFactor;
                         const height = group.height * group.scaleFactor;
                         const style = {
-                            backgroundColor: '#4400aa',
+                            // backgroundColor: '#4400aa',
                             top: -height / 2,
                             left: -width / 2,
                             transform: this._serializeTransforms(group.transforms),
