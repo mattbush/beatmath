@@ -69,9 +69,17 @@ class PlayaMapperParameters extends PieceParameters {
                 listenToLaunchpadKnob: [0, 3],
                 monitorName: 'projectorPitchAngle',
             },
+            towerWidth: {
+                type: LinearParameter,
+                range: [0.5, 1.5],
+                start: savedParams.towerWidth || 1,
+                listenToLaunchpadKnob: [2, 3],
+                monitorName: 'towerWidth',
+            },
         };
     }
     getPlayaMapping() {
+        const towerWidth = this.towerWidth.getValue();
         const groups = [
             {
                 transforms: [
@@ -120,11 +128,11 @@ class PlayaMapperParameters extends PieceParameters {
                     {translate: [this.xOffset.getValue(), this.yOffset.getValue()]},
                     {scale: this.scale.getValue() / 13.76},
                 ],
-                width: 1,
+                width: towerWidth,
                 height: 40,
                 scaleFactor: TOWER_SCALE_FACTOR,
                 shapes: [
-                    [[-0.5, 2], [0.5, 2], [0.5, -20], [-0.5, -20]],
+                    [[-towerWidth / 2, 2], [towerWidth / 2, 2], [towerWidth / 2, -20], [-towerWidth / 2, -20]],
                 ],
             },
         ];
