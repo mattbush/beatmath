@@ -4,7 +4,7 @@ const PieceParameters = require('js/core/parameters/PieceParameters');
 const {DEG_2_RAD} = require('js/core/utils/math');
 
 const CANOPY_SCALE_FACTOR = 20;
-const TOWER_SCALE_FACTOR = 10;
+const TOWER_SCALE_FACTOR = 20;
 
 class PlayaMapperParameters extends PieceParameters {
     constructor(mixboard, beatmathParameters) {
@@ -73,11 +73,11 @@ class PlayaMapperParameters extends PieceParameters {
                     {translate: [this.xOffset.getValue(), this.yOffset.getValue()]},
                     {scale: this.scale.getValue() / 21.18},
                     {translate: [10 * CANOPY_SCALE_FACTOR * Math.cos(this.triangleYawAngle.getValue() * DEG_2_RAD), 0]},
-                    {rotateY: this.triangleYawAngle.getValue()},
-                    {rotateX: this.trianglePitchAngle.getValue()},
+                    {rotateY: -this.triangleYawAngle.getValue()},
+                    {rotateX: -this.trianglePitchAngle.getValue()},
                 ],
                 width: 20,
-                height: 20,
+                height: 40,
                 scaleFactor: CANOPY_SCALE_FACTOR,
                 shapes: [
                     [[0, 0], [-7.692, -4.213], [-10, 0]],
@@ -93,11 +93,11 @@ class PlayaMapperParameters extends PieceParameters {
                     {translate: [this.xOffset.getValue(), this.yOffset.getValue()]},
                     {scale: this.scale.getValue() / 21.18},
                     {translate: [-10 * CANOPY_SCALE_FACTOR * Math.cos(this.triangleYawAngle.getValue() * DEG_2_RAD), 0]},
-                    {rotateY: -this.triangleYawAngle.getValue()},
-                    {rotateX: this.trianglePitchAngle.getValue()},
+                    {rotateY: this.triangleYawAngle.getValue()},
+                    {rotateX: -this.trianglePitchAngle.getValue()},
                 ],
                 width: 20,
-                height: 20,
+                height: 40,
                 scaleFactor: CANOPY_SCALE_FACTOR,
                 shapes: [
                     [[0, 0], [-7.692, -4.213], [-10, 0]],
@@ -113,8 +113,8 @@ class PlayaMapperParameters extends PieceParameters {
                     {translate: [this.xOffset.getValue(), this.yOffset.getValue()]},
                     {scale: this.scale.getValue() / 13.76},
                 ],
-                width: 1,
-                height: 24,
+                width: 2,
+                height: 40,
                 scaleFactor: TOWER_SCALE_FACTOR,
                 shapes: [
                     [[-0.5, 4], [0.5, 4], [0.5, -12], [-0.5, -12]],
