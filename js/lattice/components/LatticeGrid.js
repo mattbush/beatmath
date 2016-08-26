@@ -12,6 +12,44 @@ const {MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
 const tinycolor = require('tinycolor2');
 const {ColorInfluence, RotationInfluence, SizeInfluence} = require('js/lattice/state/Influence');
 
+const LatticeFrame = React.createClass({
+    mixins: [ParameterBindingsMixin],
+    contextTypes: {
+        beatmathParameters: React.PropTypes.object,
+        latticeParameters: React.PropTypes.object,
+        influences: React.PropTypes.array,
+        refreshTimer: React.PropTypes.object,
+    },
+    getParameterBindings: function() {
+        return {
+            showInfluences: this.context.latticeParameters.showInfluences,
+            numRows: this.context.latticeParameters.numRows,
+            numCols: this.context.latticeParameters.numCols,
+        };
+    },
+    render: function() {
+        const children = [];
+        const numRows = this.getParameterValue('numRows');
+        const numCols = this.getParameterValue('numCols');
+        for (let row = -numRows; row <= numRows; row++) {
+            for (let col = -numCols; col <= numCols; col++) {
+                children.push(<LatticePixel row={row} col={col} key={row + '|' + col} />);
+            }
+        }
+
+        return (
+            <g>
+                {children}
+                {this.getParameterValue('showInfluences') && <g>
+                    {_.map(this.context.influences, (influence, index) =>
+                        <InfluenceCircle influence={influence} key={index} />
+                    )}
+                </g>}
+            </g>
+        );
+    },
+});
+
 const LatticeGrid = React.createClass({
     mixins: [ParameterBindingsMixin],
     childContextTypes: {
@@ -60,25 +98,9 @@ const LatticeGrid = React.createClass({
         };
     },
     render: function() {
-        const children = [];
-        const numRows = this.getParameterValue('numRows');
-        const numCols = this.getParameterValue('numCols');
-        for (let row = -numRows; row <= numRows; row++) {
-            for (let col = -numCols; col <= numCols; col++) {
-                children.push(<LatticePixel row={row} col={col} key={row + '|' + col} />);
-            }
-        }
-
         return (
             <BeatmathFrame>
-                <g>
-                    {children}
-                    {this.getParameterValue('showInfluences') && <g>
-                        {_.map(this.state.influences, (influence, index) =>
-                            <InfluenceCircle influence={influence} key={index} />
-                        )}
-                    </g>}
-                </g>
+                <LatticeFrame />
             </BeatmathFrame>
         );
     },
