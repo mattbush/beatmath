@@ -106,7 +106,7 @@ class BeatmathParameters {
                 tempo: this.tempo,
             });
             if (mixboard.isLaunchpad()) {
-                this.frameRotation.listenToLaunchpadKnob(mixboard, 2, 7);
+                this.frameRotation.listenToLaunchpadKnob(mixboard, 2, 6); // was 2, 7
             } else {
                 this.frameRotation.listenToMixtrackWheel(mixboard, MixtrackWheels.L_TURNTABLE);
                 this.frameRotation.listenToSnapMixtrackButton(mixboard, MixtrackButtons.L_SCRATCH);
@@ -173,6 +173,20 @@ class BeatmathParameters {
             monitorName: 'Mirror Canopies',
         });
         this.mirrorCanopies.listenToLaunchpadSideButton(mixboard, LaunchpadButtons.DOWN);
+
+        this.dropOriginPercent = new LinearParameter({
+            range: [0, 1],
+            start: 0,
+            monitorName: 'Drop Origin %',
+        });
+        this.dropOriginPercent.listenToLaunchpadKnob(mixboard, 1, 7);
+
+        this.triangleCompressionPercent = new LinearParameter({
+            range: [0, 1],
+            start: 0,
+            monitorName: 'Tri Cmprs %',
+        });
+        this.triangleCompressionPercent.listenToLaunchpadKnob(mixboard, 2, 7);
 
         if (params.usePixels) {
             this.pixelPointiness = new MovingLinearParameter({

@@ -8,6 +8,7 @@ const Tree = React.createClass({
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
         treesParameters: React.PropTypes.object,
+        groupType: React.PropTypes.string,
     },
     getParameterBindings: function() {
         return {
@@ -15,12 +16,15 @@ const Tree = React.createClass({
         };
     },
     render: function() {
+        const beatmathParameters = this.context.beatmathParameters;
         const treesParameters = this.context.treesParameters;
         const numLevels = treesParameters.numLevels.getValue();
         const levelSpacing = treesParameters.getLevelSpacing();
 
         const polarGridAmount = clamp(treesParameters.polarGridAmount.getValue(), 0, 1);
         const baseTreeWidth = treesParameters.getTreeWidth();
+
+        const triangleCompressionPercent = beatmathParameters.triangleCompressionPercent.getValue();
 
         const levelHeight = treesParameters.getLevelHeight();
 
@@ -30,9 +34,23 @@ const Tree = React.createClass({
             <g>
                 {_.times(numLevels, levelIndex => {
                     const fill = treesParameters.getColorForIndexAndLevel(this.props.index, levelIndex);
+                    let xShift = 0;
                     let treeWidth = baseTreeWidth;
                     if (polarGridAmount > 0) {
                         treeWidth = lerp(baseTreeWidth, baseTreeWidth * (levelIndex + 1) / numLevels, polarGridAmount);
+                    }
+
+                    if (this.context.groupType !== 'tower' && triangleCompressionPercent > 0) {
+                        const triangleCompressionPercentPerLevel = triangleCompressionPercent * (levelIndex + 1) / numLevels;
+                        const compressionCoeff = (1 - triangleCompressionPercentPerLevel);
+                        treeWidth *= compressionCoeff;
+
+                        const treeSpacing = treesParameters.getTreeSpacing();
+
+                        const totalTreeSpacing = treesParameters.getTotalTreeSpacing();
+                        const parentDx = ((this.props.index + 0.5) * treeSpacing - totalTreeSpacing / 2) * (1 - polarGridAmount);
+
+                        xShift = -parentDx * triangleCompressionPercentPerLevel;
                     }
 
                     return (
@@ -40,7 +58,7 @@ const Tree = React.createClass({
                             className="treeRect"
                             key={levelIndex}
                             fill={fill}
-                            x={-(treeWidth / 2)}
+                            x={-(treeWidth / 2) + xShift}
                             y={levelIndex * levelSpacing + levelHeight / 2}
                             rx={borderRadius}
                             ry={borderRadius}

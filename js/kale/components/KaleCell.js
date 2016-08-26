@@ -2,7 +2,7 @@ const _ = require('lodash');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const KaleSubject = require('js/kale/components/KaleSubject');
-const {lerp, posMod, xyRotatedAroundOriginWithAngle} = require('js/core/utils/math');
+const {lerp, posMod, xyRotatedAroundOriginWithAngle, modAndShiftToHalf} = require('js/core/utils/math');
 const tinycolor = require('tinycolor2');
 const {clipPathXCenters, clipPathYCenters} = require('js/kale/components/KaleClipPaths');
 
@@ -28,7 +28,12 @@ const KaleCell = React.createClass({
     _getColorByShifting: function(x, y) {
         const colorsByCoords = this.context.kaleParameters.colorsByCoords;
         const color = tinycolor(colorsByCoords['0,0'].getValue().toHexString()); // clone
-        const colColorShift = this.context.kaleParameters.colColorShift.getValue();
+        let colColorShift = this.context.kaleParameters.colColorShift.getValue();
+        if (this.context.beatmathParameters.triangleCompressionPercent.getValue()) {
+            const colorShiftForAFullRotation = 360 / (this.context.kaleParameters.numCols.getValue() * 2 + 1);
+            const distanceFromClosestMultiple = modAndShiftToHalf(colColorShift, colorShiftForAFullRotation);
+            colColorShift = colColorShift - distanceFromClosestMultiple;
+        }
         const rowColorShift = this.context.kaleParameters.rowColorShift.getValue();
         const colorShift = colColorShift * x + rowColorShift * y;
         if (colorShift !== 0) {

@@ -11,6 +11,7 @@ const {MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
 
 const tinycolor = require('tinycolor2');
 const {ColorInfluence, RotationInfluence, SizeInfluence} = require('js/lattice/state/Influence');
+const {arclerp} = require('js/core/utils/math');
 
 const LatticeFrame = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -25,14 +26,29 @@ const LatticeFrame = React.createClass({
             showInfluences: this.context.latticeParameters.showInfluences,
             numRows: this.context.latticeParameters.numRows,
             numCols: this.context.latticeParameters.numCols,
+            triangleCompressionPercent: this.context.beatmathParameters.triangleCompressionPercent,
         };
     },
     render: function() {
         const children = [];
         const numRows = this.getParameterValue('numRows');
-        const numCols = this.getParameterValue('numCols');
+        let numCols = this.getParameterValue('numCols');
+        const triangleCompressionPercent = this.getParameterValue('triangleCompressionPercent');
+        const isTower = this.props.groupType === 'tower';
+        if (isTower) {
+            numCols = 1;
+        }
+
         for (let row = -numRows; row <= numRows; row++) {
             for (let col = -numCols; col <= numCols; col++) {
+                // skip triangle-ey ones for perf
+                if (!isTower && triangleCompressionPercent > 0) {
+                    const rowPercent = arclerp(-numRows, numRows, row);
+                    const colPercent = Math.abs(col) / numCols;
+                    if ((colPercent - rowPercent) > (1 - triangleCompressionPercent)) {
+                        continue;
+                    }
+                }
                 children.push(<LatticePixel row={row} col={col} key={row + '|' + col} />);
             }
         }
