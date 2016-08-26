@@ -74,7 +74,7 @@ const BeatmathFrame = React.createClass({
             );
         }
     },
-    _renderChildFrames(groupNumber, scaleMod = 1, groupType) {
+    _renderChildFrames(groupNumber, scaleMod = 1, translateY = 0, groupType) {
         const frameRotation = this.getParameterValue('frameRotation');
         const frameScale = scaleMod * this.getParameterValue('frameScale') * this.getParameterValue('frameScaleAutoupdating');
         const transitionPeriod = this.context.beatmathParameters.tempo.getBasePeriod() / 16;
@@ -134,9 +134,13 @@ const BeatmathFrame = React.createClass({
                 </g>
             );
         } else if (mappingMode === 'oneFramePerGroup') {
+            const translatedStyle = {
+                ...style,
+                transform: `translate(0px, ${translateY}px) ` + style.transform,
+            };
             return (
                 <g clipPath={`url(#group${groupNumber}AllShapes)`}>
-                    <g style={style}>
+                    <g style={translatedStyle}>
                         {this.props.children}
                     </g>
                 </g>
@@ -177,7 +181,7 @@ const BeatmathFrame = React.createClass({
                         {group.type === 'tower' && <rect fill="#000" x="0" y="0" height={height} width={width} />}
                         <g style={{transform: `scale(${group.scaleFactor}) translate(${group.width / 2}px, ${group.height / 2}px)`}}>
                             {this._renderDefs(groupIndex)}
-                            {this._renderChildFrames(groupIndex, 1 / group.scaleFactor, group.type)}
+                            {this._renderChildFrames(groupIndex, 1 / group.scaleFactor, -group.height / 4, group.type)}
                         </g>
                     </svg>
                 );
