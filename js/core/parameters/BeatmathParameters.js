@@ -40,21 +40,30 @@ class BeatmathParameters {
             start: WIDTH_PX,
             monitorName: 'Frame Width',
         });
-        if (mixboard.isLaunchpad()) {
-            this.width.listenToLaunchpadKnob(mixboard, 1, 7);
-        } else {
-            this.width.listenToMixtrackFader(mixboard, MixtrackFaders.L_PITCH_BEND);
-        }
+        // if (mixboard.isLaunchpad()) {
+        //     this.width.listenToLaunchpadKnob(mixboard, 1, 7);
+        // } else {
+        //     this.width.listenToMixtrackFader(mixboard, MixtrackFaders.L_PITCH_BEND);
+        // }
 
         this.height = new LinearParameter({
             range: [HEIGHT_PX / 10, HEIGHT_PX],
             start: DESIRED_HEIGHT_PX,
             monitorName: 'Frame Height',
         });
+        // if (mixboard.isLaunchpad()) {
+        //     this.height.listenToLaunchpadKnob(mixboard, 0, 7);
+        // } else {
+        //     this.height.listenToMixtrackFader(mixboard, MixtrackFaders.R_PITCH_BEND);
+        // }
+
+        this.towerScale = new LogarithmicParameter({
+            range: [0.25, 4],
+            start: 1,
+            monitorName: 'Tower Scale',
+        });
         if (mixboard.isLaunchpad()) {
-            this.height.listenToLaunchpadKnob(mixboard, 0, 7);
-        } else {
-            this.height.listenToMixtrackFader(mixboard, MixtrackFaders.R_PITCH_BEND);
+            this.towerScale.listenToLaunchpadKnob(mixboard, 0, 7);
         }
 
         if (params.useFrame !== false) {
@@ -113,12 +122,12 @@ class BeatmathParameters {
                 start: 0,
                 monitorName: 'Color Spin',
             });
-            if (mixboard.isLaunchpad()) {
-                this.colorSpin.listenToLaunchpadKnob(mixboard, 2, 6);
-            } else {
-                this.colorSpin.listenToMixtrackWheel(mixboard, MixtrackWheels.R_TURNTABLE);
-                this.colorSpin.listenToResetMixtrackButton(mixboard, MixtrackButtons.R_SCRATCH);
-            }
+            // if (mixboard.isLaunchpad()) {
+            //     this.colorSpin.listenToLaunchpadKnob(mixboard, 2, 6);
+            // } else {
+            //     this.colorSpin.listenToMixtrackWheel(mixboard, MixtrackWheels.R_TURNTABLE);
+            //     this.colorSpin.listenToResetMixtrackButton(mixboard, MixtrackButtons.R_SCRATCH);
+            // }
         }
 
         // todo move to anagramsParameters

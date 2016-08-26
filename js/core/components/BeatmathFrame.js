@@ -16,6 +16,7 @@ const BeatmathFrame = React.createClass({
             frameScale: this.context.beatmathParameters.frameScale,
             frameScaleAutoupdating: this.context.beatmathParameters.frameScaleAutoupdating,
             mappingMode: this.context.beatmathParameters.mappingMode,
+            towerScale: this.context.beatmathParameters.towerScale,
         };
     },
     _serializeTransforms(transforms) {
@@ -76,7 +77,11 @@ const BeatmathFrame = React.createClass({
     },
     _renderChildFrames(groupNumber, scaleMod = 1, translateY = 0, groupType) {
         const frameRotation = this.getParameterValue('frameRotation');
-        const frameScale = scaleMod * this.getParameterValue('frameScale') * this.getParameterValue('frameScaleAutoupdating');
+        let frameScale = scaleMod * this.getParameterValue('frameScale') * this.getParameterValue('frameScaleAutoupdating');
+        if (groupType === 'tower') {
+            frameScale *= this.getParameterValue('towerScale');
+        }
+
         const transitionPeriod = this.context.beatmathParameters.tempo.getBasePeriod() / 16;
         const style = {
             transform: `rotate(${frameRotation}deg) scale(${frameScale})`,
@@ -134,6 +139,10 @@ const BeatmathFrame = React.createClass({
                 </g>
             );
         } else if (mappingMode === 'oneFramePerGroup') {
+            const clonedChild = React.cloneElement(React.Children.only(this.props.children), {
+                groupType: groupType,
+            });
+
             const translatedStyle = {
                 ...style,
                 transform: `translate(0px, ${translateY}px) ` + style.transform,
@@ -141,7 +150,7 @@ const BeatmathFrame = React.createClass({
             return (
                 <g clipPath={`url(#group${groupNumber}AllShapes)`}>
                     <g style={translatedStyle}>
-                        {this.props.children}
+                        {clonedChild}
                     </g>
                 </g>
             );
