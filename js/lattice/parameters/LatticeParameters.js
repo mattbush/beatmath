@@ -33,7 +33,7 @@ class LatticeParameters extends PieceParameters {
             numCols: {
                 type: IntLinearParameter,
                 range: [0, 24],
-                start: 12,
+                start: 10,
                 listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
                 listenToMixtrackFader: MixtrackFaders.L_GAIN,
                 monitorName: '# Columns',
@@ -41,7 +41,7 @@ class LatticeParameters extends PieceParameters {
             numRows: {
                 type: IntLinearParameter,
                 range: [0, 15],
-                start: 12,
+                start: 10,
                 listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
                 listenToMixtrackFader: MixtrackFaders.R_GAIN,
                 monitorName: '# Rows',

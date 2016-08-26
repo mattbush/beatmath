@@ -82,6 +82,7 @@ class PlayaMapperParameters extends PieceParameters {
         const towerWidth = this.towerWidth.getValue();
         const groups = [
             {
+                type: 'canopy',
                 transforms: [
                     {perspective: [21.18 * CANOPY_SCALE_FACTOR]},
                     {rotateX: this.projectorPitchAngle.getValue()},
@@ -102,6 +103,7 @@ class PlayaMapperParameters extends PieceParameters {
                 ],
             },
             {
+                type: 'canopy',
                 transforms: [
                     {perspective: [21.18 * CANOPY_SCALE_FACTOR]},
                     {rotateX: this.projectorPitchAngle.getValue()},
@@ -122,6 +124,7 @@ class PlayaMapperParameters extends PieceParameters {
                 ],
             },
             {
+                type: 'tower',
                 transforms: [
                     {perspective: [13.76 * TOWER_SCALE_FACTOR]},
                     {rotateX: this.projectorPitchAngle.getValue()},

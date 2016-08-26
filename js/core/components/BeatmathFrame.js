@@ -74,7 +74,7 @@ const BeatmathFrame = React.createClass({
             );
         }
     },
-    _renderChildFrames(groupNumber, scaleMod = 1) {
+    _renderChildFrames(groupNumber, scaleMod = 1, groupType) {
         const frameRotation = this.getParameterValue('frameRotation');
         const frameScale = scaleMod * this.getParameterValue('frameScale') * this.getParameterValue('frameScaleAutoupdating');
         const transitionPeriod = this.context.beatmathParameters.tempo.getBasePeriod() / 16;
@@ -89,6 +89,7 @@ const BeatmathFrame = React.createClass({
                 const clonedChild = React.cloneElement(React.Children.only(this.props.children), {
                     mapperShape: mapperShape,
                     mapperShapeIndex: index,
+                    groupType: groupType,
                 });
 
                 const translatedStyle = {
@@ -166,7 +167,6 @@ const BeatmathFrame = React.createClass({
                 const width = group.width * group.scaleFactor;
                 const height = group.height * group.scaleFactor;
                 const style = {
-                    // backgroundColor: '#4400aa',
                     top: -height / 2,
                     left: -width / 2,
                     transform: this._serializeTransforms(group.transforms),
@@ -174,9 +174,10 @@ const BeatmathFrame = React.createClass({
                 };
                 return (
                     <svg key={groupIndex} style={style} width={width} height={height}>
+                        {group.type === 'tower' && <rect fill="#000" x="0" y="0" height={height} width={width} />}
                         <g style={{transform: `scale(${group.scaleFactor}) translate(${group.width / 2}px, ${group.height / 2}px)`}}>
                             {this._renderDefs(groupIndex)}
-                            {this._renderChildFrames(groupIndex, 1 / group.scaleFactor)}
+                            {this._renderChildFrames(groupIndex, 1 / group.scaleFactor, group.type)}
                         </g>
                     </svg>
                 );
