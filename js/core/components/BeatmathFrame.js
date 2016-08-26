@@ -17,6 +17,8 @@ const BeatmathFrame = React.createClass({
             frameScaleAutoupdating: this.context.beatmathParameters.frameScaleAutoupdating,
             mappingMode: this.context.beatmathParameters.mappingMode,
             towerScale: this.context.beatmathParameters.towerScale,
+            canopyOrTower: this.context.beatmathParameters.canopyOrTower,
+            mirrorCanopies: this.context.beatmathParameters.mirrorCanopies,
         };
     },
     _serializeTransforms(transforms) {
@@ -143,14 +145,22 @@ const BeatmathFrame = React.createClass({
                 groupType: groupType,
             });
 
+            const canopyOrTower = this.getParameterValue('canopyOrTower');
+            const shouldShow = (canopyOrTower === 'both' || canopyOrTower === groupType);
+
             const translatedStyle = {
                 ...style,
                 transform: `translate(0px, ${translateY}px) ` + style.transform,
             };
+
+            if (this.getParameterValue('mirrorCanopies') && groupNumber) {
+                translatedStyle.transform = 'scaleX(-1) ' + translatedStyle.transform;
+            }
+
             return (
                 <g clipPath={`url(#group${groupNumber}AllShapes)`}>
                     <g style={translatedStyle}>
-                        {clonedChild}
+                        {shouldShow && clonedChild}
                     </g>
                 </g>
             );

@@ -102,7 +102,7 @@ class Parameter {
         this._monitorX = 8.5;
         this._monitorY = (buttonCode === LaunchpadButtons.LEFT || buttonCode === LaunchpadButtons.RIGHT)
             ? 2
-            : 1;
+            : (buttonCode === LaunchpadButtons.UP ? 0 : 1);
         this._updateMonitor();
     }
     listenForAutoupdateCue(mixboard) {
@@ -155,6 +155,10 @@ class ToggleParameter extends Parameter {
         mixboard.addMixtrackButtonListener(eventCode, this.onButtonUpdate.bind(this));
         this.addMixtrackStatusLight(mixboard, eventCode);
     }
+    listenToLaunchpadSideButton(mixboard, eventCode) {
+        mixboard.addLaunchpadButtonListener(eventCode, this.onButtonUpdate.bind(this));
+        this._setMonitorCoordsFromLaunchpadSideButton(eventCode);
+    }
     listenToLaunchpadButton(mixboard, column) {
         mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[column], this.onButtonUpdate.bind(this));
         this._setMonitorCoordsFromLaunchpadButton(column);
@@ -186,6 +190,10 @@ class CycleParameter extends Parameter {
         mixboard.addLaunchpadButtonListener(decrementCode, this.onDecrementButtonPress.bind(this));
         mixboard.addLaunchpadButtonListener(incrementCode, this.onIncrementButtonPress.bind(this));
         this._setMonitorCoordsFromLaunchpadSideButton(decrementCode);
+    }
+    listenToCycleLaunchpadSideButton(mixboard, eventCode) {
+        mixboard.addLaunchpadButtonListener(eventCode, this.onIncrementButtonPress.bind(this));
+        this._setMonitorCoordsFromLaunchpadSideButton(eventCode);
     }
     listenToDecrementAndIncrementLaunchpadButtons(mixboard, column) {
         mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[column], this.onIncrementButtonPress.bind(this));
