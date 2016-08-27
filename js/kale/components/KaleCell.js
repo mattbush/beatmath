@@ -32,8 +32,16 @@ const KaleCell = React.createClass({
         const colorsByCoords = this.context.kaleParameters.colorsByCoords;
         const color = tinycolor(colorsByCoords['0,0'].getValue().toHexString()); // clone
         let colColorShift = this.context.kaleParameters.colColorShift.getValue();
+
+        let numCellsInFullRotation = (this.context.kaleParameters.numCols.getValue() * 2 + 1);
+
+        // double numTrees depending on mode
+        if (this.context.beatmathParameters.mappingMode.getValue() === 'acrossGroups') {
+            numCellsInFullRotation *= 2;
+        }
+
         if (this.context.beatmathParameters.triangleCompressionPercent.getValue()) {
-            const colorShiftForAFullRotation = 360 / (this.context.kaleParameters.numCols.getValue() * 2 + 1);
+            const colorShiftForAFullRotation = 360 / numCellsInFullRotation;
             const distanceFromClosestMultiple = modAndShiftToHalf(colColorShift, colorShiftForAFullRotation);
             colColorShift = colColorShift - distanceFromClosestMultiple;
         }

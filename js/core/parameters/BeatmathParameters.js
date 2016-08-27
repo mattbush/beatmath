@@ -155,6 +155,9 @@ class BeatmathParameters {
         //     mappingModeCycleValues.push('onWithFramesSpecial');
         // }
         const mappingModeCycleValues = ['off', 'oneFramePerGroup'];
+        if (params.canMapAcrossGroups) {
+            mappingModeCycleValues.push('acrossGroups');
+        }
         this.mappingMode = new CycleParameter({
             cycleValues: mappingModeCycleValues,
             monitorName: 'Mapping Mode',

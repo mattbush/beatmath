@@ -21,7 +21,7 @@ const KaleGrid = React.createClass({
     render: function() {
         let kaleCells;
         const mapperShape = this.props.mapperShape;
-        const mapperShapeXOffset = mapperShape ? mapperShape.getCenterX() / SCALE : 0;
+        let mapperShapeXOffset = mapperShape ? mapperShape.getCenterX() / SCALE : 0;
         const mapperShapeYOffset = mapperShape ? mapperShape.getCenterY() / SCALE : 0;
 
         if (this.getParameterValue('isInfinite')) {
@@ -34,9 +34,15 @@ const KaleGrid = React.createClass({
                 />
             );
         } else {
+
             kaleCells = [];
             const numRows = this.getParameterValue('numRows');
             const numCols = this.getParameterValue('numCols');
+
+            if (this.context.beatmathParameters.mappingMode.getValue() === 'acrossGroups') {
+                mapperShapeXOffset = this.props.mapperShapeIndex ? (numCols + 0.5) : -(numCols + 0.5);
+            }
+
             for (let y = -numRows; y <= numRows; y++) {
                 for (let x = -numCols; x <= numCols; x++) {
                     if ((x + y) % 2 !== 0) {

@@ -33,7 +33,7 @@ const BeatmathFrame = React.createClass({
     },
     _renderDefs(groupNumber) {
         const mappingMode = this.getParameterValue('mappingMode');
-        if (mappingMode === 'oneFramePerGroup') {
+        if (mappingMode === 'oneFramePerGroup' || mappingMode === 'acrossGroups') {
             return (
                 <defs>
                     {this.props.defs}
@@ -140,9 +140,10 @@ const BeatmathFrame = React.createClass({
                     </g>
                 </g>
             );
-        } else if (mappingMode === 'oneFramePerGroup') {
+        } else if (mappingMode === 'oneFramePerGroup' || mappingMode === 'acrossGroups') {
             const clonedChild = React.cloneElement(React.Children.only(this.props.children), {
                 groupType: groupType,
+                mapperShapeIndex: (mappingMode === 'acrossGroups' ? groupNumber : null),
             });
 
             const canopyOrTower = this.getParameterValue('canopyOrTower');
@@ -185,7 +186,7 @@ const BeatmathFrame = React.createClass({
         // );
 
         const mappingMode = this.getParameterValue('mappingMode');
-        if (mappingMode === 'oneFramePerGroup') {
+        if (mappingMode === 'oneFramePerGroup' || mappingMode === 'acrossGroups') {
             const mapperGroups = this.context.beatmathParameters.mapPlayaMapperGroups((group, groupIndex) => {
                 const width = group.width * group.scaleFactor;
                 const height = group.height * group.scaleFactor;

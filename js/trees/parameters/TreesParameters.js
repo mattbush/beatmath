@@ -264,14 +264,18 @@ class TreesParameters extends PieceParameters {
     _getColorShiftPerTree() {
         const baseColorShift = this.treeColorShift.getValue();
         let polarGridAmount = clamp(this.polarGridAmount.getValue(), 0, 1);
+        let numTreesInRotation = this.numTrees.getValue();
         if (polarGridAmount === 0) {
             if (!this._beatmathParameters.triangleCompressionPercent.getValue()) {
                 return baseColorShift;
             }
             polarGridAmount = 1;
-            // TODO: double numTrees depending on mode
+            // double numTrees depending on mode
+            if (this._beatmathParameters.mappingMode.getValue() === 'acrossGroups') {
+                numTreesInRotation *= 2;
+            }
         }
-        const colorShiftForAFullRotation = 360 / this.numTrees.getValue();
+        const colorShiftForAFullRotation = 360 / numTreesInRotation;
         const distanceFromClosestMultiple = modAndShiftToHalf(baseColorShift, colorShiftForAFullRotation);
         return baseColorShift - (distanceFromClosestMultiple * polarGridAmount);
     }

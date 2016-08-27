@@ -41,6 +41,7 @@ const Tree = React.createClass({
                     }
 
                     if (this.context.groupType !== 'tower' && triangleCompressionPercent > 0) {
+                        const indexForCompression = this.props.index % treesParameters.numTrees.getValue();
                         const triangleCompressionPercentPerLevel = triangleCompressionPercent * (levelIndex + 1) / numLevels;
                         const compressionCoeff = (1 - triangleCompressionPercentPerLevel);
                         treeWidth *= compressionCoeff;
@@ -48,7 +49,7 @@ const Tree = React.createClass({
                         const treeSpacing = treesParameters.getTreeSpacing();
 
                         const totalTreeSpacing = treesParameters.getTotalTreeSpacing();
-                        const parentDx = ((this.props.index + 0.5) * treeSpacing - totalTreeSpacing / 2) * (1 - polarGridAmount);
+                        const parentDx = ((indexForCompression + 0.5) * treeSpacing - totalTreeSpacing / 2) * (1 - polarGridAmount);
 
                         xShift = -parentDx * triangleCompressionPercentPerLevel;
                     }
