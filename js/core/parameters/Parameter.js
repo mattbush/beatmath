@@ -437,6 +437,7 @@ class AngleParameter extends Parameter {
         this._tempo = params.tempo;
         this._onLaunchpadKnobSpinInterval = this._onLaunchpadKnobSpinInterval.bind(this);
         this._knobSensitivity = params.knobSensitivity || 1;
+        this._numUpdatesPerBasePeriod = params.numUpdatesPerBasePeriod || 16;
     }
     listenToLaunchpadKnob(mixboard, row, column) {
         mixboard.addLaunchpadKnobListener(row, column, this.onLaunchpadKnobUpdate.bind(this));
@@ -453,7 +454,7 @@ class AngleParameter extends Parameter {
         if (inputValue !== 0 && !this._launchpadKnobIntervalId) {
             let intervalMs;
             if (this._tempo) {
-                intervalMs = this._tempo.getBasePeriod() / 16;
+                intervalMs = this._tempo.getBasePeriod() / this._numUpdatesPerBasePeriod;
             } else {
                 intervalMs = 20;
             }

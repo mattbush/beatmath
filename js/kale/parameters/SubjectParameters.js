@@ -16,6 +16,7 @@ class SubjectParameters extends PieceParameters {
                 monitorName: 'Outer Rotation',
                 autoupdateOnCue: true,
                 knobSensitivity: 0.1,
+                numUpdatesPerBasePeriod: 4,
             },
             innerRotation: {
                 type: MovingAngleParameter,
@@ -28,6 +29,7 @@ class SubjectParameters extends PieceParameters {
                 monitorName: 'Inner Rotation',
                 autoupdateOnCue: true,
                 knobSensitivity: 0.1,
+                numUpdatesPerBasePeriod: 4,
             },
             outerScaleAmount: {
                 type: MovingLogarithmicParameter,

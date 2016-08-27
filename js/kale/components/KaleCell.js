@@ -2,7 +2,7 @@ const _ = require('lodash');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const KaleSubject = require('js/kale/components/KaleSubject');
-const {lerp, posMod, xyRotatedAroundOriginWithAngle, modAndShiftToHalf} = require('js/core/utils/math');
+const {dist, lerp, posMod, xyRotatedAroundOriginWithAngle, modAndShiftToHalf} = require('js/core/utils/math');
 const tinycolor = require('tinycolor2');
 const {clipPathXCenters, clipPathYCenters} = require('js/kale/components/KaleClipPaths');
 
@@ -24,6 +24,9 @@ const KaleCell = React.createClass({
             triangularGridPercent: this.context.kaleParameters.triangularGridPercent,
             cellSymmetry: this.context.kaleParameters.cellSymmetry,
         };
+    },
+    _getUpdateDelay: function() {
+        return Math.round(dist(this.props.logicalX, this.props.logicalY)) * 20 % 50;
     },
     _getColorByShifting: function(x, y) {
         const colorsByCoords = this.context.kaleParameters.colorsByCoords;
