@@ -33,7 +33,7 @@ const BeatmathFrame = React.createClass({
     },
     _renderDefs(groupNumber) {
         const mappingMode = this.getParameterValue('mappingMode');
-        if (mappingMode === 'oneFramePerGroup' || mappingMode === 'acrossGroups') {
+        if (mappingMode === 'oneFramePerGroup' || mappingMode === 'acrossGroups' || mappingMode === 'inFramesInGroups') {
             return (
                 <defs>
                     {this.props.defs}
@@ -52,7 +52,7 @@ const BeatmathFrame = React.createClass({
                         });
                         const pointsString = pointsArray.join(' ');
                         return (
-                            <clipPath key={'mapperShape' + index} id={`group${groupNumber}mapperShape` + index}>
+                            <clipPath key={'mapperShape' + index} id={`group${groupNumber}Shape` + index}>
                                 <polygon points={pointsString} />
                             </clipPath>
                         );
@@ -140,6 +140,32 @@ const BeatmathFrame = React.createClass({
                     </g>
                 </g>
             );
+        } else if (mappingMode === 'inFramesInGroups') {
+            const canopyOrTower = this.getParameterValue('canopyOrTower');
+            const shouldShow = (canopyOrTower === 'both' || canopyOrTower === groupType);
+
+            return this.context.beatmathParameters.mapMapperShapesInGroup(groupNumber, (mapperShape, index) => {
+                const clonedChild = React.cloneElement(React.Children.only(this.props.children), {
+                    mapperShapeIndex: groupNumber * 4 + index,
+                    groupType: groupType,
+                });
+
+                const centerX = (mapperShape[0][0] + mapperShape[1][0] + mapperShape[2][0]) / 3;
+                const centerY = (mapperShape[0][1] + mapperShape[1][1] + mapperShape[2][1]) / 3;
+
+                const translatedStyle = {
+                    ...style,
+                    transform: `translate(${centerX}px, ${centerY}px) ` + style.transform,
+                };
+
+                return (
+                    <g key={index} clipPath={`url(#group${groupNumber}Shape${index})`}>
+                        <g style={translatedStyle}>
+                            {shouldShow && clonedChild}
+                        </g>
+                    </g>
+                );
+            });
         } else if (mappingMode === 'oneFramePerGroup' || mappingMode === 'acrossGroups') {
             const clonedChild = React.cloneElement(React.Children.only(this.props.children), {
                 groupType: groupType,
@@ -186,7 +212,7 @@ const BeatmathFrame = React.createClass({
         // );
 
         const mappingMode = this.getParameterValue('mappingMode');
-        if (mappingMode === 'oneFramePerGroup' || mappingMode === 'acrossGroups') {
+        if (mappingMode === 'oneFramePerGroup' || mappingMode === 'acrossGroups' || mappingMode === 'inFramesInGroups') {
             const mapperGroups = this.context.beatmathParameters.mapPlayaMapperGroups((group, groupIndex) => {
                 const width = group.width * group.scaleFactor;
                 const height = group.height * group.scaleFactor;

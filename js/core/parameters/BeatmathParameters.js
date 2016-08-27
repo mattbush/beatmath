@@ -158,6 +158,9 @@ class BeatmathParameters {
         if (params.canMapAcrossGroups) {
             mappingModeCycleValues.push('acrossGroups');
         }
+        if (params.hasSpecialMapping) {
+            mappingModeCycleValues.push('inFramesInGroups');
+        }
         this.mappingMode = new CycleParameter({
             cycleValues: mappingModeCycleValues,
             monitorName: 'Mapping Mode',
