@@ -16,7 +16,7 @@ const STATUS_TO_LIGHT_VALUE = {
 };
 
 class Parameter {
-    constructor({start, monitorName, manualMonitorCoords}) {
+    constructor({start, monitorName, manualMonitorCoords, canSmoothUpdate}) {
         this._listeners = [];
         this._value = start;
         this._monitorName = monitorName;
@@ -27,6 +27,7 @@ class Parameter {
         if (monitorName) {
             this.addListener(this._updateMonitor.bind(this));
         }
+        this._canSmoothUpdate = canSmoothUpdate || false;
     }
     getValue() {
         return this._value;
@@ -121,9 +122,14 @@ class Parameter {
     _checkAutopilotToggle() {
         if (this._isAutoupdateCuePressed) {
             if (this._canChangeAutoupdate) {
-                this._isUpdatingEnabled = !this._isUpdatingEnabled;
-                this._canChangeAutoupdate = false;
+                if (this._isUpdatingEnabled && !this._smoothedUpdating && this._canSmoothUpdate) {
+                    this._smoothedUpdating = true;
+                } else {
+                    this._isUpdatingEnabled = !this._isUpdatingEnabled;
+                    this._smoothedUpdating = false;
+                }
                 this._updateListeners({forceUpdate: true});
+                this._canChangeAutoupdate = false;
             }
             return !this._isUpdatingEnabled;
         }
@@ -528,8 +534,8 @@ class MovingColorParameter extends Parameter {
             this._autoupdateInterval = setInterval(this.update.bind(this), params.autoupdate);
         }
     }
-    update() {
-        this._speed += (Math.random() * this._variance * 2) - this._variance;
+    update(mod = 1) {
+        this._speed += (Math.random() * this._variance * 2 * mod) - this._variance * mod;
         if (Math.abs(this._speed) > this._maxSpeed) {
             this._speed *= 0.5;
         }
@@ -550,11 +556,11 @@ class MovingAngleParameter extends AngleParameter {
         this._maxSpeed = params.max;
         this._isUpdatingEnabled = true;
     }
-    update() {
+    update(mod = 1) {
         if (!this._isUpdatingEnabled) {
             return;
         }
-        this._speed += (Math.random() * this._variance * 2) - this._variance;
+        this._speed += (Math.random() * this._variance * 2 * mod) - this._variance * mod;
         if (Math.abs(this._speed) > this._maxSpeed) {
             this._speed *= 0.5;
         }
@@ -593,11 +599,11 @@ class MovingLinearParameter extends LinearParameter {
         }
         this._isUpdatingEnabled = true;
     }
-    update() {
+    update(mod = 1) {
         if (!this._isUpdatingEnabled) {
             return;
         }
-        this._speed += (Math.random() * this._variance * 2) - this._variance;
+        this._speed += (Math.random() * this._variance * 2 * mod) - this._variance * mod;
 
         const nextOriginal = this._increment(this._value, this._getSpeedAsIncrement());
         const min = this._autoupdateRange ? this._autoupdateRange[0] : this._minParam.getValue();

@@ -164,6 +164,7 @@ class TreesParameters extends PieceParameters {
                 variance: 0.15,
                 autoupdateEveryNBeats: 8,
                 autoupdateOnCue: true,
+                canSmoothUpdate: true,
             },
             riseDirection: {
                 type: MovingLinearParameter,
