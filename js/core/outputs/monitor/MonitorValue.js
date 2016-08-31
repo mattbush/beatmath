@@ -13,7 +13,9 @@ const STATUS_TO_COLOR = {
     [ParameterStatus.MIN]: '#ea1',
     [ParameterStatus.MAX]: '#ea1',
     [ParameterStatus.CHANGED]: '#de1',
-    [ParameterStatus.CHANGING]: '#3e2',
+    [ParameterStatus.CHANGING]: '#6d1',
+    [ParameterStatus.SMOOTH]: '#3e2',
+
 };
 
 const MonitorValue = React.createClass({
@@ -37,7 +39,7 @@ const MonitorValue = React.createClass({
             value = value ? 'ON' : 'OFF';
         }
 
-        const statusStyle = (payload.autoStatus === AutoupdateStatus.ACTIVE) ? {} : {
+        const statusStyle = (payload.autoStatus === AutoupdateStatus.ACTIVE || payload.autoStatus === AutoupdateStatus.SMOOTH) ? {} : {
             color: STATUS_TO_COLOR[payload.status],
         };
 
@@ -51,6 +53,7 @@ const MonitorValue = React.createClass({
                 </div>
                 <div className={`monitorStatus ${payload.autoStatus}`} style={statusStyle}>
                     {payload.autoStatus === AutoupdateStatus.ACTIVE ? 'AUTO' :
+                        payload.autoStatus === AutoupdateStatus.SMOOTH ? 'SMOOTH' :
                         payload.status
                     }
                 </div>

@@ -11,8 +11,9 @@ const STATUS_TO_LIGHT_VALUE = {
     [ParameterStatus.BASE]: 0x13,
     [ParameterStatus.MIN]: 0x12,
     [ParameterStatus.MAX]: 0x12,
-    [ParameterStatus.CHANGED]: 0x21,
+    [ParameterStatus.CHANGED]: 0x20,
     [ParameterStatus.CHANGING]: 0x30,
+    [ParameterStatus.SMOOTH]: 0x31,
 };
 
 class Parameter {
@@ -51,7 +52,10 @@ class Parameter {
     }
     addLaunchpadStatusLight(mixboard, eventCode) {
         const updateLight = () => {
-            const lightValue = this._isUpdatingEnabled ? 0x30 : STATUS_TO_LIGHT_VALUE[this._getStatus()];
+            const status = this._isUpdatingEnabled ?
+                (this._smoothedUpdating ? ParameterStatus.SMOOTH : ParameterStatus.CHANGING) :
+                this._getStatus();
+            const lightValue = STATUS_TO_LIGHT_VALUE[status];
             mixboard.setLaunchpadLightValue(eventCode, lightValue);
         };
         updateLight();
@@ -71,7 +75,7 @@ class Parameter {
             value: value,
             x: this._monitorX,
             y: this._monitorY,
-            autoStatus: this._isUpdatingEnabled ? AutoupdateStatus.ACTIVE :
+            autoStatus: this._isUpdatingEnabled ? (this._smoothedUpdating ? AutoupdateStatus.SMOOTH : AutoupdateStatus.ACTIVE) :
                 (this._isListeningForAutoupdateCue ? AutoupdateStatus.INACTIVE : AutoupdateStatus.NOT_APPLICABLE),
             status: this._getStatus(),
             type: this._getType(),
