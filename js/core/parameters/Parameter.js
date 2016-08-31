@@ -11,12 +11,13 @@ const STATUS_TO_LIGHT_VALUE = {
     [ParameterStatus.BASE]: 0x13,
     [ParameterStatus.MIN]: 0x12,
     [ParameterStatus.MAX]: 0x12,
-    [ParameterStatus.CHANGED]: 0x21,
+    [ParameterStatus.CHANGED]: 0x20,
     [ParameterStatus.CHANGING]: 0x30,
+    [ParameterStatus.SMOOTH]: 0x31,
 };
 
 class Parameter {
-    constructor({start, monitorName, manualMonitorCoords}) {
+    constructor({start, monitorName, manualMonitorCoords, canSmoothUpdate}) {
         this._listeners = [];
         this._value = start;
         this._monitorName = monitorName;
@@ -27,6 +28,7 @@ class Parameter {
         if (monitorName) {
             this.addListener(this._updateMonitor.bind(this));
         }
+        this._canSmoothUpdate = canSmoothUpdate || false;
     }
     getValue() {
         return this._value;
@@ -50,7 +52,10 @@ class Parameter {
     }
     addLaunchpadStatusLight(mixboard, eventCode) {
         const updateLight = () => {
-            const lightValue = this._isUpdatingEnabled ? 0x30 : STATUS_TO_LIGHT_VALUE[this._getStatus()];
+            const status = this._isUpdatingEnabled ?
+                (this._smoothedUpdating ? ParameterStatus.SMOOTH : ParameterStatus.CHANGING) :
+                this._getStatus();
+            const lightValue = STATUS_TO_LIGHT_VALUE[status];
             mixboard.setLaunchpadLightValue(eventCode, lightValue);
         };
         updateLight();
@@ -70,7 +75,7 @@ class Parameter {
             value: value,
             x: this._monitorX,
             y: this._monitorY,
-            autoStatus: this._isUpdatingEnabled ? AutoupdateStatus.ACTIVE :
+            autoStatus: this._isUpdatingEnabled ? (this._smoothedUpdating ? AutoupdateStatus.SMOOTH : AutoupdateStatus.ACTIVE) :
                 (this._isListeningForAutoupdateCue ? AutoupdateStatus.INACTIVE : AutoupdateStatus.NOT_APPLICABLE),
             status: this._getStatus(),
             type: this._getType(),
@@ -121,9 +126,14 @@ class Parameter {
     _checkAutopilotToggle() {
         if (this._isAutoupdateCuePressed) {
             if (this._canChangeAutoupdate) {
-                this._isUpdatingEnabled = !this._isUpdatingEnabled;
-                this._canChangeAutoupdate = false;
+                if (this._isUpdatingEnabled && !this._smoothedUpdating && this._canSmoothUpdate) {
+                    this._smoothedUpdating = true;
+                } else {
+                    this._isUpdatingEnabled = !this._isUpdatingEnabled;
+                    this._smoothedUpdating = false;
+                }
                 this._updateListeners({forceUpdate: true});
+                this._canChangeAutoupdate = false;
             }
             return !this._isUpdatingEnabled;
         }
@@ -528,12 +538,14 @@ class MovingColorParameter extends Parameter {
             this._autoupdateInterval = setInterval(this.update.bind(this), params.autoupdate);
         }
     }
-    update() {
-        this._speed += (Math.random() * this._variance * 2) - this._variance;
-        if (Math.abs(this._speed) > this._maxSpeed) {
-            this._speed *= 0.5;
+    update(increment = 1, shouldChangeSpeed = true) {
+        if (shouldChangeSpeed) {
+            this._speed += (Math.random() * this._variance * 2) - this._variance;
+            if (Math.abs(this._speed) > this._maxSpeed) {
+                this._speed *= 0.5;
+            }
         }
-        this._value = this._value.spin(this._speed);
+        this._value = this._value.spin(this._speed * increment);
         this._updateListeners();
     }
     destroy() {
@@ -550,15 +562,17 @@ class MovingAngleParameter extends AngleParameter {
         this._maxSpeed = params.max;
         this._isUpdatingEnabled = true;
     }
-    update() {
+    update(increment = 1, shouldChangeSpeed = true) {
         if (!this._isUpdatingEnabled) {
             return;
         }
-        this._speed += (Math.random() * this._variance * 2) - this._variance;
-        if (Math.abs(this._speed) > this._maxSpeed) {
-            this._speed *= 0.5;
+        if (shouldChangeSpeed) {
+            this._speed += (Math.random() * this._variance * 2) - this._variance;
+            if (Math.abs(this._speed) > this._maxSpeed) {
+                this._speed *= 0.5;
+            }
         }
-        this._spinValue(this._speed);
+        this._spinValue(this._speed * increment);
     }
     onResetButtonPress(inputValue) {
         if (!inputValue || this._checkAutopilotToggle()) {
@@ -593,13 +607,15 @@ class MovingLinearParameter extends LinearParameter {
         }
         this._isUpdatingEnabled = true;
     }
-    update() {
+    update(increment = 1, shouldChangeSpeed = true) {
         if (!this._isUpdatingEnabled) {
             return;
         }
-        this._speed += (Math.random() * this._variance * 2) - this._variance;
+        if (shouldChangeSpeed) {
+            this._speed += (Math.random() * this._variance * 2) - this._variance;
+        }
 
-        const nextOriginal = this._increment(this._value, this._getSpeedAsIncrement());
+        const nextOriginal = this._increment(this._value, this._getSpeedAsIncrement(increment));
         const min = this._autoupdateRange ? this._autoupdateRange[0] : this._minParam.getValue();
         const max = this._autoupdateRange ? this._autoupdateRange[1] : this._maxParam.getValue();
 
@@ -614,8 +630,8 @@ class MovingLinearParameter extends LinearParameter {
         this._value = nextConstrained;
         this._updateListeners();
     }
-    _getSpeedAsIncrement() {
-        return this._speed;
+    _getSpeedAsIncrement(increment) {
+        return this._speed * increment;
     }
     destroy() {
         super.destroy();
@@ -664,8 +680,8 @@ class MovingLogarithmicParameter extends MovingLinearParameter {
     _interpolate(min, max, interpolation) {
         return logerp(min, max, interpolation);
     }
-    _getSpeedAsIncrement() {
-        return 2 ** this._speed;
+    _getSpeedAsIncrement(increment) {
+        return 2 ** (this._speed * increment);
     }
 }
 
