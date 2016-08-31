@@ -53,9 +53,15 @@ class PieceParameters {
     }
     autoupdateEveryNBeats(parameter, n) {
         const tempo = this._beatmathParameters.tempo;
+        const canSmooth = parameter._canSmoothUpdate;
+
         tempo.addListener(() => {
             const tick = tempo.getNumTicks();
-            if (tick % (n * tempo._bpmMod) === 0) {
+
+            const isMultiple = tick % (n * tempo._bpmMod) === 0;
+            if (canSmooth && parameter._smoothedUpdating) {
+                parameter.update(1 / (n * tempo._bpmMod), isMultiple);
+            } else if (isMultiple) {
                 parameter.update();
             }
         });

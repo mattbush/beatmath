@@ -44,11 +44,16 @@
     color: #eee;
 }
 
-.inactive, .active {
+.inactive, .active, .smooth {
     border: 1px solid #39e;
 }
 
 .active {
-    background-color: #39e;
+    background-color: #2ae;
+    color: #000;
+}
+
+.smooth {
+    background-color: #46e;
     color: #000;
 }

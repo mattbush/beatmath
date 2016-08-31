@@ -4,6 +4,7 @@ const ParameterStatus = {
     MAX: 'MAX',
     CHANGED: 'CHANGED',
     CHANGING: 'CHANGING',
+    SMOOTH: 'SMOOTH',
     DETACHED: 'DETACHED',
 };
 
