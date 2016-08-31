@@ -99,6 +99,7 @@ class TreesParameters extends PieceParameters {
                 variance: 5,
                 autoupdateEveryNBeats: 8,
                 autoupdateOnCue: true,
+                canSmoothUpdate: true,
             },
             levelColorShift: {
                 type: MovingLinearParameter,
@@ -111,6 +112,7 @@ class TreesParameters extends PieceParameters {
                 variance: 5,
                 autoupdateEveryNBeats: 8,
                 autoupdateOnCue: true,
+                canSmoothUpdate: true,
             },
             trailPercent: {
                 type: LinearParameter,
@@ -139,6 +141,7 @@ class TreesParameters extends PieceParameters {
                 variance: 0.5,
                 autoupdateEveryNBeats: 4,
                 autoupdateOnCue: true,
+                canSmoothUpdate: true,
             },
             mirrorStagger: {
                 type: ToggleParameter,
@@ -185,6 +188,7 @@ class TreesParameters extends PieceParameters {
                 variance: 0.04,
                 autoupdateEveryNBeats: 4,
                 autoupdateOnCue: true,
+                canSmoothUpdate: true,
             },
             sineAmplitude: {
                 type: MovingLinearParameter,
@@ -195,6 +199,7 @@ class TreesParameters extends PieceParameters {
                 variance: 0.01,
                 autoupdateEveryNBeats: 2,
                 autoupdateOnCue: true,
+                canSmoothUpdate: true,
             },
             sinePeriodTicks: {type: LogarithmicParameter,
                 range: [4, 64],
