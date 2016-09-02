@@ -165,10 +165,13 @@ class ToggleParameter extends Parameter {
         mixboard.addMixtrackButtonListener(eventCode, this.onButtonUpdate.bind(this));
         this.addMixtrackStatusLight(mixboard, eventCode);
     }
-    listenToLaunchpadButton(mixboard, column) {
-        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[column], this.onButtonUpdate.bind(this));
-        this._setMonitorCoordsFromLaunchpadButton(column);
-        this.addLaunchpadButtonStatusLight(mixboard, column);
+    listenToLaunchpadButton(mixboard, columnOrEventCode) {
+        if (columnOrEventCode < 8) {
+            this._setMonitorCoordsFromLaunchpadButton(columnOrEventCode);
+            this.addLaunchpadButtonStatusLight(mixboard, columnOrEventCode);
+            columnOrEventCode = LaunchpadButtons.TRACK_CONTROL[columnOrEventCode];
+        }
+        mixboard.addLaunchpadButtonListener(columnOrEventCode, this.onButtonUpdate.bind(this));
     }
     onButtonUpdate(inputValue) {
         if (this._shouldUpdateFromInputValue(inputValue)) { // button is pressed down, not up
