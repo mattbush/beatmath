@@ -1,11 +1,15 @@
-const {MovingLinearParameter, LogarithmicParameter, LinearParameter, IntLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {MovingLinearParameter, LogarithmicParameter, LinearParameter, HoldButtonParameter, IntLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 const {MixtrackFaders, MixtrackKnobs, MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const tinycolor = require('tinycolor2');
 const {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const {arclerp, clamp, modAndShiftToHalf} = require('js/core/utils/math');
+const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 
 const PI_TIMES_2 = Math.PI * 2;
+
+const WHITE = tinycolor('#fff');
+const BLACK = tinycolor('#000');
 
 class TreesParameters extends PieceParameters {
     constructor(mixboard, beatmathParameters) {
@@ -207,6 +211,16 @@ class TreesParameters extends PieceParameters {
                 listenToDecrementAndIncrementLaunchpadButtons: 4,
                 monitorName: 'Sine Ticks',
             },
+            blackout: {
+                type: HoldButtonParameter,
+                start: false,
+                listenToLaunchpadButton: LaunchpadButtons.TRACK_FOCUS[5],
+            },
+            whiteout: {
+                type: HoldButtonParameter,
+                start: false,
+                listenToLaunchpadButton: LaunchpadButtons.TRACK_CONTROL[5],
+            },
         };
     }
     _incrementNumTicks() {
@@ -286,6 +300,11 @@ class TreesParameters extends PieceParameters {
         return baseColorShift - (distanceFromClosestMultiple * polarGridAmount);
     }
     getColorForIndexAndLevel(treeIndex, levelNumber) {
+        if (this.whiteout.getValue()) {
+            return WHITE;
+        } else if (this.blackout.getValue()) {
+            return BLACK;
+        }
         const color = tinycolor(this.levelColor.getValue().toHexString()); // clone
         const colorShiftPerTree = this._getColorShiftPerTree();
         const colorShiftPerLevel = this.levelColorShift.getValue();

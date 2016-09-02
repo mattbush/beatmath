@@ -169,22 +169,34 @@ class ToggleParameter extends Parameter {
         mixboard.addLaunchpadButtonListener(eventCode, this.onButtonUpdate.bind(this));
         this._setMonitorCoordsFromLaunchpadSideButton(eventCode);
     }
-    listenToLaunchpadButton(mixboard, column) {
-        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[column], this.onButtonUpdate.bind(this));
-        this._setMonitorCoordsFromLaunchpadButton(column);
-        this.addLaunchpadButtonStatusLight(mixboard, column);
+    listenToLaunchpadButton(mixboard, columnOrEventCode) {
+        if (columnOrEventCode < 8) {
+            this._setMonitorCoordsFromLaunchpadButton(columnOrEventCode);
+            this.addLaunchpadButtonStatusLight(mixboard, columnOrEventCode);
+            columnOrEventCode = LaunchpadButtons.TRACK_CONTROL[columnOrEventCode];
+        }
+        mixboard.addLaunchpadButtonListener(columnOrEventCode, this.onButtonUpdate.bind(this));
     }
     onButtonUpdate(inputValue) {
-        if (inputValue) { // button is pressed down, not up
+        if (this._shouldUpdateFromInputValue(inputValue)) { // button is pressed down, not up
             this._value = !this._value;
             this._updateListeners();
         }
+    }
+    _shouldUpdateFromInputValue(inputValue) {
+        return inputValue;
     }
     _getStatus() {
         return this._value ? ParameterStatus.CHANGED : ParameterStatus.BASE;
     }
     _getType() {
         return 'Toggle';
+    }
+}
+
+class HoldButtonParameter extends ToggleParameter {
+    _shouldUpdateFromInputValue(/* inputValue */) {
+        return true;
     }
 }
 
@@ -721,6 +733,7 @@ module.exports = {
     LogarithmicParameter,
     IntLinearParameter,
     ToggleParameter,
+    HoldButtonParameter,
     CycleParameter,
     MovingAngleParameter,
     MovingColorParameter,

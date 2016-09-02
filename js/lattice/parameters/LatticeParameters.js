@@ -68,6 +68,13 @@ class LatticeParameters extends PieceParameters {
                 monitorName: 'Latency',
                 manualMonitorCoords: {x: 5, y: 5},
             },
+            wavePercent: {
+                type: LinearParameter,
+                range: [0, 1],
+                start: 0,
+                listenToLaunchpadFader: [5, {addButtonStatusLight: true}],
+                monitorName: 'Wave %',
+            },
         };
     }
 }
