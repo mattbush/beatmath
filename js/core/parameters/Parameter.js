@@ -171,16 +171,25 @@ class ToggleParameter extends Parameter {
         this.addLaunchpadButtonStatusLight(mixboard, column);
     }
     onButtonUpdate(inputValue) {
-        if (inputValue) { // button is pressed down, not up
+        if (this._shouldUpdateFromInputValue(inputValue)) { // button is pressed down, not up
             this._value = !this._value;
             this._updateListeners();
         }
+    }
+    _shouldUpdateFromInputValue(inputValue) {
+        return inputValue;
     }
     _getStatus() {
         return this._value ? ParameterStatus.CHANGED : ParameterStatus.BASE;
     }
     _getType() {
         return 'Toggle';
+    }
+}
+
+class HoldButtonParameter extends ToggleParameter {
+    _shouldUpdateFromInputValue(/* inputValue */) {
+        return true;
     }
 }
 
@@ -713,6 +722,7 @@ module.exports = {
     LogarithmicParameter,
     IntLinearParameter,
     ToggleParameter,
+    HoldButtonParameter,
     CycleParameter,
     MovingAngleParameter,
     MovingColorParameter,
