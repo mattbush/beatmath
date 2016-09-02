@@ -72,6 +72,11 @@ const LatticePixel = React.createClass({
         }
 
         _.each(this.context.influences, this._mixInfluenceIntoNextState);
+        const wavePercent = this.context.latticeParameters.wavePercent.getValue();
+        if (wavePercent) {
+            const sizeModFromOffset = (tempo.getNumTicks() % 2) + (refreshOffset / tempo.getPeriod()) / 2;
+            this._nextState.size = lerp(this._nextState.size, CELL_SIZE * lerp(1.5, 0, sizeModFromOffset), wavePercent);
+        }
         this.setState(this._nextState);
     },
     _getRefreshOffset: function() {
