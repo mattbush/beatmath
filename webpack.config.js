@@ -14,6 +14,7 @@ module.exports = {
         mapper: './js/mapper/mapper',
         mixboard_and_hue: './js/mixboard_and_hue/mixboard_and_hue',
         monitor: './js/core/outputs/monitor',
+        wallow: './js/wallow/wallow',
     },
     output: {
         path: __dirname,
