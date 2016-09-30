@@ -1,9 +1,8 @@
-const _ = require('lodash');
 const React = require('react');
 const WallowParameters = require('js/wallow/parameters/WallowParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
 
-const hexGrid = _.times(7, () => _.times(16, () => {}));
+const hexGrid = require('js/wallow/WallowHexGrid');
 
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 
@@ -15,8 +14,13 @@ const Hex = React.createClass({
         const tx = this.props.column + (this.props.row % 2 ? 0.5 : 0);
         const ty = this.props.row * Y_AXIS_SCALE;
         return (
-            <g style={{transform: `translate(${tx}px, ${ty}px) scale(1, ${Y_AXIS_SCALE})`}}>
-                <polygon className="line" points="0,.667 .5,.333 .5,-.333 0,-.667 -.5,-.333 -.5,.333" />
+            <g style={{transform: `translate(${tx}px, ${ty}px) scale(${1 / 12}, -${1 / 8 * 4 / 3 * Y_AXIS_SCALE}) translate(-6px,-4px)`}}>
+                <polygon className="line" points="6,8 12,6 12,2 6,0 0,2 0,6" />
+                <g style={{}}>
+                    {hexGrid[this.props.row][this.props.column].map(polygon => {
+                        return <polygon className="mine" fill={polygon.color} points={polygon.points} />;
+                    })}
+                </g>
             </g>
         );
     },
