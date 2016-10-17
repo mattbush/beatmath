@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const React = require('react');
 const WallowParameters = require('js/wallow/parameters/WallowParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
@@ -8,19 +9,20 @@ const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 
 const Hex = React.createClass({
     render() {
-        if (this.props.row % 2 && this.props.column === hexGrid[0].length - 1) {
+        if (this.props.row % 2 && this.props.column === _.size(hexGrid[0]) - 1) {
             return null;
         }
-        const tx = this.props.column + (this.props.row % 2 ? 0.5 : 0);
+        const tx = Number(this.props.column) + (this.props.row % 2 ? 0.5 : 0);
         const ty = this.props.row * Y_AXIS_SCALE;
         return (
             <g style={{transform: `translate(${tx}px, ${ty}px) scale(${1 / 12}, -${1 / 8 * 4 / 3 * Y_AXIS_SCALE}) translate(-6px,-4px)`}}>
                 <polygon className="line" points="6,8 12,6 12,2 6,0 0,2 0,6" />
                 <g style={{}}>
-                    {hexGrid[this.props.row][this.props.column].map(polygon => {
-                        return <polygon className="mine" fill={polygon.color} points={polygon.points} />;
+                    {hexGrid[this.props.row][this.props.column].map((polygon, index) => {
+                        return <polygon className="mine" key={index} fill={polygon.color} points={polygon.points} />;
                     })}
                 </g>
+                <text style={{transform: 'scale(2, -1) translate(1px, -2px)', fill: '#fff', fontSize: '2px'}}>{this.props.column}</text>
             </g>
         );
     },
@@ -45,15 +47,15 @@ const WallowContainer = React.createClass({
         };
     },
     render: function() {
-        const componentGrid = hexGrid.map((hexes, row) => {
-            return hexes.map((hex, column) => {
+        const componentGrid = _.map(hexGrid, (hexes, row) => {
+            return _.map(hexes, (hex, column) => {
                 return <Hex row={row} column={column} />;
             });
         });
 
         return (
             <BeatmathFrame>
-                <g style={{transform: `scale(76) translate(${-(hexGrid[0].length - 1) / 2}px, ${-(hexGrid.length) / 2}px)`}}>
+                <g style={{transform: `scale(76) translate(${-(_.size(hexGrid[0]) - 1) / 2}px, ${-_.size(hexGrid) / 2}px)`}}>
                     {componentGrid}
                 </g>
             </BeatmathFrame>
