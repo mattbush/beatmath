@@ -20,98 +20,98 @@ y
 
 x
  */
-const z1 = {color: '#A09000', points: '6,8 9,7 6,6 3,7'};
-const z2 = {color: '#A09000', points: '3,7 6,6 3,5 0,6'};
-const z3 = {color: '#A09000', points: '9,7 12,6 9,5 6,6'};
-const z4 = {color: '#A09000', points: '6,6 9,5 6,4 3,5'};
-const z5 = {color: '#A09000', points: '3,5 6,4 3,3 0,4'};
-const z6 = {color: '#A09000', points: '9,5 12,4 9,3 6,4'};
-const z7 = {color: '#A09000', points: '6,4 9,3 6,2 3,3'};
-const z8 = {color: '#A09000', points: '3,3 6,2 3,1 0,2'};
-const z9 = {color: '#A09000', points: '9,3 12,2 9,1 6,2'};
-const z0 = {color: '#A09000', points: '6,2 9,1 6,0 3,1'};
+const z1 = {color: '#A09000', points: '0,4 3,3 0,2 -3,3'};
+const z2 = {color: '#A09000', points: '-3,3 0,2 -3,1 -6,2'};
+const z3 = {color: '#A09000', points: '3,3 6,2 3,1 0,2'};
+const z4 = {color: '#A09000', points: '0,2 3,1 0,0 -3,1'};
+const z5 = {color: '#A09000', points: '-3,1 0,0 -3,-1 -6,0'};
+const z6 = {color: '#A09000', points: '3,1 6,0 3,-1 0,0'};
+const z7 = {color: '#A09000', points: '0,0 3,-1 0,-2 -3,-1'};
+const z8 = {color: '#A09000', points: '-3,-1 0,-2 -3,-3 -6,-2'};
+const z9 = {color: '#A09000', points: '3,-1 6,-2 3,-3 0,-2'};
+const z0 = {color: '#A09000', points: '0,-2 3,-3 0,-4 -3,-3'};
 
-const y1 = {color: '#203080', points: '0,6 0,4 3,5 3,7'};
-const y2 = {color: '#203080', points: '0,4 0,2 3,3 3,5'};
-const y3 = {color: '#203080', points: '3,7 3,5 6,6 6,8'};
-const y4 = {color: '#203080', points: '3,5 3,3 6,4 6,6'};
-const y5 = {color: '#203080', points: '3,3 3,1 6,2 6,4'};
-const y6 = {color: '#203080', points: '6,6 6,4 9,5 9,7'};
-const y7 = {color: '#203080', points: '6,4 6,2 9,3 9,5'};
-const y8 = {color: '#203080', points: '6,2 6,0 9,1 9,3'};
-const y9 = {color: '#203080', points: '9,5 9,3 12,4 12,6'};
-const y0 = {color: '#203080', points: '9,3 9,1 12,2 12,4'};
+const y1 = {color: '#203080', points: '-6,2 -6,0 -3,1 -3,3'};
+const y2 = {color: '#203080', points: '-6,0 -6,-2 -3,-1 -3,1'};
+const y3 = {color: '#203080', points: '-3,3 -3,1 0,2 0,4'};
+const y4 = {color: '#203080', points: '-3,1 -3,-1 0,0 0,2'};
+const y5 = {color: '#203080', points: '-3,-1 -3,-3 0,-2 0,0'};
+const y6 = {color: '#203080', points: '0,2 0,0 3,1 3,3'};
+const y7 = {color: '#203080', points: '0,0 0,-2 3,-1 3,1'};
+const y8 = {color: '#203080', points: '0,-2 0,-4 3,-3 3,-1'};
+const y9 = {color: '#203080', points: '3,1 3,-1 6,0 6,2'};
+const y0 = {color: '#203080', points: '3,-1 3,-3 6,-2 6,0'};
 
-const x1 = {color: '#802020', points: '12,6 12,4 9,5 9,7'};
-const x2 = {color: '#802020', points: '9,7 9,5 6,6 6,8'};
-const x3 = {color: '#802020', points: '12,4 12,2 9,3 9,5'};
-const x4 = {color: '#802020', points: '9,5 9,3 6,4 6,6'};
-const x5 = {color: '#802020', points: '6,6 6,4 3,5 3,7'};
-const x6 = {color: '#802020', points: '9,3 9,1 6,2 6,4'};
-const x7 = {color: '#802020', points: '6,4 6,2 3,3 3,5'};
-const x8 = {color: '#802020', points: '3,5 3,3 0,4 0,6'};
-const x9 = {color: '#802020', points: '6,2 6,0 3,1 3,3'};
-const x0 = {color: '#802020', points: '3,3 3,1 0,2 0,4'};
+const x1 = {color: '#802020', points: '6,2 6,0 3,1 3,3'};
+const x2 = {color: '#802020', points: '3,3 3,1 0,2 0,4'};
+const x3 = {color: '#802020', points: '6,0 6,-2 3,-1 3,1'};
+const x4 = {color: '#802020', points: '3,1 3,-1 0,0 0,2'};
+const x5 = {color: '#802020', points: '0,2 0,0 -3,1 -3,3'};
+const x6 = {color: '#802020', points: '3,-1 3,-3 0,-2 0,0'};
+const x7 = {color: '#802020', points: '0,0 0,-2 -3,-1 -3,1'};
+const x8 = {color: '#802020', points: '-3,1 -3,-1 -6,0 -6,2'};
+const x9 = {color: '#802020', points: '0,-2 0,-4 -3,-3 -3,-1'};
+const x0 = {color: '#802020', points: '-3,-1 -3,-3 -6,-2 -6,0'};
 
-const w1 = {color: '#00aaaa', points: '6,8 12,6 6,4'};
-const w3 = {color: '#00aaaa', points: '12,6 12,2 6,4'};
-const w5 = {color: '#00aaaa', points: '12,2 6,0 6,4'};
-const w7 = {color: '#00aaaa', points: '6,0 0,2 6,4'};
-const w9 = {color: '#00aaaa', points: '0,2 0,6 6,4'};
-const w11 = {color: '#00aaaa', points: '0,6 6,8 6,4'};
+const w1 = {color: '#00aaaa', points: '0,4 6,2 0,0'};
+const w3 = {color: '#00aaaa', points: '6,2 6,-2 0,0'};
+const w5 = {color: '#00aaaa', points: '6,-2 0,-4 0,0'};
+const w7 = {color: '#00aaaa', points: '0,-4 -6,-2 0,0'};
+const w9 = {color: '#00aaaa', points: '-6,-2 -6,2 0,0'};
+const w11 = {color: '#00aaaa', points: '-6,2 0,4 0,0'};
 
-const w2 = {color: '#00bb33', points: '6,8 12,6 12,2 6,4'};
-const w6 = {color: '#00bb33', points: '12,2 6,0 0,2 6,4'};
-const w10 = {color: '#00bb33', points: '0,2 0,6 6,8 6,4'};
-const w4 = {color: '#00bb33', points: '12,6 12,2 6,0 6,4'};
-const w8 = {color: '#00bb33', points: '6,0 0,2 0,6 6,4'};
-const w12 = {color: '#00bb33', points: '0,6 6,8 12,6 6,4'};
+const w2 = {color: '#00bb33', points: '0,4 6,2 6,-2 0,0'};
+const w6 = {color: '#00bb33', points: '6,-2 0,-4 -6,-2 0,0'};
+const w10 = {color: '#00bb33', points: '-6,-2 -6,2 0,4 0,0'};
+const w4 = {color: '#00bb33', points: '6,2 6,-2 0,-4 0,0'};
+const w8 = {color: '#00bb33', points: '0,-4 -6,-2 -6,2 0,0'};
+const w12 = {color: '#00bb33', points: '-6,2 0,4 6,2 0,0'};
 
-const a1 = {color: '#550077', points: '6,8 12,2 0,2'};
-const a5 = {color: '#770099', points: '6,6 9,3 3,3'};
-const a3 = {color: '#550077', points: '6,0 0,6 12,6'};
-const a7 = {color: '#770099', points: '6,2 3,5 9,5'};
+const a1 = {color: '#550077', points: '0,4 6,-2 -6,-2'};
+const a5 = {color: '#770099', points: '0,2 3,-1 -3,-1'};
+const a3 = {color: '#550077', points: '0,-4 -6,2 6,2'};
+const a7 = {color: '#770099', points: '0,-2 -3,1 3,1'};
 
-const a2 = {color: '#770099', points: '12,6 9,3 6,6'};
-const a6 = {color: '#770099', points: '6,0 3,3 9,3'};
-const a10 = {color: '#770099', points: '0,6 6,6 3,3'};
+const a2 = {color: '#770099', points: '6,2 3,-1 0,2'};
+const a6 = {color: '#770099', points: '0,-4 -3,-1 3,-1'};
+const a10 = {color: '#770099', points: '-6,2 0,2 -3,-1'};
 
-const a4 = {color: '#770099', points: '12,2 6,2 9,5'};
-const a8 = {color: '#770099', points: '0,2 3,5 6,2'};
-const a12 = {color: '#770099', points: '6,8 9,5 3,5'};
+const a4 = {color: '#770099', points: '6,-2 0,-2 3,1'};
+const a8 = {color: '#770099', points: '-6,-2 -3,1 0,-2'};
+const a12 = {color: '#770099', points: '0,4 3,1 -3,1'};
 
-const c1 = {color: '#666666', points: '6,6  9,5  9,3 6,2 3,3 3,5'};
+const c1 = {color: '#666666', points: '0,2  3,1  3,-1 0,-2 -3,-1 -3,1'};
 
-const c2 = {color: '#666666', points: '9,7 12,6 12,4 9,3 6,4 6,6'};
-const c4 = {color: '#666666', points: '9,5 12,4 12,2 9,1 6,2 6,4'};
-const c6 = {color: '#666666', points: '6,4  9,3  9,1 6,0 3,1 3,3'};
-const c8 = {color: '#666666', points: '3,5  6,4  6,2 3,1 0,2 0,4'};
-const c10 = {color: '#666666', points: '3,7 6,6  6,4 3,3 0,4 0,6'};
-const c12 = {color: '#666666', points: '6,8 9,7  9,5 6,4 3,5 3,7'};
+const c2 = {color: '#666666', points: '3,3 6,2 6,0 3,-1 0,0 0,2'};
+const c4 = {color: '#666666', points: '3,1 6,0 6,-2 3,-3 0,-2 0,0'};
+const c6 = {color: '#666666', points: '0,0  3,-1  3,-3 0,-4 -3,-3 -3,-1'};
+const c8 = {color: '#666666', points: '-3,1  0,0  0,-2 -3,-3 -6,-2 -6,0'};
+const c10 = {color: '#666666', points: '-3,3 0,2  0,0 -3,-1 -6,0 -6,2'};
+const c12 = {color: '#666666', points: '0,4 3,3  3,1 0,0 -3,1 -3,3'};
 
-const g12 = {color: '#888888', points: '6,8 12,6  9,5 6,6 3,5 0,6'};
+const g12 = {color: '#888888', points: '0,4 6,2  3,1 0,2 -3,1 -6,2'};
 
-const h2 = {color: '#888888', points: '9,7 12,6 12,4 9,3 6,6'};
-const h4 = {color: '#888888', points: '9,5 12,4 12,2 9,1 6,2'};
-const h6 = {color: '#888888', points: '9,3 9,1 6,0 3,1 3,3'};
-const h8 = {color: '#888888', points: '3,5 6,2 3,1 0,2 0,4'};
-const h10 = {color: '#888888', points: '3,7 6,6 3,3 0,4 0,6'};
-const h12 = {color: '#888888', points: '6,8 9,7 9,5 3,5 3,7'};
+const h2 = {color: '#888888', points: '3,3 6,2 6,0 3,-1 0,2'};
+const h4 = {color: '#888888', points: '3,1 6,0 6,-2 3,-3 0,-2'};
+const h6 = {color: '#888888', points: '3,-1 3,-3 0,-4 -3,-3 -3,-1'};
+const h8 = {color: '#888888', points: '-3,1 0,-2 -3,-3 -6,-2 -6,0'};
+const h10 = {color: '#888888', points: '-3,3 0,2 -3,-1 -6,0 -6,2'};
+const h12 = {color: '#888888', points: '0,4 3,3 3,1 -3,1 -3,3'};
 
-const i2 = {color: '#888888', points: '9,7 12,6 12,4 9,3 9,5 6,6'};
-const i4 = {color: '#888888', points: '9,5 12,4 12,2 9,1 6,2 9,3'};
-const i6 = {color: '#888888', points: '6,2  9,3  9,1 6,0 3,1 3,3'};
-const i8 = {color: '#888888', points: '3,5  3,3  6,2 3,1 0,2 0,4'};
-const i10 = {color: '#888888', points: '3,7 6,6  3,5 3,3 0,4 0,6'};
-const i12 = {color: '#888888', points: '6,8 9,7  9,5 6,6 3,5 3,7'};
+const i2 = {color: '#888888', points: '3,3 6,2 6,0 3,-1 3,1 0,2'};
+const i4 = {color: '#888888', points: '3,1 6,0 6,-2 3,-3 0,-2 3,-1'};
+const i6 = {color: '#888888', points: '0,-2  3,-1  3,-3 0,-4 -3,-3 -3,-1'};
+const i8 = {color: '#888888', points: '-3,1  -3,-1  0,-2 -3,-3 -6,-2 -6,0'};
+const i10 = {color: '#888888', points: '-3,3 0,2  -3,1 -3,-1 -6,0 -6,2'};
+const i12 = {color: '#888888', points: '0,4 3,3  3,1 0,2 -3,1 -3,3'};
 
-const j4 = {color: '#AAAAAA', points: '9,5 12,2 6,2 9,3'};
-const j8 = {color: '#AAAAAA', points: '3,5  3,3 6,2 0,2'};
-const j12 = {color: '#AAAAAA', points: '6,8 9,5 6,6 3,5'};
+const j4 = {color: '#AAAAAA', points: '3,1 6,-2 0,-2 3,-1'};
+const j8 = {color: '#AAAAAA', points: '-3,1  -3,-1 0,-2 -6,-2'};
+const j12 = {color: '#AAAAAA', points: '0,4 3,1 0,2 -3,1'};
 
-const k2 = {color: '#AAAAAA', points: '9,3 9,5 6,6'};
-const k6 = {color: '#AAAAAA', points: '6,2  9,3 3,3'};
-const k10 = {color: '#AAAAAA', points: '6,6 3,5 3,3'};
+const k2 = {color: '#AAAAAA', points: '3,-1 3,1 0,2'};
+const k6 = {color: '#AAAAAA', points: '0,-2  3,-1 -3,-1'};
+const k10 = {color: '#AAAAAA', points: '0,2 -3,1 -3,-1'};
 
 
 const hexGrid = [

@@ -15,14 +15,14 @@ const Hex = React.createClass({
         const tx = Number(this.props.column) + (this.props.row % 2 ? 0.5 : 0);
         const ty = this.props.row * Y_AXIS_SCALE;
         return (
-            <g style={{transform: `translate(${tx}px, ${ty}px) scale(${1 / 12}, -${1 / 8 * 4 / 3 * Y_AXIS_SCALE}) translate(-6px,-4px)`}}>
-                <polygon className="line" points="6,8 12,6 12,2 6,0 0,2 0,6" />
+            <g style={{transform: `translate(${tx}px, ${ty}px) scale(${1 / 12}, -${1 / 8 * 4 / 3 * Y_AXIS_SCALE})`}}>
+                <polygon className="line" points="0,4 6,2 6,-2 0,-4 -6,-2 -6,2" />
                 <g style={{}}>
                     {hexGrid[this.props.row][this.props.column].map((polygon, index) => {
                         return <polygon className="mine" key={index} fill={polygon.color} points={polygon.points} />;
                     })}
                 </g>
-                <text style={{transform: 'scale(2, -1) translate(1px, -2px)', fill: '#fff', fontSize: '2px'}}>{this.props.column}</text>
+                <text style={{transform: 'scale(2, -1) translate(-2px, 2px)', fill: '#fff', fontSize: '2px'}}>{this.props.column}</text>
             </g>
         );
     },
