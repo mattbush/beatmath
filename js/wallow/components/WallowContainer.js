@@ -19,6 +19,7 @@ const Hex = React.createClass({
                 <polygon className="line" points="0,4 6,2 6,-2 0,-4 -6,-2 -6,2" />
                 <g style={{}}>
                     {hexGrid[this.props.row][this.props.column].map((polygon, index) => {
+                        // return <polygon className="mine" key={index} fill={`#fff`} style={{opacity: '0.5'}} points={polygon.points} />;
                         return <polygon className="mine" key={index} fill={polygon.color} points={polygon.points} />;
                     })}
                 </g>
