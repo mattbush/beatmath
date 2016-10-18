@@ -106,13 +106,15 @@ const BeatmathFrame = React.createClass({
         const height = this.getParameterValue('height');
 
         const persp = width * 0.52;
-        const pitchAngle = 0;
-        const dx = 0;
-        const dy = 0;
-        const scale = 1;
+        const pitchAngle = 11.2;
+        const dx = -10.5;
+        const dy = 19;
+        const scaleX = 1.084;
+        const scaleY = 1.272;
+        const rot = -0.18;
 
         const svgStyle = {
-            transform: `perspective(${persp}px) rotateX(${pitchAngle}deg) translate(${dx}px, ${dy}px) scale(${scale})`
+            transform: `rotate(${rot}deg) perspective(${persp}px) rotateX(${pitchAngle}deg) translate(${dx}px, ${dy}px) scale(${scaleX}, ${scaleY})`
         };
 
         const style = {
