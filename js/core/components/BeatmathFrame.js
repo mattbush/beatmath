@@ -104,6 +104,17 @@ const BeatmathFrame = React.createClass({
     render: function() {
         const width = this.getParameterValue('width');
         const height = this.getParameterValue('height');
+
+        const persp = width * 0.52;
+        const pitchAngle = 0;
+        const dx = 0;
+        const dy = 0;
+        const scale = 1;
+
+        const svgStyle = {
+            transform: `perspective(${persp}px) rotateX(${pitchAngle}deg) translate(${dx}px, ${dy}px) scale(${scale})`
+        };
+
         const style = {
             transform: `translate(${width / 2}px, ${height / 2}px)`,
         };
@@ -121,7 +132,7 @@ const BeatmathFrame = React.createClass({
 
         return (
             <div className="main">
-                <svg width={width} height={height}>
+                <svg width={width} height={height} style={svgStyle}>
                     <g style={style}>
                         {this._renderDefs()}
                         {this._renderChildFrames()}
