@@ -102,6 +102,12 @@ const a5 = {color: '#770099', points: '0,2 3,-1 -3,-1'};
 const a3 = {color: '#550077', points: '0,-4 -6,2 6,2'};
 const a7 = {color: '#770099', points: '0,-2 -3,1 3,1'};
 
+const b55 = {color: '#9900BB', points: '0,-1 -1.5,0.5 1.5,0.5'};
+const a54 = {color: '#9900BB', points: '3,-1 0,-1 1.5,0.5'};
+const a58 = {color: '#9900BB', points: '-3,-1 0,-1 -1.5,0.5'};
+const a512 = {color: '#9900BB', points: '0,2 -1.5,0.5 1.5,0.5'};
+const a555 = {color: '#BB00DD', points: '0,0.5 0.75,-0.25 -0.75,-0.25'};
+
 const a2 = {color: '#770099', points: '6,2 3,-1 0,2'};
 const a6 = {color: '#770099', points: '0,-4 -3,-1 3,-1'};
 const a10 = {color: '#770099', points: '-6,2 0,2 -3,-1'};
@@ -183,22 +189,108 @@ const l4 = {color: '#66556A', points: '3,1 6,-2 0,-2 0,0'};
 const l8 = {color: '#66556A', points: '-3,1 0,0 0,-2 -6,-2'};
 const l12 = {color: '#66556A', points: '0,4 3,1 0,0 -3,1'};
 
+const qa0 = {color: '#9900BB', points: '0,0.67 1,-0.33 -1,-0.33'};
+const qb0 = {color: '#9900BB', points: '0,1.33 2,-0.67 -2,-0.67'};
+const qc0 = a5; // {color: '#770099', points: '0,2 3,-1 -3,-1'};
+const qd0 = {color: '#9900BB', points: '0,2.67 4,-1.33 -4,-1.33'};
+const qe0 = {color: '#9900BB', points: '0,3.33 5,-1.67 -5,-1.67'};
+const qf0 = a1; // {color: '#550077', points: '0,4 6,-2 -6,-2'};
+
+const qa2 = {color: '#993070', points: '0,0.67 6,2 1,-0.33'};
+const qb2 = {color: '#993070', points: '0,1.33 6,2 2,-0.67'};
+const qc2 = a2; // {color: '#770099', points: '0,2 6,2 3,-1'};
+const qd2 = {color: '#993070', points: '0,2.67 6,2 4,-1.33'};
+const qe2 = {color: '#993070', points: '0,3.33 6,2 5,-1.67'};
+const qf2 = e2; // {color: '#773800', points: '0,4 6,2 6,-2'};
+
+const qa6 = {color: '#993070', points: '1,-0.33 0,-4 -1,-0.33'};
+const qb6 = {color: '#993070', points: '2,-0.67 0,-4 -2,-0.67'};
+const qc6 = a6; // {color: '#770099', points: '3,-1 0,-4 -3,-1'};
+const qd6 = {color: '#993070', points: '4,-1.33 0,-4 -4,-1.33'};
+const qe6 = {color: '#993070', points: '5,-1.67 0,-4 -5,-1.67'};
+const qf6 = e6; // {color: '#773800', points: '6,-2 0,-4 -6,-2'};
+
+const qa10 = {color: '#993070', points: '0,0.67 -6,2 -1,-0.33'};
+const qb10 = {color: '#993070', points: '0,1.33 -6,2 -2,-0.67'};
+const qc10 = a10; // {color: '#770099', points: '0,2 -6,2 -3,-1'};
+const qd10 = {color: '#993070', points: '0,2.67 -6,2 -4,-1.33'};
+const qe10 = {color: '#993070', points: '0,3.33 -6,2 -5,-1.67'};
+const qf10 = e10; // {color: '#773800', points: '0,4 -6,2 -6,-2'};
+
+const qa1 = {color: '#88AA55', points: '0,4 6,2 0,0.67'};
+const qb1 = {color: '#88AA55', points: '0,4 6,2 0,1.33'};
+const qc1 = f1; // {color: '#AA6622', points: '0,4 6,2 0,2'};
+const qd1 = {color: '#88AA55', points: '0,4 6,2 0,2.67'};
+const qe1 = {color: '#88AA55', points: '0,4 6,2 0,3.33'};
+
+const qa3 = {color: '#88AA55', points: '6,2 6,-2 1,-0.33'};
+const qb3 = {color: '#88AA55', points: '6,2 6,-2 2,-0.67'};
+const qc3 = f3; // {color: '#AA6622', points: '6,2 6,-2 3,-1'};
+const qd3 = {color: '#88AA55', points: '6,2 6,-2 4,-1.33'};
+const qe3 = {color: '#88AA55', points: '6,2 6,-2 5,-1.67'};
+
+const qa5 = {color: '#88AA55', points: '6,-2 0,-4 1,-0.33'};
+const qb5 = {color: '#88AA55', points: '6,-2 0,-4 2,-0.67'};
+const qc5 = f5; // {color: '#AA6622', points: '6,-2 0,-4 3,-1'};
+const qd5 = {color: '#88AA55', points: '6,-2 0,-4 4,-1.33'};
+const qe5 = {color: '#88AA55', points: '6,-2 0,-4 5,-1.67'};
+
+const qa7 = {color: '#88AA55', points: '-6,-2 0,-4 -1,-0.33'};
+const qb7 = {color: '#88AA55', points: '-6,-2 0,-4 -2,-0.67'};
+const qc7 = f7; // {color: '#AA6622', points: '-6,-2 0,-4 -3,-1'};
+const qd7 = {color: '#88AA55', points: '-6,-2 0,-4 -4,-1.33'};
+const qe7 = {color: '#88AA55', points: '-6,-2 0,-4 -5,-1.67'};
+
+const qa9 = {color: '#88AA55', points: '-6,2 -6,-2 -1,-0.33'};
+const qb9 = {color: '#88AA55', points: '-6,2 -6,-2 -2,-0.67'};
+const qc9 = f9; // {color: '#AA6622', points: '-6,2 -6,-2 -3,-1'};
+const qd9 = {color: '#88AA55', points: '-6,2 -6,-2 -4,-1.33'};
+const qe9 = {color: '#88AA55', points: '-6,2 -6,-2 -5,-1.67'};
+
+const qa11 = {color: '#88AA55', points: '0,4 -6,2 0,0.67'};
+const qb11 = {color: '#88AA55', points: '0,4 -6,2 0,1.33'};
+const qc11 = f11; // {color: '#AA6622', points: '0,4 -6,2 0,2'};
+const qd11 = {color: '#88AA55', points: '0,4 -6,2 0,2.67'};
+const qe11 = {color: '#88AA55', points: '0,4 -6,2 0,3.33'};
+
+const ra2 = {color: '#1166AA', points: '-2,2 6,2 4,0 0,0'};
+const ra6 = {color: '#1166AA', points: '0,0 4,0 0,-4 -2,-2'};
+const ra10 = {color: '#1166AA', points: '0,0 -2,-2 -6,2 -2,2'};
+const rb2 = {color: '#1166AA', points: '0,2 6,2 3,-1 0,0'};
+const rb6 = {color: '#1166AA', points: '0,0 3,-1 0,-4 -3,-1'};
+const rb10 = {color: '#1166AA', points: '0,0 -3,-1 -6,2 0,2'};
+const rc2 = {color: '#1166AA', points: '0,2 6,2 3,-1 0,-1 0,0 1.5,0.5'};
+const rc6 = {color: '#1166AA', points: '0,0 0,-1 3,-1 0,-4 -3,-1 -1.5,0.5'};
+const rc10 = {color: '#1166AA', points: '0,0 -1.5,0.5 -3,-1 -6,2 0,2 1.5,0.5'};
+
+const sa12 = {color: '#3344BB', points: '-2,2 -6,2 0,4 6,2 4,0 0,0'};
+const sa4 = {color: '#3344BB', points: '0,0 4,0 6,2 6,-2 0,-4 -2,-2'};
+const sa8 = {color: '#3344BB', points: '0,0 -2,-2 0,-4 -6,-2 -6,2 -2,2'};
+const sb12 = {color: '#3344BB', points: '0,2 -6,2 0,4 6,2 3,-1 0,0'};
+const sb4 = {color: '#3344BB', points: '0,0 3,-1 6,2 6,-2 0,-4 -3,-1'};
+const sb8 = {color: '#3344BB', points: '0,0 -3,-1 0,-4 -6,-2 -6,2 0,2'};
+const sc12 = {color: '#3344BB', points: '0,2 -6,2 0,4 6,2 3,-1 0,-1 0,0 1.5,0.5'};
+const sc4 = {color: '#3344BB', points: '0,0 0,-1 3,-1 6,2 6,-2 0,-4 -3,-1 -1.5,0.5'};
+const sc8 = {color: '#3344BB', points: '0,0 -1.5,0.5 -3,-1 0,-4 -6,-2 -6,2 0,2 1.5,0.5'};
+
+// f1, f3, f5, f7, f9, f11,
+// w1, w3, w5, w7, w9, w11
 
 const hexGrid = [
-    {0: [], 1: [], 2: [f4, f8, f12], 3: [f4, f8, f12, a2, a6, a10, a5], 4: [f1, f3, f5, f7, f9, f11, a2, a6, a10, a5],
-     5: [w2, w6, w10, a5], 6: [w2, w6, w10, a5], 7: [x0, y0, z1, a5, h2, h6, h10], 8: [i2, i6, i10, x0, y0, z1, k2, k6, k10, a5], 9: [i2, i6, i10, x0, y0, z1, c1],
+    {0: [], 1: [sc4, sc8, sc12], 2: [f4, f8, f12, rc2, rc6, rc10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512, a555], 4: [f1, f3, f5, f7, f9, f11, a2, a6, a10, b55, a54, a58, a512],
+     5: [w2, w6, w10, b55, a54, a58, a512], 6: [w2, w6, w10, a5], 7: [x0, y0, z1, a5, h2, h6, h10], 8: [i2, i6, i10, x0, y0, z1, k2, k6, k10, a5], 9: [i2, i6, i10, x0, y0, z1, c1],
      10: [x1, x0, y1, y0, z1, z0, b1, b3, b5, b7, b9, b11, c1], 11: [x1, x0, y1, y0, z1, z0, z4, z5, z6, z7, b1, b5, b7, b11], 12: [x1, y6, x5, y1, x0, y5, x6, y0, z1, z5, z6, z0], 13: [x1, x2, x9, x0, y1, y3, y8, y0, v3], 14: [xx1, yy5, xx7, yy11, v3], 15: [x1, x0, y1, y0, z1, z0, v0]},
 
-    {/**/0: [], 1: [], 2: [f4, f8, f12, a3], 3: [f4, f8, f12, a2, a6, a10, a5], 4: [w4, w8, w12, a5],
+    {/**/0: [], 1: [sb4, sb8, sb12], 2: [f4, f8, f12, rb2, rb6, rb10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512], 4: [w4, w8, w12, b55, a54, a58, a512],
          5: [w4, w8, w12, a5], 6: [w1, w3, w5, w7, w9, w11, a5], 7: [g1, g3, g5, g7, g9, g11, k2, k6, k10, a5], 8: [g1, g3, g5, g7, g9, g11, c1], 9: [g12, g4, g8, c1],
          10: [z1, z2, z3, x8, x9, x0, y8, y9, y0, c1], 11: [x1, x2, y3, y1, x0, x9, y8, y0, z4, z5, z6, z7], 12: [x1, x0, y1, y0, z4, z5, z6, z7, i6, i12], 13: [x1, x0, y1, y0, i6, i12, v3], 14: [xx3, zz5, xx9, zz11, v1]},
 
-    {0: [], 1: [], 2: [], 3: [f4, f8, f12, a3], 4: [f4, f8, f12, a2, a6, a10, a5],
+    {0: [], 1: [], 2: [sa4, sa8, sa12], 3: [f4, f8, f12, ra2, ra6, ra10], 4: [f4, f8, f12, a2, a6, a10, a5],
     5: [f4, f8, f12, a2, a6, a10, a5], 6: [e1, e3, e5, e7, e9, e11, a1, a5], 7: [e2, e6, e10, a1, a5], 8: [e2, e6, e10, j4, j8, j12, c1], 9: [e1, e3, e5, e7, e9, e11, j4, j8, j12, c1],
     10: [g12, g4, g8, x4, y4, z7], 11: [z1, z2, z3, x8, y4, x4, y9, z7, x0, x9, y8, y0], 12: [z1, z2, z3, x8, y4, x4, y9, x0, y5, x6, y0, z0], 13: [x1, x0, y1, y0, z5, z6, c6, c12], 14: [x0, y5, x6, y0, z1, z0, uu1, uu2, uu3, uu4], 15: [x8, x0, z0, y9, y0, g12, u5, u6]},
 
-    {/**/0: [], 1: [w1, w3, w5, w7, w9, w11], 2: [w1, w3, w5, w7, w9, w11], 3: [w1, w3, w5, w7, w9, w11], 4: [f1, f3, f5, f7, f9, f11, a2, a6, a10, a5],
-         5: [w1, w3, w5, w7, w9, w11], 6: [w1, w3, w5, w7, w9, w11], 7: [e2, e6, e10, a1], 8: [e2, e6, e10,  l4, l8, l12], 9: [e1, e3, e5, e7, e9, e11, a1, z4, x7, y7],
+    {/**/0: [], 1: [w1, w3, w5, w7, w9, w11], 2: [qa1, qa3, qa5, qa7, qa9, qa11, qa0, qa2, qa6, qa10], 3: [qb1, qb3, qb5, qb7, qb9, qb11, qb0, qb2, qb6, qb10], 4: [qc1, qc3, qc5, qc7, qc9, qc11, qc0, qc2, qc6, qc10],
+         5: [qd1, qd3, qd5, qd7, qd9, qd11, qd0, qd2, qd6, qd10], 6: [qe1, qe3, qe5, qe7, qe9, qe11, qe0, qe2, qe6, qe10], 7: [qf0, qf2, qf6, qf10], 8: [e2, e6, e10,  l4, l8, l12], 9: [e1, e3, e5, e7, e9, e11, j4, j8, j12, z4, x7, y7],
          10: [g12, g4, g8, z4, x7, y7], 11: [z1, z2, z3, z4, x8, x7, y7, y9, x0, x9, y8, y0], 12: [w4, w8, w12, x0, x9, y8, y0, z1], 13: [w4, w8, w12, x0, y0, z1], 14: [u4, u8, u12, x1, x0, y1, y0, z1, z0]},
 
     {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [], 13: [], 14: [], 15: []},
