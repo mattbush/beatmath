@@ -10,13 +10,17 @@ const Hex = React.createClass({
         if (this.props.row % 2 && this.props.column === _.size(hexGrid[0]) - 1) {
             return null;
         }
-        const tx = Number(this.props.column) + (this.props.row % 2 ? 0.5 : 0);
-        const ty = this.props.row * Y_AXIS_SCALE;
+        const cell = hexGrid[this.props.row][this.props.column];
+        const shapes = cell.shapes;
+
+        const tx = Number(this.props.column) + (this.props.row % 2 ? 0.5 : 0) + cell.offsets[0];
+        const ty = this.props.row * Y_AXIS_SCALE + cell.offsets[1];
+
         return (
             <g style={{transform: `translate(${tx}px, ${ty}px) scale(${1 / 12}, -${1 / 8 * 4 / 3 * Y_AXIS_SCALE})`}}>
                 <polygon className="line" points="0,4 6,2 6,-2 0,-4 -6,-2 -6,2" />
                 <g style={{}}>
-                    {hexGrid[this.props.row][this.props.column].map((polygon, index) => {
+                    {shapes.map((polygon, index) => {
                         // return <polygon className="mine" key={index} fill={`#fff`} style={{opacity: '0.5'}} points={polygon.points} />;
                         return <polygon className="mine" key={index} fill={polygon.color} points={polygon.points} />;
                     })}
