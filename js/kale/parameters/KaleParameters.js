@@ -4,8 +4,8 @@ const PieceParameters = require('js/core/parameters/PieceParameters');
 const {ceilOfMultiple} = require('js/core/utils/math');
 const tinycolor = require('tinycolor2');
 
-const MAX_NUM_ROWS = 6;
-const MAX_NUM_COLS = 12;
+const MAX_NUM_ROWS = 7;
+const MAX_NUM_COLS = 15;
 
 class KaleParameters extends PieceParameters {
     _declareParameters() {
@@ -19,7 +19,7 @@ class KaleParameters extends PieceParameters {
             },
             numCols: {
                 type: IntLinearParameter,
-                start: 8,
+                start: 15,
                 range: [0, MAX_NUM_COLS],
                 listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
                 monitorName: '# Columns',

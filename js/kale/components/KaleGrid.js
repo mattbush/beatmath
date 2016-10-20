@@ -2,7 +2,7 @@ const React = require('react');
 const KaleCell = require('js/kale/components/KaleCell');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 
-const SCALE = 64;
+const SCALE = 38;
 
 const KaleGrid = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -37,7 +37,9 @@ const KaleGrid = React.createClass({
             kaleCells = [];
             const numRows = this.getParameterValue('numRows');
             const numCols = this.getParameterValue('numCols');
-            for (let y = -numRows; y <= numRows; y++) {
+            const yMin = -3;
+            const yMax = yMin + numRows - 1;
+            for (let y = yMin; y <= yMax; y++) {
                 for (let x = -numCols; x <= numCols; x++) {
                     if ((x + y) % 2 !== 0) {
                         continue;
@@ -56,7 +58,7 @@ const KaleGrid = React.createClass({
         }
 
         return (
-            <g transform={`scale(${SCALE})`}>
+            <g transform={`scale(${SCALE})  translate(0, -1.78)`}>
                 {kaleCells}
             </g>
         );
