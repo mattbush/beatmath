@@ -46,12 +46,23 @@ class Mixboard {
             return;
         }
 
+        window.midiAccess = midiAccess;
+
         // todo: work when it's not the first
         if (midiAccess.inputs && midiAccess.inputs.size > 0) {
-            this._midiInput = midiAccess.inputs.values().next().value;
+            const iterator = midiAccess.inputs.values();
+            this._midiInput = iterator.next().value;
+            if (midiAccess.inputs.size > 1 && this._midiInput.name.toLowerCase().includes('traktor')) {
+                this._midiInput = iterator.next().value;
+            }
         }
         if (midiAccess.outputs && midiAccess.outputs.size > 0) {
-            this._midiOutput = midiAccess.outputs.values().next().value;
+            const iterator = midiAccess.outputs.values();
+            this._midiOutput = iterator.next().value;
+            if (midiAccess.outputs.size > 1 && this._midiOutput.name.toLowerCase().includes('traktor')) {
+                this._midiOutput = iterator.next().value;
+            }
+
         }
     }
     _onMixtrackMidiMessage(e) {
