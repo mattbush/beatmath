@@ -107,7 +107,7 @@ _.times(21, index => {
             jsx: (
                 <clipPath id={clipPathKey}>
                     <polygon points={_.map(points, pair => pair.join(',')).join(' ')} />
-                </clipPath>,
+                </clipPath>
             ),
         });
     });
