@@ -1,6 +1,6 @@
-var tinycolor = require('tinycolor2');
-var updateHue = require('js/core/outputs/updateHue');
-var {MovingColorParameter} = require('js/core/parameters/Parameter');
+const tinycolor = require('tinycolor2');
+const updateHue = require('js/core/outputs/updateHue');
+const {MovingColorParameter} = require('js/core/parameters/Parameter');
 
 const {ENABLE_HUE, COLOR_REFRESH_RATE, COLOR_MIX_COEFFICIENT} = require('js/bricks/parameters/BricksConstants');
 

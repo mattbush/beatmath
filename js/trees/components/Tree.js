@@ -1,9 +1,9 @@
-var _ = require('underscore');
-var React = require('react');
-var ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
-var {lerp} = require('js/core/utils/math');
+const _ = require('lodash');
+const React = require('react');
+const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
+const {lerp, clamp} = require('js/core/utils/math');
 
-var Tree = React.createClass({
+const Tree = React.createClass({
     mixins: [ParameterBindingsMixin],
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
@@ -15,22 +15,22 @@ var Tree = React.createClass({
         };
     },
     render: function() {
-        var treesParameters = this.context.treesParameters;
-        var numLevels = treesParameters.numLevels.getValue();
-        var levelSpacing = treesParameters.levelSpacing.getValue();
+        const treesParameters = this.context.treesParameters;
+        const numLevels = treesParameters.numLevels.getValue();
+        const levelSpacing = treesParameters.getLevelSpacing();
 
-        var polarGridAmount = treesParameters.polarGridAmount.getValue();
-        var baseTreeWidth = treesParameters.getTreeWidth();
+        const polarGridAmount = clamp(treesParameters.polarGridAmount.getValue(), 0, 1);
+        const baseTreeWidth = treesParameters.getTreeWidth();
 
-        var levelHeight = treesParameters.getLevelHeight();
+        const levelHeight = treesParameters.getLevelHeight();
 
-        var borderRadius = treesParameters.getBorderRadius();
+        const borderRadius = treesParameters.getBorderRadius();
 
         return (
             <g>
                 {_.times(numLevels, levelIndex => {
-                    var fill = treesParameters.getColorForIndexAndLevel(this.props.index, levelIndex);
-                    var treeWidth = baseTreeWidth;
+                    const fill = treesParameters.getColorForIndexAndLevel(this.props.index, levelIndex);
+                    let treeWidth = baseTreeWidth;
                     if (polarGridAmount > 0) {
                         treeWidth = lerp(baseTreeWidth, baseTreeWidth * (levelIndex + 1) / numLevels, polarGridAmount);
                     }
@@ -41,7 +41,7 @@ var Tree = React.createClass({
                             key={levelIndex}
                             fill={fill}
                             x={-(treeWidth / 2)}
-                            y={levelIndex * levelSpacing}
+                            y={levelIndex * levelSpacing + levelHeight / 2}
                             rx={borderRadius}
                             ry={borderRadius}
                             width={treeWidth}

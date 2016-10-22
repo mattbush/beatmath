@@ -1,7 +1,7 @@
-var React = require('react');
-var ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
-var BeatmathPixel = require('js/core/components/BeatmathPixel');
-var tinycolor = require('tinycolor2');
+const React = require('react');
+const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
+const BeatmathPixel = require('js/core/components/BeatmathPixel');
+const tinycolor = require('tinycolor2');
 const ARRANGEMENTS = require('js/twenty_sixteen/state/arrangements');
 
 const PIXEL_SPACING = 40;
@@ -14,8 +14,8 @@ const TwentySixteenPixel = React.createClass({
         twentySixteenParameters: React.PropTypes.object,
     },
     getParameterBindings: function() {
-        var originalIndex = this.props.index;
-        var indexMapping;
+        const originalIndex = this.props.index;
+        let indexMapping;
         if (this.props.color === 'gold') {
             indexMapping = this.context.twentySixteenParameters.goldIndexMappings[originalIndex];
         } else {
@@ -28,10 +28,10 @@ const TwentySixteenPixel = React.createClass({
         };
     },
     render: function() {
-        var arrangement = ARRANGEMENTS[this.getParameterValue('arrangementIndex')];
-        var index = this.getParameterValue('indexMapping');
+        const arrangement = ARRANGEMENTS[this.getParameterValue('arrangementIndex')];
+        const index = this.getParameterValue('indexMapping');
 
-        var x, y;
+        let x, y;
         if (this.props.color === 'gold') {
             x = arrangement.goldX[index];
             y = arrangement.goldY[index];
@@ -40,28 +40,28 @@ const TwentySixteenPixel = React.createClass({
             y = arrangement.blueY[index];
         }
 
-        var xOffset = -arrangement.width / 2 * PIXEL_SPACING;
-        var yOffset = -arrangement.height / 2 * PIXEL_SPACING;
+        const xOffset = -arrangement.width / 2 * PIXEL_SPACING;
+        const yOffset = -arrangement.height / 2 * PIXEL_SPACING;
 
-        var translateX = (xOffset + x * PIXEL_SPACING) * arrangement.scale;
-        var translateY = (yOffset + y * PIXEL_SPACING) * arrangement.scale;
+        const translateX = (xOffset + x * PIXEL_SPACING) * arrangement.scale;
+        const translateY = (yOffset + y * PIXEL_SPACING) * arrangement.scale;
 
-        var transitionTime = this.context.beatmathParameters.tempo.getPeriod() / 2;
+        const transitionTime = this.context.beatmathParameters.tempo.getPeriod() / 2;
 
-        var rotation = 0;
+        let rotation = 0;
         if (this.context.twentySixteenParameters.reverseFrameRotationInPixels.getValue()) {
             rotation = -Math.round(this.context.beatmathParameters.frameRotation.getValue());
         }
 
-        var style = {
+        const style = {
             transform: `translate(${translateX}px, ${translateY}px) scale(${PIXEL_SIZE / 2}) rotate(${rotation}deg)`,
             transition: `transform ${transitionTime / 1000}s ease`,
         };
 
-        var goldColor = this.context.twentySixteenParameters.goldColor.getValue();
+        let goldColor = this.context.twentySixteenParameters.goldColor.getValue();
         goldColor = tinycolor(goldColor.toHexString()); // clone
 
-        var color = this.props.color === 'gold' ? goldColor : goldColor.spin(180);
+        const color = this.props.color === 'gold' ? goldColor : goldColor.spin(180);
         return (
             <g style={style}>
                 <BeatmathPixel color={color} />

@@ -1,5 +1,5 @@
 const {LinearParameter} = require('js/core/parameters/Parameter');
-const {mixboardButton, mixboardKnob} = require('js/core/inputs/MixboardConstants');
+const {MixtrackButtons, MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const FrondState = require('js/fronds/state/FrondState');
 
@@ -10,13 +10,13 @@ class FrondsParameters extends PieceParameters {
                 type: LinearParameter,
                 range: [1, 4],
                 start: 1,
-                listenToDecrementAndIncrementButtons: [mixboardButton.L_PLAY_PAUSE, mixboardButton.L_STUTTER],
+                listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_PLAY_PAUSE, MixtrackButtons.L_STUTTER],
             },
             opacity: {
                 type: LinearParameter,
                 range: [0.2, 1],
                 start: 1,
-                listenToKnob: mixboardKnob.CUE_GAIN,
+                listenToMixtrackKnob: MixtrackKnobs.CUE_GAIN,
             },
         };
     }
@@ -27,7 +27,7 @@ class FrondsParameters extends PieceParameters {
         this.numFronds.addListener(this.onNumFrondsChanged.bind(this));
     }
     onNumFrondsChanged() {
-        var newNumFronds = this.numFronds.getValue();
+        const newNumFronds = this.numFronds.getValue();
         while (this.frondStates.length < newNumFronds) {
             this.frondStates.push(new FrondState(this._mixboard, this._beatmathParameters, this));
         }

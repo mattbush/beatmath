@@ -1,8 +1,8 @@
-var _ = require('underscore');
+const _ = require('lodash');
 
-var THROTTLE_MS = 100;
+const THROTTLE_MS = 16;
 
-var ParameterBindingsMixin = {
+const ParameterBindingsMixin = {
     // callers implement this, returns a mapping of string to parameter object
     // getParameterBindings: function() {},
     _getParameterBindings: function() {
@@ -12,7 +12,10 @@ var ParameterBindingsMixin = {
         return this._parameterBindings;
     },
     componentDidMount: function() {
-        this._boundThrottledForceUpdate = _.throttle(this.forceUpdate.bind(this), THROTTLE_MS);
+        const boundForceUpdate = this.forceUpdate.bind(this);
+        const updateDelay = this._getUpdateDelay ? this._getUpdateDelay() : null;
+        const boundForceUpdateWithDelay = updateDelay ? () => setTimeout(boundForceUpdate, updateDelay) : boundForceUpdate;
+        this._boundThrottledForceUpdate = _.throttle(boundForceUpdateWithDelay, THROTTLE_MS);
 
         _.each(this._getParameterBindings(), parameter => parameter.addListener(this._boundThrottledForceUpdate));
     },

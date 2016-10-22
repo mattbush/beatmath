@@ -1,4 +1,4 @@
-const _ = require('underscore');
+const _ = require('lodash');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 
@@ -36,7 +36,7 @@ const Frond = React.createClass({
         const leafRotation = {
             opacity: this.context.frondsParameters.opacity.getValue(),
             transform: `rotate(${leafAngle}deg)`,
-            transition: `transform 2s`,
+            transition: 'transform 2s',
         };
 
         return (
@@ -50,7 +50,7 @@ const Frond = React.createClass({
 
         const frondTranslation = {
             transform: `translate(${this.getParameterValue('x')}px,${this.getParameterValue('y')}px)`,
-            transition: `transform 0.25s linear`,
+            transition: 'transform 0.25s linear',
         };
 
         const scale = Math.pow(2, frondState.scaleLog2.getValue());
@@ -73,7 +73,7 @@ const Frond = React.createClass({
             <g style={frondTranslation}>
                 <g style={frondScale}>
                     <g style={frondRotation}>
-                        {_.times(this.getParameterValue('numLeaves'), i => this._renderLeafAtIndex(i, frondShape))}
+                        {_.times(Math.round(this.getParameterValue('numLeaves')), i => this._renderLeafAtIndex(i, frondShape))}
                     </g>
                 </g>
             </g>

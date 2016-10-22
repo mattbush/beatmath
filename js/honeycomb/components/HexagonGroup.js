@@ -1,15 +1,21 @@
-var React = require('react');
-var tinycolor = require('tinycolor2');
-var updateHue = require('js/core/outputs/updateHue');
-var MagicHexagon = require('js/honeycomb/components/MagicHexagon');
+const React = require('react');
+const tinycolor = require('tinycolor2');
+const updateHue = require('js/core/outputs/updateHue');
+const MagicHexagon = require('js/honeycomb/components/MagicHexagon');
 
 let AnimationControlledMixin = require('js/honeycomb/components/AnimationControlledMixin');
 
 const COLORS = [tinycolor('#f00'), tinycolor('#1a1'), tinycolor('#36f')];
 
+<<<<<<< HEAD
 var ENABLE_HUE = true;
 var SAT_COEFF = 1.5;
 var BRI_COEFF = 0.6;
+=======
+const ENABLE_HUE = false;
+const SAT_COEFF = 1.5;
+const BRI_COEFF = 0.6;
+>>>>>>> master
 
 const HEX_HEIGHT = 1.732;
 const HEX_HEIGHT_X2 = HEX_HEIGHT * 2;
@@ -20,15 +26,15 @@ const HEX_HEIGHT_X5 = HEX_HEIGHT * 5;
 let HexagonGroup = React.createClass({
     mixins: [AnimationControlledMixin],
     getStyle: function(ticks) {
-        var color = COLORS[(ticks + this.props.index) % COLORS.length];
-        var transformDuration = this.context.period;
+        const color = COLORS[(ticks + this.props.index) % COLORS.length];
+        const transformDuration = this.context.period;
         return {
             stroke: color,
             transition: `transform ${transformDuration}s linear`,
         };
     },
     render: function() {
-        var style = this.getStyle(this.context.ticks + 1);
+        const style = this.getStyle(this.context.ticks + 1);
         if (ENABLE_HUE) {
             updateHue(this.props.index, tinycolor(style.stroke), {satCoeff: SAT_COEFF, briCoeff: BRI_COEFF});
         }
@@ -51,7 +57,7 @@ let HexagonGroup = React.createClass({
                 </g>
             </g>
         );
-    }
+    },
 });
 
 module.exports = HexagonGroup;

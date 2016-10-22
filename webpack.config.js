@@ -1,24 +1,30 @@
 module.exports = {
     entry: {
-        anagrams: "./js/anagrams/anagrams",
-        bricks: "./js/bricks/bricks",
-        fronds: "./js/fronds/fronds",
-        honeycomb: "./js/honeycomb/honeycomb",
-        lattice: "./js/lattice/lattice",
-        pinecone: "./js/pinecone/pinecone",
-        text: "./js/text/text",
-        trees: "./js/trees/trees",
-        twenty_sixteen: "./js/twenty_sixteen/twenty_sixteen",
-        mixboard_and_hue: "./js/mixboard_and_hue/mixboard_and_hue",
-        monitor: "./js/core/outputs/monitor",
+        anagrams: './js/anagrams/anagrams',
+        bricks: './js/bricks/bricks',
+        fronds: './js/fronds/fronds',
+        honeycomb: './js/honeycomb/honeycomb',
+        kale: './js/kale/kale',
+        lattice: './js/lattice/lattice',
+        nodes: './js/nodes/nodes',
+        pinecone: './js/pinecone/pinecone',
+        text: './js/text/text',
+        trees: './js/trees/trees',
+        twenty_sixteen: './js/twenty_sixteen/twenty_sixteen',
+        mapper: './js/mapper/mapper',
+        mixboard_and_hue: './js/mixboard_and_hue/mixboard_and_hue',
+        monitor: './js/core/outputs/monitor',
+        wall_lattice: './js/wall_lattice/wall_lattice',
+        wall_trees: './js/wall_trees/wall_trees',
+        wallow: './js/wallow/wallow',
     },
     output: {
         path: __dirname,
-        filename: "js/build/[name].bundle.js",
+        filename: 'js/build/[name].bundle.js',
     },
     module: {
         loaders: [
-            {test: /\.css$/, loader: "style!css"},
+            {test: /\.css$/, loader: 'style!css'},
             {
                 test: /\.jsx?$/,
                 exclude: /(node_modules|bower_components)/,
@@ -30,5 +36,5 @@ module.exports = {
         root: [
             __dirname,
         ],
-    }
+    },
 };

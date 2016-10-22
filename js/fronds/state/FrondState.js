@@ -1,5 +1,5 @@
-const {MovingLinearParameter, MovingColorParameter, LinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
-const {mixboardWheel, mixboardKnob, mixboardButton} = require('js/core/inputs/MixboardConstants');
+const {MovingLinearParameter, MovingColorParameter, AngleParameter} = require('js/core/parameters/Parameter');
+const {MixtrackWheels, MixtrackKnobs, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const tinycolor = require('tinycolor2');
 
@@ -33,67 +33,85 @@ class FrondState extends PieceParameters {
                 type: AngleParameter,
                 start: AngleParameter.RANDOM_ANGLE,
                 constrainTo: false,
-                listenToWheel: mixboardWheel.R_TURNTABLE,
+                listenToMixtrackWheel: MixtrackWheels.R_TURNTABLE,
             },
             scaleLog2: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [-4, 5],
                 start: 0,
                 incrementAmount: 0.25,
-                listenToWheel: mixboardWheel.R_CONTROL_2,
+                listenToMixtrackWheel: MixtrackWheels.R_CONTROL_2,
+                variance: 0.1,
+                autoupdateEveryNBeats: 2,
             },
             autorotateAmount: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [0, 1],
                 start: 0.5,
-                listenToKnob: mixboardKnob.R_MID,
+                listenToMixtrackKnob: MixtrackKnobs.R_MID,
+                variance: 0.01,
+                autoupdateEveryNBeats: 4,
             },
             autorotatePeriodLog2: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [0, AUTOPILOT_FREQ_MAX],
                 start: 3,
-                listenToDecrementAndIncrementButtons: [mixboardButton.R_LOOP_MANUAL, mixboardButton.R_LOOP_IN],
+                listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.R_LOOP_MANUAL, MixtrackButtons.R_LOOP_IN],
+                variance: 0.1,
+                autoupdateEveryNBeats: 16,
             },
             autoscaleAmount: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [0, 1],
                 start: 0.5,
-                listenToKnob: mixboardKnob.R_BASS,
+                listenToMixtrackKnob: MixtrackKnobs.R_BASS,
+                variance: 0.01,
+                autoupdateEveryNBeats: 4,
             },
             autoscalePeriodLog2: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [0, AUTOPILOT_FREQ_MAX],
                 start: 2,
-                listenToDecrementAndIncrementButtons: [mixboardButton.R_LOOP_OUT, mixboardButton.R_LOOP_RELOOP],
+                listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.R_LOOP_OUT, MixtrackButtons.R_LOOP_RELOOP],
+                variance: 0.1,
+                autoupdateEveryNBeats: 16,
             },
             numLeaves: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [2, 32],
                 start: 2,
-                listenToWheel: mixboardWheel.R_SELECT,
+                listenToMixtrackWheel: MixtrackWheels.R_SELECT,
+                variance: 1.5,
+                autoupdateEveryNBeats: 8,
             },
             leafLengthLog2: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [-4, 5],
                 start: 0,
                 incrementAmount: 0.25,
-                listenToWheel: mixboardWheel.R_CONTROL_1,
+                listenToMixtrackWheel: MixtrackWheels.R_CONTROL_1,
                 monitorName: 'Leaf Length Log2',
+                variance: 0.1,
+                autoupdateEveryNBeats: 2,
             },
             leafTapering: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [0, 1],
                 start: 1,
                 incrementAmount: 0.1,
-                listenToDecrementAndIncrementButtons: [mixboardButton.R_DELETE, mixboardButton.R_HOT_CUE_1],
+                listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.R_DELETE, MixtrackButtons.R_HOT_CUE_1],
                 monitorName: 'Leaf Tapering',
+                variance: 0.01,
+                autoupdateEveryNBeats: 2,
             },
             leafPointLength: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [0, 1],
                 start: 0.5,
-                listenToKnob: mixboardKnob.R_TREBLE,
+                listenToMixtrackKnob: MixtrackKnobs.R_TREBLE,
                 monitorName: 'Leaf Point Length',
+                variance: 0.01,
+                autoupdateEveryNBeats: 2,
             },
         };
     }
@@ -111,7 +129,7 @@ class FrondState extends PieceParameters {
         return Math.pow(2, this.autorotatePeriodLog2.getValue()) * this._beatmathParameters.tempo.getPeriod();
     }
     _onTickForAutopilot() {
-        var ticks = this._beatmathParameters.tempo.getNumTicks();
+        const ticks = this._beatmathParameters.tempo.getNumTicks();
 
         const autoscaleFreq = Math.pow(2, this.autoscalePeriodLog2.getValue());
         const autorotateFreq = Math.pow(2, this.autorotatePeriodLog2.getValue());

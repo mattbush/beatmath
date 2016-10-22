@@ -1,5 +1,5 @@
-var _ = require('underscore');
-var {nextFloat} = require('js/core/utils/math');
+const _ = require('lodash');
+const {nextFloat} = require('js/core/utils/math');
 
 const POSSIBLE_ORIENTATIONS_BY_PARITY = [
     [0, 2, 4],
@@ -30,18 +30,18 @@ const NEIGHBOR_OFFSETS_AND_POSSIBLE_ORIENTATIONS_BY_PARITY = [
     ],
 ];
 
-var truncateToBaseOrientation = function(orientation) {
+const truncateToBaseOrientation = function(orientation) {
     return orientation % 2 ? orientation - 1 : orientation;
 };
 
-var getPossibleOrientationsBasedOnNeighbors = function(bricksParameters, grid, newItem) {
-    var allPossibleOrientations = POSSIBLE_ORIENTATIONS_BY_PARITY[newItem.parity];
-    var neighborOrientationsSeen = {0: 0, 2: 0, 4: 0};
-    var possibleOrientations = allPossibleOrientations;
-    for (var neighborOffset of NEIGHBOR_OFFSETS_AND_POSSIBLE_ORIENTATIONS_BY_PARITY[newItem.parity]) {
-        var neighborCoords = `${newItem.x + neighborOffset.x},${newItem.y + neighborOffset.y}`;
+const getPossibleOrientationsBasedOnNeighbors = function(bricksParameters, grid, newItem) {
+    const allPossibleOrientations = POSSIBLE_ORIENTATIONS_BY_PARITY[newItem.parity];
+    const neighborOrientationsSeen = {0: 0, 2: 0, 4: 0};
+    let possibleOrientations = allPossibleOrientations;
+    for (let neighborOffset of NEIGHBOR_OFFSETS_AND_POSSIBLE_ORIENTATIONS_BY_PARITY[newItem.parity]) {
+        const neighborCoords = `${newItem.x + neighborOffset.x},${newItem.y + neighborOffset.y}`;
         if (_.has(grid, neighborCoords)) {
-            var neighborOrientation = grid[neighborCoords];
+            const neighborOrientation = grid[neighborCoords];
             neighborOrientationsSeen[truncateToBaseOrientation(neighborOrientation)]++;
             possibleOrientations = _.intersection(possibleOrientations, neighborOffset.constraints[neighborOrientation] || allPossibleOrientations);
         }
@@ -49,24 +49,24 @@ var getPossibleOrientationsBasedOnNeighbors = function(bricksParameters, grid, n
     if (!possibleOrientations.length) {
         return {};
     }
-    var weightedPossibleOrientations = {};
-    var brickHomogeneity = bricksParameters.brickHomogeneity.getValue();
-    var multiple = Math.abs(brickHomogeneity);
-    var sign = Math.sign(brickHomogeneity);
-    for (var possibleOrientation of possibleOrientations) {
-        var neighborCount = neighborOrientationsSeen[possibleOrientation - newItem.parity];
+    const weightedPossibleOrientations = {};
+    const brickHomogeneity = bricksParameters.brickHomogeneity.getValue();
+    const multiple = Math.abs(brickHomogeneity);
+    const sign = Math.sign(brickHomogeneity);
+    for (let possibleOrientation of possibleOrientations) {
+        const neighborCount = neighborOrientationsSeen[possibleOrientation - newItem.parity];
         weightedPossibleOrientations[possibleOrientation] = Math.pow((1 + neighborCount * multiple), sign);
     }
     return weightedPossibleOrientations;
 };
 
-var addPair = function(a, b) { return a + b; };
+const addPair = function(a, b) { return a + b; };
 
-var getRandomOrientationFromArray = function(weightedPossibleOrientations) {
-    var sum = _.values(weightedPossibleOrientations).reduce(addPair, 0);
-    var randomVal = nextFloat(sum);
-    for (var orientation in weightedPossibleOrientations) {
-        var weight = weightedPossibleOrientations[orientation];
+const getRandomOrientationFromArray = function(weightedPossibleOrientations) {
+    const sum = _.values(weightedPossibleOrientations).reduce(addPair, 0);
+    let randomVal = nextFloat(sum);
+    for (let orientation in weightedPossibleOrientations) { // eslint-disable-line guard-for-in
+        const weight = weightedPossibleOrientations[orientation];
         if (randomVal < weight) {
             return orientation;
         } else {
@@ -76,8 +76,8 @@ var getRandomOrientationFromArray = function(weightedPossibleOrientations) {
     throw new Error('this should be unreachable');
 };
 
-var getPossibleOrientation = function(bricksParameters, grid, newItem) {
-    var weightedPossibleOrientations = getPossibleOrientationsBasedOnNeighbors(bricksParameters, grid, newItem);
+const getPossibleOrientation = function(bricksParameters, grid, newItem) {
+    const weightedPossibleOrientations = getPossibleOrientationsBasedOnNeighbors(bricksParameters, grid, newItem);
     if (!_.isEmpty(weightedPossibleOrientations)) {
         return getRandomOrientationFromArray(weightedPossibleOrientations);
     }

@@ -1,10 +1,10 @@
-var React = require('react');
-var Letter = require('js/anagrams/components/Letter');
+const React = require('react');
+const Letter = require('js/anagrams/components/Letter');
 
 const {WIDTH_PX} = require('js/core/parameters/BeatmathConstants.js');
 const {LETTER_SPACING, ANAGRAM_CYCLE_TIME, JUMP_UNIT_HEIGHT, LETTER_TRANSITION_TIME} = require('js/anagrams/parameters/AnagramsConstants');
 
-var RearrangingLetter = React.createClass({
+const RearrangingLetter = React.createClass({
     getInitialState: function() {
         return {
             inTransition: false,
@@ -29,7 +29,7 @@ var RearrangingLetter = React.createClass({
         }
     },
     render: function() {
-        var vertStyle, horizStyle;
+        let vertStyle, horizStyle;
         if (this.state.inTransition) {
             let x = (this.state.previousIndex + this.state.nextIndex) / 2 * this.props.letterSpacing;
             let y = (this.state.nextIndex - this.state.previousIndex) * JUMP_UNIT_HEIGHT;
@@ -44,7 +44,7 @@ var RearrangingLetter = React.createClass({
         } else {
             let x = this.state.nextIndex * this.props.letterSpacing;
             vertStyle = {
-                transform: `translate(0px, 0px)`,
+                transform: 'translate(0px, 0px)',
                 transition: `transform ${LETTER_TRANSITION_TIME / 2000}s ease-in`,
             };
             horizStyle = {
@@ -62,7 +62,7 @@ var RearrangingLetter = React.createClass({
     },
 });
 
-var AnagramSet = React.createClass({
+const AnagramSet = React.createClass({
     getInitialState: function() {
         return {
             anagramIndex: 0,
@@ -75,22 +75,22 @@ var AnagramSet = React.createClass({
         clearInterval(this._intervalId);
     },
     _cycleAnagramIndex: function() {
-        var newAnagramIndex = (this.state.anagramIndex + 1) % this.props.anagramSet.getAnagramCount();
+        const newAnagramIndex = (this.state.anagramIndex + 1) % this.props.anagramSet.getAnagramCount();
         this.setState({
             anagramIndex: newAnagramIndex,
         });
     },
     render: function() {
-        var anagramSet = this.props.anagramSet;
-        var anagramIndex = this.state.anagramIndex;
+        const anagramSet = this.props.anagramSet;
+        const anagramIndex = this.state.anagramIndex;
 
-        var anagramLength = anagramSet.getLengthOfAnagram(anagramIndex);
-        var letterSpacing = Math.min(LETTER_SPACING, (WIDTH_PX - LETTER_SPACING) / anagramLength);
-        var xOffset = -1 * (anagramLength - 1) / 2 * letterSpacing + WIDTH_PX * this.props.xPosition;
-        var letterCount = anagramSet.getLetterCount();
+        const anagramLength = anagramSet.getLengthOfAnagram(anagramIndex);
+        const letterSpacing = Math.min(LETTER_SPACING, (WIDTH_PX - LETTER_SPACING) / anagramLength);
+        const xOffset = -1 * (anagramLength - 1) / 2 * letterSpacing + WIDTH_PX * this.props.xPosition;
+        const letterCount = anagramSet.getLetterCount();
 
-        var letterComponents = [];
-        for (var letterIndex = 0; letterIndex < letterCount; letterIndex++) {
+        const letterComponents = [];
+        for (let letterIndex = 0; letterIndex < letterCount; letterIndex++) {
             letterComponents.push(
                 <RearrangingLetter
                     character={anagramSet.getLetterAtLetterIndex(letterIndex)}
@@ -101,7 +101,7 @@ var AnagramSet = React.createClass({
             );
         }
 
-        var style = {
+        const style = {
             transform: `translate(${xOffset}px, 0px)`,
             transition: `transform ${LETTER_TRANSITION_TIME / 1000}s ease`,
         };
@@ -111,7 +111,7 @@ var AnagramSet = React.createClass({
                 {letterComponents}
             </g>
         );
-    }
+    },
 });
 
 module.exports = AnagramSet;

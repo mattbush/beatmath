@@ -1,12 +1,43 @@
-var _ = require('underscore');
-var React = require('react');
-var TwentySixteenParameters = require('js/twenty_sixteen/parameters/TwentySixteenParameters');
-var BeatmathFrame = require('js/core/components/BeatmathFrame');
+const _ = require('lodash');
+const React = require('react');
+const TwentySixteenParameters = require('js/twenty_sixteen/parameters/TwentySixteenParameters');
+const BeatmathFrame = require('js/core/components/BeatmathFrame');
 
-var TwentySixteenPixel = require('js/twenty_sixteen/components/TwentySixteenPixel');
+const TwentySixteenPixel = require('js/twenty_sixteen/components/TwentySixteenPixel');
 
 const NUM_GOLD = 20;
 const NUM_BLUE = 16;
+
+const TwentySixteenFrame = React.createClass({
+    contextTypes: {
+        mixboard: React.PropTypes.object,
+        beatmathParameters: React.PropTypes.object,
+        twentySixteenParameters: React.PropTypes.object,
+    },
+    render: function() {
+        const golds = _.times(NUM_GOLD, index =>
+            <TwentySixteenPixel
+                color="gold"
+                key={index}
+                index={index}
+            />
+        );
+        const blues = _.times(NUM_BLUE, index =>
+            <TwentySixteenPixel
+                color="blue"
+                key={index}
+                index={index}
+            />
+        );
+
+        return (
+            <g>
+                {golds}
+                {blues}
+            </g>
+        );
+    },
+});
 
 const TwentySixteen = React.createClass({
     childContextTypes: {
@@ -27,27 +58,9 @@ const TwentySixteen = React.createClass({
         };
     },
     render: function() {
-        var golds = _.times(NUM_GOLD, index =>
-            <TwentySixteenPixel
-                color="gold"
-                key={index}
-                index={index}
-            />
-        );
-        var blues = _.times(NUM_BLUE, index =>
-            <TwentySixteenPixel
-                color="blue"
-                key={index}
-                index={index}
-            />
-        );
-
         return (
             <BeatmathFrame>
-                <g>
-                    {golds}
-                    {blues}
-                </g>
+                <TwentySixteenFrame />
             </BeatmathFrame>
         );
     },

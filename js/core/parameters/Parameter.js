@@ -1,14 +1,34 @@
-var _ = require('underscore');
-var {lerp, posMod, constrainToRange, modAndShiftToHalf, nextFloat} = require('js/core/utils/math');
+const _ = require('lodash');
+const {lerp, logerp, posMod, clamp, modAndShiftToHalf, nextFloat} = require('js/core/utils/math');
+const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
+const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
+const AutoupdateStatus = require('js/core/parameters/AutoupdateStatus');
+const ParameterStatus = require('js/core/parameters/ParameterStatus');
+const {LaunchpadKnobOutputCodes} = require('js/core/inputs/LaunchpadConstants');
+
+const STATUS_TO_LIGHT_VALUE = {
+    [ParameterStatus.DETACHED]: 0x03,
+    [ParameterStatus.BASE]: 0x13,
+    [ParameterStatus.MIN]: 0x12,
+    [ParameterStatus.MAX]: 0x12,
+    [ParameterStatus.CHANGED]: 0x20,
+    [ParameterStatus.CHANGING]: 0x30,
+    [ParameterStatus.SMOOTH]: 0x31,
+};
 
 class Parameter {
-    constructor({start, monitorName}) {
+    constructor({start, monitorName, manualMonitorCoords, canSmoothUpdate}) {
         this._listeners = [];
         this._value = start;
         this._monitorName = monitorName;
+        if (manualMonitorCoords) {
+            this._monitorX = manualMonitorCoords.x;
+            this._monitorY = manualMonitorCoords.y;
+        }
         if (monitorName) {
             this.addListener(this._updateMonitor.bind(this));
         }
+        this._canSmoothUpdate = canSmoothUpdate || false;
     }
     getValue() {
         return this._value;
@@ -22,19 +42,102 @@ class Parameter {
         this._listeners.push(fn);
     }
     removeListener(fn) {
-        this._listeners.filter(listener => listener !== fn);
+        this._listeners = this._listeners.filter(listener => listener !== fn);
     }
-    addStatusLight(mixboard, eventCode, predicateFn = _.identity) {
-        var updateLight = () => {
+    addLaunchpadKnobStatusLight(mixboard, row, column) {
+        this.addLaunchpadStatusLight(mixboard, LaunchpadKnobOutputCodes[row][column]);
+    }
+    addLaunchpadButtonStatusLight(mixboard, column) {
+        this.addLaunchpadStatusLight(mixboard, LaunchpadButtons.TRACK_CONTROL[column]);
+    }
+    addLaunchpadStatusLight(mixboard, eventCode) {
+        const updateLight = () => {
+            const status = this._isUpdatingEnabled ?
+                (this._smoothedUpdating ? ParameterStatus.SMOOTH : ParameterStatus.CHANGING) :
+                this._getStatus();
+            const lightValue = STATUS_TO_LIGHT_VALUE[status];
+            mixboard.setLaunchpadLightValue(eventCode, lightValue);
+        };
+        updateLight();
+        this._listeners.push(updateLight);
+    }
+    addMixtrackStatusLight(mixboard, eventCode, predicateFn = _.identity) {
+        const updateLight = () => {
             mixboard.toggleLight(eventCode, predicateFn(this.getValue()));
         };
         updateLight();
         this._listeners.push(updateLight);
     }
     _updateMonitor() {
-        var value = this.getValue();
-        value = _.isNumber(value) ? Math.round(value * 1000) / 1000 : value;
-        window.localStorage.setItem(this._monitorName, value);
+        const value = this.getValue();
+        const payload = {
+            name: this._monitorName,
+            value: value,
+            x: this._monitorX,
+            y: this._monitorY,
+            autoStatus: this._isUpdatingEnabled ? (this._smoothedUpdating ? AutoupdateStatus.SMOOTH : AutoupdateStatus.ACTIVE) :
+                (this._isListeningForAutoupdateCue ? AutoupdateStatus.INACTIVE : AutoupdateStatus.NOT_APPLICABLE),
+            status: this._getStatus(),
+            type: this._getType(),
+        };
+        window.localStorage.setItem(this._monitorName, JSON.stringify(payload));
+    }
+    _getType() {
+        return null;
+    }
+    _getStatus() {
+        return ParameterStatus.BASE;
+    }
+    _setMonitorCoordsFromLaunchpadFader(column) {
+        this._monitorX = column;
+        this._monitorY = 3.5;
+        this._updateMonitor();
+    }
+    _setMonitorCoordsFromLaunchpadKnob(row, column) {
+        this._monitorX = column;
+        this._monitorY = row;
+        this._updateMonitor();
+    }
+    _setMonitorCoordsFromLaunchpadButton(column) {
+        this._monitorX = column;
+        this._monitorY = 5;
+        this._updateMonitor();
+    }
+    _setMonitorCoordsFromLaunchpadSideButton(buttonCode) {
+        this._monitorX = 8.5;
+        this._monitorY = (buttonCode === LaunchpadButtons.LEFT || buttonCode === LaunchpadButtons.RIGHT)
+            ? 2
+            : 1;
+        this._updateMonitor();
+    }
+    listenForAutoupdateCue(mixboard) {
+        this._isUpdatingEnabled = false;
+        this._isListeningForAutoupdateCue = true;
+        if (mixboard.isLaunchpad()) {
+            mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[7], this.onAutoupdateCuePressed.bind(this));
+        } else {
+            mixboard.addMixtrackButtonListener(MixtrackButtons.L_CUE, this.onAutoupdateCuePressed.bind(this));
+        }
+    }
+    onAutoupdateCuePressed(inputValue) {
+        this._isAutoupdateCuePressed = inputValue;
+        this._canChangeAutoupdate = inputValue;
+    }
+    _checkAutopilotToggle() {
+        if (this._isAutoupdateCuePressed) {
+            if (this._canChangeAutoupdate) {
+                if (this._isUpdatingEnabled && !this._smoothedUpdating && this._canSmoothUpdate) {
+                    this._smoothedUpdating = true;
+                } else {
+                    this._isUpdatingEnabled = !this._isUpdatingEnabled;
+                    this._smoothedUpdating = false;
+                }
+                this._updateListeners({forceUpdate: true});
+                this._canChangeAutoupdate = false;
+            }
+            return !this._isUpdatingEnabled;
+        }
+        return true;
     }
     destroy() {}
 }
@@ -50,7 +153,7 @@ class NegatedParameter extends Parameter {
     }
 }
 
-var wrapParam = function(value) {
+const wrapParam = function(value) {
     if (!(value instanceof Parameter)) {
         value = new Parameter({start: value});
     }
@@ -58,15 +161,38 @@ var wrapParam = function(value) {
 };
 
 class ToggleParameter extends Parameter {
-    listenToButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onButtonUpdate.bind(this));
-        this.addStatusLight(mixboard, eventCode);
+    listenToMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onButtonUpdate.bind(this));
+        this.addMixtrackStatusLight(mixboard, eventCode);
+    }
+    listenToLaunchpadButton(mixboard, columnOrEventCode) {
+        if (columnOrEventCode < 8) {
+            this._setMonitorCoordsFromLaunchpadButton(columnOrEventCode);
+            this.addLaunchpadButtonStatusLight(mixboard, columnOrEventCode);
+            columnOrEventCode = LaunchpadButtons.TRACK_CONTROL[columnOrEventCode];
+        }
+        mixboard.addLaunchpadButtonListener(columnOrEventCode, this.onButtonUpdate.bind(this));
     }
     onButtonUpdate(inputValue) {
-        if (inputValue) { // button is pressed down, not up
+        if (this._shouldUpdateFromInputValue(inputValue)) { // button is pressed down, not up
             this._value = !this._value;
             this._updateListeners();
         }
+    }
+    _shouldUpdateFromInputValue(inputValue) {
+        return inputValue;
+    }
+    _getStatus() {
+        return this._value ? ParameterStatus.CHANGED : ParameterStatus.BASE;
+    }
+    _getType() {
+        return 'Toggle';
+    }
+}
+
+class HoldButtonParameter extends ToggleParameter {
+    _shouldUpdateFromInputValue(/* inputValue */) {
+        return true;
     }
 }
 
@@ -78,23 +204,42 @@ class CycleParameter extends Parameter {
         this._cycleValues = params.cycleValues;
         this._valueIndex = 0;
     }
-    listenToCycleAndResetButtons(mixboard, cycleCode, resetCode) {
-        this.listenToCycleButton(mixboard, cycleCode);
-        this.listenToResetButton(mixboard, resetCode);
-        this.addStatusLight(mixboard, cycleCode, value => value !== this._cycleValues[0]);
+    listenToDecrementAndIncrementLaunchpadSideButtons(mixboard, decrementCode, incrementCode) {
+        mixboard.addLaunchpadButtonListener(decrementCode, this.onDecrementButtonPress.bind(this));
+        mixboard.addLaunchpadButtonListener(incrementCode, this.onIncrementButtonPress.bind(this));
+        this._setMonitorCoordsFromLaunchpadSideButton(decrementCode);
     }
-    listenToCycleButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onCycleButtonPress.bind(this));
+    listenToDecrementAndIncrementLaunchpadButtons(mixboard, column) {
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[column], this.onIncrementButtonPress.bind(this));
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[column], this.onDecrementButtonPress.bind(this));
+        this._setMonitorCoordsFromLaunchpadButton(column);
+        this.addLaunchpadButtonStatusLight(mixboard, column);
     }
-    onCycleButtonPress(inputValue) {
+    listenToCycleAndResetMixtrackButtons(mixboard, cycleCode, resetCode) {
+        this.listenToCycleMixtrackButton(mixboard, cycleCode);
+        this.listenToResetMixtrackButton(mixboard, resetCode);
+        this.addMixtrackStatusLight(mixboard, cycleCode, value => value !== this._cycleValues[0]);
+    }
+    listenToCycleMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onIncrementButtonPress.bind(this));
+    }
+    onIncrementButtonPress(inputValue) {
         if (inputValue) {
-            this._valueIndex = posMod(this._valueIndex + 1, this._cycleValues.length);
-            this._value = this._cycleValues[this._valueIndex];
-            this._updateListeners();
+            this._moveValueIndex(1);
         }
     }
-    listenToResetButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onResetButtonPress.bind(this));
+    onDecrementButtonPress(inputValue) {
+        if (inputValue) {
+            this._moveValueIndex(-1);
+        }
+    }
+    _moveValueIndex(delta) {
+        this._valueIndex = posMod(this._valueIndex + delta, this._cycleValues.length);
+        this._value = this._cycleValues[this._valueIndex];
+        this._updateListeners();
+    }
+    listenToResetMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onResetButtonPress.bind(this));
     }
     onResetButtonPress(inputValue) {
         if (inputValue) {
@@ -107,7 +252,7 @@ class CycleParameter extends Parameter {
 
 class LinearParameter extends Parameter {
     constructor(params) {
-        var [min, max] = params.range;
+        let [min, max] = params.range;
         min = wrapParam(min);
         max = wrapParam(max);
         if (params.startLerp !== undefined) {
@@ -121,36 +266,60 @@ class LinearParameter extends Parameter {
         this._gePassedByInput = false;
         this._defaultOff = params.start;
         this._defaultOn = params.defaultOn;
+        this._useStartAsMidpoint = params.useStartAsMidpoint;
     }
-    listenToFader(mixboard, eventCode) {
-        mixboard.addFaderListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
-    }
-    listenToKnob(mixboard, eventCode) {
-        mixboard.addKnobListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
-    }
-    listenToWheel(mixboard, eventCode) {
-        mixboard.addWheelListener(eventCode, this.onWheelUpdate.bind(this));
-    }
-    listenToResetButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onResetButtonPress.bind(this));
-        this.addStatusLight(mixboard, eventCode, value => value !== this._defaultOff);
-    }
-    listenToDecrementAndIncrementButtons(mixboard, decrementCode, incrementCode) {
-        this.listenToIncrementButton(mixboard, incrementCode);
-        this.listenToDecrementButton(mixboard, decrementCode);
-        if (this._defaultOff === this._minParam.getValue()) {
-            this.addStatusLight(mixboard, incrementCode, value => value > this._minParam.getValue());
-            this.addStatusLight(mixboard, decrementCode, value => value >= this._maxParam.getValue());
-        } else {
-            this.addStatusLight(mixboard, incrementCode, value => value > this._defaultOff);
-            this.addStatusLight(mixboard, decrementCode, value => value < this._defaultOff);
+    listenToLaunchpadFader(mixboard, column, opts = {}) {
+        mixboard.addLaunchpadFaderListener(column, this.onFaderOrKnobUpdate.bind(this));
+        this._setMonitorCoordsFromLaunchpadFader(column);
+        if (opts.addButtonStatusLight) {
+            this.addLaunchpadStatusLight(mixboard, LaunchpadButtons.TRACK_FOCUS[column]);
         }
     }
-    listenToIncrementButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onIncrementButtonPress.bind(this));
+    listenToLaunchpadKnob(mixboard, row, column, opts = {}) {
+        mixboard.addLaunchpadKnobListener(row, column, this.onFaderOrKnobUpdate.bind(this));
+        this._setMonitorCoordsFromLaunchpadKnob(row, column);
+        this.addLaunchpadKnobStatusLight(mixboard, row, column);
+        if (opts.useSnapButton) {
+            mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[7], value => this._isSnapButtonPressed = value);
+        }
     }
-    listenToDecrementButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onDecrementButtonPress.bind(this));
+    listenToDecrementAndIncrementLaunchpadButtons(mixboard, column) {
+        this._lePassedByInput = true;
+        this._gePassedByInput = true;
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[column], this.onIncrementButtonPress.bind(this));
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[column], this.onDecrementButtonPress.bind(this));
+        this._setMonitorCoordsFromLaunchpadButton(column);
+        this.addLaunchpadButtonStatusLight(mixboard, column);
+    }
+    listenToMixtrackFader(mixboard, eventCode) {
+        mixboard.addMixtrackFaderListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
+    }
+    listenToMixtrackKnob(mixboard, eventCode) {
+        mixboard.addMixtrackKnobListener(eventCode, this.onFaderOrKnobUpdate.bind(this));
+    }
+    listenToMixtrackWheel(mixboard, eventCode) {
+        mixboard.addMixtrackWheelListener(eventCode, this.onWheelUpdate.bind(this));
+    }
+    listenToResetMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onResetButtonPress.bind(this));
+        this.addMixtrackStatusLight(mixboard, eventCode, value => value !== this._defaultOff);
+    }
+    listenToDecrementAndIncrementMixtrackButtons(mixboard, decrementCode, incrementCode) {
+        this.listenToIncrementMixtrackButton(mixboard, incrementCode);
+        this.listenToDecrementMixtrackButton(mixboard, decrementCode);
+        if (this._defaultOff === this._minParam.getValue()) {
+            this.addMixtrackStatusLight(mixboard, incrementCode, value => value > this._minParam.getValue());
+            this.addMixtrackStatusLight(mixboard, decrementCode, value => value >= this._maxParam.getValue());
+        } else {
+            this.addMixtrackStatusLight(mixboard, incrementCode, value => value > this._defaultOff);
+            this.addMixtrackStatusLight(mixboard, decrementCode, value => value < this._defaultOff);
+        }
+    }
+    listenToIncrementMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onIncrementButtonPress.bind(this));
+    }
+    listenToDecrementMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onDecrementButtonPress.bind(this));
     }
     onResetButtonPress(inputValue) {
         if (inputValue) {
@@ -164,29 +333,42 @@ class LinearParameter extends Parameter {
     }
     onIncrementButtonPress(inputValue) {
         if (inputValue) {
-            var newValue = this._value + this._incrementAmount;
+            const newValue = this._increment(this._value, this._incrementAmount);
             this._constrainToRangeAndUpdateValue(newValue);
         }
     }
     onDecrementButtonPress(inputValue) {
         if (inputValue) {
-            var newValue = this._value - this._incrementAmount;
+            const newValue = this._decrement(this._value, this._incrementAmount);
             this._constrainToRangeAndUpdateValue(newValue);
         }
     }
     onWheelUpdate(inputValue) {
-        var newValue = this._value + (inputValue * this._incrementAmount);
+        const newValue = this._value + (inputValue * this._incrementAmount);
         this._constrainToRangeAndUpdateValue(newValue);
     }
     _constrainToRangeAndUpdateValue(newValue) {
-        newValue = constrainToRange(this._minParam.getValue(), this._maxParam.getValue(), newValue);
+        newValue = clamp(newValue, this._minParam.getValue(), this._maxParam.getValue());
         if (newValue !== this._value) {
             this._value = newValue;
             this._updateListeners();
         }
     }
     onFaderOrKnobUpdate(inputValue) {
-        var newValue = lerp(this._minParam.getValue(), this._maxParam.getValue(), inputValue);
+        let newValue;
+        if (this._useStartAsMidpoint) {
+            if (inputValue >= 0.5) {
+                newValue = this._interpolate(this._defaultOff, this._maxParam.getValue(), (inputValue - 0.5) * 2);
+            } else {
+                newValue = this._interpolate(this._minParam.getValue(), this._defaultOff, inputValue * 2);
+            }
+        } else {
+            newValue = this._interpolate(this._minParam.getValue(), this._maxParam.getValue(), inputValue);
+        }
+        if (this._isSnapButtonPressed) {
+            newValue = Math.round(newValue);
+        }
+
         // don't update from the fader or knob until you've "met" the current value
         if (!this._lePassedByInput || !this._gePassedByInput) {
             if (newValue >= this._value) {
@@ -201,14 +383,56 @@ class LinearParameter extends Parameter {
             this._updateListeners();
         }
     }
+    _increment(value, amount) {
+        return value + amount;
+    }
+    _decrement(value, amount) {
+        return value - amount;
+    }
+    _interpolate(min, max, interpolation) {
+        return lerp(min, max, interpolation);
+    }
+    _getStatus() {
+        if (!this._lePassedByInput || !this._gePassedByInput) {
+            return ParameterStatus.DETACHED;
+        }
+        const value = this.getValue();
+
+        if (value === this._minParam.getValue()) {
+            return ParameterStatus.MIN;
+        } else if (value === this._maxParam.getValue()) {
+            return ParameterStatus.MAX;
+        } else if (value === this._defaultOff) {
+            return ParameterStatus.BASE;
+        }
+        return ParameterStatus.CHANGED;
+    }
+}
+
+class LogarithmicParameter extends LinearParameter {
+    constructor(params) {
+        if (params.incrementAmount === undefined) {
+            params.incrementAmount = 2;
+        }
+        super(params);
+    }
+    _increment(value, amount) {
+        return value * amount;
+    }
+    _decrement(value, amount) {
+        return value / amount;
+    }
+    _interpolate(min, max, interpolation) {
+        return logerp(min, max, interpolation);
+    }
 }
 
 class IntLinearParameter extends LinearParameter {
     getValue() {
         return Math.round(super.getValue());
     }
-    _updateListeners() {
-        if (this.getValue() === this._lastIntegerValue) {
+    _updateListeners(opts = {}) {
+        if (!opts.forceUpdate && this.getValue() === this._lastIntegerValue) {
             return;
         }
         super._updateListeners();
@@ -224,24 +448,59 @@ class AngleParameter extends Parameter {
         super(params);
         this._constrainTo = (params.constrainTo !== undefined) ? params.constrainTo : 360;
         this._defaultOff = params.start;
+        this._tempo = params.tempo;
+        this._onLaunchpadKnobSpinInterval = this._onLaunchpadKnobSpinInterval.bind(this);
+        this._knobSensitivity = params.knobSensitivity || 1;
+        this._numUpdatesPerBasePeriod = params.numUpdatesPerBasePeriod || 16;
     }
-    listenToWheel(mixboard, eventCode) {
-        mixboard.addWheelListener(eventCode, this.onWheelUpdate.bind(this));
+    listenToLaunchpadKnob(mixboard, row, column) {
+        mixboard.addLaunchpadKnobListener(row, column, this.onLaunchpadKnobUpdate.bind(this));
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[7], value => this._isSnapButtonPressed = value);
+        this._setMonitorCoordsFromLaunchpadKnob(row, column);
+        this.addLaunchpadKnobStatusLight(mixboard, row, column);
+    }
+    listenToMixtrackWheel(mixboard, eventCode) {
+        mixboard.addMixtrackWheelListener(eventCode, this.onWheelUpdate.bind(this));
+    }
+    onLaunchpadKnobUpdate(inputValue) {
+        inputValue -= 0.5;
+        this._launchpadKnobValue = inputValue * Math.abs(inputValue) * 30 * this._knobSensitivity;
+        if (inputValue !== 0 && !this._launchpadKnobIntervalId) {
+            let intervalMs;
+            if (this._tempo) {
+                intervalMs = this._tempo.getBasePeriod() / this._numUpdatesPerBasePeriod;
+            } else {
+                intervalMs = 20;
+            }
+            this._launchpadKnobIntervalId = setInterval(this._onLaunchpadKnobSpinInterval, intervalMs);
+            this._onLaunchpadKnobSpinInterval();
+        } else if (inputValue === 0 && this._launchpadKnobIntervalId) {
+            clearInterval(this._launchpadKnobIntervalId);
+            this._launchpadKnobIntervalId = null;
+            this._updateListeners({forceUpdate: true});
+        }
+    }
+    _onLaunchpadKnobSpinInterval() {
+        if (this._isSnapButtonPressed) {
+            this.onSnapButton(true);
+        } else {
+            this._spinValue(this._launchpadKnobValue);
+        }
     }
     onWheelUpdate(inputValue) {
         this._spinValue(inputValue);
     }
-    listenToSnapButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onSnapButton.bind(this));
+    listenToSnapMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onSnapButton.bind(this));
     }
     onSnapButton(inputValue) {
         if (inputValue) {
-            var distanceFromClosestMultipleOf15 = modAndShiftToHalf(this._value, 15);
+            const distanceFromClosestMultipleOf15 = modAndShiftToHalf(this._value, 15);
             this._spinValue(-distanceFromClosestMultipleOf15);
         }
     }
-    listenToResetButton(mixboard, eventCode) {
-        mixboard.addButtonListener(eventCode, this.onResetButtonPress.bind(this));
+    listenToResetMixtrackButton(mixboard, eventCode) {
+        mixboard.addMixtrackButtonListener(eventCode, this.onResetButtonPress.bind(this));
     }
     onResetButtonPress(inputValue) {
         if (inputValue) {
@@ -250,11 +509,34 @@ class AngleParameter extends Parameter {
         }
     }
     _spinValue(spinAmount) {
+        if (spinAmount === 0) {
+            return;
+        }
         this._value = this._value + spinAmount;
         if (this._constrainTo !== false) {
             this._value = posMod(this._value, this._constrainTo);
         }
         this._updateListeners();
+    }
+    _getStatus() {
+        if (this._launchpadKnobIntervalId) {
+            return ParameterStatus.CHANGING;
+        }
+        const value = this.getValue();
+        if (value % 15 === 0) {
+            return ParameterStatus.BASE;
+        }
+        return ParameterStatus.CHANGED;
+    }
+    _getType() {
+        return 'Angle';
+    }
+    destroy() {
+        super.destroy();
+        if (this._launchpadKnobIntervalId) {
+            clearInterval(this._launchpadKnobIntervalId);
+            this._launchpadKnobIntervalId = null;
+        }
     }
 }
 
@@ -268,15 +550,18 @@ class MovingColorParameter extends Parameter {
             this._autoupdateInterval = setInterval(this.update.bind(this), params.autoupdate);
         }
     }
-    update() {
-        this._speed += (Math.random() * this._variance * 2) - this._variance;
-        if (Math.abs(this._speed) > this._maxSpeed) {
-            this._speed *= 0.5;
+    update(increment = 1, shouldChangeSpeed = true) {
+        if (shouldChangeSpeed) {
+            this._speed += (Math.random() * this._variance * 2) - this._variance;
+            if (Math.abs(this._speed) > this._maxSpeed) {
+                this._speed *= 0.5;
+            }
         }
-        this._value = this._value.spin(this._speed);
+        this._value = this._value.spin(this._speed * increment);
         this._updateListeners();
     }
     destroy() {
+        super.destroy();
         clearInterval(this._autoupdateInterval);
     }
 }
@@ -287,13 +572,39 @@ class MovingAngleParameter extends AngleParameter {
         this._variance = params.variance;
         this._speed = 0;
         this._maxSpeed = params.max;
+        this._isUpdatingEnabled = true;
     }
-    update() {
-        this._speed += (Math.random() * this._variance * 2) - this._variance;
-        if (Math.abs(this._speed) > this._maxSpeed) {
-            this._speed *= 0.5;
+    update(increment = 1, shouldChangeSpeed = true) {
+        if (!this._isUpdatingEnabled) {
+            return;
         }
-        this._spinValue(this._speed);
+        if (shouldChangeSpeed) {
+            this._speed += (Math.random() * this._variance * 2) - this._variance;
+            if (Math.abs(this._speed) > this._maxSpeed) {
+                this._speed *= 0.5;
+            }
+        }
+        this._spinValue(this._speed * increment);
+    }
+    onResetButtonPress(inputValue) {
+        if (!inputValue || this._checkAutopilotToggle()) {
+            super.onResetButtonPress(inputValue);
+        }
+    }
+    onSnapButton(inputValue) {
+        if (!inputValue || this._checkAutopilotToggle()) {
+            super.onSnapButton(inputValue);
+        }
+    }
+    onLaunchpadKnobUpdate(inputValue) {
+        if (this._checkAutopilotToggle()) {
+            super.onLaunchpadKnobUpdate(inputValue);
+        }
+    }
+    onWheelUpdate(inputValue) {
+        if (this._checkAutopilotToggle()) {
+            super.onWheelUpdate(inputValue);
+        }
     }
 }
 
@@ -301,16 +612,26 @@ class MovingLinearParameter extends LinearParameter {
     constructor(params) {
         super(params);
         this._variance = params.variance;
+        this._autoupdateRange = params.autoupdateRange;
         this._speed = 0;
         if (params.autoupdate !== undefined) {
             this._autoupdateInterval = setInterval(this.update.bind(this), params.autoupdate);
         }
+        this._isUpdatingEnabled = true;
     }
-    update() {
-        this._speed += (Math.random() * this._variance * 2) - this._variance;
+    update(increment = 1, shouldChangeSpeed = true) {
+        if (!this._isUpdatingEnabled) {
+            return;
+        }
+        if (shouldChangeSpeed) {
+            this._speed += (Math.random() * this._variance * 2) - this._variance;
+        }
 
-        var nextOriginal = this._value + this._speed;
-        var nextConstrained = constrainToRange(this._minParam.getValue(), this._maxParam.getValue(), nextOriginal);
+        const nextOriginal = this._increment(this._value, this._getSpeedAsIncrement(increment));
+        const min = this._autoupdateRange ? this._autoupdateRange[0] : this._minParam.getValue();
+        const max = this._autoupdateRange ? this._autoupdateRange[1] : this._maxParam.getValue();
+
+        const nextConstrained = clamp(nextOriginal, min, max);
 
         // if speed is positive and we're past max, or vice versa
         if ((nextConstrained < nextOriginal && this._speed > 0) ||
@@ -321,8 +642,78 @@ class MovingLinearParameter extends LinearParameter {
         this._value = nextConstrained;
         this._updateListeners();
     }
+    _getSpeedAsIncrement(increment) {
+        return this._speed * increment;
+    }
     destroy() {
+        super.destroy();
         clearInterval(this._autoupdateInterval);
+    }
+    onResetButtonPress(inputValue) {
+        if (!inputValue || this._checkAutopilotToggle()) {
+            super.onResetButtonPress(inputValue);
+        }
+    }
+    onIncrementButtonPress(inputValue) {
+        if (!inputValue || this._checkAutopilotToggle()) {
+            super.onIncrementButtonPress(inputValue);
+        }
+    }
+    onDecrementButtonPress(inputValue) {
+        if (!inputValue || this._checkAutopilotToggle()) {
+            super.onDecrementButtonPress(inputValue);
+        }
+    }
+    onWheelUpdate(inputValue) {
+        if (this._checkAutopilotToggle()) {
+            super.onWheelUpdate(inputValue);
+        }
+    }
+    onFaderOrKnobUpdate(inputValue) {
+        if (this._checkAutopilotToggle()) {
+            super.onFaderOrKnobUpdate(inputValue);
+        }
+    }
+}
+
+class MovingLogarithmicParameter extends MovingLinearParameter {
+    constructor(params) {
+        if (params.incrementAmount === undefined) {
+            params.incrementAmount = 2;
+        }
+        super(params);
+    }
+    _increment(value, amount) {
+        return value * amount;
+    }
+    _decrement(value, amount) {
+        return value / amount;
+    }
+    _interpolate(min, max, interpolation) {
+        return logerp(min, max, interpolation);
+    }
+    _getSpeedAsIncrement(increment) {
+        return 2 ** (this._speed * increment);
+    }
+}
+
+class MovingIntLinearParameter extends MovingLinearParameter {
+    getValue() {
+        return Math.round(super.getValue());
+    }
+    _updateListeners(opts = {}) {
+        if (!opts.forceUpdate && this.getValue() === this._lastIntegerValue) {
+            return;
+        }
+        super._updateListeners();
+        this._lastIntegerValue = this.getValue();
+    }
+}
+
+class ManualParameter extends Parameter {
+    setValue(value) {
+        this._value = value;
+        this._updateListeners();
     }
 }
 
@@ -331,10 +722,15 @@ module.exports = {
     NegatedParameter,
     AngleParameter,
     LinearParameter,
+    LogarithmicParameter,
     IntLinearParameter,
     ToggleParameter,
+    HoldButtonParameter,
     CycleParameter,
     MovingAngleParameter,
     MovingColorParameter,
     MovingLinearParameter,
+    MovingLogarithmicParameter,
+    MovingIntLinearParameter,
+    ManualParameter,
 };

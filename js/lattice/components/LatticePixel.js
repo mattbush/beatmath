@@ -1,26 +1,26 @@
-var _ = require('underscore');
-var React = require('react');
-var tinycolor = require('tinycolor2');
-var BeatmathPixel = require('js/core/components/BeatmathPixel');
-var {runAtTimestamp} = require('js/core/utils/time');
-var {lerp} = require('js/core/utils/math');
+const _ = require('lodash');
+const React = require('react');
+const tinycolor = require('tinycolor2');
+const BeatmathPixel = require('js/core/components/BeatmathPixel');
+const {runAtTimestamp} = require('js/core/utils/time');
+const {lerp} = require('js/core/utils/math');
 
 const {CELL_SIZE} = require('js/lattice/parameters/LatticeConstants');
 
 const SQRT_3_OVER_2 = Math.sqrt(3) / 2;
 const SQRT_SQRT_3_OVER_2 = Math.sqrt(SQRT_3_OVER_2);
 
-var gray = tinycolor('#909090');
+const gray = tinycolor('#909090');
 
-var calculateRowTriangular = function(row) {
+const calculateRowTriangular = function(row) {
     return row * SQRT_SQRT_3_OVER_2;
 };
-var calculateColTriangular = function(row, col) {
-    var val = (row % 2) ? (col + 0.25) : (col - 0.25);
+const calculateColTriangular = function(row, col) {
+    const val = (row % 2) ? (col + 0.25) : (col - 0.25);
     return val / SQRT_SQRT_3_OVER_2;
 };
 
-var LatticePixel = React.createClass({
+const LatticePixel = React.createClass({
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
         latticeParameters: React.PropTypes.object,
@@ -28,14 +28,14 @@ var LatticePixel = React.createClass({
         refreshTimer: React.PropTypes.object,
     },
     componentDidMount: function() {
-        var tempo = this.context.beatmathParameters.tempo;
-        var refreshOffset = this._getRefreshOffset();
+        const tempo = this.context.beatmathParameters.tempo;
+        const refreshOffset = this._getRefreshOffset();
         runAtTimestamp(this._update, tempo.getNextTick() + refreshOffset);
     },
     getInitialState: function() {
-        var rowTriangular = calculateRowTriangular(this.props.row, this.props.col);
-        var colTriangular = calculateColTriangular(this.props.row, this.props.col);
-        var triangularGridAmount = this.context.latticeParameters.triangularGridAmount.getValue();
+        const rowTriangular = calculateRowTriangular(this.props.row, this.props.col);
+        const colTriangular = calculateColTriangular(this.props.row, this.props.col);
+        const triangularGridAmount = this.context.latticeParameters.triangularGridAmount.getValue();
         return {
             rowTriangular,
             colTriangular,
@@ -51,15 +51,18 @@ var LatticePixel = React.createClass({
         if (!this.isMounted()) {
             return;
         }
-        var tempo = this.context.beatmathParameters.tempo;
-        var triangularGridAmount = this.context.latticeParameters.triangularGridAmount.getValue();
+        const tempo = this.context.beatmathParameters.tempo;
+        const triangularGridAmount = this.context.latticeParameters.triangularGridAmount.getValue();
 
-        var refreshOffset = this._getRefreshOffset();
+        let refreshOffset = this._getRefreshOffset();
         if (tempo.getNumTicks() % 2 &&
             this.context.latticeParameters.oscillate.getValue()) {
             refreshOffset = tempo.getPeriod() - refreshOffset;
         }
         runAtTimestamp(this._update, tempo.getNextTick() + refreshOffset);
+        if (this.props.row === 0 && this.props.col === 0) {
+            this.context.latticeParameters.latency.setValue((Date.now() - tempo.getNextTick()) / 1000);
+        }
 
         this._nextState = _.clone(this.state);
         if (triangularGridAmount !== this.state.triangularGridAmount) {
@@ -69,11 +72,16 @@ var LatticePixel = React.createClass({
         }
 
         _.each(this.context.influences, this._mixInfluenceIntoNextState);
+        const wavePercent = this.context.latticeParameters.wavePercent.getValue();
+        if (wavePercent) {
+            const sizeModFromOffset = (tempo.getNumTicks() % 2) + (refreshOffset / tempo.getPeriod()) / 2;
+            this._nextState.size = lerp(this._nextState.size, CELL_SIZE * lerp(1.5, 0, sizeModFromOffset), wavePercent);
+        }
         this.setState(this._nextState);
     },
     _getRefreshOffset: function() {
         // just use one or the other, rather than a mix, to take advantage of the cache
-        var useTriangularGrid = this.context.latticeParameters.triangularGridAmount.getValue() >= 0.5;
+        const useTriangularGrid = this.context.latticeParameters.triangularGridAmount.getValue() >= 0.5;
         return this.context.refreshTimer.getRefreshOffset(
             useTriangularGrid ? this.state.rowTriangular : this.props.row,
             useTriangularGrid ? this.state.colTriangular : this.props.col,
@@ -83,12 +91,12 @@ var LatticePixel = React.createClass({
         return influence.mix(this._nextState, this.state.rowComputed, this.state.colComputed);
     },
     render: function() {
-        var rotation = Math.floor(this.state.rotation);
-        var x = this.state.colComputed * CELL_SIZE;
-        var y = this.state.rowComputed * CELL_SIZE;
-        var fill = this.state.color;
+        const rotation = Math.floor(this.state.rotation);
+        const x = this.state.colComputed * CELL_SIZE;
+        const y = this.state.rowComputed * CELL_SIZE;
+        const fill = this.state.color;
 
-        var style = {
+        const style = {
             transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${this.state.size / 2})`,
         };
 

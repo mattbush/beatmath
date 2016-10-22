@@ -1,15 +1,15 @@
 require('regenerator/runtime');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var AnagramDisplay = require('js/anagrams/components/AnagramDisplay');
-var Mixboard = require('js/core/inputs/Mixboard');
-var MixboardContext = require('js/core/components/MixboardContext');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const AnagramDisplay = require('js/anagrams/components/AnagramDisplay');
+const Mixboard = require('js/core/inputs/Mixboard');
+const MixboardContext = require('js/core/components/MixboardContext');
 
 document.addEventListener('DOMContentLoaded', async function() {
-    var mixboard = await Mixboard.getInstanceAsync();
+    const mixboard = await Mixboard.getInstanceAsync();
 
     ReactDOM.render(
-        <MixboardContext mixboard={mixboard}>
+        <MixboardContext mixboard={mixboard} useColor={true}>
             <AnagramDisplay />
         </MixboardContext>,
         document.getElementById('start')

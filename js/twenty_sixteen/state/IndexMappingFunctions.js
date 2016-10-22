@@ -1,24 +1,24 @@
-var {posMod} = require('js/core/utils/math');
+const {posMod} = require('js/core/utils/math');
 
 const NUM_GOLD = 20;
 const NUM_BLUE = 16;
 
-var generateIncrementFunction = function(total, increment) {
+const generateIncrementFunction = function(total, increment) {
     return value => posMod(value + increment, total);
 };
 
-var generateIncrementModFunction = function(divisor, increment) {
+const generateIncrementModFunction = function(divisor, increment) {
     return value => {
-        var base = Math.floor(value / divisor) * divisor;
-        var valueMod = value % divisor;
+        const base = Math.floor(value / divisor) * divisor;
+        const valueMod = value % divisor;
         return base + posMod(valueMod + increment, divisor);
     };
 };
 
-var generateIncrementFixedCenterGoldFunction = function(increment) {
+const generateIncrementFixedCenterGoldFunction = function(increment) {
     return value => {
-        var base = Math.floor(value / 5) * 5;
-        var valueMod = value % 5;
+        const base = Math.floor(value / 5) * 5;
+        const valueMod = value % 5;
         if (valueMod === 0) {
             return value;
         } else {
@@ -27,11 +27,11 @@ var generateIncrementFixedCenterGoldFunction = function(increment) {
     };
 };
 
-var generateIncrementRotatingCenterGoldFunction = function(increment) {
+const generateIncrementRotatingCenterGoldFunction = function(increment) {
     return value => {
-        var multipleOf5 = Math.floor(value / 5);
-        var base = multipleOf5 * 5;
-        var valueMod = value % 5;
+        const multipleOf5 = Math.floor(value / 5);
+        const base = multipleOf5 * 5;
+        const valueMod = value % 5;
         if (valueMod === 0) {
             return 5 * posMod(multipleOf5 + increment, 4);
         } else {
@@ -40,8 +40,8 @@ var generateIncrementRotatingCenterGoldFunction = function(increment) {
     };
 };
 
-var generateIncrementModTwoSectionsFunction = function(midpoint, total, increment) {
-    var topHalfSize = total - midpoint;
+const generateIncrementModTwoSectionsFunction = function(midpoint, total, increment) {
+    const topHalfSize = total - midpoint;
 
     return value => {
         if (value >= midpoint) {

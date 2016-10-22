@@ -1,4 +1,4 @@
-var mixboardButton = {
+const MixtrackButtons = {
     L_SYNC: 64,
     L_CUE: 51,
     L_PLAY_PAUSE: 59,
@@ -50,7 +50,7 @@ var mixboardButton = {
     R_TURNTABLE: 77,
 };
 
-var mixboardFader = {
+const MixtrackFaders = {
     L_GAIN: 8,
     R_GAIN: 9,
     CROSSFADER: 10,
@@ -59,7 +59,7 @@ var mixboardFader = {
     MASTER_GAIN: 23,
 };
 
-var mixboardKnob = {
+const MixtrackKnobs = {
     CUE_GAIN: 11,
     CUE_MIX: 12,
     L_TREBLE: 16,
@@ -70,7 +70,7 @@ var mixboardKnob = {
     R_BASS: 21,
 };
 
-var mixboardWheel = {
+const MixtrackWheels = {
     R_TURNTABLE: 24,
     L_TURNTABLE: 25,
     BROWSE: 26,
@@ -82,22 +82,22 @@ var mixboardWheel = {
     R_CONTROL_2: 32,
 };
 
-var mixboardWheelCoefficients = {
-    [mixboardWheel.R_TURNTABLE]: 0.25,
-    [mixboardWheel.L_TURNTABLE]: 0.25,
-    [mixboardWheel.BROWSE]: 1,
-    [mixboardWheel.L_SELECT]: 1,
-    [mixboardWheel.L_CONTROL_1]: 0.5,
-    [mixboardWheel.L_CONTROL_2]: 0.5,
-    [mixboardWheel.R_SELECT]: 1,
-    [mixboardWheel.R_CONTROL_1]: 0.5,
-    [mixboardWheel.R_CONTROL_2]: 0.5,
+const MixtrackWheelCoefficients = {
+    [MixtrackWheels.R_TURNTABLE]: 0.25,
+    [MixtrackWheels.L_TURNTABLE]: 0.25,
+    [MixtrackWheels.BROWSE]: 1,
+    [MixtrackWheels.L_SELECT]: 1,
+    [MixtrackWheels.L_CONTROL_1]: 0.5,
+    [MixtrackWheels.L_CONTROL_2]: 0.5,
+    [MixtrackWheels.R_SELECT]: 1,
+    [MixtrackWheels.R_CONTROL_1]: 0.5,
+    [MixtrackWheels.R_CONTROL_2]: 0.5,
 };
 
 module.exports = {
-    mixboardButton,
-    mixboardWheel,
-    mixboardFader,
-    mixboardKnob,
-    mixboardWheelCoefficients,
+    MixtrackButtons,
+    MixtrackWheels,
+    MixtrackFaders,
+    MixtrackKnobs,
+    MixtrackWheelCoefficients,
 };

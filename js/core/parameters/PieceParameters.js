@@ -1,23 +1,46 @@
-var _ = require('underscore');
+const _ = require('lodash');
 
-var MIXBOARD_LISTENER_KEYS = (value, key) => key.startsWith('listenTo');
+const SPECIAL_KEYS = [
+    'autoupdateEveryNBeats', 'autoupdateOnCue',
+];
+const MIXBOARD_LISTENER_KEYS = (value, key) => key.startsWith('listenTo');
 
 class PieceParameters {
-    constructor(mixboard, beatmathParameters) {
+    constructor(mixboard, beatmathParameters, opts) {
         this._mixboard = mixboard;
         this._beatmathParameters = beatmathParameters;
 
-        this._initParameters();
+        this._initParameters(opts);
     }
-    _initParameters() {
-        var parameters = this._declareParameters();
+    _initParameters(opts) {
+        const parameters = this._declareParameters(opts);
         _.each(parameters, (properties, paramName) => {
-            var {type, ...restOfProperties} = properties;
-            var constructorProperties = _.omit(restOfProperties, MIXBOARD_LISTENER_KEYS);
-            var listenerProperties = _.pick(restOfProperties, MIXBOARD_LISTENER_KEYS);
+            let {type, ...restOfProperties} = properties;
 
-            var parameter = new type(constructorProperties);
+            if (this._mixboard.isMixboardConnected() && _.has(restOfProperties, 'mixboardStart')) {
+                restOfProperties.start = restOfProperties.mixboardStart;
+                delete restOfProperties.mixboardStart;
+            }
+
+            const specialProperties = _.pick(restOfProperties, SPECIAL_KEYS);
+            restOfProperties = _.omit(restOfProperties, SPECIAL_KEYS);
+            const listenerProperties = _.pickBy(restOfProperties, MIXBOARD_LISTENER_KEYS);
+            const constructorProperties = _.omitBy(restOfProperties, MIXBOARD_LISTENER_KEYS);
+            constructorProperties.tempo = this._beatmathParameters.tempo;
+
+            const parameter = new type(constructorProperties);
+
+            _.each(specialProperties, (value, specialMethodName) => {
+                this[specialMethodName](parameter, value);
+            });
+
             _.each(listenerProperties, (value, listenerMethodName) => {
+                if (listenerMethodName.includes('Mixtrack') && this._mixboard.isLaunchpad()) {
+                    return; // continue
+                }
+                if (listenerMethodName.includes('Launchpad') && !this._mixboard.isLaunchpad()) {
+                    return; // continue
+                }
                 if (_.isArray(value)) { // ugh, hack
                     parameter[listenerMethodName](this._mixboard, ...value);
                 } else {
@@ -28,7 +51,27 @@ class PieceParameters {
             this[paramName] = parameter;
         });
     }
-    _declareParameters() {
+    autoupdateEveryNBeats(parameter, n) {
+        const tempo = this._beatmathParameters.tempo;
+        const canSmooth = parameter._canSmoothUpdate;
+
+        tempo.addListener(() => {
+            const tick = tempo.getNumTicks();
+
+            const isMultiple = tick % (n * tempo._bpmMod) === 0;
+            if (canSmooth && parameter._smoothedUpdating) {
+                parameter.update(1 / (n * tempo._bpmMod), isMultiple);
+            } else if (isMultiple) {
+                parameter.update();
+            }
+        });
+    }
+    autoupdateOnCue(parameter) {
+        if (this._mixboard.isMixboardConnected()) {
+            parameter.listenForAutoupdateCue(this._mixboard);
+        }
+    }
+    _declareParameters(/* opts */) {
         // empty, override me
         return {};
     }

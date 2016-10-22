@@ -1,10 +1,10 @@
-var _ = require('underscore');
-var React = require('react');
+const _ = require('lodash');
+const React = require('react');
 
 let HoneycombParameters = require('js/honeycomb/parameters/HoneycombParameters');
 let AnimationControlledMixin = require('js/honeycomb/components/AnimationControlledMixin');
 let HexagonGroup = require('js/honeycomb/components/HexagonGroup');
-var BeatmathFrame = require('js/core/components/BeatmathFrame');
+const BeatmathFrame = require('js/core/components/BeatmathFrame');
 
 const {WIDTH_PX} = require('js/core/parameters/BeatmathConstants');
 
@@ -19,22 +19,22 @@ const ROTATION_SPEED = 15;
 let RotatingCore = React.createClass({
     mixins: [AnimationControlledMixin],
     getStyle: function(ticks) {
-        var transformDuration = this.context.period;
-        var rotationDegrees;
+        const transformDuration = this.context.period;
+        let rotationDegrees;
         if (ticks % ROTATIONS_IN_SET >= ROTATIONS_IN_SET / 2) {
             rotationDegrees = (ROTATIONS_IN_SET - (ticks % ROTATIONS_IN_SET)) * ROTATION_SPEED;
         } else {
             rotationDegrees = (ticks % ROTATIONS_IN_SET) * ROTATION_SPEED;
         }
-        var scale = 100 - (ticks % 2) * 40;
-        var ease = ticks % 2 ? 'ease' : 'ease';
+        const scale = 100 - (ticks % 2) * 40;
+        const ease = ticks % 2 ? 'ease' : 'ease';
         return {
             transform: `rotate(${rotationDegrees}deg) scale(${scale})`,
             transition: `transform ${transformDuration}s ${ease}`,
         };
     },
     render: function() {
-        var children = _.times(6, x =>
+        const children = _.times(6, x =>
             <g key={x} transform={`rotate(${x * 60})`}>
                 <HexagonGroup index={x} />
             </g>
@@ -47,7 +47,7 @@ let RotatingCore = React.createClass({
     },
 });
 
-var HoneycombContainer = React.createClass({
+const HoneycombContainer = React.createClass({
     childContextTypes: {
         honeycombParameters: React.PropTypes.object,
         bpm: React.PropTypes.number,
@@ -97,7 +97,7 @@ var HoneycombContainer = React.createClass({
         return (
             <BeatmathFrame>
                 {_.times(NUM_CORES, i => {
-                    var xOffset = WIDTH_PX / NUM_CORES * (i - (NUM_CORES - 1) / 2);
+                    const xOffset = WIDTH_PX / NUM_CORES * (i - (NUM_CORES - 1) / 2);
                     return (
                         <g key={i} transform={`translate(${xOffset}, 0) scale(${1 / NUM_CORES})`}>
                             <RotatingCore />

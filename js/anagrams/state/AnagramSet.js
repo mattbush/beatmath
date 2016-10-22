@@ -1,4 +1,4 @@
-var _ = require('underscore');
+const _ = require('lodash');
 
 class AnagramSet {
     constructor(anagrams) {
@@ -10,7 +10,7 @@ class AnagramSet {
             if (index === 0) {
                 this._sortedLetters = this._getSortedLettersFromAnagram(anagram);
             } else {
-                var sortedLetters = this._getSortedLettersFromAnagram(anagram);
+                const sortedLetters = this._getSortedLettersFromAnagram(anagram);
                 if (sortedLetters !== this._sortedLetters) {
                     this._isValid = false;
                     return; // continue
@@ -23,8 +23,8 @@ class AnagramSet {
         return anagramString.replace(/\s/g, '').split('').sort().join('');
     }
     _getAnagramLetterOffsets(anagramString) {
-        var prev;
-        var lastIndexOfOriginal = -1;
+        let prev;
+        let lastIndexOfOriginal = -1;
         return _.map(this._sortedLetters.split(''), char => {
             if (char !== prev) {
                 prev = char;
