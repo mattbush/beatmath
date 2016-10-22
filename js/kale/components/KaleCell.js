@@ -5,8 +5,10 @@ const KaleSubject = require('js/kale/components/KaleSubject');
 const {dist, lerp, posMod, xyRotatedAroundOriginWithAngle} = require('js/core/utils/math');
 const tinycolor = require('tinycolor2');
 const {clipPathXCenters, clipPathYCenters} = require('js/kale/components/KaleClipPaths');
+const wallowHexGrid = require('js/wallow/WallowHexGrid');
 
 const Y_AXIS_SCALE = Math.sqrt(3);
+const WALLOW_OFFSET_SCALE = 2;
 
 const KaleCell = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -114,8 +116,11 @@ const KaleCell = React.createClass({
 
         const yAxisScale = lerp(2, Y_AXIS_SCALE, triGridPercent);
 
-        const centerX = this.props.logicalX + (this.props.logicalY % 2 ? brickGridPercent - 1 : 0);
-        const centerY = this.props.logicalY * yAxisScale;
+        const wallowCell = wallowHexGrid[this.props.logicalY + 3][Math.floor((this.props.logicalX + 15) / 2)];
+        const [xOffsetFromWallow, yOffsetFromWallow] = wallowCell.offsets;
+
+        const centerX = this.props.logicalX + (this.props.logicalY % 2 ? brickGridPercent - 1 : 0) + xOffsetFromWallow * WALLOW_OFFSET_SCALE;
+        const centerY = this.props.logicalY * yAxisScale + yOffsetFromWallow * WALLOW_OFFSET_SCALE;
 
         const reflectionElements = _.times(reflectionsPerCell, index => {
             const isBStyle = (reflectionsPerCell === 6 && index >= 2 && index < 4);
