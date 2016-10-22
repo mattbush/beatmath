@@ -17,15 +17,17 @@ const Hex = React.createClass({
         const ty = this.props.row * Y_AXIS_SCALE + cell.offsets[1];
 
         return (
-            <g style={{transform: `translate(${tx}px, ${ty}px) scale(${1 / 12}, -${1 / 8 * 4 / 3 * Y_AXIS_SCALE})`}}>
-                <polygon className="line" points="0,4 6,2 6,-2 0,-4 -6,-2 -6,2" />
+            <g style={{transform: `translate(${tx}px, ${ty}px)`}}>
+                <g style={{transform: `scale(${1 / 12}, -${1 / 8 * 4 / 3 * Y_AXIS_SCALE})`}}>
+                    <polygon className="line" points="0,4 6,2 6,-2 0,-4 -6,-2 -6,2" />
+                </g>
                 <g style={{}}>
                     {shapes.map((polygon, index) => {
                         // return <polygon className="mine" key={index} fill={`#fff`} style={{opacity: '0.5'}} points={polygon.points} />;
                         return <polygon className="mine" key={index} fill={polygon.color} points={polygon.points} />;
                     })}
                 </g>
-                <text style={{transform: 'scale(2, -1) translate(-2px, 2px)', fill: '#fff', fontSize: '2px'}}>{this.props.column}</text>
+                <text style={{transform: 'scale(0.15, 0.15) translate(-2px, 2px)', fill: '#fff', fontSize: '2px'}}>{this.props.column}</text>
             </g>
         );
     },
