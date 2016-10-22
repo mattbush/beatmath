@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 const _ = require('lodash');
+const {polarAngleDeg, posMod} = require('js/core/utils/math');
 
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 
@@ -322,6 +324,8 @@ const tc7 = {color: '#11AA66', points: '-3,-1 0,-4 0,-1'};
 const tc9 = {color: '#11AA66', points: '-3,-1 -6,2 -1.5,0.5'};
 const tc11 = {color: '#11AA66', points: '0,2 -6,2 -1.5,0.5'};
 
+/* eslint-enable no-unused-vars */
+
 const hexGridShapes = [
     {0: [sc1, sc3, sc5, sc7, sc9, sc11], 1: [sc4, sc8, sc12], 2: [f4, f8, f12, rc2, rc6, rc10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512, a555], 4: [f1, f3, f5, f7, f9, f11, a2, a6, a10, b55, a54, a58, a512],
      5: [w2, w6, w10, b55, a54, a58, a512], 6: [w2, w6, w10, a5], 7: [x0, y0, z1, a5, h2, h6, h10], 8: [i2, i6, i10, x0, y0, z1, k2, k6, k10, a5], 9: [i2, i6, i10, x0, y0, z1, c1],
@@ -371,6 +375,16 @@ const processShapeIfNeeded = function(shape) {
     const pointsUnscaled = _.filter(shape.points.split(' ')).map(x => x.split(','));
     const points = pointsUnscaled.map(([x, y]) => [x * 1 / 12, -y * 1 / 8 * 4 / 3 * Y_AXIS_SCALE]);
     shape.points = points;
+
+    const centerX = points.map(p => p[0]).reduce((x, xx) => x + xx, 0) / points.length;
+    const centerY = points.map(p => p[1]).reduce((x, xx) => x + xx, 0) / points.length;
+
+    const deg = polarAngleDeg(centerX, centerY);
+    const largestY = _.max(points.map(p => p[1]));
+
+    shape.center = [centerX, centerY];
+    shape.clockNumber = Math.round(posMod(90 - deg, 360) / 30);
+    shape.largestY = largestY;
 };
 
 const hexGrid = _.map(hexGridShapes, (row, rowIndex) => _.mapValues(row, (shapes, colIndex) => {
