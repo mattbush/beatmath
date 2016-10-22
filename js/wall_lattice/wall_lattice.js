@@ -1,7 +1,7 @@
 require('regenerator/runtime');
 const React = require('react');
 const ReactDOM = require('react-dom');
-const WallowContainer = require('js/wall_lattice/components/WallowContainer');
+const WallLatticeContainer = require('js/wall_lattice/components/WallLatticeContainer');
 const Mixboard = require('js/core/inputs/Mixboard');
 const MixboardContext = require('js/core/components/MixboardContext');
 
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     ReactDOM.render(
         <MixboardContext mixboard={mixboard} useFrame={false}>
-            <WallowContainer />
+            <WallLatticeContainer />
         </MixboardContext>,
         document.getElementById('start')
     );
