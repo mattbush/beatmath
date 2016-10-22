@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const React = require('react');
+// const tinycolor = require('tinycolor2');
 
 const hexGrid = require('js/wallow/WallowHexGrid');
 
@@ -23,6 +24,7 @@ const Hex = React.createClass({
                 </g>
                 <g style={{}}>
                     {shapes.map((polygon, index) => {
+                        // const color = tinycolor('#AA5555').saturate(100 * polygon.center[0]).lighten(100 * polygon.yMax);
                         // return <polygon className="mine" key={index} fill={`#fff`} style={{opacity: '0.5'}} points={polygon.points} />;
                         return <polygon className="mine" key={index} fill={polygon.color} points={polygon.points} />;
                     })}

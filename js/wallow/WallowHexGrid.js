@@ -380,11 +380,11 @@ const processShapeIfNeeded = function(shape) {
     const centerY = points.map(p => p[1]).reduce((x, xx) => x + xx, 0) / points.length;
 
     const deg = polarAngleDeg(centerX, centerY);
-    const largestY = _.max(points.map(p => p[1]));
+    const yMax = -_.min(points.map(p => p[1]));
 
     shape.center = [centerX, centerY];
-    shape.clockNumber = Math.round(posMod(90 - deg, 360) / 30);
-    shape.largestY = largestY;
+    shape.clockNumber = Math.round(posMod(deg + 90, 360) / 30);
+    shape.yMax = yMax;
 };
 
 const hexGrid = _.map(hexGridShapes, (row, rowIndex) => _.mapValues(row, (shapes, colIndex) => {
