@@ -1,10 +1,10 @@
 .line {
     fill: none;
     stroke: #fff;
-    stroke-width: 0.2px;
+    stroke-width: 0.1px;
 }
 
 .mine {
-    stroke: #fff;
-    stroke-width: 0.2px;
+    stroke: #000;
+    stroke-width: 0.02px;
 }

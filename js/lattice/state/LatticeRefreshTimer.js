@@ -115,10 +115,12 @@ class LatticeRefreshTimer extends PieceParameters {
         _.each(this._declareParameters(), (value, paramName) => {
             this[paramName].addListener(this._flushCache);
         });
-        this._latticeParameters.triangularGridAmount.addListener(this._flushCacheIfNewGrid.bind(this));
+        if (this._latticeParameters.triangularGridAmount) {
+            this._latticeParameters.triangularGridAmount.addListener(this._flushCacheIfNewGrid.bind(this));
+        }
     }
     _isTriangularGrid() {
-        return this._latticeParameters.triangularGridAmount.getValue() >= 0.5;
+        return this._latticeParameters.triangularGridAmount && this._latticeParameters.triangularGridAmount.getValue() >= 0.5;
     }
     _flushCacheIfNewGrid() {
         if (this._cachedIsTriangularGrid !== this._isTriangularGrid()) {
