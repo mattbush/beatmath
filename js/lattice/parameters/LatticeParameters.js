@@ -56,7 +56,7 @@ class LatticeParameters extends PieceParameters {
             triangularGridAmount: {
                 type: LinearParameter,
                 range: [0, 1],
-                start: 0,
+                start: 1,
                 incrementAmount: 0.05,
                 listenToLaunchpadKnob: [0, 0],
                 listenToMixtrackWheel: MixtrackWheels.R_CONTROL_2,

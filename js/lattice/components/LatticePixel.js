@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const React = require('react');
 const tinycolor = require('tinycolor2');
-const BeatmathPixel = require('js/core/components/BeatmathPixel');
+const FloraPixel = require('js/lattice/components/FloraPixel');
 const {runAtTimestamp} = require('js/core/utils/time');
 const {lerp} = require('js/core/utils/math');
 
@@ -102,7 +102,7 @@ const LatticePixel = React.createClass({
 
         return (
             <g style={style}>
-                <BeatmathPixel color={fill} />
+                <FloraPixel color={fill} aperture={0} rotundity={0} />
             </g>
         );
     },
