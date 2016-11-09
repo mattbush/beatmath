@@ -2,7 +2,7 @@ const _ = require('lodash');
 const tinycolor = require('tinycolor2');
 const {posMod} = require('js/core/utils/math');
 
-const USE_COLOR_MAPPING = false;
+const USE_COLOR_MAPPING = true;
 const MAPPING_PALETTE = [5, 25, 45, 100, 120];
 
 function mapColorToPalette(color, palette) {

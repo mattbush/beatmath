@@ -15,7 +15,7 @@ class LatticeParameters extends PieceParameters {
             mixCoefficient: {
                 type: LinearParameter,
                 range: [0.2, 2],
-                start: 1,
+                start: 0.9,
                 useStartAsMidpoint: true,
                 listenToLaunchpadKnob: [1, 0],
                 listenToMixtrackKnob: MixtrackKnobs.L_BASS,
@@ -24,7 +24,7 @@ class LatticeParameters extends PieceParameters {
             distanceCoefficient: {
                 type: LinearParameter,
                 range: [0.2, 3],
-                start: 1,
+                start: 0.6,
                 useStartAsMidpoint: true,
                 listenToLaunchpadKnob: [1, 1],
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,
@@ -41,7 +41,7 @@ class LatticeParameters extends PieceParameters {
             numRows: {
                 type: IntLinearParameter,
                 range: [0, 15],
-                start: 12,
+                start: 8,
                 listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
                 listenToMixtrackFader: MixtrackFaders.R_GAIN,
                 monitorName: '# Rows',

@@ -45,6 +45,8 @@ const LatticePixel = React.createClass({
             rotation: 0,
             rowComputed: lerp(this.props.row, rowTriangular, triangularGridAmount),
             colComputed: lerp(this.props.col, colTriangular, triangularGridAmount),
+            aperture: 64,
+            rotundity: 64,
         };
     },
     _update: function() {
@@ -102,7 +104,7 @@ const LatticePixel = React.createClass({
 
         return (
             <g style={style}>
-                <FloraPixel color={fill} aperture={0} rotundity={0} />
+                <FloraPixel color={fill} aperture={Math.round(this.state.aperture)} rotundity={Math.round(this.state.rotundity)} />
             </g>
         );
     },

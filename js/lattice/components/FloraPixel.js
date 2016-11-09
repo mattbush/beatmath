@@ -9,7 +9,7 @@ function generateFlowerPath(aperture, rotundity) {
     const rotundityPercent = rotundity / 128;
 
     const apertureCoeff = 0.3 * aperturePercent + 0.05;
-    const scale = 1.75 - apertureCoeff + rotundityPercent / 4;
+    const scale = 2 - apertureCoeff + rotundityPercent / 4;
     const points = _.times(6, i => {
         if (i % 2) {
             return [Math.cos(i / 6 * TWOPI) * scale, Math.sin(i / 6 * TWOPI) * scale].map(x => _.round(x, 5));
