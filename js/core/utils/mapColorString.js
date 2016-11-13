@@ -3,7 +3,7 @@ const tinycolor = require('tinycolor2');
 const {posMod} = require('js/core/utils/math');
 
 const USE_COLOR_MAPPING = true;
-const MAPPING_PALETTE = [5, 25, 45, 100, 120];
+const MAPPING_PALETTE = [-15, 45, 115, 100, 25];
 
 function mapColorToPalette(color, palette) {
     const paletteSize = palette.length;

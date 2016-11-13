@@ -27,7 +27,7 @@ class BeatmathParameters {
         }
 
         this.tempo = new BeatmathTempo(mixboard, {
-            bpm: 120,
+            bpm: 90,
             bpmMod: params.bpmMod,
         });
 
@@ -110,7 +110,7 @@ class BeatmathParameters {
                 monitorName: 'Color Spin',
             });
             if (mixboard.isLaunchpad()) {
-                this.colorSpin.listenToLaunchpadKnob(mixboard, 2, 6);
+                // this.colorSpin.listenToLaunchpadKnob(mixboard, 2, 6);
             } else {
                 this.colorSpin.listenToMixtrackWheel(mixboard, MixtrackWheels.R_TURNTABLE);
                 this.colorSpin.listenToResetMixtrackButton(mixboard, MixtrackButtons.R_SCRATCH);
@@ -135,6 +135,8 @@ class BeatmathParameters {
         if (!mixboard.isLaunchpad()) {
             this.brightness.listenToIncrementMixtrackButton(mixboard, MixtrackButtons.R_PITCH_BEND_PLUS);
             this.brightness.listenToDecrementMixtrackButton(mixboard, MixtrackButtons.R_PITCH_BEND_MINUS);
+        } else {
+            this.brightness.listenToLaunchpadKnob(mixboard, 2, 6);
         }
 
         const mappingModeCycleValues = ['off', 'onWithOneFrame', 'onWithFrames'];
