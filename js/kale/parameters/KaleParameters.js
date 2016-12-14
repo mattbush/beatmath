@@ -17,7 +17,7 @@ class KaleParameters extends PieceParameters {
                 listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
                 monitorName: '# Rows',
             },
-            numCols: {
+            numColumns: {
                 type: IntLinearParameter,
                 start: 8,
                 range: [0, MAX_NUM_COLS],
