@@ -5,6 +5,7 @@ const {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const {arclerp, clamp, modAndShiftToHalf} = require('js/core/utils/math');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
+const P = require('js/core/parameters/P');
 
 const PI_TIMES_2 = Math.PI * 2;
 
@@ -29,14 +30,7 @@ class TreesParameters extends PieceParameters {
                 variance: 1,
                 autoupdate: 1000,
             },
-            numColumns: {
-                type: IntLinearParameter,
-                range: [1, 24],
-                start: 16, buildupStart: 1,
-                listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
-                listenToMixtrackFader: MixtrackFaders.L_GAIN,
-                monitorName: '# Columns',
-            },
+            0: P.NumColumns({start: 16, max: 24}),
             numRows: {
                 type: IntLinearParameter,
                 range: [1, 24],

@@ -15,7 +15,7 @@ class PieceParameters {
     _initParameters(opts) {
         const parameters = this._declareParameters(opts);
         _.each(parameters, (properties, paramName) => {
-            let {type, ...restOfProperties} = properties;
+            let {type, propertyName, ...restOfProperties} = properties;
 
             if (this._mixboard.isMixboardConnected() && _.has(restOfProperties, 'buildupStart') && location.search.includes('buildup')) {
                 restOfProperties.start = restOfProperties.buildupStart;
@@ -47,7 +47,7 @@ class PieceParameters {
                 }
             });
 
-            this[paramName] = parameter;
+            this[propertyName || paramName] = parameter;
         });
     }
     autoupdateEveryNBeats(parameter, n) {

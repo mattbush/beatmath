@@ -1,6 +1,7 @@
 const {ManualParameter, IntLinearParameter, ToggleParameter, LinearParameter} = require('js/core/parameters/Parameter');
 const {MixtrackButtons, MixtrackFaders, MixtrackKnobs, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
+const P = require('js/core/parameters/P');
 
 class LatticeParameters extends PieceParameters {
     _declareParameters() {
@@ -30,14 +31,7 @@ class LatticeParameters extends PieceParameters {
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,
                 monitorName: 'Distance Coeff',
             },
-            numCols: {
-                type: IntLinearParameter,
-                range: [0, 24],
-                start: 12,
-                listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
-                listenToMixtrackFader: MixtrackFaders.L_GAIN,
-                monitorName: '# Columns',
-            },
+            0: P.NumColumns({start: 12, max: 24}),
             numRows: {
                 type: IntLinearParameter,
                 range: [0, 15],
