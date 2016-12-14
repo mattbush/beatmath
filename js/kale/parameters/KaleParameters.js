@@ -1,8 +1,9 @@
-const {MovingLinearParameter, IntLinearParameter, CycleParameter, MovingColorParameter, LinearParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {MovingLinearParameter, CycleParameter, MovingColorParameter, LinearParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 // const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const {ceilOfMultiple} = require('js/core/utils/math');
 const tinycolor = require('tinycolor2');
+const P = require('js/core/parameters/P');
 
 const MAX_NUM_ROWS = 6;
 const MAX_NUM_COLS = 12;
@@ -10,20 +11,8 @@ const MAX_NUM_COLS = 12;
 class KaleParameters extends PieceParameters {
     _declareParameters() {
         return {
-            numRows: {
-                type: IntLinearParameter,
-                start: 3,
-                range: [0, MAX_NUM_ROWS],
-                listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
-                monitorName: '# Rows',
-            },
-            numColumns: {
-                type: IntLinearParameter,
-                start: 8,
-                range: [0, MAX_NUM_COLS],
-                listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
-                monitorName: '# Columns',
-            },
+            0: P.NumColumns({start: 8, max: MAX_NUM_COLS}),
+            1: P.NumRows({start: 3, max: MAX_NUM_ROWS}),
             colColorShift: {
                 type: MovingLinearParameter,
                 range: [-45, 45],

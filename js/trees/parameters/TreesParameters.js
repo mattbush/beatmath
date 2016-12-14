@@ -1,5 +1,5 @@
 const {MovingLinearParameter, LogarithmicParameter, LinearParameter, HoldButtonParameter, IntLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
-const {MixtrackFaders, MixtrackKnobs, MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
+const {MixtrackKnobs, MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const tinycolor = require('tinycolor2');
 const {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
 const PieceParameters = require('js/core/parameters/PieceParameters');
@@ -31,14 +31,7 @@ class TreesParameters extends PieceParameters {
                 autoupdate: 1000,
             },
             0: P.NumColumns({start: 16, max: 24}),
-            numRows: {
-                type: IntLinearParameter,
-                range: [1, 24],
-                start: 24, buildupStart: 1,
-                listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
-                listenToMixtrackFader: MixtrackFaders.R_GAIN,
-                monitorName: '# Rows',
-            },
+            1: P.NumRows({start: 16, max: 24}),
             columnWidth: {
                 type: IntLinearParameter,
                 range: [10, 200],
