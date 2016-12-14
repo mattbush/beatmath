@@ -14,7 +14,7 @@ const KaleGrid = React.createClass({
     getParameterBindings: function() {
         return {
             numRows: this.context.kaleParameters.numRows,
-            numCols: this.context.kaleParameters.numCols,
+            numColumns: this.context.kaleParameters.numColumns,
             isInfinite: this.context.kaleParameters.isInfinite,
         };
     },
@@ -36,9 +36,9 @@ const KaleGrid = React.createClass({
         } else {
             kaleCells = [];
             const numRows = this.getParameterValue('numRows');
-            const numCols = this.getParameterValue('numCols');
+            const numColumns = this.getParameterValue('numColumns');
             for (let y = -numRows; y <= numRows; y++) {
-                for (let x = -numCols; x <= numCols; x++) {
+                for (let x = -numColumns; x <= numColumns; x++) {
                     if ((x + y) % 2 !== 0) {
                         continue;
                     }
