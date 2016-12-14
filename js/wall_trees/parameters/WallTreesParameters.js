@@ -25,7 +25,7 @@ class WallTreesParameters extends PieceParameters {
     }
     _declareParameters() {
         return {
-            levelColor: {
+            baseColor: {
                 type: MovingColorParameter,
                 start: tinycolor('#5ff'),
                 max: 5,
@@ -39,12 +39,12 @@ class WallTreesParameters extends PieceParameters {
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
                 monitorName: 'Period Ticks',
             },
-            treeColorShift: {
+            columnColorShift: {
                 type: MovingLinearParameter,
                 range: [-180, 180],
                 start: 0,
                 incrementAmount: 2.5,
-                monitorName: 'Tree Color Shift',
+                monitorName: 'Column Color Shift',
                 listenToLaunchpadKnob: [0, 0],
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_DELETE, MixtrackButtons.L_HOT_CUE_1],
                 variance: 5,
@@ -52,12 +52,12 @@ class WallTreesParameters extends PieceParameters {
                 autoupdateOnCue: true,
                 canSmoothUpdate: true,
             },
-            levelColorShift: {
+            rowColorShift: {
                 type: MovingLinearParameter,
                 range: [-180, 180],
                 start: 0,
                 incrementAmount: 2.5,
-                monitorName: 'Level Color Shift',
+                monitorName: 'Row Color Shift',
                 listenToLaunchpadKnob: [0, 1],
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_HOT_CUE_2, MixtrackButtons.L_HOT_CUE_3],
                 variance: 5,
@@ -161,16 +161,16 @@ class WallTreesParameters extends PieceParameters {
         this._riseNumTicks += this.riseDirection.getValue();
         this._sineNumTicks += this.sineDirection.getValue();
     }
-    _getSineAmount(treeIndex) {
+    _getSineAmount(columnIndex) {
         const sineAmplitude = this.sineAmplitude.getValue();
         if (sineAmplitude === 0) {
             return 0;
         }
         const sinePeriodTicks = this.sinePeriodTicks.getValue();
-        const sineWaveAngularOffsetPercent = (this._sineNumTicks + treeIndex) / sinePeriodTicks;
+        const sineWaveAngularOffsetPercent = (this._sineNumTicks + columnIndex) / sinePeriodTicks;
         return sineAmplitude * NUM_LEVELS * Math.sin(sineWaveAngularOffsetPercent * PI_TIMES_2);
     }
-    _getLevelIllumination(treeIndex, levelNumber) {
+    _getRowIllumination(columnIndex, rowIndex) {
         const periodTicks = this.periodTicks.getValue();
         let staggerAmount = this.staggerAmount.getValue();
         if (this.roundStagger.getValue()) {
@@ -178,15 +178,15 @@ class WallTreesParameters extends PieceParameters {
         }
         if (staggerAmount !== 0) {
             if (this.mirrorStagger.getValue()) {
-                treeIndex = posModAndBendToLowerHalf(treeIndex, NUM_TREES - 1);
+                columnIndex = posModAndBendToLowerHalf(columnIndex, NUM_TREES - 1);
             }
-            levelNumber -= (treeIndex - NUM_TREES / 2) * staggerAmount;
+            rowIndex -= (columnIndex - NUM_TREES / 2) * staggerAmount;
         }
-        const sineAmount = this._getSineAmount(treeIndex - NUM_TREES / 2);
-        return posMod(this._riseNumTicks - levelNumber + sineAmount, periodTicks) / periodTicks;
+        const sineAmount = this._getSineAmount(columnIndex - NUM_TREES / 2);
+        return posMod(this._riseNumTicks - rowIndex + sineAmount, periodTicks) / periodTicks;
     }
-    _getColorShiftPerTree() {
-        return this.treeColorShift.getValue();
+    _getColorShiftPerColumn() {
+        return this.columnColorShift.getValue();
     }
     getColorForRowAndColumnAndPolygon(row, column, polygon) {
         const level = column * 4 + polygon.clockNumber;
@@ -195,23 +195,23 @@ class WallTreesParameters extends PieceParameters {
         } else if (this.blackout.getValue()) {
             return BLACK;
         }
-        const color = tinycolor(this.levelColor.getValue().toHexString()); // clone
-        const colorShiftPerTree = this._getColorShiftPerTree();
-        const colorShiftPerLevel = this.levelColorShift.getValue();
-        const colorShift = colorShiftPerTree * row + colorShiftPerLevel * level;
+        const color = tinycolor(this.baseColor.getValue().toHexString()); // clone
+        const colorShiftPerColumn = this._getColorShiftPerColumn();
+        const colorShiftPerRow = this.rowColorShift.getValue();
+        const colorShift = colorShiftPerColumn * row + colorShiftPerRow * level;
         if (colorShift !== 0) {
             color.spin(colorShift);
         }
-        const baseLevelIllumination = this._getLevelIllumination(row, level);
+        const baseRowIllumination = this._getRowIllumination(row, level);
         const revTrailPercent = 1 - this.revTrailPercent.getValue();
-        let levelIllumination;
-        if (baseLevelIllumination > revTrailPercent || revTrailPercent === 0) {
-            levelIllumination = arclerp(1, revTrailPercent, baseLevelIllumination);
+        let rowIllumination;
+        if (baseRowIllumination > revTrailPercent || revTrailPercent === 0) {
+            rowIllumination = arclerp(1, revTrailPercent, baseRowIllumination);
         } else {
-            levelIllumination = arclerp(0, revTrailPercent, baseLevelIllumination);
+            rowIllumination = arclerp(0, revTrailPercent, baseRowIllumination);
         }
 
-        if (levelIllumination === 0) {
+        if (rowIllumination === 0) {
             return color;
         }
         const trailPercent = this.trailPercent.getValue();
@@ -219,7 +219,7 @@ class WallTreesParameters extends PieceParameters {
         const fullDarkenAmount = 65;
         let darkenAmount;
         if (trailPercent !== 0) {
-            const trailedDarkenAmount = levelIllumination * fullDarkenAmount;
+            const trailedDarkenAmount = rowIllumination * fullDarkenAmount;
             darkenAmount = lerp(defaultDarkenAmount, trailedDarkenAmount, trailPercent);
         } else {
             darkenAmount = defaultDarkenAmount;
