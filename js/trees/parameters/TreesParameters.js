@@ -32,7 +32,7 @@ class TreesParameters extends PieceParameters {
             numColumns: {
                 type: IntLinearParameter,
                 range: [1, 24],
-                start: 16, mixboardStart: 1,
+                start: 16, buildupStart: 1,
                 listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
                 listenToMixtrackFader: MixtrackFaders.L_GAIN,
                 monitorName: '# Columns',
@@ -40,7 +40,7 @@ class TreesParameters extends PieceParameters {
             numRows: {
                 type: IntLinearParameter,
                 range: [1, 24],
-                start: 24, mixboardStart: 1,
+                start: 24, buildupStart: 1,
                 listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
                 listenToMixtrackFader: MixtrackFaders.R_GAIN,
                 monitorName: '# Rows',
@@ -121,7 +121,7 @@ class TreesParameters extends PieceParameters {
             trailPercent: {
                 type: LinearParameter,
                 range: [0, 1],
-                start: 0.5, mixboardStart: 0,
+                start: 0.5, buildupStart: 0,
                 incrementAmount: 0.05,
                 monitorName: 'Trail %',
                 listenToLaunchpadKnob: [2, 2],
@@ -163,7 +163,7 @@ class TreesParameters extends PieceParameters {
             polarGridAmount: {
                 type: MovingLinearParameter,
                 range: [-2, 3],
-                start: 0.5, mixboardStart: 0,
+                start: 0.5, buildupStart: 0,
                 incrementAmount: 0.05,
                 listenToLaunchpadFader: [2, {addButtonStatusLight: true}],
                 listenToMixtrackWheel: MixtrackWheels.R_CONTROL_2,

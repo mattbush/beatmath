@@ -68,7 +68,7 @@ class WallTreesParameters extends PieceParameters {
             trailPercent: {
                 type: LinearParameter,
                 range: [0, 1],
-                start: 0.5, mixboardStart: 0,
+                start: 0.5, buildupStart: 0,
                 incrementAmount: 0.05,
                 monitorName: 'Trail %',
                 listenToLaunchpadKnob: [2, 2],

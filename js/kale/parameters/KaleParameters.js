@@ -61,7 +61,7 @@ class KaleParameters extends PieceParameters {
             triangularGridPercent: {
                 type: LinearParameter,
                 range: [0, 1],
-                start: 1, mixboardStart: 0,
+                start: 1, buildupStart: 0,
                 listenToLaunchpadKnob: [2, 2],
                 monitorName: 'Triangle Grid %',
             },
