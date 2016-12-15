@@ -1,18 +1,12 @@
-const {ManualParameter, ToggleParameter, LinearParameter} = require('js/core/parameters/Parameter');
-const {MixtrackButtons, MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
+const {ManualParameter, LinearParameter} = require('js/core/parameters/Parameter');
+const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
 
 class LatticeParameters extends PieceParameters {
     _declareParameters() {
         return {
-            showInfluences: {
-                type: ToggleParameter,
-                start: false,
-                listenToLaunchpadButton: 0,
-                listenToMixtrackButton: MixtrackButtons.L_SYNC,
-                monitorName: 'Debug Influences',
-            },
+            3: P.CustomToggle({name: 'showInfluences', button: 0}),
             mixCoefficient: {
                 type: LinearParameter,
                 range: [0.2, 2],
@@ -33,13 +27,7 @@ class LatticeParameters extends PieceParameters {
             },
             0: P.NumColumns({start: 12, max: 24}),
             1: P.NumRows({start: 12, max: 15}),
-            oscillate: {
-                type: ToggleParameter,
-                start: false,
-                listenToLaunchpadButton: 1,
-                listenToMixtrackButton: MixtrackButtons.L_PITCH_BEND_MINUS,
-                monitorName: 'Oscillate?',
-            },
+            4: P.CustomToggle({name: 'oscillate', button: 1}),
             2: P.TriangularGridPercent({knobPosition: [0, 0]}),
             latency: {
                 type: ManualParameter,

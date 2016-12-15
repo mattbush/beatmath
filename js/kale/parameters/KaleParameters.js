@@ -1,4 +1,4 @@
-const {CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {CycleParameter} = require('js/core/parameters/Parameter');
 // const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
@@ -13,18 +13,8 @@ class KaleParameters extends PieceParameters {
             1: P.NumRows({start: 3, max: MAX_NUM_ROWS}),
             2: P.ColumnColorShift({range: 45}),
             3: P.RowColorShift({range: 45}),
-            isInfinite: {
-                type: ToggleParameter,
-                start: false,
-                listenToLaunchpadButton: 0,
-                monitorName: 'Infinite?',
-            },
-            cellSymmetry: {
-                type: ToggleParameter,
-                start: true,
-                listenToLaunchpadButton: 3,
-                monitorName: 'Cell Symmetry',
-            },
+            6: P.CustomToggle({name: 'isInfinite', button: 0}),
+            7: P.CustomToggle({name: 'cellSymmetry', button: 3, start: true}),
             4: P.TriangularGridPercent({start: 1, knobPosition: [2, 2]}),
             reflectionsPerCell: {
                 type: CycleParameter,

@@ -1,4 +1,4 @@
-const {MovingLinearParameter, LogarithmicParameter, LinearParameter, HoldButtonParameter, IntLinearParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {MovingLinearParameter, LogarithmicParameter, LinearParameter, HoldButtonParameter, IntLinearParameter} = require('js/core/parameters/Parameter');
 const {MixtrackKnobs, MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const tinycolor = require('tinycolor2');
 const {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
@@ -95,19 +95,8 @@ class TreesParameters extends PieceParameters {
                 autoupdateOnCue: true,
                 canSmoothUpdate: true,
             },
-            mirrorStagger: {
-                type: ToggleParameter,
-                start: false,
-                listenToLaunchpadButton: 1,
-                listenToMixtrackButton: MixtrackButtons.L_EFFECT,
-                monitorName: 'Mirror Stagger?',
-            },
-            roundStagger: {
-                type: ToggleParameter,
-                start: true,
-                listenToLaunchpadButton: 0,
-                monitorName: 'Round Stagger?',
-            },
+            6: P.CustomToggle({name: 'mirrorStagger', button: 1}),
+            7: P.CustomToggle({name: 'roundStagger', button: 0, start: true}),
             polarGridAmount: {
                 type: MovingLinearParameter,
                 range: [-2, 3],

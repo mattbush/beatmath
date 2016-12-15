@@ -1,5 +1,9 @@
-const {LinearParameter, IntLinearParameter, MovingLinearParameter, MovingColorParameter} = require('js/core/parameters/Parameter');
+const {ToggleParameter, LinearParameter, IntLinearParameter, MovingLinearParameter, MovingColorParameter} = require('js/core/parameters/Parameter');
 const tinycolor = require('tinycolor2');
+
+function camelCaseToHumanReadable(text) {
+    return text.charAt(0).toUpperCase() + text.slice(1).replace(/([A-Z])/g, ' $1');
+}
 
 const P = {
     NumColumns: ({start, max}) => ({
@@ -73,6 +77,13 @@ const P = {
         max: 5,
         variance: 1,
         autoupdate: 1000,
+    }),
+    CustomToggle: ({name, button, start = false}) => ({
+        propertyName: name,
+        type: ToggleParameter,
+        start: start,
+        listenToLaunchpadButton: button,
+        monitorName: camelCaseToHumanReadable(name) + '?',
     }),
 };
 
