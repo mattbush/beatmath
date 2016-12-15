@@ -53,7 +53,7 @@ class LatticeParameters extends PieceParameters {
                 listenToMixtrackButton: MixtrackButtons.L_PITCH_BEND_MINUS,
                 monitorName: 'Oscillate?',
             },
-            triangularGridAmount: {
+            triangularGridPercent: {
                 type: LinearParameter,
                 range: [0, 1],
                 start: 0,
