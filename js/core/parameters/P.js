@@ -1,4 +1,4 @@
-const {IntLinearParameter, MovingLinearParameter} = require('js/core/parameters/Parameter');
+const {LinearParameter, IntLinearParameter, MovingLinearParameter} = require('js/core/parameters/Parameter');
 
 const P = {
     NumColumns: ({start, max}) => ({
@@ -44,6 +44,14 @@ const P = {
         autoupdateEveryNBeats: 8,
         autoupdateOnCue: true,
         canSmoothUpdate: true,
+    }),
+    TriangularGridPercent: ({start = 0, knobPosition}) => ({
+        propertyName: 'triangularGridPercent',
+        type: LinearParameter,
+        range: [0, 1],
+        start: start, buildupStart: 0,
+        listenToLaunchpadKnob: knobPosition,
+        monitorName: 'Triangle Grid %',
     }),
 };
 

@@ -1,4 +1,4 @@
-const {CycleParameter, MovingColorParameter, LinearParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {CycleParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 // const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const tinycolor = require('tinycolor2');
@@ -26,13 +26,7 @@ class KaleParameters extends PieceParameters {
                 listenToLaunchpadButton: 3,
                 monitorName: 'Cell Symmetry',
             },
-            triangularGridPercent: {
-                type: LinearParameter,
-                range: [0, 1],
-                start: 1, buildupStart: 0,
-                listenToLaunchpadKnob: [2, 2],
-                monitorName: 'Triangle Grid %',
-            },
+            4: P.TriangularGridPercent({start: 1, knobPosition: [2, 2]}),
             reflectionsPerCell: {
                 type: CycleParameter,
                 cycleValues: [1, 2, 4, 6],

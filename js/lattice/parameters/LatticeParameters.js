@@ -1,5 +1,5 @@
 const {ManualParameter, ToggleParameter, LinearParameter} = require('js/core/parameters/Parameter');
-const {MixtrackButtons, MixtrackKnobs, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
+const {MixtrackButtons, MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
 
@@ -40,15 +40,7 @@ class LatticeParameters extends PieceParameters {
                 listenToMixtrackButton: MixtrackButtons.L_PITCH_BEND_MINUS,
                 monitorName: 'Oscillate?',
             },
-            triangularGridPercent: {
-                type: LinearParameter,
-                range: [0, 1],
-                start: 0,
-                incrementAmount: 0.05,
-                listenToLaunchpadKnob: [0, 0],
-                listenToMixtrackWheel: MixtrackWheels.R_CONTROL_2,
-                monitorName: 'Triangle Grid %',
-            },
+            2: P.TriangularGridPercent({knobPosition: [0, 0]}),
             latency: {
                 type: ManualParameter,
                 start: 0,
