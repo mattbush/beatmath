@@ -1,6 +1,7 @@
 const {LinearParameter, MovingAngleParameter, MovingLinearParameter, MovingLogarithmicParameter} = require('js/core/parameters/Parameter');
 // const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
+const P = require('js/core/parameters/P');
 
 class SubjectParameters extends PieceParameters {
     _declareParameters() {
@@ -74,17 +75,7 @@ class SubjectParameters extends PieceParameters {
                 listenToLaunchpadKnob: [0, 5],
                 monitorName: 'Drift %',
             },
-            borderRadiusPercent: {
-                type: MovingLinearParameter,
-                range: [0, 1],
-                autoupdateRange: [0, 0.6],
-                listenToLaunchpadKnob: [0, 4],
-                monitorName: 'Roundness %',
-                start: 0.3,
-                variance: 0.01,
-                autoupdateEveryNBeats: 1,
-                autoupdateOnCue: true,
-            },
+            0: P.BorderRadiusPercent({start: 0.3, autoupdateMax: 0.6}),
             viewpointShiftPercent: {
                 type: MovingLinearParameter,
                 range: [0, 1],

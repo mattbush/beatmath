@@ -53,6 +53,18 @@ const P = {
         listenToLaunchpadKnob: knobPosition,
         monitorName: 'Triangle Grid %',
     }),
+    BorderRadiusPercent: ({start = 0, autoupdateMax = 1} = {}) => ({
+        propertyName: 'borderRadiusPercent',
+        type: MovingLinearParameter,
+        range: [0, 1],
+        autoupdateRange: [0, autoupdateMax],
+        start: start,
+        listenToLaunchpadKnob: [0, 4],
+        variance: 0.01,
+        monitorName: 'Roundness %',
+        autoupdateEveryNBeats: 2,
+        autoupdateOnCue: true,
+    }),
 };
 
 module.exports = P;
