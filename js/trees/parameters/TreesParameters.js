@@ -1,4 +1,4 @@
-const {MovingLinearParameter, LogarithmicParameter, LinearParameter, HoldButtonParameter, IntLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {MovingLinearParameter, LogarithmicParameter, LinearParameter, HoldButtonParameter, IntLinearParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 const {MixtrackKnobs, MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const tinycolor = require('tinycolor2');
 const {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
@@ -23,13 +23,7 @@ class TreesParameters extends PieceParameters {
     }
     _declareParameters() {
         return {
-            baseColor: {
-                type: MovingColorParameter,
-                start: tinycolor('#5ff'),
-                max: 5,
-                variance: 1,
-                autoupdate: 1000,
-            },
+            5: P.BaseColor(),
             0: P.NumColumns({start: 16, max: 24}),
             1: P.NumRows({start: 16, max: 24}),
             columnWidth: {

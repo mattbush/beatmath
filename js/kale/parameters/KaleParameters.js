@@ -1,7 +1,6 @@
-const {CycleParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {CycleParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 // const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
-const tinycolor = require('tinycolor2');
 const P = require('js/core/parameters/P');
 
 const MAX_NUM_ROWS = 6;
@@ -33,13 +32,7 @@ class KaleParameters extends PieceParameters {
                 listenToDecrementAndIncrementLaunchpadButtons: 2,
                 monitorName: '# Reflections',
             },
-            baseColor: {
-                type: MovingColorParameter,
-                start: tinycolor('#5ff'),
-                max: 6,
-                variance: 1.5,
-                autoupdate: 2000,
-            },
+            5: P.BaseColor(),
         };
     }
 }

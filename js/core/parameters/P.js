@@ -1,4 +1,5 @@
-const {LinearParameter, IntLinearParameter, MovingLinearParameter} = require('js/core/parameters/Parameter');
+const {LinearParameter, IntLinearParameter, MovingLinearParameter, MovingColorParameter} = require('js/core/parameters/Parameter');
+const tinycolor = require('tinycolor2');
 
 const P = {
     NumColumns: ({start, max}) => ({
@@ -64,6 +65,14 @@ const P = {
         monitorName: 'Roundness %',
         autoupdateEveryNBeats: 2,
         autoupdateOnCue: true,
+    }),
+    BaseColor: () => ({
+        propertyName: 'baseColor',
+        type: MovingColorParameter,
+        start: tinycolor('#5ff'),
+        max: 5,
+        variance: 1,
+        autoupdate: 1000,
     }),
 };
 
