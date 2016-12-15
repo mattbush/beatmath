@@ -1,7 +1,6 @@
 const {MovingLinearParameter, CycleParameter, MovingColorParameter, LinearParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 // const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
-const {ceilOfMultiple} = require('js/core/utils/math');
 const tinycolor = require('tinycolor2');
 const P = require('js/core/parameters/P');
 
@@ -13,7 +12,7 @@ class KaleParameters extends PieceParameters {
         return {
             0: P.NumColumns({start: 8, max: MAX_NUM_COLS}),
             1: P.NumRows({start: 3, max: MAX_NUM_ROWS}),
-            colColorShift: {
+            columnColorShift: {
                 type: MovingLinearParameter,
                 range: [-45, 45],
                 start: 0,
@@ -60,26 +59,14 @@ class KaleParameters extends PieceParameters {
                 listenToDecrementAndIncrementLaunchpadButtons: 2,
                 monitorName: '# Reflections',
             },
+            baseColor: {
+                type: MovingColorParameter,
+                start: tinycolor('#5ff'),
+                max: 6,
+                variance: 1.5,
+                autoupdate: 2000,
+            },
         };
-    }
-    constructor(...args) {
-        super(...args);
-
-        this.colorsByCoords = {};
-        const numColorRows = ceilOfMultiple(MAX_NUM_ROWS, 3) + 3;
-        const numColorCols = ceilOfMultiple(MAX_NUM_COLS, 3) + 3;
-        for (let row = -numColorRows; row <= numColorRows; row += 3) {
-            for (let col = -numColorCols; col <= numColorCols; col += 3) {
-                if ((row + col) % 2 === 0) {
-                    this.colorsByCoords[`${col},${row}`] = new MovingColorParameter({
-                        start: tinycolor('#5ff'),
-                        max: 6,
-                        variance: 1.5,
-                        autoupdate: 2000,
-                    });
-                }
-            }
-        }
     }
 }
 
