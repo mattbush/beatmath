@@ -30,9 +30,9 @@ const KaleCell = React.createClass({
     },
     _getColorByShifting: function(x, y) {
         const color = tinycolor(this.context.kaleParameters.baseColor.getValue().toHexString()); // clone
-        const colColorShift = this.context.kaleParameters.colColorShift.getValue();
+        const columnColorShift = this.context.kaleParameters.columnColorShift.getValue();
         const rowColorShift = this.context.kaleParameters.rowColorShift.getValue();
-        const colorShift = colColorShift * x + rowColorShift * y;
+        const colorShift = columnColorShift * x + rowColorShift * y;
         if (colorShift !== 0) {
             color.spin(colorShift);
         }

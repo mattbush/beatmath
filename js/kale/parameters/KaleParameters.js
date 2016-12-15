@@ -23,7 +23,7 @@ class KaleParameters extends PieceParameters {
                 listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
                 monitorName: '# Columns',
             },
-            colColorShift: {
+            columnColorShift: {
                 type: MovingLinearParameter,
                 range: [-45, 45],
                 start: 0,
