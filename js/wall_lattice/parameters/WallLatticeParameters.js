@@ -1,6 +1,7 @@
 const {Parameter, LinearParameter} = require('js/core/parameters/Parameter');
 const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
+const P = require('js/core/parameters/P');
 
 class WallLatticeParameters extends PieceParameters {
     _declareParameters() {
@@ -31,13 +32,7 @@ class WallLatticeParameters extends PieceParameters {
                 type: Parameter,
                 start: 8,
             },
-            wavePercent: {
-                type: LinearParameter,
-                range: [0, 1],
-                start: 0,
-                listenToLaunchpadFader: [5, {addButtonStatusLight: true}],
-                monitorName: 'Wave %',
-            },
+            0: P.CustomPercent({name: 'wavePercent', inputPosition: {fader: 5}}),
         };
     }
 }

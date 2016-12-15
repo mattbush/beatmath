@@ -15,7 +15,7 @@ class KaleParameters extends PieceParameters {
             3: P.RowColorShift({range: 45}),
             6: P.CustomToggle({name: 'isInfinite', button: 0}),
             7: P.CustomToggle({name: 'cellSymmetry', button: 3, start: true}),
-            4: P.TriangularGridPercent({start: 1, knobPosition: [2, 2]}),
+            4: P.TriangularGridPercent({start: 1, inputPosition: [2, 2]}),
             reflectionsPerCell: {
                 type: CycleParameter,
                 cycleValues: [1, 2, 4, 6],

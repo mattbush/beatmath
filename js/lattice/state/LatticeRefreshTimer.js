@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const {MovingIntLinearParameter, MovingLogarithmicParameter, MovingLinearParameter, CycleParameter} = require('js/core/parameters/Parameter');
+const {MovingIntLinearParameter, MovingLogarithmicParameter, MovingLinearParameter} = require('js/core/parameters/Parameter');
 const {MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
@@ -83,11 +83,6 @@ class LatticeRefreshTimer extends PieceParameters {
             },
             0: P.CustomToggle({name: 'bendGlobalSpirals', button: 2}),
             1: P.CustomToggle({name: 'bendLocalSpirals', button: 3}),
-            subdivisionSizeMultiple: {
-                type: CycleParameter,
-                cycleValues: [false, 1, 2, 3],
-                listenToCycleAndResetMixtrackButtons: [MixtrackButtons.L_EFFECT, MixtrackButtons.L_DELETE],
-            },
         };
     }
     constructor(mixboard, beatmathParameters, {latticeParameters}) {
@@ -140,16 +135,12 @@ class LatticeRefreshTimer extends PieceParameters {
 
         }
 
-        const subdivisionSizeMultiple = this.subdivisionSizeMultiple.getValue();
         let subdivisionRadius = false;
-        if (subdivisionSizeMultiple !== false) {
-            subdivisionRadius = rippleRadius * subdivisionSizeMultiple;
-        } else {
-            const subdivisionSize = this.subdivisionSize.getValue();
-            if (subdivisionSize !== MAX_RIPPLES_TREAT_AS_INFINITE) {
-                subdivisionRadius = subdivisionSize;
-            }
+        const subdivisionSize = this.subdivisionSize.getValue();
+        if (subdivisionSize !== MAX_RIPPLES_TREAT_AS_INFINITE) {
+            subdivisionRadius = subdivisionSize;
         }
+
         if (subdivisionRadius !== false) {
             row = modAndShiftToHalf(row, subdivisionRadius);
             col = modAndShiftToHalf(col, subdivisionRadius);

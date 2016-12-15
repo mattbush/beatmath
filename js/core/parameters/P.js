@@ -50,12 +50,12 @@ const P = {
         autoupdateOnCue: true,
         canSmoothUpdate: true,
     }),
-    TriangularGridPercent: ({start = 0, knobPosition}) => ({
+    TriangularGridPercent: ({start = 0, inputPosition}) => ({
         propertyName: 'triangularGridPercent',
         type: LinearParameter,
         range: [0, 1],
         start: start, buildupStart: 0,
-        listenToLaunchpadKnob: knobPosition,
+        listenToLaunchpadKnob: inputPosition,
         monitorName: 'Triangle Grid %',
     }),
     BorderRadiusPercent: ({start = 0, autoupdateMax = 1} = {}) => ({
@@ -84,6 +84,17 @@ const P = {
         start: start,
         listenToLaunchpadButton: button,
         monitorName: camelCaseToHumanReadable(name) + '?',
+    }),
+    CustomPercent: ({name, inputPosition, start = 0, buildupStart = 0}) => ({
+        propertyName: name,
+        type: LinearParameter,
+        range: [0, 1],
+        start: start, buildupStart: buildupStart,
+        monitorName: camelCaseToHumanReadable(name).replace('Percent', '%'),
+        ...(Array.isArray(inputPosition) ?
+            {listenToLaunchpadKnob: inputPosition} :
+            {listenToLaunchpadFader: [inputPosition.fader, {addButtonStatusLight: true}]}
+        ),
     }),
 };
 

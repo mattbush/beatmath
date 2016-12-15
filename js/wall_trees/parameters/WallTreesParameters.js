@@ -1,4 +1,4 @@
-const {MovingLinearParameter, LogarithmicParameter, LinearParameter, HoldButtonParameter} = require('js/core/parameters/Parameter');
+const {MovingLinearParameter, LogarithmicParameter, HoldButtonParameter} = require('js/core/parameters/Parameter');
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const tinycolor = require('tinycolor2');
 const {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
@@ -36,23 +36,8 @@ class WallTreesParameters extends PieceParameters {
             },
             1: P.ColumnColorShift({range: 180}),
             2: P.RowColorShift({range: 180}),
-            trailPercent: {
-                type: LinearParameter,
-                range: [0, 1],
-                start: 0.5, buildupStart: 0,
-                incrementAmount: 0.05,
-                monitorName: 'Trail %',
-                listenToLaunchpadKnob: [2, 2],
-                listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_MANUAL, MixtrackButtons.L_LOOP_IN],
-            },
-            revTrailPercent: {
-                type: LinearParameter,
-                range: [0, 1],
-                start: 0,
-                incrementAmount: 0.05,
-                monitorName: 'Rev Trail %',
-                listenToLaunchpadKnob: [1, 2],
-            },
+            8: P.CustomPercent({name: 'trailPercent', start: 0.5, inputPosition: [2, 2]}),
+            9: P.CustomPercent({name: 'revTrailPercent', start: 0, inputPosition: [1, 2]}),
             staggerAmount: {
                 type: MovingLinearParameter,
                 range: [-8, 8],
