@@ -11,16 +11,17 @@ const Snowflake = React.createClass({
     },
     getParameterBindings: function() {
         return {
-//          foo: this.state.snowstormParameters.foo,
+            length1: this.context.snowstormParameters.length1,
+            width1: this.context.snowstormParameters.width1,
         };
     },
     render: function() {
-        // const snowstormParameters = this.context.snowstormParameters;
+        //  const snowstormParameters = this.context.snowstormParameters;
         const points = [];
         const HYPOTENUSE = 2 * (3 ** -0.5);
         const TANGENT = 3 ** -0.5;
-        const length1 = 1;
-        const width1 = 0.1;
+        const length1 = this.getParameterValue('length1');
+        const width1 = this.getParameterValue('width1');
 
         _.times(6, i => {
             const angle = Math.PI * i / 3;
