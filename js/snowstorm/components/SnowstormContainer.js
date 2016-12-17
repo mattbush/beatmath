@@ -1,6 +1,7 @@
 const React = require('react');
 const SnowstormParameters = require('js/snowstorm/parameters/SnowstormParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
+const Snowflake = require('js/snowstorm/components/Snowflake');
 
 const SnowstormContainer = React.createClass({
     childContextTypes: {
@@ -23,7 +24,7 @@ const SnowstormContainer = React.createClass({
     render: function() {
         return (
             <BeatmathFrame>
-                Hello world!
+                <Snowflake />
             </BeatmathFrame>
         );
     },
