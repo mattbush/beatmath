@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
-// const {lerp, clamp} = require('js/core/utils/math');
+const {lerp} = require('js/core/utils/math');
 
 const Snowflake = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -19,10 +19,11 @@ const Snowflake = React.createClass({
         });
         return {
             ...parametersAtSnowstormIndex(0),
+            ...parametersAtSnowstormIndex(1),
         };
     },
     getBlendedValue(name) {
-        return this.getParameterValue(0 + name);
+        return lerp(this.getParameterValue(0 + name), this.getParameterValue(1 + name), 0.5);
     },
     render: function() {
         //  const snowstormParameters = this.context.snowstormParameters;
