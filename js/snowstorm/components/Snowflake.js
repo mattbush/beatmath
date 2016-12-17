@@ -1,29 +1,24 @@
 const _ = require('lodash');
 const React = require('react');
-const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const {lerp} = require('js/core/utils/math');
 
 const Snowflake = React.createClass({
-    mixins: [ParameterBindingsMixin],
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
         snowstormParameters: React.PropTypes.array,
     },
-    getParameterBindings: function() {
-        const parametersAtSnowstormIndex = i => ({
-            [i + 'length1']: this.context.snowstormParameters[i].length1,
-            [i + 'width1']: this.context.snowstormParameters[i].width1,
-            [i + 'offset2']: this.context.snowstormParameters[i].offset2,
-            [i + 'length2']: this.context.snowstormParameters[i].length2,
-            [i + 'width2']: this.context.snowstormParameters[i].width2,
-        });
-        return {
-            ...parametersAtSnowstormIndex(0),
-            ...parametersAtSnowstormIndex(1),
-        };
+    componentWillMount() {
+        this._blendedValues = {};
+        for (const propertyName of ['length1', 'width1', 'offset2', 'length2', 'width2']) {
+            this._blendedValues[propertyName] = lerp(
+                this.context.snowstormParameters[0][propertyName].getValue(),
+                this.context.snowstormParameters[1][propertyName].getValue(),
+                this.props.blend,
+            );
+        }
     },
-    getBlendedValue(name) {
-        return lerp(this.getParameterValue(0 + name), this.getParameterValue(1 + name), this.props.blend);
+    getBlendedValue(propertyName) {
+        return this._blendedValues[propertyName];
     },
     render: function() {
         //  const snowstormParameters = this.context.snowstormParameters;
@@ -69,7 +64,6 @@ const Snowflake = React.createClass({
         });
 
         const dx = (-0.5 + this.props.blend) * 1000;
-        console.log(this.props.blend, dx);
 
         return (
             <g style={{transform: `translateX(${dx}px) scale(${scale})`}}>

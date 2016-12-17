@@ -1,47 +1,65 @@
-const {LinearParameter} = require('js/core/parameters/Parameter');
+const {MovingLinearParameter} = require('js/core/parameters/Parameter');
 // const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
 class SnowstormParameters extends PieceParameters {
     constructor(mixboard, beatmathParameters, which) {
-        super(mixboard, beatmathParameters, {knobColumnOffset: which * 3});
+        super(mixboard, beatmathParameters, {
+            knobColumnOffset: which * 3,
+            monitorNamePrefix: which ? 'R ' : 'L ',
+        });
     }
-    _declareParameters({knobColumnOffset}) {
+    _declareParameters({knobColumnOffset, monitorNamePrefix}) {
         return {
             width1: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [0.1, 0.5],
                 start: 0.2,
                 listenToLaunchpadKnob: [0, 0 + knobColumnOffset],
-                monitorName: 'Width 1',
+                monitorname: monitorNamePrefix + 'Width 1',
+                variance: 0.01,
+                autoupdateEveryNBeats: 1,
+                autoupdateOnCue: true,
             },
             length1: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [0.3, 1.5],
                 start: 1,
                 listenToLaunchpadKnob: [0, 1 + knobColumnOffset],
-                monitorName: 'Length 1',
+                monitorname: monitorNamePrefix + 'Length 1',
+                variance: 0.03,
+                autoupdateEveryNBeats: 1,
+                autoupdateOnCue: true,
             },
             width2: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [0.1, 0.5],
                 start: 0.2,
                 listenToLaunchpadKnob: [1, 0 + knobColumnOffset],
-                monitorName: 'Width 2',
+                monitorname: monitorNamePrefix + 'Width 2',
+                variance: 0.01,
+                autoupdateEveryNBeats: 1,
+                autoupdateOnCue: true,
             },
             length2: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [0.3, 1.5],
                 start: 0.6,
                 listenToLaunchpadKnob: [1, 1 + knobColumnOffset],
-                monitorName: 'Length 2',
+                monitorname: monitorNamePrefix + 'Length 2',
+                variance: 0.03,
+                autoupdateEveryNBeats: 1,
+                autoupdateOnCue: true,
             },
             offset2: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [0, 1],
                 start: 0.5,
                 listenToLaunchpadKnob: [2, 1 + knobColumnOffset],
-                monitorName: 'Offset 2',
+                monitorname: monitorNamePrefix + 'Offset 2',
+                variance: 0.02,
+                autoupdateEveryNBeats: 1,
+                autoupdateOnCue: true,
             },
         };
     }
