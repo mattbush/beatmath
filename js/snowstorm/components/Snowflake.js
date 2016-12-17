@@ -23,7 +23,7 @@ const Snowflake = React.createClass({
         };
     },
     getBlendedValue(name) {
-        return lerp(this.getParameterValue(0 + name), this.getParameterValue(1 + name), 0.5);
+        return lerp(this.getParameterValue(0 + name), this.getParameterValue(1 + name), this.props.blend);
     },
     render: function() {
         //  const snowstormParameters = this.context.snowstormParameters;
@@ -37,7 +37,7 @@ const Snowflake = React.createClass({
         const offset2 = this.getBlendedValue('offset2') * this.getBlendedValue('length1');
         const width2 = this.getBlendedValue('width2');
         const length2 = this.getBlendedValue('length2') + width2 * HYPOTENUSE;
-        const scale = 1000 / (5 + (1.5 * length1) + (3 * width1) + (1.5 * offset2) + (3 * width2) + (2 * length2));
+        const scale = 300 / (5 + (1.5 * length1) + (3 * width1) + (1.5 * offset2) + (3 * width2) + (2 * length2));
 
         _.times(6, i => {
             const angle = Math.PI * i / 3;
@@ -68,8 +68,11 @@ const Snowflake = React.createClass({
             addPoint(-(width1), offset2 + width1 * TANGENT - width2 * HYPOTENUSE);
         });
 
+        const dx = (-0.5 + this.props.blend) * 1000;
+        console.log(this.props.blend, dx);
+
         return (
-            <g style={{transform: `scale(${scale})`}}>
+            <g style={{transform: `translateX(${dx}px) scale(${scale})`}}>
                 <polygon points={points.map(p => p.join(',')).join(' ')} fill="#0ff" />
             </g>
         );

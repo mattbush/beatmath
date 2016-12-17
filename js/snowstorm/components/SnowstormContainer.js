@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const React = require('react');
 const SnowstormParameters = require('js/snowstorm/parameters/SnowstormParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
@@ -27,7 +28,7 @@ const SnowstormContainer = React.createClass({
     render: function() {
         return (
             <BeatmathFrame>
-                <Snowflake />
+                {_.times(11, i => <Snowflake index={i} blend={i / 10} />)}
             </BeatmathFrame>
         );
     },
