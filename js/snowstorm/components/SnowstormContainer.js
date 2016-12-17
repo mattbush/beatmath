@@ -5,7 +5,7 @@ const Snowflake = require('js/snowstorm/components/Snowflake');
 
 const SnowstormContainer = React.createClass({
     childContextTypes: {
-        snowstormParameters: React.PropTypes.object,
+        snowstormParameters: React.PropTypes.array,
     },
     contextTypes: {
         mixboard: React.PropTypes.object,
@@ -18,7 +18,10 @@ const SnowstormContainer = React.createClass({
     },
     getInitialState: function() {
         return {
-            snowstormParameters: new SnowstormParameters(this.context.mixboard, this.context.beatmathParameters),
+            snowstormParameters: [
+                new SnowstormParameters(this.context.mixboard, this.context.beatmathParameters, 0),
+                new SnowstormParameters(this.context.mixboard, this.context.beatmathParameters, 1),
+            ],
         };
     },
     render: function() {

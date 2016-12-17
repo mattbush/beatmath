@@ -7,16 +7,22 @@ const Snowflake = React.createClass({
     mixins: [ParameterBindingsMixin],
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
-        snowstormParameters: React.PropTypes.object,
+        snowstormParameters: React.PropTypes.array,
     },
     getParameterBindings: function() {
+        const parametersAtSnowstormIndex = i => ({
+            [i + 'length1']: this.context.snowstormParameters[i].length1,
+            [i + 'width1']: this.context.snowstormParameters[i].width1,
+            [i + 'offset2']: this.context.snowstormParameters[i].offset2,
+            [i + 'length2']: this.context.snowstormParameters[i].length2,
+            [i + 'width2']: this.context.snowstormParameters[i].width2,
+        });
         return {
-            length1: this.context.snowstormParameters.length1,
-            width1: this.context.snowstormParameters.width1,
-            offset2: this.context.snowstormParameters.offset2,
-            length2: this.context.snowstormParameters.length2,
-            width2: this.context.snowstormParameters.width2,
+            ...parametersAtSnowstormIndex(0),
         };
+    },
+    getBlendedValue(name) {
+        return this.getParameterValue(0 + name);
     },
     render: function() {
         //  const snowstormParameters = this.context.snowstormParameters;
@@ -25,11 +31,11 @@ const Snowflake = React.createClass({
         const TANGENT = 3 ** -0.5;
         const SINE = 1 / 2;
         const COSINE = 3 ** 0.5 / 2;
-        const width1 = this.getParameterValue('width1');
-        const length1 = this.getParameterValue('length1') + width1 * HYPOTENUSE;
-        const offset2 = this.getParameterValue('offset2') * this.getParameterValue('length1');
-        const width2 = this.getParameterValue('width2');
-        const length2 = this.getParameterValue('length2') + width2 * HYPOTENUSE;
+        const width1 = this.getBlendedValue('width1');
+        const length1 = this.getBlendedValue('length1') + width1 * HYPOTENUSE;
+        const offset2 = this.getBlendedValue('offset2') * this.getBlendedValue('length1');
+        const width2 = this.getBlendedValue('width2');
+        const length2 = this.getBlendedValue('length2') + width2 * HYPOTENUSE;
         const scale = 1000 / (5 + (1.5 * length1) + (3 * width1) + (1.5 * offset2) + (3 * width2) + (2 * length2));
 
         _.times(6, i => {
