@@ -1,11 +1,15 @@
 const _ = require('lodash');
 const React = require('react');
 const {lerp} = require('js/core/utils/math');
+const {NUM_ROWS, BEATS_PER_ROW} = require('js/snowstorm/parameters/SnowstormConstants');
 
 const Snowflake = React.createClass({
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
         snowstormParameters: React.PropTypes.array,
+    },
+    getInitialState() {
+        return {mounted: false};
     },
     componentWillMount() {
         this._blendedValues = {};
@@ -16,11 +20,7 @@ const Snowflake = React.createClass({
                 this.props.blend,
             );
         }
-    },
-    getBlendedValue(propertyName) {
-        return this._blendedValues[propertyName];
-    },
-    render: function() {
+
         //  const snowstormParameters = this.context.snowstormParameters;
         const points = [];
         const HYPOTENUSE = 2 * (3 ** -0.5);
@@ -63,11 +63,32 @@ const Snowflake = React.createClass({
             addPoint(-(width1), offset2 + width1 * TANGENT - width2 * HYPOTENUSE);
         });
 
-        const dx = (-0.5 + this.props.blend) * 1000;
+        this._scale = scale;
+        this._points = points.map(p => p.join(',')).join(' ');
+    },
+    componentDidMount() {
+        _.defer(() => {
+            this.setState({mounted: true});
+        });
+    },
+    getBlendedValue(propertyName) {
+        return this._blendedValues[propertyName];
+    },
+    render: function() {
+        const dx = (-0.5 + this.props.blend) * 1110;
+        const dy = this.state.mounted ? 920 : 0;
+
+        const delay = (NUM_ROWS + 1) * BEATS_PER_ROW * this.context.beatmathParameters.tempo.getPeriod();
+        const style = {
+            transform: `translate(${dx}px, ${dy}px) scale(${this._scale})`,
+            transition: `transform ${delay}ms linear`,
+        };
+
+//        console.log(style);
 
         return (
-            <g style={{transform: `translateX(${dx}px) scale(${scale})`}}>
-                <polygon points={points.map(p => p.join(',')).join(' ')} fill="#0ff" />
+            <g style={style}>
+                <polygon points={this._points} fill="#0ff" />
             </g>
         );
     },

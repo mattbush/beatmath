@@ -13,12 +13,12 @@ class SnowstormParameters extends PieceParameters {
         return {
             width1: {
                 type: MovingLinearParameter,
-                range: [0.1, 0.5],
+                range: [0.1, 0.45],
                 start: 0.2,
                 listenToLaunchpadKnob: [0, 0 + knobColumnOffset],
                 monitorName: monitorNamePrefix + 'Width 1',
                 variance: 0.01,
-                autoupdateEveryNBeats: 1,
+                autoupdateEveryNBeats: 4,
                 autoupdateOnCue: true,
             },
             length1: {
@@ -28,17 +28,17 @@ class SnowstormParameters extends PieceParameters {
                 listenToLaunchpadKnob: [0, 1 + knobColumnOffset],
                 monitorName: monitorNamePrefix + 'Length 1',
                 variance: 0.03,
-                autoupdateEveryNBeats: 1,
+                autoupdateEveryNBeats: 4,
                 autoupdateOnCue: true,
             },
             width2: {
                 type: MovingLinearParameter,
-                range: [0.1, 0.5],
+                range: [0.1, 0.45],
                 start: 0.2,
                 listenToLaunchpadKnob: [1, 0 + knobColumnOffset],
                 monitorName: monitorNamePrefix + 'Width 2',
                 variance: 0.01,
-                autoupdateEveryNBeats: 1,
+                autoupdateEveryNBeats: 4,
                 autoupdateOnCue: true,
             },
             length2: {
@@ -48,7 +48,7 @@ class SnowstormParameters extends PieceParameters {
                 listenToLaunchpadKnob: [1, 1 + knobColumnOffset],
                 monitorName: monitorNamePrefix + 'Length 2',
                 variance: 0.03,
-                autoupdateEveryNBeats: 1,
+                autoupdateEveryNBeats: 4,
                 autoupdateOnCue: true,
             },
             offset2: {
@@ -58,7 +58,7 @@ class SnowstormParameters extends PieceParameters {
                 listenToLaunchpadKnob: [2, 1 + knobColumnOffset],
                 monitorName: monitorNamePrefix + 'Offset 2',
                 variance: 0.02,
-                autoupdateEveryNBeats: 1,
+                autoupdateEveryNBeats: 4,
                 autoupdateOnCue: true,
             },
         };

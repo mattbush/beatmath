@@ -3,9 +3,7 @@ const React = require('react');
 const SnowstormParameters = require('js/snowstorm/parameters/SnowstormParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const Snowflake = require('js/snowstorm/components/Snowflake');
-
-const NUM_COLS = 10;
-const NUM_ROWS = 10;
+const {NUM_ROWS, NUM_COLS, BEATS_PER_ROW} = require('js/snowstorm/parameters/SnowstormConstants');
 
 const Snowstorm = React.createClass({
     contextTypes: {
@@ -17,8 +15,8 @@ const Snowstorm = React.createClass({
     componentDidMount() {
         this.context.beatmathParameters.tempo.addListener(() => {
             const numTicks = this.context.beatmathParameters.tempo.getNumTicks();
-            if (numTicks % 4 === 0) {
-                this.setState({numTicks: numTicks / 4});
+            if (numTicks % BEATS_PER_ROW === 0) {
+                this.setState({numTicks: numTicks / BEATS_PER_ROW});
             }
         });
     },
@@ -28,8 +26,8 @@ const Snowstorm = React.createClass({
         const endRow = this.state.numTicks;
         for (let i = startRow; i <= endRow; i++) {
             rows.push(
-                <g key={i} style={{transform: `translateY(${i * 50}px)`}}>
-                    {_.times(NUM_COLS + 1, j => <Snowflake key={j} blend={j / NUM_COLS} />)}
+                <g key={i} style={{transform: 'translateY(-460px)'}}>
+                    {_.times(NUM_COLS + 1, j => <Snowflake key={j} blend={(j + (i % 2 ? 0.5 : 0)) / (NUM_COLS + 0.5)} />)}
                 </g>
             );
         }
