@@ -2,6 +2,8 @@ const _ = require('lodash');
 const React = require('react');
 const {lerp} = require('js/core/utils/math');
 const {NUM_ROWS, NUM_COLUMNS, BEATS_PER_ROW, SNOWFLAKE_SCALE} = require('js/snowstorm/parameters/SnowstormConstants');
+const tinycolor = require('tinycolor2');
+const mapColorString = require('js/core/utils/mapColorString');
 
 const Snowflake = React.createClass({
     contextTypes: {
@@ -20,6 +22,13 @@ const Snowflake = React.createClass({
                 this.props.blend,
             );
         }
+
+        const baseColor = tinycolor.mix(
+            this.context.snowstormParameters[0].baseColor.getValue(),
+            this.context.snowstormParameters[1].baseColor.getValue(),
+            this.props.blend * 100,
+        );
+        this._color = mapColorString(baseColor);
 
         //  const snowstormParameters = this.context.snowstormParameters;
         const points = [];
@@ -88,7 +97,7 @@ const Snowflake = React.createClass({
 
         return (
             <g style={style}>
-                <polygon points={this._points} fill="#0ff" />
+                <polygon points={this._points} fill={this._color} />
             </g>
         );
     },
