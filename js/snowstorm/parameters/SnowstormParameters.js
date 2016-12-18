@@ -62,11 +62,21 @@ class SnowstormParameters extends PieceParameters {
                 autoupdateEveryNBeats: 4,
                 autoupdateOnCue: true,
             },
+            rotation: {
+                type: MovingLinearParameter,
+                range: [-90, 90],
+                start: 0,
+                listenToLaunchpadKnob: [0, 2 + knobColumnOffset],
+                monitorName: monitorNamePrefix + 'Rotation',
+                variance: 30,
+                autoupdateEveryNBeats: 4,
+                autoupdateOnCue: true,
+            },
             baseColor: {
                 type: MovingColorParameter,
                 start: tinycolor('#3ff'),
-                max: 6,
-                variance: 2,
+                max: 7,
+                variance: 3,
                 autoupdate: 2000,
             },
         };

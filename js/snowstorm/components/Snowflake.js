@@ -15,7 +15,7 @@ const Snowflake = React.createClass({
     },
     componentWillMount() {
         this._blendedValues = {};
-        for (const propertyName of ['length1', 'width1', 'offset2', 'length2', 'width2']) {
+        for (const propertyName of ['length1', 'width1', 'offset2', 'length2', 'width2', 'rotation']) {
             this._blendedValues[propertyName] = lerp(
                 this.context.snowstormParameters[0][propertyName].getValue(),
                 this.context.snowstormParameters[1][propertyName].getValue(),
@@ -86,10 +86,11 @@ const Snowflake = React.createClass({
     render: function() {
         const dx = (-0.5 + this.props.blend) * 116 * (NUM_COLUMNS + 1.5);
         const dy = this.state.mounted ? 116 * (NUM_ROWS + 1) : 0;
+        const rotation = this.state.mounted ? this.getBlendedValue('rotation') * NUM_ROWS : 0;
 
         const delay = (NUM_ROWS + 1) * BEATS_PER_ROW * this.context.beatmathParameters.tempo.getPeriod();
         const style = {
-            transform: `translate(${dx}px, ${dy}px) scale(${this._scale})`,
+            transform: `translate(${dx}px, ${dy}px) scale(${this._scale}) rotate(${rotation}deg)`,
             transition: `transform ${delay}ms linear`,
         };
 
