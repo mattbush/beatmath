@@ -3,7 +3,7 @@ const React = require('react');
 const SnowstormParameters = require('js/snowstorm/parameters/SnowstormParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const Snowflake = require('js/snowstorm/components/Snowflake');
-const {NUM_ROWS, NUM_COLS, BEATS_PER_ROW} = require('js/snowstorm/parameters/SnowstormConstants');
+const {NUM_ROWS, NUM_COLUMNS, BEATS_PER_ROW} = require('js/snowstorm/parameters/SnowstormConstants');
 
 const Snowstorm = React.createClass({
     contextTypes: {
@@ -26,8 +26,8 @@ const Snowstorm = React.createClass({
         const endRow = this.state.numTicks;
         for (let i = startRow; i <= endRow; i++) {
             rows.push(
-                <g key={i} style={{transform: 'translateY(-460px)'}}>
-                    {_.times(NUM_COLS + 1, j => <Snowflake key={j} blend={(j + (i % 2 ? 0.5 : 0)) / (NUM_COLS + 0.5)} />)}
+                <g key={i} style={{transform: `translateY(${-58 * (NUM_ROWS + 1)}px)`}}>
+                    {_.times(NUM_COLUMNS + 1, j => <Snowflake key={j} blend={(j + (i % 2 ? 0.5 : 0)) / (NUM_COLUMNS + 0.5)} />)}
                 </g>
             );
         }

@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const React = require('react');
 const {lerp} = require('js/core/utils/math');
-const {NUM_ROWS, BEATS_PER_ROW} = require('js/snowstorm/parameters/SnowstormConstants');
+const {NUM_ROWS, NUM_COLUMNS, BEATS_PER_ROW, SNOWFLAKE_SCALE} = require('js/snowstorm/parameters/SnowstormConstants');
 
 const Snowflake = React.createClass({
     contextTypes: {
@@ -32,7 +32,7 @@ const Snowflake = React.createClass({
         const offset2 = this.getBlendedValue('offset2') * this.getBlendedValue('length1');
         const width2 = this.getBlendedValue('width2');
         const length2 = this.getBlendedValue('length2') + width2 * HYPOTENUSE;
-        const scale = 300 / (5 + (1.5 * length1) + (3 * width1) + (1.5 * offset2) + (3 * width2) + (2 * length2));
+        const scale = SNOWFLAKE_SCALE * 300 / (5 + (1.5 * length1) + (3 * width1) + (1.5 * offset2) + (3 * width2) + (2 * length2));
 
         _.times(6, i => {
             const angle = Math.PI * i / 3;
@@ -75,8 +75,8 @@ const Snowflake = React.createClass({
         return this._blendedValues[propertyName];
     },
     render: function() {
-        const dx = (-0.5 + this.props.blend) * 1110;
-        const dy = this.state.mounted ? 920 : 0;
+        const dx = (-0.5 + this.props.blend) * 116 * (NUM_COLUMNS + 1.5);
+        const dy = this.state.mounted ? 116 * (NUM_ROWS + 1) : 0;
 
         const delay = (NUM_ROWS + 1) * BEATS_PER_ROW * this.context.beatmathParameters.tempo.getPeriod();
         const style = {
