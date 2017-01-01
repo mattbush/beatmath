@@ -1,7 +1,6 @@
 const {MovingLinearParameter, IntLinearParameter, CycleParameter, MovingColorParameter, LinearParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 // const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
-const {ceilOfMultiple} = require('js/core/utils/math');
 const tinycolor = require('tinycolor2');
 
 const MAX_NUM_ROWS = 7;
@@ -17,14 +16,14 @@ class KaleParameters extends PieceParameters {
                 listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
                 monitorName: '# Rows',
             },
-            numCols: {
+            numColumns: {
                 type: IntLinearParameter,
                 start: 15,
                 range: [0, MAX_NUM_COLS],
                 listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
                 monitorName: '# Columns',
             },
-            colColorShift: {
+            columnColorShift: {
                 type: MovingLinearParameter,
                 range: [-45, 45],
                 start: 0,
@@ -61,7 +60,7 @@ class KaleParameters extends PieceParameters {
             triangularGridPercent: {
                 type: LinearParameter,
                 range: [0, 1],
-                start: 1, mixboardStart: 1,
+                start: 1, buildupStart: 1,
                 listenToLaunchpadKnob: [2, 2],
                 monitorName: 'Triangle Grid %',
             },
@@ -71,26 +70,14 @@ class KaleParameters extends PieceParameters {
                 listenToDecrementAndIncrementLaunchpadButtons: 2,
                 monitorName: '# Reflections',
             },
+            baseColor: {
+                type: MovingColorParameter,
+                start: tinycolor('#5ff'),
+                max: 6,
+                variance: 1.5,
+                autoupdate: 2000,
+            },
         };
-    }
-    constructor(...args) {
-        super(...args);
-
-        this.colorsByCoords = {};
-        const numColorRows = ceilOfMultiple(MAX_NUM_ROWS, 3) + 3;
-        const numColorCols = ceilOfMultiple(MAX_NUM_COLS, 3) + 3;
-        for (let row = -numColorRows; row <= numColorRows; row += 3) {
-            for (let col = -numColorCols; col <= numColorCols; col += 3) {
-                if ((row + col) % 2 === 0) {
-                    this.colorsByCoords[`${col},${row}`] = new MovingColorParameter({
-                        start: tinycolor('#5ff'),
-                        max: 6,
-                        variance: 1.5,
-                        autoupdate: 2000,
-                    });
-                }
-            }
-        }
     }
 }
 

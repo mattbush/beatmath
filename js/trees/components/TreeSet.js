@@ -22,19 +22,19 @@ const TreeFrame = React.createClass({
     },
     render: function() {
         const treesParameters = this.context.treesParameters;
-        const numTrees = treesParameters.numTrees.getValue();
+        const numColumns = treesParameters.numColumns.getValue();
         const indexOffsetForMapperShape = this.props.mapperShapeIndex
-            ? numTrees * this.props.mapperShapeIndex
+            ? numColumns * this.props.mapperShapeIndex
             : 0;
 
-        const treeSpacing = treesParameters.getTreeSpacing();
+        const columnSpacing = treesParameters.getColumnSpacing();
         const polarGridAmount = clamp(treesParameters.polarGridAmount.getValue(), 0, 1);
 
-        const transformations = _.times(numTrees, index => {
-            const totalTreeSpacing = treesParameters.getTotalTreeSpacing();
-            const dx = ((index + 0.5) * treeSpacing - totalTreeSpacing / 2) * (1 - polarGridAmount);
-            const dy = treesParameters.getTotalLevelSpacing() / 2 * (1 - polarGridAmount);
-            const rotation = ((index + 0.5) - (numTrees / 2)) * (360 / numTrees) * polarGridAmount;
+        const transformations = _.times(numColumns, index => {
+            const totalColumnSpacing = treesParameters.getTotalColumnSpacing();
+            const dx = ((index + 0.5) * columnSpacing - totalColumnSpacing / 2) * (1 - polarGridAmount);
+            const dy = treesParameters.getTotalRowSpacing() / 2 * (1 - polarGridAmount);
+            const rotation = ((index + 0.5) - (numColumns / 2)) * (360 / numColumns) * polarGridAmount;
             return {
                 transform: `translate(${dx}px, ${dy}px) rotate(${rotation}deg) scaleY(-1)`,
             };
@@ -42,7 +42,7 @@ const TreeFrame = React.createClass({
 
         return (
             <g>
-                {_.times(numTrees, index =>
+                {_.times(numColumns, index =>
                     <g key={index} style={transformations[index]} className="tree">
                         <Tree index={index + indexOffsetForMapperShape} />
                     </g>
