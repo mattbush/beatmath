@@ -23,7 +23,14 @@ const WallTreesHex = React.createClass({
         return (
             <g style={{transform: `translate(${tx}px, ${ty}px)`}}>
                 {shapes.map((polygon, index) => {
-                    const fill = this.context.wallTreesParameters.getColorForRowAndColumnAndPolygon(this.props.row, this.props.column, polygon);
+                    let dy = 0;
+                    if (polygon.center[0] === 0 && polygon.center[1] === 0) {
+                        dy = polygon.yMax / 2;
+                    }
+                    const column = (tx + polygon.center[0] - 7) / Y_AXIS_SCALE;
+                    const row = -(ty + polygon.center[1] + dy - 1.5) * 2;
+
+                    const fill = this.context.wallTreesParameters.getColorForColumnAndRow(column, row);
                     return <polygon className="mine" key={index} fill={fill} points={polygon.points} />;
                 })}
             </g>
