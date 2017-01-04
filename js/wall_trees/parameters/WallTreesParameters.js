@@ -6,8 +6,8 @@ const PieceParameters = require('js/core/parameters/PieceParameters');
 const {arclerp} = require('js/core/utils/math');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 
-const NUM_TREES = 4;
-const NUM_LEVELS = 60;
+const NUM_TREES = 15;
+const NUM_LEVELS = 8;
 
 const PI_TIMES_2 = Math.PI * 2;
 
@@ -41,7 +41,7 @@ class WallTreesParameters extends PieceParameters {
             },
             columnColorShift: {
                 type: MovingLinearParameter,
-                range: [-180, 180],
+                range: [-45, 45],
                 start: 0,
                 incrementAmount: 2.5,
                 monitorName: 'Column Color Shift',
@@ -54,7 +54,7 @@ class WallTreesParameters extends PieceParameters {
             },
             rowColorShift: {
                 type: MovingLinearParameter,
-                range: [-180, 180],
+                range: [-45, 45],
                 start: 0,
                 incrementAmount: 2.5,
                 monitorName: 'Row Color Shift',
@@ -178,7 +178,7 @@ class WallTreesParameters extends PieceParameters {
         }
         if (staggerAmount !== 0) {
             if (this.mirrorStagger.getValue()) {
-                columnIndex = posModAndBendToLowerHalf(columnIndex, NUM_TREES - 1);
+                columnIndex = posModAndBendToLowerHalf(columnIndex, (NUM_TREES / 2.5));
             }
             rowIndex -= (columnIndex - NUM_TREES / 2) * staggerAmount;
         }
@@ -188,8 +188,7 @@ class WallTreesParameters extends PieceParameters {
     _getColorShiftPerColumn() {
         return this.columnColorShift.getValue();
     }
-    getColorForRowAndColumnAndPolygon(row, column, polygon) {
-        const level = column * 4 + polygon.clockNumber;
+    getColorForColumnAndRow(column, row) {
         if (this.whiteout.getValue()) {
             return WHITE;
         } else if (this.blackout.getValue()) {
@@ -198,11 +197,11 @@ class WallTreesParameters extends PieceParameters {
         const color = tinycolor(this.baseColor.getValue().toHexString()); // clone
         const colorShiftPerColumn = this._getColorShiftPerColumn();
         const colorShiftPerRow = this.rowColorShift.getValue();
-        const colorShift = colorShiftPerColumn * row + colorShiftPerRow * level;
+        const colorShift = colorShiftPerColumn * column + colorShiftPerRow * row;
         if (colorShift !== 0) {
             color.spin(colorShift);
         }
-        const baseRowIllumination = this._getRowIllumination(row, level);
+        const baseRowIllumination = this._getRowIllumination(column, row);
         const revTrailPercent = 1 - this.revTrailPercent.getValue();
         let rowIllumination;
         if (baseRowIllumination > revTrailPercent || revTrailPercent === 0) {
