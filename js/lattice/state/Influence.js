@@ -12,7 +12,7 @@ class Influence {
         this._latticeParameters = latticeParameters;
 
         this._colParameter = new MovingLinearParameter({
-            range: [new NegatedParameter(latticeParameters.numCols), latticeParameters.numCols],
+            range: [new NegatedParameter(latticeParameters.numColumns), latticeParameters.numColumns],
             variance: 0.25,
             startLerp: startCol,
         });

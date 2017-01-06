@@ -23,7 +23,7 @@ class WallLatticeParameters extends PieceParameters {
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,
                 monitorName: 'Distance Coeff',
             },
-            numCols: {
+            numColumns: {
                 type: Parameter,
                 start: 38,
             },

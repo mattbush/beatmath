@@ -61,15 +61,15 @@ const LatticeGrid = React.createClass({
         return {
             showInfluences: this.state.latticeParameters.showInfluences,
             numRows: this.state.latticeParameters.numRows,
-            numCols: this.state.latticeParameters.numCols,
+            numColumns: this.state.latticeParameters.numColumns,
         };
     },
     render: function() {
         const children = [];
         const numRows = this.getParameterValue('numRows');
-        const numCols = this.getParameterValue('numCols');
+        const numColumns = this.getParameterValue('numColumns');
         for (let row = -numRows; row <= numRows; row++) {
-            for (let col = -numCols; col <= numCols; col++) {
+            for (let col = -numColumns; col <= numColumns; col++) {
                 children.push(<LatticePixel row={row} col={col} key={row + '|' + col} />);
             }
         }

@@ -17,9 +17,8 @@ class PieceParameters {
         _.each(parameters, (properties, paramName) => {
             let {type, ...restOfProperties} = properties;
 
-            if (this._mixboard.isMixboardConnected() && _.has(restOfProperties, 'mixboardStart')) {
-                restOfProperties.start = restOfProperties.mixboardStart;
-                delete restOfProperties.mixboardStart;
+            if (this._mixboard.isMixboardConnected() && _.has(restOfProperties, 'buildupStart') && location.search.includes('buildup')) {
+                restOfProperties.start = restOfProperties.buildupStart;
             }
 
             const specialProperties = _.pick(restOfProperties, SPECIAL_KEYS);

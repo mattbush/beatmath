@@ -43,7 +43,7 @@ const WallLatticeContainer = React.createClass({
         return {
             showInfluences: this.state.latticeParameters.showInfluences,
             numRows: this.state.latticeParameters.numRows,
-            numCols: this.state.latticeParameters.numCols,
+            numColumns: this.state.latticeParameters.numColumns,
         };
     },
 

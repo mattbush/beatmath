@@ -21,7 +21,7 @@ class RingParameters extends PieceParameters {
                 type: IntLinearParameter,
                 range: [0, 16],
                 start: (ringIndex + 1),
-                mixboardStart: ringIndex ? 1 : 1,
+                buildupStart: ringIndex ? 1 : 1,
                 listenToLaunchpadFader: [ringIndex, {addButtonStatusLight: true}],
                 monitorName: prettyRingIndex + '# Nodes',
             },

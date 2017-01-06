@@ -90,7 +90,7 @@ class SubjectParameters extends PieceParameters {
                 range: [0, 1],
                 autoupdateRange: [0.05, 0.55],
                 start: 0.3,
-                mixboardStart: 1,
+                buildupStart: 1,
                 listenToLaunchpadFader: [2, {addButtonStatusLight: true}],
                 monitorName: 'View Shift %',
                 variance: 0.01,

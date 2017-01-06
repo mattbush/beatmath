@@ -16,36 +16,36 @@ const Tree = React.createClass({
     },
     render: function() {
         const treesParameters = this.context.treesParameters;
-        const numLevels = treesParameters.numLevels.getValue();
-        const levelSpacing = treesParameters.getLevelSpacing();
+        const numRows = treesParameters.numRows.getValue();
+        const rowSpacing = treesParameters.getRowSpacing();
 
         const polarGridAmount = clamp(treesParameters.polarGridAmount.getValue(), 0, 1);
-        const baseTreeWidth = treesParameters.getTreeWidth();
+        const baseColumnWidth = treesParameters.getColumnWidth();
 
-        const levelHeight = treesParameters.getLevelHeight();
+        const rowHeight = treesParameters.getRowHeight();
 
         const borderRadius = treesParameters.getBorderRadius();
 
         return (
             <g>
-                {_.times(numLevels, levelIndex => {
-                    const fill = treesParameters.getColorForIndexAndLevel(this.props.index, levelIndex);
-                    let treeWidth = baseTreeWidth;
+                {_.times(numRows, rowIndex => {
+                    const fill = treesParameters.getColorForIndexAndRow(this.props.index, rowIndex);
+                    let columnWidth = baseColumnWidth;
                     if (polarGridAmount > 0) {
-                        treeWidth = lerp(baseTreeWidth, baseTreeWidth * (levelIndex + 1) / numLevels, polarGridAmount);
+                        columnWidth = lerp(baseColumnWidth, baseColumnWidth * (rowIndex + 1) / numRows, polarGridAmount);
                     }
 
                     return (
                         <rect
                             className="treeRect"
-                            key={levelIndex}
+                            key={rowIndex}
                             fill={fill}
-                            x={-(treeWidth / 2)}
-                            y={levelIndex * levelSpacing + levelHeight / 2}
+                            x={-(columnWidth / 2)}
+                            y={rowIndex * rowSpacing + rowHeight / 2}
                             rx={borderRadius}
                             ry={borderRadius}
-                            width={treeWidth}
-                            height={levelHeight}
+                            width={columnWidth}
+                            height={rowHeight}
                         />
                     );
                 })}
