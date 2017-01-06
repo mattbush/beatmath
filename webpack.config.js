@@ -8,6 +8,7 @@ module.exports = {
         lattice: './js/lattice/lattice',
         nodes: './js/nodes/nodes',
         pinecone: './js/pinecone/pinecone',
+        snowstorm: './js/snowstorm/snowstorm',
         text: './js/text/text',
         trees: './js/trees/trees',
         twenty_sixteen: './js/twenty_sixteen/twenty_sixteen',
