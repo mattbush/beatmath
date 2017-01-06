@@ -77,14 +77,14 @@ class BeatmathParameters {
             }
             if (mixboard.isLaunchpad()) {
                 this.frameScaleAutoupdating.listenToLaunchpadFader(mixboard, 6, {addButtonStatusLight: true});
+                this.tempo.addListener(() => {
+                    const nTicks = 1;
+                    const tick = this.tempo.getNumTicks();
+                    if (tick % (nTicks * this.tempo._bpmMod) === 0) {
+                        this.frameScaleAutoupdating.update();
+                    }
+                });
             }
-            this.tempo.addListener(() => {
-                const nTicks = 1;
-                const tick = this.tempo.getNumTicks();
-                if (tick % (nTicks * this.tempo._bpmMod) === 0) {
-                    this.frameScaleAutoupdating.update();
-                }
-            });
 
             this.frameRotation = new AngleParameter({
                 start: 0,

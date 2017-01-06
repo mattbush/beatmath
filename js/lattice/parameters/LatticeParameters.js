@@ -30,19 +30,7 @@ class LatticeParameters extends PieceParameters {
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,
                 monitorName: 'Distance Coeff',
             },
-            numCols: {
-<<<<<<< HEAD
-                type: LinearParameter,
-                range: [0, 40],
-                start: 2,
-                listenToFader: mixboardFader.L_GAIN,
-            },
-            numRows: {
-                type: LinearParameter,
-                range: [0, 25],
-                start: 2,
-                listenToFader: mixboardFader.R_GAIN,
-=======
+            numColumns: {
                 type: IntLinearParameter,
                 range: [0, 24],
                 start: 12,
@@ -57,7 +45,6 @@ class LatticeParameters extends PieceParameters {
                 listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
                 listenToMixtrackFader: MixtrackFaders.R_GAIN,
                 monitorName: '# Rows',
->>>>>>> master
             },
             oscillate: {
                 type: ToggleParameter,
@@ -66,7 +53,7 @@ class LatticeParameters extends PieceParameters {
                 listenToMixtrackButton: MixtrackButtons.L_PITCH_BEND_MINUS,
                 monitorName: 'Oscillate?',
             },
-            triangularGridAmount: {
+            triangularGridPercent: {
                 type: LinearParameter,
                 range: [0, 1],
                 start: 0,
