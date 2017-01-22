@@ -86,6 +86,21 @@ const w4 = {color: '#00bb33', points: '6,2 6,-2 0,-4 0,0'};
 const w8 = {color: '#00bb33', points: '0,-4 -6,-2 -6,2 0,0'};
 const w12 = {color: '#00bb33', points: '-6,2 0,4 6,2 0,0'};
 
+// wa: variant of w with an inscribed small upward triangle
+const wa1 = {color: '#00aaaa', points: '0,4 6,2 1.5,0.5 0,2'};
+const wa3 = {color: '#00aaaa', points: '6,2 6,-2 3,-1, 1.5,0.5'};
+const wa5 = {color: '#00aaaa', points: '6,-2 0,-4 0,-1 3,-1'};
+const wa7 = {color: '#00aaaa', points: '0,-4 -6,-2 -3,-1 0,-1'};
+const wa9 = {color: '#00aaaa', points: '-6,-2 -6,2 -1.5,0.5 -3,-1'};
+const wa11 = {color: '#00aaaa', points: '-6,2 0,4 0,2 -1.5,0.5'};
+
+const wa2 = {color: '#00bb33', points: '0,4 6,2 6,-2 3,-1 0,2'};
+const wa6 = {color: '#00bb33', points: '6,-2 0,-4 -6,-2 -3,-1 3,-1'};
+const wa10 = {color: '#00bb33', points: '-6,-2 -6,2 0,4 0,2 -3,-1'};
+const wa4 = {color: '#00bb33', points: '6,2 6,-2 0,-4 0,-1 3,-1 1.5,0.5'};
+const wa8 = {color: '#00bb33', points: '0,-4 -6,-2 -6,2 -1.5,0.5 -3,-1 0,-1'};
+const wa12 = {color: '#00bb33', points: '-6,2 0,4 6,2 1.5,0.5 0,2 -1.5,0.5'};
+
 const v0 = {color: '#444444', points: '0,2 3,3 3,1 6,0 3,-1 3,-3 0,-2 -3,-3 -3,-1 -6,0 -3,1 -3,3'};
 const v1 = {color: '#444444', points: '3,3 3,-1 -3,-3, -3,1'};
 const v3 = {color: '#444444', points: '0,2 6,0 0,-2 -6,0'};
@@ -328,11 +343,11 @@ const tc11 = {color: '#11AA66', points: '0,2 -6,2 -1.5,0.5'};
 
 const hexGridShapes = [
     {0: [sc1, sc3, sc5, sc7, sc9, sc11], 1: [sc4, sc8, sc12], 2: [f4, f8, f12, rc2, rc6, rc10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512, a555], 4: [f1, f3, f5, f7, f9, f11, a2, a6, a10, b55, a54, a58, a512],
-     5: [w2, w6, w10, b55, a54, a58, a512], 6: [w2, w6, w10, a5], 7: [x0, y0, z1, a5, h2, h6, h10], 8: [i2, i6, i10, x0, y0, z1, k2, k6, k10, a5], 9: [i2, i6, i10, x0, y0, z1, c1],
+     5: [wa2, wa6, wa10, b55, a54, a58, a512], 6: [wa2, wa6, wa10, a5], 7: [x0, y0, z1, a5, h2, h6, h10], 8: [i2, i6, i10, x0, y0, z1, k2, k6, k10, a5], 9: [i2, i6, i10, x0, y0, z1, c1],
      10: [x1, x0, y1, y0, z1, z0, b1, b3, b5, b7, b9, b11, c1], 11: [x1, x0, y1, y0, z1, z0, z4, z5, z6, z7, b1, b5, b7, b11], 12: [x1, y6, x5, y1, x0, y5, x6, y0, z1, z5, z6, z0], 13: [x1, x2, x9, x0, y1, y3, y8, y0, v3], 14: [xx1, yy5, xx7, yy11, v3], 15: [x1, x0, y1, y0, z1, z0, v0]},
 
-    {/**/0: [sb1, sb3, sb5, sb7, sb9, sb11], 1: [sb4, sb8, sb12], 2: [f4, f8, f12, rb2, rb6, rb10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512], 4: [w4, w8, w12, b55, a54, a58, a512],
-         5: [w4, w8, w12, a5], 6: [w1, w3, w5, w7, w9, w11, a5], 7: [g1, g3, g5, g7, g9, g11, k2, k6, k10, a5], 8: [g1, g3, g5, g7, g9, g11, c1], 9: [g12, g4, g8, c1],
+    {/**/0: [sb1, sb3, sb5, sb7, sb9, sb11], 1: [sb4, sb8, sb12], 2: [f4, f8, f12, rb2, rb6, rb10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512], 4: [wa4, wa8, wa12, b55, a54, a58, a512],
+         5: [wa4, wa8, wa12, a5], 6: [wa1, wa3, wa5, wa7, wa9, wa11, a5], 7: [g1, g3, g5, g7, g9, g11, k2, k6, k10, a5], 8: [g1, g3, g5, g7, g9, g11, c1], 9: [g12, g4, g8, c1],
          10: [z1, z2, z3, x8, x9, x0, y8, y9, y0, c1], 11: [x1, x2, y3, y1, x0, x9, y8, y0, z4, z5, z6, z7], 12: [x1, x0, y1, y0, z4, z5, z6, z7, i6, i12], 13: [x1, x0, y1, y0, i6, i12, v3], 14: [xx3, zz5, xx9, zz11, v1]},
 
     {0: [tb2, tb4, tb6, tb8, tb10, tb12, c1], 1: [sa1, sa3, sa5, sa7, sa9, sa11], 2: [sa4, sa8, sa12], 3: [f4, f8, f12, ra2, ra6, ra10], 4: [f4, f8, f12, a2, a6, a10, a5],
