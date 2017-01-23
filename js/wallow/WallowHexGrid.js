@@ -454,6 +454,7 @@ const processShapeIfNeeded = function(shape) {
     const yMax = -_.min(points.map(p => p[1]));
 
     shape.center = [centerX, centerY];
+    shape.pointsAroundCenter = shape.points.map(([x, y]) => [x - centerX, y - centerY]);
     shape.clockNumber = Math.round(posMod(deg + 90, 360) / 30);
     shape.yMax = yMax;
 };

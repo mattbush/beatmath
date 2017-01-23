@@ -6,6 +6,8 @@ const PieceParameters = require('js/core/parameters/PieceParameters');
 const {lerp, dist, manhattanDist, triangularDist, polarAngleDeg, posMod, modAndShiftToHalf, posModAndBendToLowerHalf} = require('js/core/utils/math');
 const MAX_RIPPLES_TREAT_AS_INFINITE = 40;
 
+const EPSILON = 0.01;
+
 class LatticeRefreshTimer extends PieceParameters {
     _declareParameters() {
         return {
@@ -108,6 +110,7 @@ class LatticeRefreshTimer extends PieceParameters {
     constructor(mixboard, beatmathParameters, {latticeParameters}) {
         super(mixboard, beatmathParameters);
         this._refreshOffsetCache = {};
+        this._refreshGradientCache = {};
         this._latticeParameters = latticeParameters;
         this._flushCacheIfNewGrid();
         this._flushCache = this._flushCache.bind(this);
@@ -130,14 +133,22 @@ class LatticeRefreshTimer extends PieceParameters {
     }
     _flushCache() {
         this._refreshOffsetCache = {};
+        this._refreshGradientCache = {};
     }
     getRefreshOffset(row, col) {
         const key = `${row}|${col}`;
         if (!_.has(this._refreshOffsetCache, key)) {
-            this._refreshOffsetCache[key] = this._calculateRefreshOffset(row, col);
+            this._refreshOffsetCache[key] = posMod(this._calculateRefreshOffset(row, col), 1);
         }
         const offset = this._refreshOffsetCache[key];
         return offset * this._beatmathParameters.tempo.getPeriod();
+    }
+    getRefreshGradient(row, col) {
+        const key = `${row}|${col}`;
+        if (!_.has(this._refreshGradientCache, key)) {
+            this._refreshGradientCache[key] = this._calculateRefreshGradient(row, col);
+        }
+        return this._refreshGradientCache[key];
     }
     _calculateRefreshOffset(row, col) {
         let total = 0;
@@ -198,7 +209,16 @@ class LatticeRefreshTimer extends PieceParameters {
             total += localPolarAngle / sectorSize;
         }
 
-        return posMod(total, 1);
+        return total;
+    }
+    _calculateRefreshGradient(row, col) {
+        const main = this._calculateRefreshOffset(row, col);
+        const mainPlusDeltaX = this._calculateRefreshOffset(row, col + EPSILON);
+        const mainPlusDeltaY = this._calculateRefreshOffset(row + EPSILON, col);
+        return {
+            x: mainPlusDeltaY - main,
+            y: main - mainPlusDeltaX,
+        };
     }
 }
 
