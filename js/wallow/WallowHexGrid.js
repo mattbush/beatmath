@@ -3,6 +3,7 @@ const _ = require('lodash');
 const {polarAngleDeg, posMod} = require('js/core/utils/math');
 
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
+const USE_OFFSETS = false;
 
 /*
    < z1 >
@@ -177,6 +178,27 @@ const f7 = {color: '#AA6622', points: '0,-4 -6,-2 -3,-1'};
 const f9 = {color: '#AA6622', points: '-3,-1 -6,-2 -6,2'};
 const f11 = {color: '#AA6622', points: '-6,2 0,4 0,2'};
 
+const ea2 = {color: '#884810', points: '0,4 0,0 6,-2'};
+const ea6 = {color: '#884810', points: '6,-2 0,0 -6,-2'};
+const ea10 = {color: '#884810', points: '-6,-2 0,0 0,4'};
+const fa4 = {color: '#884810', points: '6,2 0,0 0,-4'};
+const fa8 = {color: '#884810', points: '0,-4 0,0 -6,2'};
+const fa12 = {color: '#884810', points: '-6,2 0,0 6,2'};
+
+const ef5 = {color: '#BB7733', points: '6,-2 0,-4 2,-2'};
+const ef6 = {color: '#BB7733', points: '2,-2 0,-4 -2,-2'};
+const ef7 = {color: '#BB7733', points: '-2,-2 0,-4 -6,-2'};
+
+const ff3 = {color: '#BB7733', points: '6,2 6,-2 4,0'};
+const ff4 = {color: '#BB7733', points: '4,0 6,-2 2,-2'};
+const ff5 = {color: '#BB7733', points: '2,-2 6,-2 0,-4'};
+const ff7 = {color: '#BB7733', points: '0,-4 -6,-2 -2,-2'};
+const ff8 = {color: '#BB7733', points: '-2,-2 -6,-2 -4,0'};
+const ff9 = {color: '#BB7733', points: '-4,0 -6,-2 -6,2'};
+const ff11 = {color: '#BB7733', points: '-6,2 0,4 -2,2'};
+const ff12 = {color: '#BB7733', points: '-2,2 0,4 2,2'};
+const ff1 = {color: '#BB7733', points: '2,2 0,4 6,2'};
+
 const g12 = {color: '#669988', points: '0,4 6,2 3,1 0,2 -3,1 -6,2'};
 const g4 = {color: '#669988', points: '3,1 6,2 6,-2 0,-4 0,-2 3,-1'};
 const g8 = {color: '#669988', points: '-3,1 -3,-1 0,-2 0,-4 -6,-2 -6,2'};
@@ -213,6 +235,9 @@ const k10 = {color: '#AAAAAA', points: '0,2 -3,1 -3,-1'};
 const l4 = {color: '#66556A', points: '3,1 6,-2 0,-2 0,0'};
 const l8 = {color: '#66556A', points: '-3,1 0,0 0,-2 -6,-2'};
 const l12 = {color: '#66556A', points: '0,4 3,1 0,0 -3,1'};
+const l2 = {color: '#66556A', points: '0,2 6,2 3,-1 0,0'};
+const l6 = {color: '#66556A', points: '0,0 3,-1 0,-4 -3,-1'};
+const l10 = {color: '#66556A', points: '0,0 -3,-1 -6,2 0,2'};
 
 const qa0 = {color: '#9900BB', points: '0,0.67 1,-0.33 -1,-0.33'};
 const qb0 = {color: '#9900BB', points: '0,1.33 2,-0.67 -2,-0.67'};
@@ -281,9 +306,7 @@ const qe11 = {color: '#88AA55', points: '0,4 -6,2 0,3.33'};
 const ra2 = {color: '#1166AA', points: '-2,2 6,2 4,0 0,0'};
 const ra6 = {color: '#1166AA', points: '0,0 4,0 0,-4 -2,-2'};
 const ra10 = {color: '#1166AA', points: '0,0 -2,-2 -6,2 -2,2'};
-const rb2 = {color: '#1166AA', points: '0,2 6,2 3,-1 0,0'};
-const rb6 = {color: '#1166AA', points: '0,0 3,-1 0,-4 -3,-1'};
-const rb10 = {color: '#1166AA', points: '0,0 -3,-1 -6,2 0,2'};
+// rb2,6,10 are l2,6,10
 const rc2 = {color: '#1166AA', points: '0,2 6,2 3,-1 0,-1 0,0 1.5,0.5'};
 const rc6 = {color: '#1166AA', points: '0,0 0,-1 3,-1 0,-4 -3,-1 -1.5,0.5'};
 const rc10 = {color: '#1166AA', points: '0,0 -1.5,0.5 -3,-1 -6,2 0,2 1.5,0.5'};
@@ -346,7 +369,7 @@ const hexGridShapes = [
      5: [wa2, wa6, wa10, b55, a54, a58, a512], 6: [wa2, wa6, wa10, a5], 7: [x0, y0, z1, a5, h2, h6, h10], 8: [i2, i6, i10, x0, y0, z1, k2, k6, k10, a5], 9: [i2, i6, i10, x0, y0, z1, c1],
      10: [x1, x0, y1, y0, z1, z0, b1, b3, b5, b7, b9, b11, c1], 11: [x1, x0, y1, y0, z1, z0, z4, z5, z6, z7, b1, b5, b7, b11], 12: [x1, y6, x5, y1, x0, y5, x6, y0, z1, z5, z6, z0], 13: [x1, x2, x9, x0, y1, y3, y8, y0, v3], 14: [xx1, yy5, xx7, yy11, v3], 15: [x1, x0, y1, y0, z1, z0, v0]},
 
-    {/**/0: [sb1, sb3, sb5, sb7, sb9, sb11], 1: [sb4, sb8, sb12], 2: [f4, f8, f12, rb2, rb6, rb10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512], 4: [wa4, wa8, wa12, b55, a54, a58, a512],
+    {/**/0: [sb1, sb3, sb5, sb7, sb9, sb11], 1: [sb4, sb8, sb12], 2: [f4, f8, f12, l2, l6, l10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512], 4: [wa4, wa8, wa12, b55, a54, a58, a512],
          5: [wa4, wa8, wa12, a5], 6: [wa1, wa3, wa5, wa7, wa9, wa11, a5], 7: [g1, g3, g5, g7, g9, g11, k2, k6, k10, a5], 8: [g1, g3, g5, g7, g9, g11, c1], 9: [g12, g4, g8, c1],
          10: [z1, z2, z3, x8, x9, x0, y8, y9, y0, c1], 11: [x1, x2, y3, y1, x0, x9, y8, y0, z4, z5, z6, z7], 12: [x1, x0, y1, y0, z4, z5, z6, z7, i6, i12], 13: [x1, x0, y1, y0, i6, i12, v3], 14: [xx3, zz5, xx9, zz11, v1]},
 
@@ -358,7 +381,9 @@ const hexGridShapes = [
          5: [qd1, qd3, qd5, qd7, qd9, qd11, qd0, qd2, qd6, qd10], 6: [qe1, qe3, qe5, qe7, qe9, qe11, qe0, qe2, qe6, qe10], 7: [qf0, qf2, qf6, qf10], 8: [e1, e3, e5, e7, e9, e11, l4, l8, l12], 9: [e1, e3, e5, e7, e9, e11, j4, j8, j12, z4, x7, y7],
          10: [g12, g4, g8, z4, x7, y7], 11: [z1, z2, z3, z4, x8, x7, y7, y9, x0, x9, y8, y0], 12: [v4x, v8x, v12, x0, x9, y8, y0, z1], 13: [v4, v8, v12, x0, y0, z1], 14: [u4, u8, u12, x1, x0, y1, y0, z1, z0]},
 
-    {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [], 13: [], 14: [], 15: []},
+    {0: [e2, e6, e10, ea2, ea6, ea10], 1: [w1, w3, e6, e10, ea6, ea10], 2: [w1, w3, e6, ea6, w9, w11], 3: [f1, f3, f5, f7, f9, f11, l2, l6, l10], 4: [f1, f3, f5, f7, f9, f11, a3],
+    5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a2, a6, a10, a5], 6: [e2, e5, f8, f11], 7: [e2, ef5, ef6, ef7, e10, a1], 8: [e2, ef5, ef6, ef7, e10], 9: [e2, e10],
+    10: [e2, e6, e10, j4, j8, j12, z4, x7, y7], 11: [e2, e6, e10, j4, j8, j12], 12: [x0, y0, z1], 13: [x0, y0, z1], 14: [x0, y0, z1], 15: [x0, y0, z1]},
 
     {/**/0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [], 13: [], 14: []},
 
@@ -408,7 +433,7 @@ const hexGrid = _.map(hexGridShapes, (row, rowIndex) => _.mapValues(row, (shapes
 
     return {
         shapes: shapes,
-        offsets: hexGridOffsets[rowIndex][colIndex].split(',').map(Number).map(x => x / 100),
+        offsets: hexGridOffsets[rowIndex][colIndex].split(',').map(Number).map(x => (USE_OFFSETS ? x / 100 : 0)),
     };
 }));
 

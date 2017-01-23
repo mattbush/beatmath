@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const React = require('react');
-const tinycolor = require('tinycolor2');
+// const tinycolor = require('tinycolor2');
 const {posModAndBendToLowerHalf, posMod} = require('js/core/utils/math');
 
 const hexGrid = require('js/wallow/WallowHexGrid');
@@ -8,7 +8,7 @@ const hexGrid = require('js/wallow/WallowHexGrid');
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 
 const DEBUG_MODE = true;
-const OVERLAP_MODE = true;
+const OVERLAP_MODE = false;
 
 const Hex = React.createClass({
     getInitialState() {
