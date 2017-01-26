@@ -5,10 +5,24 @@ const PieceParameters = require('js/core/parameters/PieceParameters');
 class WallSnowstormParameters extends PieceParameters {
     _declareParameters() {
         return {
-            test: {
+            delayPerColumn: {
                 type: MovingLinearParameter,
-                range: [0.1, 0.45],
-                start: 0.2,
+                range: [-100, 100],
+                start: 80,
+                listenToLaunchpadFader: 0,
+                monitorName: 'Bleh',
+            },
+            delayPerRow: {
+                type: MovingLinearParameter,
+                range: [0, 600],
+                start: 400,
+                listenToLaunchpadFader: 0,
+                monitorName: 'Bleh',
+            },
+            transitionTime: {
+                type: MovingLinearParameter,
+                range: [0, 1200],
+                start: 800,
                 listenToLaunchpadFader: 0,
                 monitorName: 'Bleh',
             },

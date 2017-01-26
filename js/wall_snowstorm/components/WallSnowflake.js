@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const React = require('react');
 const {lerp, clamp} = require('js/core/utils/math');
-const {SNOWFLAKE_SCALE, NUM_ROWS} = require('js/wall_snowstorm/parameters/WallSnowstormConstants');
+const {SNOWFLAKE_SCALE, NUM_ROWS, NUM_COLUMNS} = require('js/wall_snowstorm/parameters/WallSnowstormConstants');
 const tinycolor = require('tinycolor2');
 const mapColorString = require('js/core/utils/mapColorString');
 
@@ -100,8 +100,14 @@ const Snowflake = React.createClass({
         const tx = this.props.column + (row % 2 ? 0.5 : 0) + cell.offsets[0];
         const ty = row * Y_AXIS_SCALE + cell.offsets[1];
         const rotation = (row % 2 ? 180 : 0);
-        const transitionTime = 800;
-        const delay = (NUM_ROWS - rowBase) * 400 + this.props.column * 80;
+
+        const delayPerColumn = this.context.wallSnowstormParameters.delayPerColumn.getValue();
+        const delayPerRow = this.context.wallSnowstormParameters.delayPerRow.getValue();
+        const transitionTime = this.context.wallSnowstormParameters.transitionTime.getValue();
+
+        const rowDelay = (NUM_ROWS - rowBase) * delayPerRow;
+        const columnDelay = delayPerColumn > 0 ? (this.props.column * delayPerColumn) : (NUM_COLUMNS - 1 - this.props.column) * Math.abs(delayPerColumn);
+        const delay = rowDelay + columnDelay;
 
         const style = {
             transform: `translate(${tx}px, ${ty}px) scale(${scale}) rotate(${rotation}deg)`,
