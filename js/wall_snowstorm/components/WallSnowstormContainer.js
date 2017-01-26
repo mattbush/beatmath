@@ -1,4 +1,5 @@
 const React = require('react');
+const WallSnowflakeParameters = require('js/wall_snowstorm/parameters/WallSnowflakeParameters');
 const WallSnowstormParameters = require('js/wall_snowstorm/parameters/WallSnowstormParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const WallSnowstormGrid = require('js/wall_snowstorm/components/WallSnowstormGrid');
@@ -6,7 +7,8 @@ const WallSnowflakeContainer = require('js/wall_snowstorm/components/WallSnowfla
 
 const WallSnowstormContainer = React.createClass({
     childContextTypes: {
-        snowstormParameters: React.PropTypes.array,
+        wallSnowstormParameters: React.PropTypes.object,
+        snowflakeParameters: React.PropTypes.array,
     },
     contextTypes: {
         mixboard: React.PropTypes.object,
@@ -14,14 +16,16 @@ const WallSnowstormContainer = React.createClass({
     },
     getChildContext() {
         return {
-            snowstormParameters: this.state.snowstormParameters,
+            wallSnowstormParameters: this.state.wallSnowstormParameters,
+            snowflakeParameters: this.state.snowflakeParameters,
         };
     },
     getInitialState() {
         return {
-            snowstormParameters: [
-                new WallSnowstormParameters(this.context.mixboard, this.context.beatmathParameters, 0),
-                new WallSnowstormParameters(this.context.mixboard, this.context.beatmathParameters, 1),
+            wallSnowstormParameters: new WallSnowstormParameters(this.context.mixboard, this.context.beatmathParameters),
+            snowflakeParameters: [
+                new WallSnowflakeParameters(this.context.mixboard, this.context.beatmathParameters, 0),
+                new WallSnowflakeParameters(this.context.mixboard, this.context.beatmathParameters, 1),
             ],
         };
     },

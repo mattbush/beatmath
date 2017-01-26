@@ -12,7 +12,8 @@ const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 const Snowflake = React.createClass({
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
-        snowstormParameters: React.PropTypes.array,
+        snowflakeParameters: React.PropTypes.array,
+        wallSnowstormParameters: React.PropTypes.object,
     },
     getInitialState() {
         return {mounted: false};
@@ -22,20 +23,20 @@ const Snowflake = React.createClass({
         this._blendedValues = {};
         for (const propertyName of ['length1', 'width1', 'offset2', 'length2', 'width2']) {
             this._blendedValues[propertyName] = lerp(
-                this.context.snowstormParameters[0][propertyName].getValue(),
-                this.context.snowstormParameters[1][propertyName].getValue(),
+                this.context.snowflakeParameters[0][propertyName].getValue(),
+                this.context.snowflakeParameters[1][propertyName].getValue(),
                 this.props.blend,
             );
         }
 
         const baseColor = tinycolor.mix(
-            this.context.snowstormParameters[0].baseColor.getValue(),
-            this.context.snowstormParameters[1].baseColor.getValue(),
+            this.context.snowflakeParameters[0].baseColor.getValue(),
+            this.context.snowflakeParameters[1].baseColor.getValue(),
             this.props.blend * 100,
         );
         this._color = mapColorString(baseColor);
 
-        //  const snowstormParameters = this.context.snowstormParameters;
+        //  const snowflakeParameters = this.context.snowflakeParameters;
         const points = [];
         const HYPOTENUSE = 2 * (3 ** -0.5);
         const TANGENT = 3 ** -0.5;
@@ -90,6 +91,8 @@ const Snowflake = React.createClass({
     },
     render: function() {
         const rowBase = (this.props.tick - this._startTick - 1); // ranges from -1 through NUM_ROWS
+        // const totalTime = BEATS_PER_ROW * this.context.beatmathParameters.tempo.getPeriod();
+
         const row = clamp(rowBase, 0, NUM_ROWS - 1);
         const scale = (row === rowBase) ? this._scale : (this._scale / 100);
         const cell = hexGrid[row][this.props.column];
