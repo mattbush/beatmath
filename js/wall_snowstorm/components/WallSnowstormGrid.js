@@ -1,24 +1,12 @@
 const _ = require('lodash');
 const React = require('react');
 // const tinycolor = require('tinycolor2');
-const {posMod} = require('js/core/utils/math');
 
 const hexGrid = require('js/wallow/WallowHexGrid');
 
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 
 const Hex = React.createClass({
-    getInitialState() {
-        return {
-            ghostState: Math.random(),
-        };
-    },
-    componentDidMount() {
-        setInterval(this._update.bind(this), 100);
-    },
-    _update() {
-        this.setState({ghostState: posMod(this.state.ghostState + Math.random() * 0.001, 1)});
-    },
     render() {
         if (this.props.row % 2 && this.props.column === _.size(hexGrid[0]) - 1) {
             return null;
