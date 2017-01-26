@@ -1,7 +1,7 @@
 const React = require('react');
 const WallowParameters = require('js/wallow/parameters/WallowParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
-const WallSnowstormGrid = require('js/wallow/components/WallSnowstormGrid');
+const WallSnowstormGrid = require('js/wall_snowstorm/components/WallSnowstormGrid');
 
 const WallSnowstormContainer = React.createClass({
     childContextTypes: {
@@ -11,17 +11,17 @@ const WallSnowstormContainer = React.createClass({
         mixboard: React.PropTypes.object,
         beatmathParameters: React.PropTypes.object,
     },
-    getChildContext: function() {
+    getChildContext() {
         return {
             wallowParameters: this.state.wallowParameters,
         };
     },
-    getInitialState: function() {
+    getInitialState() {
         return {
             wallowParameters: new WallowParameters(this.context.mixboard, this.context.beatmathParameters),
         };
     },
-    render: function() {
+    render() {
         return (
             <BeatmathFrame>
                 <WallSnowstormGrid />

@@ -40,7 +40,7 @@ const Hex = React.createClass({
 });
 
 const WallSnowstormGrid = React.createClass({
-    render: function() {
+    render() {
         const componentGrid = _.map(hexGrid, (hexes, row) => {
             return _.map(hexes, (hex, column) => {
                 return <Hex row={row} column={column} />;
