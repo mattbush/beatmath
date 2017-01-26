@@ -104,10 +104,11 @@ const Snowflake = React.createClass({
         const delayPerColumn = this.context.wallSnowstormParameters.delayPerColumn.getValue();
         const delayPerRow = this.context.wallSnowstormParameters.delayPerRow.getValue();
         const transitionTime = this.context.wallSnowstormParameters.transitionTime.getValue();
+        const columnDelayLimit = this.context.wallSnowstormParameters.columnDelayLimit.getValue();
 
         const rowDelay = (NUM_ROWS - rowBase) * delayPerRow;
         const columnDelay = delayPerColumn > 0 ? (this.props.column * delayPerColumn) : (NUM_COLUMNS - 1 - this.props.column) * Math.abs(delayPerColumn);
-        const delay = rowDelay + columnDelay;
+        const delay = rowDelay + (columnDelay % columnDelayLimit);
 
         const style = {
             transform: `translate(${tx}px, ${ty}px) scale(${scale}) rotate(${rotation}deg)`,
