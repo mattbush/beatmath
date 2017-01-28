@@ -91,6 +91,7 @@ const Snowflake = React.createClass({
     },
     render: function() {
         const rowBase = (this.props.tick - this._startTick - 1); // ranges from -1 through NUM_ROWS
+        const period = this.context.beatmathParameters.tempo.getPeriod();
         // const totalTime = BEATS_PER_ROW * this.context.beatmathParameters.tempo.getPeriod();
 
         const row = clamp(rowBase, 0, NUM_ROWS - 1);
@@ -101,10 +102,10 @@ const Snowflake = React.createClass({
         const ty = row * Y_AXIS_SCALE + cell.offsets[1];
         const rotation = (row % 2 ? 180 : 0);
 
-        const delayPerColumn = this.context.wallSnowstormParameters.delayPerColumn.getValue();
-        const delayPerRow = this.context.wallSnowstormParameters.delayPerRow.getValue();
-        const transitionTime = this.context.wallSnowstormParameters.transitionTime.getValue();
-        const columnDelayLimit = this.context.wallSnowstormParameters.columnDelayLimit.getValue();
+        const delayPerColumn = this.context.wallSnowstormParameters.delayPerColumn.getValue() * period;
+        const delayPerRow = this.context.wallSnowstormParameters.delayPerRow.getValue() * period;
+        const transitionTime = this.context.wallSnowstormParameters.transitionTime.getValue() * period;
+        const columnDelayLimit = this.context.wallSnowstormParameters.columnDelayLimit.getValue() * period;
 
         const rowDelay = (NUM_ROWS - rowBase) * delayPerRow;
         const columnDelay = delayPerColumn > 0 ? (this.props.column * delayPerColumn) : (NUM_COLUMNS - 1 - this.props.column) * Math.abs(delayPerColumn);
