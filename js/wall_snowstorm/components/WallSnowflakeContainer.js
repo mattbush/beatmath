@@ -22,7 +22,7 @@ const WallSnowflakeContainer = React.createClass({
     render() {
         const rows = [];
         const startRow = Math.max(this.state.numTicks - (NUM_ROWS + 2), 0);
-        const endRow = this.state.numTicks;
+        const endRow = this.state.numTicks + 1;
         for (let i = startRow; i < endRow; i++) {
             rows.push(
                 <g key={i}>

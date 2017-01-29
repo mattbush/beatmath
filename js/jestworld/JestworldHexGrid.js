@@ -13,14 +13,21 @@ const r = {color: '#A09000', points: '-6,2 0,4 6,2 6,0 3,-1 6,-2 3,-3 0,-2 0,-4 
 const l = {color: '#A09000', points: '-6,2 0,4 3,3 0,2 0,-2 3,-1 6,-2 3,-3 -3,-3 -6,-2 -3,-1 -3,1'};
 const d = {color: '#A09000', points: '-6,2 0,4 6,2 6,-2 0,-4 -6,-2 -3,-1 -3,0 0,0 0,-2 3,-1 3,1 0,2 0,0 -3,0 -3,1'};
 
+const w1 = {color: '#00aaaa', points: '0,4 6,2 0,0'};
+const w3 = {color: '#00bbbb', points: '6,2 6,-2 0,0'};
+const w5 = {color: '#00cccc', points: '6,-2 0,-4 0,0'};
+const w7 = {color: '#009999', points: '0,-4 -6,-2 0,0'};
+const w9 = {color: '#008888', points: '-6,-2 -6,2 0,0'};
+const w11 = {color: '#007777', points: '-6,2 0,4 0,0'};
+
 const jestworldHexGridShapes = [
     [],
-    [null, null, null, j, e, s, t, w, o, r, l, d],
-    [],
-    [],
-    [],
-    [],
-    [],
+    [null, null, null, [j], [e], [s], [t], [w], [o], [r], [l], [d]],
+    [null, null, null, null, null, null, null, null, [w7]],
+    [null, null, null, null, [w7, w9], null, [w5], [w1, w3, w5], [w3, w5], null, null, [w7, w9]],
+    [null, [w7, w9, w11], [w7], [w5], [w1, w3, w5], [w3, w5], null, [w7, w9, w11], [w7, w9, w11, w3, w5], [w9, w11], [w5], [w1, w3, w5], [w3, w5], null, null, [w7, w9, w11]],
+    [[w1, w3, w5], [w7, w1, w3, w5], null, [w7, w9, w11], [w7, w9, w11, w3, w5], [w9, w11], [w1, w3], [w1, w3, w5, w7, w9], null, null, [w7, w9, w11], [w7, w9, w11, w3, w5], [w9, w11], [w1, w3, w5], [w1, w3, w5]],
+    [null, [w7, w9, w11, w1], null, [w1, w3], [w1, w3, w5, w7, w9], null, null, null, [w7, w9, w11], null, [w1, w3], [w1, w3, w5, w7, w9], null, null, [w1, w3, w11], [w7, w9, w11]],
 ];
 
 const processShapeIfNeeded = function(shape) {
@@ -44,6 +51,10 @@ const processShapeIfNeeded = function(shape) {
     shape.yMax = yMax;
 };
 
-const jestworldHexGrid = _.each(jestworldHexGridShapes, row => _.each(row, processShapeIfNeeded));
+_.each(jestworldHexGridShapes, row => _.each(row, shapes => {
+    if (shapes) {
+        shapes.forEach(processShapeIfNeeded);
+    }
+}));
 
-module.exports = jestworldHexGrid;
+module.exports = jestworldHexGridShapes;

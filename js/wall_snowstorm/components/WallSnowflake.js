@@ -15,9 +15,6 @@ const Snowflake = React.createClass({
         snowflakeParameters: React.PropTypes.array,
         wallSnowstormParameters: React.PropTypes.object,
     },
-    getInitialState() {
-        return {mounted: false};
-    },
     componentWillMount() {
         this._startTick = this.props.tick;
         this._blendedValues = {};
@@ -82,15 +79,20 @@ const Snowflake = React.createClass({
         this._points = points.map(p => p.join(',')).join(' ');
     },
     componentDidMount() {
-        _.defer(() => {
-            this.setState({mounted: true});
-        });
+        const cell = hexGrid[0][this.props.column];
+
+        const startTx = this.props.column + cell.offsets[0];
+        const startTy = cell.offsets[1];
+        const startScale = this._scale / 100;
+
+        this._g.style.transform = `translate(${startTx}px, ${startTy}px) scale(${startScale})`;
     },
     getBlendedValue(propertyName) {
         return this._blendedValues[propertyName];
     },
     render: function() {
         const rowBase = (this.props.tick - this._startTick - 1); // ranges from -1 through NUM_ROWS
+        const period = this.context.beatmathParameters.tempo.getPeriod();
         // const totalTime = BEATS_PER_ROW * this.context.beatmathParameters.tempo.getPeriod();
 
         const row = clamp(rowBase, 0, NUM_ROWS - 1);
@@ -101,22 +103,25 @@ const Snowflake = React.createClass({
         const ty = row * Y_AXIS_SCALE + cell.offsets[1];
         const rotation = (row % 2 ? 180 : 0);
 
-        const delayPerColumn = this.context.wallSnowstormParameters.delayPerColumn.getValue();
-        const delayPerRow = this.context.wallSnowstormParameters.delayPerRow.getValue();
-        const transitionTime = this.context.wallSnowstormParameters.transitionTime.getValue();
-        const columnDelayLimit = this.context.wallSnowstormParameters.columnDelayLimit.getValue();
+        const delayPerColumn = this.context.wallSnowstormParameters.delayPerColumn.getValue() * period;
+        const delayPerRow = this.context.wallSnowstormParameters.delayPerRow.getValue() * period;
+        const transitionTime = this.context.wallSnowstormParameters.transitionTime.getValue() * period;
+        const columnDelayLimit = this.context.wallSnowstormParameters.columnDelayLimit.getValue() * period;
 
         const rowDelay = (NUM_ROWS - rowBase) * delayPerRow;
         const columnDelay = delayPerColumn > 0 ? (this.props.column * delayPerColumn) : (NUM_COLUMNS - 1 - this.props.column) * Math.abs(delayPerColumn);
         const delay = rowDelay + (columnDelay % columnDelayLimit);
 
-        const style = {
-            transform: `translate(${tx}px, ${ty}px) scale(${scale}) rotate(${rotation}deg)`,
-            transition: `transform ${transitionTime}ms ease-in ${delay}ms`,
-        };
+        setTimeout(() => {
+            if (!this.isMounted()) {
+                return;
+            }
+            this._g.style.transition = `transform ${transitionTime}ms ease-in`;
+            this._g.style.transform = `translate(${tx}px, ${ty}px) scale(${scale}) rotate(${rotation}deg)`;
+        }, delay);
 
         return (
-            <g style={style}>
+            <g ref={el => this._g = el}>
                 <polygon points={this._points} fill={this._color} />
             </g>
         );
