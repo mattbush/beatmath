@@ -4,9 +4,14 @@ const WallSnowflake = require('js/wall_snowstorm/components/WallSnowflake');
 const {NUM_ROWS, NUM_COLUMNS, BEATS_PER_ROW} = require('js/wall_snowstorm/parameters/WallSnowstormConstants');
 const hexGrid = require('js/wallow/WallowHexGrid');
 
+const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
+const updateHue = require('js/core/outputs/updateHue');
+const tinycolor = require('tinycolor2');
+
 const WallSnowflakeContainer = React.createClass({
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
+        snowflakeParameters: React.PropTypes.array,
     },
     getInitialState() {
         return {numTicks: 0};
@@ -29,6 +34,18 @@ const WallSnowflakeContainer = React.createClass({
                     {_.times(NUM_COLUMNS, j => <WallSnowflake key={j} column={j} tick={this.state.numTicks} blend={j / (NUM_COLUMNS - 1)} />)}
                 </g>
             );
+        }
+
+        if (ENABLE_HUE) {
+            const hueInOrder = [1, 6, 7, 8, 2];
+            hueInOrder.forEach((lightNumber, index) => {
+                const baseColor = tinycolor.mix(
+                    this.context.snowflakeParameters[0].baseColor.getValue(),
+                    this.context.snowflakeParameters[1].baseColor.getValue(),
+                    index / (hueInOrder.length - 1) * 100,
+                );
+                updateHue(lightNumber, baseColor, {briCoeff: 0.4});
+            });
         }
 
         return (

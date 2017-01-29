@@ -64,7 +64,7 @@ class WallSnowflakeParameters extends PieceParameters {
             },
             baseColor: {
                 type: MovingColorParameter,
-                start: tinycolor('#3ff'),
+                start: tinycolor('#0ff'),
                 max: 7,
                 variance: 3,
                 autoupdate: 2000,

@@ -1,8 +1,21 @@
+const _ = require('lodash');
 const {LinearParameter} = require('js/core/parameters/Parameter');
 // const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
+const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
+const updateHue = require('js/core/outputs/updateHue');
+const {NUM_LIGHTS} = require('js/hue_constants');
+const tinycolor = require('tinycolor2');
 
 class WallSnowstormParameters extends PieceParameters {
+    constructor(...args) {
+        super(...args);
+        if (ENABLE_HUE) {
+            _.times(NUM_LIGHTS, lightNumber => {
+                updateHue(lightNumber, tinycolor('#000'));
+            });
+        }
+    }
     _declareParameters() {
         return {
             columnDelayLimit: {
