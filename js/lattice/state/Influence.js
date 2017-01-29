@@ -150,7 +150,7 @@ class ColorInfluence extends Influence {
     update() {
         super.update();
         if (ENABLE_HUE) {
-            updateHue(this._lightNumber, this._mainParameter.getValue(), {briCoeff: 0.5});
+            updateHue(this._lightNumber, this._mainParameter.getValue(), {briCoeff: 0.4});
         }
     }
     getColor() {
