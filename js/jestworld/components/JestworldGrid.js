@@ -1,7 +1,8 @@
 const _ = require('lodash');
 const React = require('react');
-// const tinycolor = require('tinycolor2');
-const {posMod} = require('js/core/utils/math');
+const tinycolor = require('tinycolor2');
+// const {posMod} = require('js/core/utils/math');
+const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 
 const hexGrid = require('js/wallow/WallowHexGrid');
 const jestworldHexGrid = require('js/jestworld/JestworldHexGrid');
@@ -9,16 +10,8 @@ const jestworldHexGrid = require('js/jestworld/JestworldHexGrid');
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 
 const Hex = React.createClass({
-    getInitialState() {
-        return {
-            ghostState: Math.random(),
-        };
-    },
-    componentDidMount() {
-        setInterval(this._update.bind(this), 100);
-    },
-    _update() {
-        this.setState({ghostState: posMod(this.state.ghostState + Math.random() * 0.001, 1)});
+    contextTypes: {
+        beatmathParameters: React.PropTypes.object,
     },
     render() {
         if (this.props.row % 2 && this.props.column === _.size(hexGrid[0]) - 1) {
@@ -27,14 +20,20 @@ const Hex = React.createClass({
         const cell = hexGrid[this.props.row][this.props.column];
         const shapes = cell.shapes;
 
-        const jestShape = jestworldHexGrid[this.props.row][this.props.column];
+        const jestShapes = jestworldHexGrid[this.props.row][this.props.column];
 
         const tx = Number(this.props.column) + (this.props.row % 2 ? 0.5 : 0) + cell.offsets[0];
         const ty = this.props.row * Y_AXIS_SCALE + cell.offsets[1];
 
+        const tick = this.context.beatmathParameters.tempo.getNumTicks();
+
         return (
             <g style={{transform: `translate(${tx}px, ${ty}px)`}}>
-                {jestShape && <polygon fill="#fff" points={jestShape.points} />}
+                {jestShapes && jestShapes.map((polygon, index) => {
+                    const brightenAmount = 11 - (this.props.row + this.props.column + polygon.clockNumber * 1.5 + tick) % 12;
+                    const color = tinycolor('#180').brighten(brightenAmount * 5);
+                    return <polygon fill={color} key={index} points={polygon.points} />;
+                })}
                 <g style={{transform: `scale(${1 / 12}, -${1 / 8 * 4 / 3 * Y_AXIS_SCALE})`}}>
                     <polygon className="line" points="0,4 6,2 6,-2 0,-4 -6,-2 -6,2" />
                 </g>
@@ -52,6 +51,15 @@ const Hex = React.createClass({
 });
 
 const JestworldGrid = React.createClass({
+    mixins: [ParameterBindingsMixin],
+    contextTypes: {
+        beatmathParameters: React.PropTypes.object,
+    },
+    getParameterBindings: function() {
+        return {
+            tempo: this.context.beatmathParameters.tempo,
+        };
+    },
     render: function() {
         const componentGrid = _.map(hexGrid, (hexes, row) => {
             return _.map(hexes, (hex, column) => {
