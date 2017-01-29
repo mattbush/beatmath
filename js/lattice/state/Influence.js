@@ -141,7 +141,7 @@ class ColorInfluence extends Influence {
             variance: 1,
             start: params.startValue,
         });
-        this._index = params.index;
+        this._lightNumber = params.lightNumber;
     }
     _mixByParameterType(pixelParameter, mixAmount) {
         const influenceParameter = this._mainParameter.getValue();
@@ -150,7 +150,7 @@ class ColorInfluence extends Influence {
     update() {
         super.update();
         if (ENABLE_HUE) {
-            updateHue(this._index, this._mainParameter.getValue());
+            updateHue(this._lightNumber, this._mainParameter.getValue(), {briCoeff: 0.5});
         }
     }
     getColor() {

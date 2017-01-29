@@ -37,9 +37,9 @@ const LatticeGrid = React.createClass({
         const refreshTimer = new LatticeRefreshTimer(mixboard, beatmathParameters, {latticeParameters});
 
         const influences = [
-            new ColorInfluence({beatmathParameters, latticeParameters, startCol: 0.2, startRow: 0.2, startValue: tinycolor('#f00'), index: 0}),
-            new ColorInfluence({beatmathParameters, latticeParameters, startCol: 0.8, startRow: 0.2, startValue: tinycolor('#0f0'), index: 1}),
-            new ColorInfluence({beatmathParameters, latticeParameters, startCol: 0.5, startRow: 0.8, startValue: tinycolor('#00f'), index: 2}),
+            new ColorInfluence({beatmathParameters, latticeParameters, startCol: 0.2, startRow: 0.2, startValue: tinycolor('#f00'), lightNumber: 0}),
+            new ColorInfluence({beatmathParameters, latticeParameters, startCol: 0.8, startRow: 0.2, startValue: tinycolor('#0f0'), lightNumber: 1}),
+            new ColorInfluence({beatmathParameters, latticeParameters, startCol: 0.5, startRow: 0.8, startValue: tinycolor('#00f'), lightNumber: 2}),
 
             new SizeInfluence({beatmathParameters, latticeParameters, startCol: 0.2, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
             new SizeInfluence({beatmathParameters, latticeParameters, startCol: 0.8, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
