@@ -14,6 +14,7 @@ class LatticeRefreshTimer extends PieceParameters {
             _rippleRadius: {
                 type: MovingLogarithmicParameter,
                 range: [2, MAX_RIPPLES_TREAT_AS_INFINITE],
+                autoupdateRange: [6, MAX_RIPPLES_TREAT_AS_INFINITE],
                 start: 10,
                 monitorName: 'Ripple Radius',
                 listenToLaunchpadFader: [2, {addButtonStatusLight: true, useSnapButton: true}],
@@ -25,6 +26,7 @@ class LatticeRefreshTimer extends PieceParameters {
             _subdivisionSize: {
                 type: MovingLogarithmicParameter,
                 range: [2, MAX_RIPPLES_TREAT_AS_INFINITE],
+                autoupdateRange: [12, MAX_RIPPLES_TREAT_AS_INFINITE],
                 start: MAX_RIPPLES_TREAT_AS_INFINITE,
                 listenToLaunchpadFader: [3, {addButtonStatusLight: true, useSnapButton: true}],
                 monitorName: 'Division Size',
@@ -35,6 +37,7 @@ class LatticeRefreshTimer extends PieceParameters {
             _manhattanCoefficient: {
                 type: MovingLinearParameter,
                 range: [-3, 3],
+                autoupdateRange: [-0.5, 1.5],
                 start: 0,
                 defaultOn: 1,
                 incrementAmount: 0.25,
@@ -49,6 +52,7 @@ class LatticeRefreshTimer extends PieceParameters {
             _logCoefficient: {
                 type: MovingLinearParameter,
                 range: [-3, 3],
+                autoupdateRange: [-0.5, 1.5],
                 start: 0,
                 defaultOn: 1,
                 incrementAmount: 0.25,
@@ -68,6 +72,7 @@ class LatticeRefreshTimer extends PieceParameters {
             _globalPolarAngles: {
                 type: MovingIntLinearParameter,
                 range: [-12, 12],
+                autoupdateRange: [-8, 8],
                 start: 0,
                 monitorName: '# Global Spirals',
                 listenToLaunchpadKnob: [2, 2],
@@ -79,6 +84,7 @@ class LatticeRefreshTimer extends PieceParameters {
             _localPolarAngles: {
                 type: MovingIntLinearParameter,
                 range: [-12, 12],
+                autoupdateRange: [-8, 8],
                 start: 0,
                 monitorName: '# Local Spirals',
                 listenToLaunchpadKnob: [2, 3],

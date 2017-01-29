@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const {MovingLinearParameter, LogarithmicParameter, LinearParameter, HoldButtonParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const tinycolor = require('tinycolor2');
@@ -5,6 +6,9 @@ const {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const {arclerp} = require('js/core/utils/math');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
+const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
+const updateHue = require('js/core/outputs/updateHue');
+const {NUM_LIGHTS} = require('js/hue_constants');
 
 const NUM_TREES = 15;
 const NUM_LEVELS = 8;
@@ -22,6 +26,12 @@ class WallTreesParameters extends PieceParameters {
         this._sineNumTicks = 0;
 
         beatmathParameters.tempo.addListener(this._incrementNumTicks.bind(this));
+
+        if (ENABLE_HUE) {
+            _.times(NUM_LIGHTS, lightNumber => {
+                updateHue(lightNumber, tinycolor('#000'));
+            });
+        }
     }
     _declareParameters() {
         return {

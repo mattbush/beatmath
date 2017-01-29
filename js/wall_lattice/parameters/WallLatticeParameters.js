@@ -20,8 +20,8 @@ class WallLatticeParameters extends PieceParameters {
         return {
             mixCoefficient: {
                 type: LinearParameter,
-                range: [0.2, 2],
-                start: 1,
+                range: [0.2, 3],
+                start: 1.2,
                 useStartAsMidpoint: true,
                 listenToLaunchpadKnob: [1, 0],
                 listenToMixtrackKnob: MixtrackKnobs.L_BASS,
@@ -30,7 +30,7 @@ class WallLatticeParameters extends PieceParameters {
             distanceCoefficient: {
                 type: LinearParameter,
                 range: [0.2, 3],
-                start: 1,
+                start: 1.0,
                 useStartAsMidpoint: true,
                 listenToLaunchpadKnob: [1, 1],
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,

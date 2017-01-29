@@ -7,6 +7,9 @@ const tinycolor = require('tinycolor2');
 const {clipPathXCenters, clipPathYCenters} = require('js/kale/components/KaleClipPaths');
 const wallowHexGrid = require('js/wallow/WallowHexGrid');
 
+const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
+const updateHue = require('js/core/outputs/updateHue');
+
 const Y_AXIS_SCALE = Math.sqrt(3);
 const WALLOW_OFFSET_SCALE = 2;
 
@@ -44,6 +47,14 @@ const KaleCell = React.createClass({
         return this._getColorByShifting(x, y);
     },
     render: function() {
+        if (ENABLE_HUE && this.props.logicalX === 0 && this.props.logicalY === 0) {
+            const hueInOrder = [8, 1, 2, 7, 6];
+            hueInOrder.forEach((lightNumber, index) => {
+                const color = tinycolor(this._getColor(index * 2, 0));
+                updateHue(lightNumber, color, {briCoeff: 0.3});
+            });
+        }
+
         const isInfinite = this.getParameterValue('isInfinite');
         const triangularGridPercent = this.getParameterValue('triangularGridPercent');
         let triGridPercent = Math.max((triangularGridPercent - 0.5) * 2, 0);

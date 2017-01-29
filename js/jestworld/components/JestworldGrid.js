@@ -30,13 +30,19 @@ const Hex = React.createClass({
         return (
             <g style={{transform: `translate(${tx}px, ${ty}px)`}}>
                 {jestShapes && jestShapes.map((polygon, index) => {
-                    const brightenAmount = 11 - (this.props.row + this.props.column + polygon.clockNumber * 1.5 + tick) % 12;
-                    const color = tinycolor('#180').brighten(brightenAmount * 5);
+                    let color;
+                    if (this.props.row < 2) {
+                        const brightenAmount = 16 - (Number(this.props.column) + tick) % 16;
+                        color = tinycolor('#aaa').brighten(brightenAmount * 3);
+                    } else {
+                        const brightenAmount = 11 - (this.props.row + Number(this.props.column) + polygon.clockNumber * 1.5 + tick) % 12;
+                        color = tinycolor('#170').brighten(brightenAmount * 4);
+                    }
                     return <polygon fill={color} key={index} points={polygon.points} />;
                 })}
-                <g style={{transform: `scale(${1 / 12}, -${1 / 8 * 4 / 3 * Y_AXIS_SCALE})`}}>
+                {/* <g style={{transform: `scale(${1 / 12}, -${1 / 8 * 4 / 3 * Y_AXIS_SCALE})`}}>
                     <polygon className="line" points="0,4 6,2 6,-2 0,-4 -6,-2 -6,2" />
-                </g>
+                </g> */}
                 <g style={{}}>
                     {shapes.map((polygon, index) => {
                         // const color = tinycolor('#AA5555').saturate(100 * polygon.center[0]).lighten(100 * polygon.yMax);
@@ -44,7 +50,7 @@ const Hex = React.createClass({
                         return <polygon className="mine" key={index} fill="transparent" points={polygon.points} />;
                     })}
                 </g>
-                <text style={{transform: 'scale(0.15, 0.15) translate(-2px, 2px)', fill: '#fff', fontSize: '2px'}}>{this.props.column}</text>
+                {/* <text style={{transform: 'scale(0.15, 0.15) translate(-2px, 2px)', fill: '#fff', fontSize: '2px'}}>{this.props.column}</text> */}
             </g>
         );
     },
