@@ -225,6 +225,11 @@ class LatticeRefreshTimer extends PieceParameters {
             x: mainPlusDeltaY - main,
             y: main - mainPlusDeltaX,
         };
+        // or to spin 90 degrees:
+        // return {
+        //     x: mainPlusDeltaX - main,
+        //     y: mainPlusDeltaY - main,
+        // };
     }
 }
 
