@@ -34,20 +34,21 @@ const TactileGrid = React.createClass({
         const mixboard = this.context.mixboard;
         const beatmathParameters = this.context.beatmathParameters;
         const tactileParameters = new TactileParameters(mixboard, beatmathParameters);
-        const refreshTimer = new LatticeRefreshTimer(mixboard, beatmathParameters, {latticeParameters: tactileParameters});
+        const pieceParameters = tactileParameters;
+        const refreshTimer = new LatticeRefreshTimer(mixboard, beatmathParameters, {pieceParameters});
 
         const influences = [
-            new ColorInfluence({beatmathParameters, latticeParameters: tactileParameters, startCol: 0.2, startRow: 0.2, startValue: tinycolor('#f00'), lightNumber: 0}),
-            new ColorInfluence({beatmathParameters, latticeParameters: tactileParameters, startCol: 0.8, startRow: 0.2, startValue: tinycolor('#0f0'), lightNumber: 1}),
-            new ColorInfluence({beatmathParameters, latticeParameters: tactileParameters, startCol: 0.5, startRow: 0.8, startValue: tinycolor('#00f'), lightNumber: 2}),
+            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: tinycolor('#f00'), lightNumber: 0}),
+            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: tinycolor('#0f0'), lightNumber: 1}),
+            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.8, startValue: tinycolor('#00f'), lightNumber: 2}),
 
-            new SizeInfluence({beatmathParameters, latticeParameters: tactileParameters, startCol: 0.2, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
-            new SizeInfluence({beatmathParameters, latticeParameters: tactileParameters, startCol: 0.8, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
-            new SizeInfluence({beatmathParameters, latticeParameters: tactileParameters, startCol: 0.5, startRow: 0.8, startValue: MAX_SIZE * 0.5}),
+            new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
+            new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
+            new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.8, startValue: MAX_SIZE * 0.5}),
 
-            new RotationInfluence({beatmathParameters, latticeParameters: tactileParameters, startCol: 0.2, startRow: 0.2, startValue: 0}),
-            new RotationInfluence({beatmathParameters, latticeParameters: tactileParameters, startCol: 0.8, startRow: 0.2, startValue: 0}),
-            new RotationInfluence({beatmathParameters, latticeParameters: tactileParameters, startCol: 0.5, startRow: 0.8, startValue: 0}),
+            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: 0}),
+            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: 0}),
+            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.8, startValue: 0}),
         ];
 
         return {tactileParameters, influences, refreshTimer};

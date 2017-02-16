@@ -113,23 +113,23 @@ class LatticeRefreshTimer extends PieceParameters {
             },
         };
     }
-    constructor(mixboard, beatmathParameters, {latticeParameters}) {
+    constructor(mixboard, beatmathParameters, {pieceParameters}) {
         super(mixboard, beatmathParameters);
         this._refreshOffsetCache = {};
         this._refreshGradientCache = {};
-        this._latticeParameters = latticeParameters;
+        this._pieceParameters = pieceParameters;
         this._flushCacheIfNewGrid();
         this._flushCache = this._flushCache.bind(this);
 
         _.each(this._declareParameters(), (value, paramName) => {
             this[paramName].addListener(this._flushCache);
         });
-        if (this._latticeParameters.triangularGridPercent) {
-            this._latticeParameters.triangularGridPercent.addListener(this._flushCacheIfNewGrid.bind(this));
+        if (this._pieceParameters.triangularGridPercent) {
+            this._pieceParameters.triangularGridPercent.addListener(this._flushCacheIfNewGrid.bind(this));
         }
     }
     _isTriangularGrid() {
-        return this._latticeParameters.triangularGridPercent && this._latticeParameters.triangularGridPercent.getValue() >= 0.5;
+        return this._pieceParameters.triangularGridPercent && this._pieceParameters.triangularGridPercent.getValue() >= 0.5;
     }
     _flushCacheIfNewGrid() {
         if (this._cachedIsTriangularGrid !== this._isTriangularGrid()) {

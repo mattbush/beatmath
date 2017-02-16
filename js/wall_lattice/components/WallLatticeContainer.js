@@ -27,14 +27,15 @@ const WallLatticeContainer = React.createClass({
         const mixboard = this.context.mixboard;
         const beatmathParameters = this.context.beatmathParameters;
         const wallLatticeParameters = new WallLatticeParameters(mixboard, beatmathParameters);
-        const refreshTimer = new LatticeRefreshTimer(mixboard, beatmathParameters, {latticeParameters: wallLatticeParameters});
+        const pieceParameters = wallLatticeParameters;
+        const refreshTimer = new LatticeRefreshTimer(mixboard, beatmathParameters, {pieceParameters});
 
         const influences = [
-            new ColorInfluence({beatmathParameters, latticeParameters: wallLatticeParameters, startCol: 0.3, startRow: 0.8, startValue: tinycolor('#ff0'), lightNumber: 1}),
-            new ColorInfluence({beatmathParameters, latticeParameters: wallLatticeParameters, startCol: 0.7, startRow: 0.2, startValue: tinycolor('#0f0'), lightNumber: 2}),
-            new ColorInfluence({beatmathParameters, latticeParameters: wallLatticeParameters, startCol: 0.5, startRow: 0.8, startValue: tinycolor('#00f'), lightNumber: 6}),
-            new ColorInfluence({beatmathParameters, latticeParameters: wallLatticeParameters, startCol: 0.1, startRow: 0.2, startValue: tinycolor('#f00'), lightNumber: 7}),
-            new ColorInfluence({beatmathParameters, latticeParameters: wallLatticeParameters, startCol: 0.9, startRow: 0.8, startValue: tinycolor('#0ff'), lightNumber: 8}),
+            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.3, startRow: 0.8, startValue: tinycolor('#ff0'), lightNumber: 1}),
+            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.7, startRow: 0.2, startValue: tinycolor('#0f0'), lightNumber: 2}),
+            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.8, startValue: tinycolor('#00f'), lightNumber: 6}),
+            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.1, startRow: 0.2, startValue: tinycolor('#f00'), lightNumber: 7}),
+            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.8, startValue: tinycolor('#0ff'), lightNumber: 8}),
         ];
 
         return {wallLatticeParameters, influences, refreshTimer};
