@@ -10,6 +10,7 @@ module.exports = {
         nodes: './js/nodes/nodes',
         pinecone: './js/pinecone/pinecone',
         snowstorm: './js/snowstorm/snowstorm',
+        tactile: './js/tactile/tactile',
         text: './js/text/text',
         trees: './js/trees/trees',
         twenty_sixteen: './js/twenty_sixteen/twenty_sixteen',
