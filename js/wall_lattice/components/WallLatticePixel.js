@@ -6,6 +6,8 @@ const {logerp} = require('js/core/utils/math');
 
 const gray = tinycolor('#909090');
 
+const IS_NEGATED = true;
+
 const WallLatticePixel = React.createClass({
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
@@ -62,12 +64,13 @@ const WallLatticePixel = React.createClass({
         return influence.mix(this._nextState, this._y, this._x);
     },
     render: function() {
-        const rotation = this.state.ticks % 2 ? 360 : 0;
+        const isOdd = this.state.ticks % 2;
+        const rotation = IS_NEGATED ? (isOdd ? -90 : 90) : (isOdd ? 360 : 0);
         const [x, y] = this.props.polygon.center;
         const {x: ax, y: ay} = this.context.refreshTimer.getRefreshGradient(this._y, this._x);
         const style = {
             transform: `translate(${x}px,${y}px) rotate3d(${ax},${ay},0,${rotation}deg)`,
-            transition: 'all 1.2s cubic-bezier(1,0,0,1)',
+            transition: IS_NEGATED ? 'all 0.6s linear' : 'all 1.2s cubic-bezier(1,0,0,1)',
         };
         return (
             <polygon className="mine" style={style} fill={this.state.color} points={this.props.polygon.pointsAroundCenter} />
