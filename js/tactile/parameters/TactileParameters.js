@@ -33,7 +33,7 @@ class TactileParameters extends PieceParameters {
             numColumns: {
                 type: IntLinearParameter,
                 range: [0, 32],
-                start: 16,
+                start: 20,
                 listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
                 listenToMixtrackFader: MixtrackFaders.L_GAIN,
                 monitorName: '# Columns',
@@ -41,7 +41,7 @@ class TactileParameters extends PieceParameters {
             numRows: {
                 type: IntLinearParameter,
                 range: [0, 32],
-                start: 16,
+                start: 12,
                 listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
                 listenToMixtrackFader: MixtrackFaders.R_GAIN,
                 monitorName: '# Rows',

@@ -1,6 +1,6 @@
 const {WIDTH_PX, HEIGHT_PX} = require('js/core/parameters/BeatmathConstants.js');
 
-const CELL_SIZE = 20;
+const CELL_SIZE = 30;
 const MAX_SIZE = CELL_SIZE * 1.0;
 const ENABLE_HUE = false;
 

@@ -114,7 +114,7 @@ const TactilePixel = React.createClass({
         const {x: ax, y: ay} = this._getRefreshGradient();
         const style = {
             transform: `translate(${x}px,${y}px) rotate3d(${ax},${ay},0,${rotation}deg) scale(${this.state.size / 2})`,
-            transition: 'all 0.6s linear',
+            transition: 'all 1.0s linear',
         };
 
         return (
