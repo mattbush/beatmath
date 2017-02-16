@@ -109,12 +109,15 @@ const TactilePixel = React.createClass({
         const x = this.state.colComputed * CELL_SIZE;
         const y = this.state.rowComputed * CELL_SIZE;
 
+        const tempo = this.context.beatmathParameters.tempo;
+        const duration = 0.5 * tempo.getPeriod();
+
         const isOdd = this.state.ticks % 2;
         const rotation = isOdd ? 90 : -90;
         const {x: ax, y: ay} = this._getRefreshGradient();
         const style = {
             transform: `translate(${x}px,${y}px) rotate3d(${ax},${ay},0,${rotation}deg) scale(${this.state.size / 2})`,
-            transition: 'all 1.0s linear',
+            transition: `all ${duration}ms linear`,
         };
 
         return (
