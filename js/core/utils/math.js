@@ -24,14 +24,19 @@ const clamp = function(val, min, max) {
 };
 
 const modAndShiftToHalf = function(dividend, divisor) {
-    const remainder = dividend % divisor;
-    const mod = remainder < 0 ? remainder + divisor : remainder;
+    const mod = (dividend + divisor) % divisor;
     return (mod > divisor / 2) ? (mod - divisor) : mod;
 };
 
+const modAndShiftToHalfZigzag = function(dividend, divisor) {
+    const mod = (dividend + divisor) % divisor;
+    const value = (mod > divisor / 2) ? (mod - divisor) : mod;
+    const quotient = (Math.round(dividend / divisor));
+    return quotient % 2 ? -value : value;
+};
+
 const posModAndBendToLowerHalf = function(dividend, divisor) {
-    const remainder = dividend % divisor;
-    const mod = remainder < 0 ? remainder + divisor : remainder;
+    const mod = (dividend + divisor) % divisor;
     return (mod > divisor / 2) ? (divisor - mod) : mod;
 };
 
@@ -102,6 +107,7 @@ module.exports = {
     posMod,
     ceilOfMultiple,
     modAndShiftToHalf,
+    modAndShiftToHalfZigzag,
     posModAndBendToLowerHalf,
     centerOfPoints,
     xyRotatedAroundOriginWithAngle,

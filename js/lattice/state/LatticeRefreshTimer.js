@@ -3,7 +3,7 @@ const {MovingIntLinearParameter, MovingLogarithmicParameter, MovingLinearParamet
 const {MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
-const {lerp, dist, manhattanDist, triangularDist, polarAngleDeg, posMod, modAndShiftToHalf, posModAndBendToLowerHalf} = require('js/core/utils/math');
+const {lerp, dist, manhattanDist, triangularDist, polarAngleDeg, posMod, modAndShiftToHalfZigzag, posModAndBendToLowerHalf} = require('js/core/utils/math');
 const MAX_RIPPLES_TREAT_AS_INFINITE = 40;
 
 const EPSILON = 0.01;
@@ -183,8 +183,8 @@ class LatticeRefreshTimer extends PieceParameters {
             }
         }
         if (subdivisionRadius !== false) {
-            row = modAndShiftToHalf(row, subdivisionRadius);
-            col = modAndShiftToHalf(col, subdivisionRadius);
+            row = modAndShiftToHalfZigzag(row, subdivisionRadius);
+            col = modAndShiftToHalfZigzag(col, subdivisionRadius);
         }
 
         if (this._useDistance.getValue() && rippleRadius !== MAX_RIPPLES_TREAT_AS_INFINITE) {
