@@ -40,9 +40,9 @@ const TactilePixel = React.createClass({
             rowTriangular,
             colTriangular,
             triangularGridPercent,
+            ticks: 0,
             color: gray,
             size: CELL_SIZE * 0.9,
-            rotation: 0,
             rowComputed: lerp(this.props.row, rowTriangular, triangularGridPercent),
             colComputed: lerp(this.props.col, colTriangular, triangularGridPercent),
         };
@@ -65,6 +65,8 @@ const TactilePixel = React.createClass({
         }
 
         this._nextState = _.clone(this.state);
+        this._nextState.ticks++;
+
         if (triangularGridPercent !== this.state.triangularGridPercent) {
             this._nextState.triangularGridPercent = triangularGridPercent;
             this._nextState.rowComputed = lerp(this.props.row, this.state.rowTriangular, triangularGridPercent);
@@ -87,6 +89,14 @@ const TactilePixel = React.createClass({
             useTriangularGrid ? this.state.colTriangular : this.props.col,
         );
     },
+    _getRefreshGradient() {
+        // just use one or the other, rather than a mix, to take advantage of the cache
+        const useTriangularGrid = this.context.tactileParameters.triangularGridPercent.getValue() >= 0.5;
+        return this.context.refreshTimer.getRefreshGradient(
+            useTriangularGrid ? this.state.rowTriangular : this.props.row,
+            useTriangularGrid ? this.state.colTriangular : this.props.col,
+        );
+    },
     _mixInfluenceIntoNextState: function(influence) {
         return influence.mix(this._nextState, this.state.rowComputed, this.state.colComputed);
     },
@@ -96,12 +106,15 @@ const TactilePixel = React.createClass({
         return mapColorString(hexString);
     },
     render: function() {
-        const rotation = Math.floor(this.state.rotation);
         const x = this.state.colComputed * CELL_SIZE;
         const y = this.state.rowComputed * CELL_SIZE;
 
+        const isOdd = this.state.ticks % 2;
+        const rotation = isOdd ? 90 : -90;
+        const {x: ax, y: ay} = this._getRefreshGradient();
         const style = {
-            transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${this.state.size / 2})`,
+            transform: `translate(${x}px,${y}px) rotate3d(${ax},${ay},0,${rotation}deg) scale(${this.state.size / 2})`,
+            transition: 'all 0.6s linear',
         };
 
         return (
