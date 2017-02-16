@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const React = require('react');
 const tinycolor = require('tinycolor2');
-const BeatmathPixel = require('js/core/components/BeatmathPixel');
+const mapColorString = require('js/core/utils/mapColorString');
 const {runAtTimestamp} = require('js/core/utils/time');
 const {lerp} = require('js/core/utils/math');
 
@@ -90,11 +90,15 @@ const TactilePixel = React.createClass({
     _mixInfluenceIntoNextState: function(influence) {
         return influence.mix(this._nextState, this.state.rowComputed, this.state.colComputed);
     },
+    _getColorHexString() {
+        const color = this.state.color;
+        const hexString = color.toHexString(true);
+        return mapColorString(hexString);
+    },
     render: function() {
         const rotation = Math.floor(this.state.rotation);
         const x = this.state.colComputed * CELL_SIZE;
         const y = this.state.rowComputed * CELL_SIZE;
-        const fill = this.state.color;
 
         const style = {
             transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${this.state.size / 2})`,
@@ -102,7 +106,7 @@ const TactilePixel = React.createClass({
 
         return (
             <g style={style}>
-                <BeatmathPixel color={fill} />
+                <rect x="-1" y="-1" width="2" height="2" fill={this._getColorHexString()} />
             </g>
         );
     },

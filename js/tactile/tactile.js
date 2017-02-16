@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const mixboard = await Mixboard.getInstanceAsync();
 
     ReactDOM.render(
-        <MixboardContext mixboard={mixboard} bpmMod={0.5} usePixels={true}>
+        <MixboardContext mixboard={mixboard} bpmMod={0.5}>
             <TactileGrid />
         </MixboardContext>,
         document.getElementById('start')
