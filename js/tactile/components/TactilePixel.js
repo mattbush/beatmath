@@ -42,7 +42,7 @@ const TactilePixel = React.createClass({
             triangularGridPercent,
             ticks: 0,
             color: gray,
-            size: CELL_SIZE * 0.9,
+            size: CELL_SIZE,
             rowComputed: lerp(this.props.row, rowTriangular, triangularGridPercent),
             colComputed: lerp(this.props.col, colTriangular, triangularGridPercent),
         };
