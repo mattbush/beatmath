@@ -127,13 +127,27 @@ class LatticeRefreshTimer extends PieceParameters {
         if (this._pieceParameters.triangularGridPercent) {
             this._pieceParameters.triangularGridPercent.addListener(this._flushCacheIfNewGrid.bind(this));
         }
+        if (this._pieceParameters.perpendicularFlip) {
+            this._pieceParameters.perpendicularFlip.addListener(this._flushCacheIfNewGrid.bind(this));
+        }
     }
     _isTriangularGrid() {
         return this._pieceParameters.triangularGridPercent && this._pieceParameters.triangularGridPercent.getValue() >= 0.5;
     }
+    _isPerpendicularFlip() {
+        return this._pieceParameters.perpendicularFlip && this._pieceParameters.perpendicularFlip.getValue();
+    }
     _flushCacheIfNewGrid() {
+        let didChange = false;
         if (this._cachedIsTriangularGrid !== this._isTriangularGrid()) {
             this._cachedIsTriangularGrid = this._isTriangularGrid();
+            didChange = true;
+        }
+        if (this._cachedPerpendicularFlip !== this._isPerpendicularFlip()) {
+            this._cachedPerpendicularFlip = this._isPerpendicularFlip();
+            didChange = true;
+        }
+        if (didChange) {
             this._flushCache();
         }
     }
@@ -221,15 +235,18 @@ class LatticeRefreshTimer extends PieceParameters {
         const main = this._calculateRefreshOffset(row, col);
         const mainPlusDeltaX = this._calculateRefreshOffset(row, col + EPSILON);
         const mainPlusDeltaY = this._calculateRefreshOffset(row + EPSILON, col);
-        return {
-            x: mainPlusDeltaY - main,
-            y: main - mainPlusDeltaX,
-        };
-        // or to spin 90 degrees:
-        // return {
-        //     x: mainPlusDeltaX - main,
-        //     y: mainPlusDeltaY - main,
-        // };
+
+        if (this._cachedPerpendicularFlip) {
+            return {
+                x: mainPlusDeltaX - main,
+                y: mainPlusDeltaY - main,
+            };
+        } else {
+            return {
+                x: mainPlusDeltaY - main,
+                y: main - mainPlusDeltaX,
+            };
+        }
     }
 }
 

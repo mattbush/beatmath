@@ -27,12 +27,12 @@ const TactilePixel = React.createClass({
         influences: React.PropTypes.array,
         refreshTimer: React.PropTypes.object,
     },
-    componentDidMount: function() {
+    componentDidMount() {
         const tempo = this.context.beatmathParameters.tempo;
         const refreshOffset = this._getRefreshOffset();
         runAtTimestamp(this._update, tempo.getNextTick() + refreshOffset);
     },
-    getInitialState: function() {
+    getInitialState() {
         const rowTriangular = calculateRowTriangular(this.props.row, this.props.col);
         const colTriangular = calculateColTriangular(this.props.row, this.props.col);
         const triangularGridPercent = this.context.tactileParameters.triangularGridPercent.getValue();
@@ -47,7 +47,7 @@ const TactilePixel = React.createClass({
             colComputed: lerp(this.props.col, colTriangular, triangularGridPercent),
         };
     },
-    _update: function() {
+    _update() {
         if (!this.isMounted()) {
             return;
         }
@@ -81,7 +81,7 @@ const TactilePixel = React.createClass({
         }
         this.setState(this._nextState);
     },
-    _getRefreshOffset: function() {
+    _getRefreshOffset() {
         // just use one or the other, rather than a mix, to take advantage of the cache
         const useTriangularGrid = this.context.tactileParameters.triangularGridPercent.getValue() >= 0.5;
         return this.context.refreshTimer.getRefreshOffset(
@@ -97,7 +97,7 @@ const TactilePixel = React.createClass({
             useTriangularGrid ? this.state.colTriangular : this.props.col,
         );
     },
-    _mixInfluenceIntoNextState: function(influence) {
+    _mixInfluenceIntoNextState(influence) {
         return influence.mix(this._nextState, this.state.rowComputed, this.state.colComputed);
     },
     _getColorHexString() {
@@ -105,7 +105,7 @@ const TactilePixel = React.createClass({
         const hexString = color.toHexString(true);
         return mapColorString(hexString);
     },
-    render: function() {
+    render() {
         const x = this.state.colComputed * CELL_SIZE;
         const y = this.state.rowComputed * CELL_SIZE;
 

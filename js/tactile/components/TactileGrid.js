@@ -21,14 +21,14 @@ const TactileGrid = React.createClass({
         beatmathParameters: React.PropTypes.object,
         mixboard: React.PropTypes.object,
     },
-    getChildContext: function() {
+    getChildContext() {
         return {
             tactileParameters: this.state.tactileParameters,
             influences: this.state.influences,
             refreshTimer: this.state.refreshTimer,
         };
     },
-    getInitialState: function() {
+    getInitialState() {
         const mixboard = this.context.mixboard;
         const beatmathParameters = this.context.beatmathParameters;
         const tactileParameters = new TactileParameters(mixboard, beatmathParameters);
@@ -44,14 +44,14 @@ const TactileGrid = React.createClass({
 
         return {tactileParameters, influences, refreshTimer};
     },
-    getParameterBindings: function() {
+    getParameterBindings() {
         return {
             showInfluences: this.state.tactileParameters.showInfluences,
             numRows: this.state.tactileParameters.numRows,
             numColumns: this.state.tactileParameters.numColumns,
         };
     },
-    render: function() {
+    render() {
         const children = [];
         const numRows = this.getParameterValue('numRows');
         const numColumns = this.getParameterValue('numColumns');
