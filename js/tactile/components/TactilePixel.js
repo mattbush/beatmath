@@ -110,7 +110,8 @@ const TactilePixel = React.createClass({
         const y = this.state.rowComputed * CELL_SIZE;
 
         const tempo = this.context.beatmathParameters.tempo;
-        const duration = 0.5 * tempo.getPeriod();
+        const flipDurationPercent = this.context.tactileParameters.flipDurationPercent.getValue();
+        const duration = flipDurationPercent * tempo.getPeriod();
 
         const isOdd = this.state.ticks % 2;
         const rotation = isOdd ? 90 : -90;

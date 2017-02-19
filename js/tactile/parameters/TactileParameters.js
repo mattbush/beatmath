@@ -62,6 +62,14 @@ class TactileParameters extends PieceParameters {
                 listenToMixtrackWheel: MixtrackWheels.R_CONTROL_2,
                 monitorName: 'Triangle Grid %',
             },
+            flipDurationPercent: {
+                type: LinearParameter,
+                range: [0.1, 0.9],
+                start: 0.3,
+                incrementAmount: 0.05,
+                listenToLaunchpadKnob: [0, 1],
+                monitorName: 'Flip Duration %',
+            },
             latency: {
                 type: ManualParameter,
                 start: 0,
