@@ -72,7 +72,7 @@ class TactileParameters extends PieceParameters {
             },
             perpendicularFlip: {
                 type: ToggleParameter,
-                start: true,
+                start: false,
                 listenToLaunchpadButton: 2,
                 monitorName: 'Perpendicular Flip?',
             },

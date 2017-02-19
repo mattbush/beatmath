@@ -121,9 +121,13 @@ const TactilePixel = React.createClass({
             transition: `all ${duration}ms linear`,
         };
 
+        const shape = this.context.tactileParameters.triangularGridPercent.getValue() >= 0.5 ?
+            <circle cx="0" cy="0" r="1" fill={this._getColorHexString()} /> :
+            <rect x="-1" y="-1" width="2" height="2" fill={this._getColorHexString()} />;
+
         return (
             <g style={style}>
-                <rect x="-1" y="-1" width="2" height="2" fill={this._getColorHexString()} />
+                {shape}
             </g>
         );
     },
