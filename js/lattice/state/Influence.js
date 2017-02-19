@@ -92,8 +92,10 @@ class Influence {
 class SizeInfluence extends Influence {
     constructor(params) {
         super(params);
+        const min = params.min || 1;
+        const max = params.max || MAX_SIZE;
         this._mainParameter = new MovingLinearParameter({
-            range: [1, MAX_SIZE],
+            range: [min, max],
             variance: 0.25,
             start: params.startValue,
         });

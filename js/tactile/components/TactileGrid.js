@@ -6,9 +6,10 @@ const TactilePixel = require('js/tactile/components/TactilePixel');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const LatticeRefreshTimer = require('js/lattice/state/LatticeRefreshTimer');
+const {CELL_SIZE} = require('js/tactile/parameters/TactileConstants');
 
 const tinycolor = require('tinycolor2');
-const {ColorInfluence} = require('js/lattice/state/Influence');
+const {ColorInfluence, SizeInfluence} = require('js/lattice/state/Influence');
 
 const TactileGrid = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -40,6 +41,10 @@ const TactileGrid = React.createClass({
             new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.75, startRow: 0.25, startValue: tinycolor('#0f0'), lightNumber: 1}),
             new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.25, startRow: 0.75, startValue: tinycolor('#00f'), lightNumber: 2}),
             new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.75, startRow: 0.75, startValue: tinycolor('#ff0'), lightNumber: 3}),
+            new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.25, startRow: 0.5, startValue: 0.8 * CELL_SIZE, min: 0.6 * CELL_SIZE, max: CELL_SIZE}),
+            new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.75, startRow: 0.5, startValue: 0.8 * CELL_SIZE, min: 0.6 * CELL_SIZE, max: CELL_SIZE}),
+            new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.25, startValue: 0.8 * CELL_SIZE, min: 0.6 * CELL_SIZE, max: CELL_SIZE}),
+            new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.75, startValue: 0.8 * CELL_SIZE, min: 0.6 * CELL_SIZE, max: CELL_SIZE}),
         ];
 
         return {tactileParameters, influences, refreshTimer};

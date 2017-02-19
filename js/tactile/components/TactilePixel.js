@@ -42,7 +42,7 @@ const TactilePixel = React.createClass({
             triangularGridPercent,
             ticks: 0,
             color: gray,
-            size: CELL_SIZE,
+            size: CELL_SIZE * 0.8,
             rowComputed: lerp(this.props.row, rowTriangular, triangularGridPercent),
             colComputed: lerp(this.props.col, colTriangular, triangularGridPercent),
         };
@@ -112,12 +112,13 @@ const TactilePixel = React.createClass({
         const tempo = this.context.beatmathParameters.tempo;
         const flipDurationPercent = this.context.tactileParameters.flipDurationPercent.getValue();
         const duration = flipDurationPercent * tempo.getPeriod();
+        const size = lerp(CELL_SIZE, this.state.size, this.context.tactileParameters.varySizePercent.getValue());
 
         const isOdd = this.state.ticks % 2;
         const rotation = isOdd ? 90 : -90;
         const {x: ax, y: ay} = this._getRefreshGradient();
         const style = {
-            transform: `translate(${x}px,${y}px) rotate3d(${ax},${ay},0,${rotation}deg) scale(${this.state.size / 2})`,
+            transform: `translate(${x}px,${y}px) rotate3d(${ax},${ay},0,${rotation}deg) scale(${size / 2})`,
             transition: `all ${duration}ms linear`,
         };
 

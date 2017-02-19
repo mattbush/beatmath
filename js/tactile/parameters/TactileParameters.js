@@ -76,6 +76,13 @@ class TactileParameters extends PieceParameters {
                 listenToLaunchpadButton: 2,
                 monitorName: 'Perpendicular Flip?',
             },
+            varySizePercent: {
+                type: LinearParameter,
+                range: [0, 1],
+                start: 0,
+                listenToLaunchpadKnob: [0, 2],
+                monitorName: 'Vary Size %',
+            },
             latency: {
                 type: ManualParameter,
                 start: 0,
