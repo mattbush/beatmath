@@ -8,7 +8,7 @@ const BeatmathFrame = React.createClass({
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
     },
-    getParameterBindings: function() {
+    getParameterBindings() {
         return {
             width: this.context.beatmathParameters.width,
             height: this.context.beatmathParameters.height,
@@ -101,7 +101,7 @@ const BeatmathFrame = React.createClass({
             );
         }
     },
-    render: function() {
+    render() {
         const width = this.getParameterValue('width');
         const height = this.getParameterValue('height');
         const style = {
