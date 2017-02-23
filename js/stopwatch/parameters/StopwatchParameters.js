@@ -1,23 +1,32 @@
-const {IntLinearParameter} = require('js/core/parameters/Parameter');
-// const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
+// const _ = require('lodash');
+const {LinearParameter, IntLinearParameter} = require('js/core/parameters/Parameter');
 const PieceParameters = require('js/core/parameters/PieceParameters');
+const StopwatchVisList = require('js/stopwatch/parameters/StopwatchVisList');
 
 class StopwatchParameters extends PieceParameters {
+    constructor(...args) {
+        super(...args);
+
+        this._visList = new StopwatchVisList(this);
+
+        this._beatmathParameters.tempo.addListener(this._tick.bind(this));
+        this._tick();
+    }
     _declareParameters() {
         return {
-            numRings: {
-                type: IntLinearParameter,
-                range: [1, 4],
-                start: 2,
-                listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
-                monitorName: '# Rings',
-            },
-            numTrails: {
+            numVisibleTrails: {
                 type: IntLinearParameter,
                 range: [2, 8],
-                start: 2,
+                start: 4,
+                listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
+                monitorName: '# Visible Trails',
+            },
+            hidePercent: {
+                type: LinearParameter,
+                range: [0, 1],
+                start: 0.5,
                 listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
-                monitorName: '# Trails',
+                monitorName: 'Hide %',
             },
             trailLength: {
                 type: IntLinearParameter,
