@@ -41,7 +41,11 @@ class StopwatchVisList {
         return this._overallCount;
     }
     getVisibleIndexForId(id) {
-        return this._visibleIndicesById[id];
+        const visibleIndexString = this._visibleIndicesById[id];
+        if (visibleIndexString) {
+            return Number(visibleIndexString);
+        }
+        return visibleIndexString;
     }
     isIdVisible() {
         return this.getVisibleIndexForId() !== undefined;
