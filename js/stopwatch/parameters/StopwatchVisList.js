@@ -64,8 +64,9 @@ class StopwatchVisList {
             obj.visibility = true;
         }
 
-        // shuffle
-        this._objects = _.shuffle(this._objects);
+        // shuffle hidden ones?
+        // this._objects = _.shuffle(this._objects);
+
         this._recalculateIndices();
     }
     _getVisibleCountFromParams() {

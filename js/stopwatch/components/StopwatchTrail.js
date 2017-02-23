@@ -25,17 +25,31 @@ const StopwatchTrail = React.createClass({
         if (currentTick !== this._lastTick) {
             const trailLength = this.context.stopwatchParameters.trailLength.getValue();
             const numTicksPerShuffle = this.context.stopwatchParameters.numTicksPerShuffle.getValue();
+            const attackPercent = this.context.stopwatchParameters.attackPercent.getValue();
             const numTicksToRetain = Math.max(trailLength, numTicksPerShuffle);
 
-            const lastIndex = this._visibleIndicesByTick[currentTick - numTicksPerShuffle];
+            const lastIndex = this._visibleIndicesByTick[currentTick - (currentTick % numTicksPerShuffle) - 1];
             let currentIndex = this.context.stopwatchParameters.getVisibleIndexForTrailId(this.props.trailId);
-            if (lastIndex !== undefined && currentIndex !== undefined) {
-                const locationLerp = ((currentTick % numTicksPerShuffle) + 0.5) / numTicksPerShuffle;
-                currentIndex = lerp(lastIndex, currentIndex, locationLerp); // TODO: lerp this faster, fewer ticks per shuffle
+            const finalIndex = currentIndex;
+
+            const locationLerp = ((currentTick % numTicksPerShuffle) + 0.5) / (numTicksPerShuffle * attackPercent);
+            if (lastIndex !== undefined) {
+                if (currentIndex !== undefined) {
+                    currentIndex = lerp(lastIndex, currentIndex, Math.min(locationLerp, 1)); // TODO: lerp this faster, fewer ticks per shuffle
+                }
+            } else {
+                if (locationLerp < 1) {
+                    currentIndex = undefined;
+                }
             }
 
             delete this._visibleIndicesByTick[currentTick - numTicksToRetain];
             this._visibleIndicesByTick[currentTick] = currentIndex;
+
+            if (this.props.trailId === 0) {
+                console.log(currentTick, lastIndex, currentIndex, finalIndex, locationLerp);
+            }
+
 
             this._lastTick = tempo.getNumTicks();
         }

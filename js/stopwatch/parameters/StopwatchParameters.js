@@ -17,7 +17,7 @@ class StopwatchParameters extends PieceParameters {
             numVisibleTrails: {
                 type: IntLinearParameter,
                 range: [4, 20],
-                start: 8,
+                start: 10,
                 listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
                 monitorName: '# Visible Trails',
             },
@@ -28,23 +28,30 @@ class StopwatchParameters extends PieceParameters {
             hidePercent: {
                 type: LinearParameter,
                 range: [0, 1],
-                start: 0,
+                start: 0.25,
                 listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
                 monitorName: 'Hide %',
             },
             trailLength: {
                 type: IntLinearParameter,
-                range: [1, 32],
-                start: 16,
+                range: [1, 64],
+                start: 48,
                 listenToLaunchpadFader: [2, {addButtonStatusLight: true}],
                 monitorName: 'Trail Length',
             },
             numTicksPerShuffle: {
                 type: IntLinearParameter,
                 range: [1, 32],
-                start: 4,
-                listenToLaunchpadFader: [2, {addButtonStatusLight: true}],
+                start: 16,
+                listenToLaunchpadFader: [3, {addButtonStatusLight: true}],
                 monitorName: 'Trail Length',
+            },
+            attackPercent: {
+                type: LinearParameter,
+                range: [0, 1],
+                start: 0.5,
+                listenToLaunchpadFader: [4, {addButtonStatusLight: true}],
+                monitorName: 'Attack %',
             },
         };
     }
