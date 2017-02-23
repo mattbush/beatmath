@@ -14,6 +14,7 @@ class StopwatchVisList {
         if (this._getHiddenCountFromParams() === this._hiddenCount) {
             return;
         }
+        this._adjustSize();
     }
     _adjustSize() {
         // const formerOverallCount = this._objects.length;
@@ -30,10 +31,14 @@ class StopwatchVisList {
             visibility: id < this._visibleCount,
         }));
         this._recalculateIndices();
+        this._stopwatchParameters.numTrailsChanged._updateListeners();
     }
     _recalculateIndices() {
         this._visibleObjects = this._objects.filter(x => x.visibility);
         this._visibleIndicesById = _.invert(this._visibleObjects.map(x => x.id));
+    }
+    getOverallCount() {
+        return this._overallCount;
     }
     getVisibleIndexForId(id) {
         return this._visibleIndicesById[id];
@@ -41,7 +46,7 @@ class StopwatchVisList {
     isIdVisible() {
         return this.getVisibleIndexForId() !== undefined;
     }
-    _update() {
+    update() {
         const hiddenObjects = this._objects.filter(x => !x.visibility);
 
         // hide n visible objects

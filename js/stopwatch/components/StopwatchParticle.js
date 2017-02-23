@@ -7,18 +7,25 @@ const tinycolor = require('tinycolor2');
 const StopwatchParticle = React.createClass({
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
-        stopwatchParameters: React.PropTypes.array,
+        stopwatchParameters: React.PropTypes.object,
     },
     render() {
-        const trailRatio = this.props.trailIndex / this.context.stopwatchParameters.numTrails.getValue();
+        if (this.props.visibleIndex === undefined) {
+            return null;
+        }
 
-        const distance = 100 * (1 + this.props.ringIndex);
-        const rotation = (360 * trailRatio) + (5 * this.props.tick);
+        const trailRatio = this.props.visibleIndex / this.context.stopwatchParameters.numVisibleTrails.getValue();
+
+        const x = -400 + trailRatio * 800;
+        const y = -300 + (20 * this.props.tick);
+
+        // const distance = 100 * (1 + this.props.ringIndex);
+        // const rotation = (360 * trailRatio) + (5 * this.props.tick);
 
         const fill = tinycolor('#f00').spin((10 * this.props.tick)).toHexString(true);
 
         const style = {
-            transform: `rotate(${rotation}deg) translate(${distance}px,0px)`,
+            transform: `translate(${x}px,${y}px)`,
         };
 
         return (
