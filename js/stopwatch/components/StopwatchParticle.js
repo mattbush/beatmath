@@ -33,13 +33,14 @@ const StopwatchParticle = React.createClass({
         const y = (totalHeight / 2) - trailRatio * totalHeight;
         const dx = x - lastX;
 
-        const WIDTH_PERCENT = 0.5;
+        const WIDTH_PERCENT = 0.4; // TODO make this a param
         const w = WIDTH_PERCENT * 800 / numVisibleTrails;
         const h = HEIGHT;
 
         // const distance = 100 * (1 + this.props.ringIndex);
         // const rotation = (360 * trailRatio) + (5 * this.props.tick);
 
+        // TODO: instead of passing trailPosition could pass this.props.tick or something else
         const fill = this.context.stopwatchParameters.getColorForTrailAndTick(this.props.visibleIndex, trailPosition);
         const delay = this.context.beatmathParameters.tempo.getPeriod();
 
