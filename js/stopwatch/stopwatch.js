@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const mixboard = await Mixboard.getInstanceAsync();
 
     ReactDOM.render(
-        <MixboardContext mixboard={mixboard} bpmMod={8}>
+        <MixboardContext mixboard={mixboard} bpmMod={2}>
             <StopwatchContainer />
         </MixboardContext>,
         document.getElementById('start')

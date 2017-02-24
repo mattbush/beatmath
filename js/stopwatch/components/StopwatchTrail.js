@@ -32,7 +32,7 @@ const StopwatchTrail = React.createClass({
             let currentIndex = this.context.stopwatchParameters.getVisibleIndexForTrailId(this.props.trailId);
             // const finalIndex = currentIndex;
 
-            const locationLerp = ((currentTick % numTicksPerShuffle) + 0.5) / (numTicksPerShuffle * attackPercent);
+            const locationLerp = ((currentTick % numTicksPerShuffle + 1) / (numTicksPerShuffle * attackPercent));
             if (lastIndex !== undefined) {
                 if (currentIndex !== undefined) {
                     currentIndex = lerp(lastIndex, currentIndex, Math.min(locationLerp, 1)); // TODO: lerp this faster, fewer ticks per shuffle
@@ -43,7 +43,7 @@ const StopwatchTrail = React.createClass({
                 }
             }
 
-            delete this._visibleIndicesByTick[currentTick - numTicksToRetain];
+            delete this._visibleIndicesByTick[currentTick - numTicksToRetain - 1];
             this._visibleIndicesByTick[currentTick] = currentIndex;
 
             this._lastTick = tempo.getNumTicks();
@@ -62,6 +62,7 @@ const StopwatchTrail = React.createClass({
             <g>
                 {_.times(endTick - startTick, particleIndex =>
                     <StopwatchParticle
+                        lastVisibleIndex={this._visibleIndicesByTick[startTick + particleIndex - 1]}
                         visibleIndex={this._visibleIndicesByTick[startTick + particleIndex]}
                         tick={startTick + particleIndex}
                         key={startTick + particleIndex}

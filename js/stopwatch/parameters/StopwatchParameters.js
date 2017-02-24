@@ -35,14 +35,14 @@ class StopwatchParameters extends PieceParameters {
             trailLength: {
                 type: IntLinearParameter,
                 range: [1, 64],
-                start: 48,
+                start: 12,
                 listenToLaunchpadFader: [2, {addButtonStatusLight: true}],
                 monitorName: 'Trail Length',
             },
             numTicksPerShuffle: {
                 type: IntLinearParameter,
                 range: [1, 32],
-                start: 16,
+                start: 4,
                 listenToLaunchpadFader: [3, {addButtonStatusLight: true}],
                 monitorName: 'Num Ticks Per Shuffle',
             },
