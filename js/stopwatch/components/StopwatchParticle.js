@@ -19,14 +19,20 @@ const StopwatchParticle = React.createClass({
 
         const numVisibleTrails = this.context.stopwatchParameters.numVisibleTrails.getValue();
 
-        const lastTrailRatio = this.props.lastVisibleIndex / numVisibleTrails;
-        const trailRatio = this.props.visibleIndex / numVisibleTrails;
+        const lastIndexRatio = (this.props.lastVisibleIndex + 0.5) / numVisibleTrails;
+        const indexRatio = (this.props.visibleIndex + 0.5) / numVisibleTrails;
 
+        const trailLength = this.context.stopwatchParameters.trailLength.getValue();
+        const trailPosition = currentTick - this.props.tick;
+        const trailRatio = (trailPosition + 0.5) / trailLength;
+
+        const TOTAL_WIDTH = 1000;
         const HEIGHT = 50;
+        const totalHeight = HEIGHT * trailLength;
 
-        const lastX = -400 + lastTrailRatio * 800;
-        const x = -400 + trailRatio * 800;
-        const y = 200 - (HEIGHT * (currentTick - this.props.tick));
+        const lastX = -(TOTAL_WIDTH / 2) + lastIndexRatio * TOTAL_WIDTH;
+        const x = -(TOTAL_WIDTH / 2) + indexRatio * TOTAL_WIDTH;
+        const y = (totalHeight / 2) - trailRatio * totalHeight;
         const dx = x - lastX;
 
         const WIDTH_PERCENT = 0.5;
