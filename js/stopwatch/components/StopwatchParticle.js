@@ -31,11 +31,8 @@ const StopwatchParticle = React.createClass({
         const GROWTH_RATIO = 1.2;
         const WIDTH_PERCENT = 0.4; // TODO make this a param
 
-        // TODO: instead of passing trailPosition could pass this.props.tick or something else
-        const fill = stopwatchParameters.getColorForTrailAndTick(this.props.visibleIndex, trailPosition);
-        const delay = beatmathParameters.tempo.getPeriod();
-
         const polarGridAmount = clamp(stopwatchParameters.polarGridAmount.getValue(), 0, 1);
+        let o;
 
         if (polarGridAmount >= 0.5) {
             const scale = 32 * GROWTH_RATIO ** trailPosition; // TODO cache this
@@ -45,24 +42,18 @@ const StopwatchParticle = React.createClass({
 
             const dTheta = modAndShiftToHalf(rotationRad - lastRotationRad, TWOPI);
 
-            const style = {
-                transform: `scale(${scale}) rotate(${TWOPI / 4 + rotationRad}rad)`,
-                transition: `transform ${delay}ms linear`,
+            o = {
+                x: 0,
+                y: 0,
+                scale: scale,
+                rotation: TWOPI / 4 + rotationRad,
+
+                px1: GROWTH_RATIO * Math.cos(-dTheta - widthRad / 2), py1: GROWTH_RATIO * Math.sin(-dTheta - widthRad / 2),
+                px2: GROWTH_RATIO * Math.cos(-dTheta + widthRad / 2), py2: GROWTH_RATIO * Math.sin(-dTheta + widthRad / 2),
+                px3: Math.cos(widthRad / 2), py3: Math.sin(widthRad / 2),
+                px4: Math.cos(-widthRad / 2), py4: Math.sin(-widthRad / 2),
             };
 
-            // TODO: it looks cool when the structure is jagged and the ends are reversed
-            const points = [
-                [GROWTH_RATIO * Math.cos(-dTheta - widthRad / 2), GROWTH_RATIO * Math.sin(-dTheta - widthRad / 2)],
-                [GROWTH_RATIO * Math.cos(-dTheta + widthRad / 2), GROWTH_RATIO * Math.sin(-dTheta + widthRad / 2)],
-                [Math.cos(widthRad / 2), Math.sin(widthRad / 2)],
-                [Math.cos(-widthRad / 2), Math.sin(-widthRad / 2)],
-            ].map(p => p.join(',')).join(' ');
-
-            return (
-                <g style={style}>
-                    <polygon points={points} fill={fill.toHexString(true)} />
-                </g>
-            );
         } else {
             const TOTAL_WIDTH = 1000;
             const HEIGHT = 50;
@@ -76,27 +67,40 @@ const StopwatchParticle = React.createClass({
             const w = WIDTH_PERCENT * 800 / numVisibleTrails;
             const h = HEIGHT;
 
-            // const distance = 100 * (1 + this.props.ringIndex);
-            // const rotation = (360 * trailRatio) + (5 * this.props.tick);
+            o = {
+                x: x,
+                y: y,
+                scale: 1,
+                rotation: 0,
 
-            const style = {
-                transform: `translate(${x}px,${y}px)`,
-                transition: `transform ${delay}ms linear`,
+                px1: -dx - w / 2, py1: -h / 2,
+                px2: -dx + w / 2, py2: -h / 2,
+                px3: w / 2, py3: h / 2,
+                px4: -w / 2, py4: h / 2,
             };
-
-            const points = [
-                [-dx - w / 2, -h / 2],
-                [-dx + w / 2, -h / 2],
-                [w / 2, h / 2],
-                [-w / 2, h / 2],
-            ].map(p => p.join(',')).join(' ');
-
-            return (
-                <g style={style}>
-                    <polygon points={points} fill={fill.toHexString(true)} />
-                </g>
-            );
         }
+
+        // TODO: instead of passing trailPosition could pass this.props.tick or something else
+        const fill = stopwatchParameters.getColorForTrailAndTick(this.props.visibleIndex, trailPosition);
+        const delay = beatmathParameters.tempo.getPeriod();
+
+        const style = {
+            transform: `translate(${o.x}px,${o.y}px) scale(${o.scale}) rotate(${o.rotation}rad)`,
+            transition: `transform ${delay}ms linear`,
+        };
+
+        const points = [
+            [o.px1, o.py1],
+            [o.px2, o.py2],
+            [o.px3, o.py3],
+            [o.px4, o.py4],
+        ].map(p => p.join(',')).join(' ');
+
+        return (
+            <g style={style}>
+                <polygon points={points} fill={fill.toHexString(true)} />
+            </g>
+        );
     },
 });
 
