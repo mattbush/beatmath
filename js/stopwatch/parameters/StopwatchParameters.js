@@ -44,7 +44,7 @@ class StopwatchParameters extends PieceParameters {
                 range: [1, 32],
                 start: 16,
                 listenToLaunchpadFader: [3, {addButtonStatusLight: true}],
-                monitorName: 'Trail Length',
+                monitorName: 'Num Ticks Per Shuffle',
             },
             attackPercent: {
                 type: LinearParameter,

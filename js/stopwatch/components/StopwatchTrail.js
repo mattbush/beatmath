@@ -30,7 +30,7 @@ const StopwatchTrail = React.createClass({
 
             const lastIndex = this._visibleIndicesByTick[currentTick - (currentTick % numTicksPerShuffle) - 1];
             let currentIndex = this.context.stopwatchParameters.getVisibleIndexForTrailId(this.props.trailId);
-            const finalIndex = currentIndex;
+            // const finalIndex = currentIndex;
 
             const locationLerp = ((currentTick % numTicksPerShuffle) + 0.5) / (numTicksPerShuffle * attackPercent);
             if (lastIndex !== undefined) {
@@ -45,11 +45,6 @@ const StopwatchTrail = React.createClass({
 
             delete this._visibleIndicesByTick[currentTick - numTicksToRetain];
             this._visibleIndicesByTick[currentTick] = currentIndex;
-
-            if (this.props.trailId === 0) {
-                console.log(currentTick, lastIndex, currentIndex, finalIndex, locationLerp);
-            }
-
 
             this._lastTick = tempo.getNumTicks();
         }
