@@ -1,6 +1,6 @@
-// const _ = require('lodash');
+const _ = require('lodash');
 const React = require('react');
-const {clamp, modAndShiftToHalf} = require('js/core/utils/math');
+const {clamp, modAndShiftToHalf, lerp, logerp} = require('js/core/utils/math');
 
 const TWOPI = 2 * Math.PI;
 
@@ -32,9 +32,10 @@ const StopwatchParticle = React.createClass({
         const WIDTH_PERCENT = 0.4; // TODO make this a param
 
         const polarGridAmount = clamp(stopwatchParameters.polarGridAmount.getValue(), 0, 1);
-        let o;
+        let polarO;
+        let cartesianO;
 
-        if (polarGridAmount >= 0.5) {
+        if (polarGridAmount > 0) {
             const scale = 32 * GROWTH_RATIO ** trailPosition; // TODO cache this
             const lastRotationRad = lastIndexRatio * TWOPI;
             const rotationRad = indexRatio * TWOPI;
@@ -42,7 +43,7 @@ const StopwatchParticle = React.createClass({
 
             const dTheta = modAndShiftToHalf(rotationRad - lastRotationRad, TWOPI);
 
-            o = {
+            polarO = {
                 x: 0,
                 y: 0,
                 scale: scale,
@@ -54,7 +55,9 @@ const StopwatchParticle = React.createClass({
                 px4: Math.cos(-widthRad / 2), py4: Math.sin(-widthRad / 2),
             };
 
-        } else {
+        }
+
+        if (polarGridAmount < 1) {
             const TOTAL_WIDTH = 1000;
             const HEIGHT = 50;
             const totalHeight = HEIGHT * trailLength;
@@ -67,7 +70,7 @@ const StopwatchParticle = React.createClass({
             const w = WIDTH_PERCENT * 800 / numVisibleTrails;
             const h = HEIGHT;
 
-            o = {
+            cartesianO = {
                 x: x,
                 y: y,
                 scale: 1,
@@ -80,12 +83,18 @@ const StopwatchParticle = React.createClass({
             };
         }
 
+        const o =
+            polarGridAmount === 1 ? polarO :
+            polarGridAmount === 0 ? cartesianO :
+            // meh
+            _.mapValues(cartesianO, (val, key) => (key === 'scale' ? logerp : lerp)(val, polarO[key], polarGridAmount));
+
         // TODO: instead of passing trailPosition could pass this.props.tick or something else
         const fill = stopwatchParameters.getColorForTrailAndTick(this.props.visibleIndex, trailPosition);
         const delay = beatmathParameters.tempo.getPeriod();
 
         const style = {
-            transform: `translate(${o.x}px,${o.y}px) scale(${o.scale}) rotate(${o.rotation}rad)`,
+            transform: `scale(${o.scale}) rotate(${o.rotation}rad) translate(${o.x}px,${o.y}px)`,
             transition: `transform ${delay}ms linear`,
         };
 
