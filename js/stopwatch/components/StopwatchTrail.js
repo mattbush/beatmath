@@ -32,7 +32,7 @@ const StopwatchTrail = React.createClass({
             let currentIndex = this.context.stopwatchParameters.getVisibleIndexForTrailId(this.props.trailId);
             // const finalIndex = currentIndex;
 
-            const locationLerp = ((currentTick % numTicksPerShuffle + 1) / (numTicksPerShuffle * attackPercent));
+            const locationLerp = ((currentTick % numTicksPerShuffle + 1) / Math.ceil(numTicksPerShuffle * attackPercent));
             if (lastIndex !== undefined) {
                 if (currentIndex !== undefined) {
                     currentIndex = lerp(lastIndex, currentIndex, Math.min(locationLerp, 1)); // TODO: lerp this faster, fewer ticks per shuffle

@@ -50,7 +50,7 @@ class StopwatchParameters extends PieceParameters {
             },
             numTicksPerShuffle: {
                 type: IntLinearParameter,
-                range: [1, 32],
+                range: [1, 8],
                 start: 4,
                 listenToLaunchpadFader: [3, {addButtonStatusLight: true}],
                 monitorName: 'Num Ticks Per Shuffle',

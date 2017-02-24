@@ -38,7 +38,7 @@ const StopwatchParticle = React.createClass({
         const polarGridAmount = clamp(stopwatchParameters.polarGridAmount.getValue(), 0, 1);
 
         if (polarGridAmount >= 0.5) {
-            const scale = 16 * GROWTH_RATIO ** trailPosition; // TODO cache this
+            const scale = 32 * GROWTH_RATIO ** trailPosition; // TODO cache this
             const lastRotationRad = lastIndexRatio * TWOPI;
             const rotationRad = indexRatio * TWOPI;
             const widthRad = WIDTH_PERCENT * TWOPI / numVisibleTrails;
@@ -46,7 +46,7 @@ const StopwatchParticle = React.createClass({
             const dTheta = modAndShiftToHalf(rotationRad - lastRotationRad, TWOPI);
 
             const style = {
-                transform: `scale(${scale}) rotate(${rotationRad}rad)`,
+                transform: `scale(${scale}) rotate(${TWOPI / 4 + rotationRad}rad)`,
                 transition: `transform ${delay}ms linear`,
             };
 
