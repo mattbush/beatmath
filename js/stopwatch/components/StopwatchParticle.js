@@ -1,8 +1,6 @@
 // const _ = require('lodash');
 const React = require('react');
 // const {lerp} = require('js/core/utils/math');
-const tinycolor = require('tinycolor2');
-// const mapColorString = require('js/core/utils/mapColorString');
 
 const StopwatchParticle = React.createClass({
     contextTypes: {
@@ -42,7 +40,7 @@ const StopwatchParticle = React.createClass({
         // const distance = 100 * (1 + this.props.ringIndex);
         // const rotation = (360 * trailRatio) + (5 * this.props.tick);
 
-        const fill = tinycolor('#f00').spin((5 * this.props.tick)).toHexString(true);
+        const fill = this.context.stopwatchParameters.getColorForTrailAndTick(this.props.visibleIndex, trailPosition);
         const delay = this.context.beatmathParameters.tempo.getPeriod();
 
         const style = {
@@ -54,7 +52,7 @@ const StopwatchParticle = React.createClass({
 
         return (
             <g style={style}>
-                <polygon points={points} fill={fill} />
+                <polygon points={points} fill={fill.toHexString(true)} />
             </g>
         );
     },

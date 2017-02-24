@@ -1,7 +1,9 @@
 // const _ = require('lodash');
-const {Parameter, LinearParameter, IntLinearParameter} = require('js/core/parameters/Parameter');
+const {Parameter, LinearParameter, IntLinearParameter, MovingLinearParameter, MovingColorParameter} = require('js/core/parameters/Parameter');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const StopwatchVisList = require('js/stopwatch/parameters/StopwatchVisList');
+const {clamp, modAndShiftToHalf} = require('js/core/utils/math');
+const tinycolor = require('tinycolor2');
 
 class StopwatchParameters extends PieceParameters {
     constructor(...args) {
@@ -14,6 +16,13 @@ class StopwatchParameters extends PieceParameters {
     }
     _declareParameters() {
         return {
+            baseColor: {
+                type: MovingColorParameter,
+                start: tinycolor('#5ff'),
+                max: 5,
+                variance: 1,
+                autoupdate: 1000,
+            },
             numVisibleTrails: {
                 type: IntLinearParameter,
                 range: [4, 20],
@@ -53,6 +62,38 @@ class StopwatchParameters extends PieceParameters {
                 listenToLaunchpadFader: [4, {addButtonStatusLight: true}],
                 monitorName: 'Attack %',
             },
+            columnColorShift: {
+                type: MovingLinearParameter,
+                range: [-45, 45],
+                start: 0,
+                monitorName: 'Column Color Shift',
+                listenToLaunchpadKnob: [0, 0],
+                variance: 0.25,
+                autoupdateEveryNBeats: 1,
+                autoupdateOnCue: true,
+            },
+            rowColorShift: {
+                type: MovingLinearParameter,
+                range: [-45, 45],
+                start: 0,
+                monitorName: 'Row Color Shift',
+                listenToLaunchpadKnob: [0, 1],
+                variance: 0.25,
+                autoupdateEveryNBeats: 1,
+                autoupdateOnCue: true,
+            },
+            polarGridAmount: {
+                type: MovingLinearParameter,
+                range: [-2, 3],
+                start: 0.5, buildupStart: 0,
+                incrementAmount: 0.05,
+                listenToLaunchpadKnob: [1, 0],
+                monitorName: 'Polar Grid %',
+                variance: 0.15,
+                autoupdateEveryNBeats: 8,
+                autoupdateOnCue: true,
+                canSmoothUpdate: true,
+            },
         };
     }
     getTrailCount() {
@@ -65,6 +106,26 @@ class StopwatchParameters extends PieceParameters {
         if (this._beatmathParameters.tempo.getNumTicks() % this.numTicksPerShuffle.getValue() === 0) {
             this._visList.update();
         }
+    }
+    _getColorShiftPerColumn() {
+        const baseColorShift = this.columnColorShift.getValue();
+        const polarGridAmount = clamp(this.polarGridAmount.getValue(), 0, 1);
+        if (polarGridAmount === 0) {
+            return baseColorShift;
+        }
+        const colorShiftForAFullRotation = 360 / this.numVisibleTrails.getValue();
+        const distanceFromClosestMultiple = modAndShiftToHalf(baseColorShift, colorShiftForAFullRotation);
+        return baseColorShift - (distanceFromClosestMultiple * polarGridAmount);
+    }
+    getColorForTrailAndTick(trailIndex, tickIndex) {
+        const color = tinycolor(this.baseColor.getValue().toHexString()); // clone
+        const colorShiftPerColumn = this._getColorShiftPerColumn();
+        const colorShiftPerRow = this.rowColorShift.getValue();
+        const colorShift = colorShiftPerColumn * trailIndex + colorShiftPerRow * tickIndex;
+        if (colorShift !== 0) {
+            color.spin(colorShift);
+        }
+        return color;
     }
 }
 
