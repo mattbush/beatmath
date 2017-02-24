@@ -4,6 +4,8 @@ class StopwatchVisList {
     constructor(stopwatchParameters) {
         this._stopwatchParameters = stopwatchParameters;
 
+        this._numUpdates = 0;
+
         this._objects = [];
         this._stopwatchParameters.numVisibleTrails.addListener(this._adjustSize.bind(this));
         this._stopwatchParameters.hidePercent.addListener(this._onHidePercentChange.bind(this));
@@ -51,6 +53,8 @@ class StopwatchVisList {
         return this.getVisibleIndexForId() !== undefined;
     }
     update() {
+        this._numUpdates++;
+
         const hiddenObjects = this._objects.filter(x => !x.visibility);
 
         // hide n visible objects
@@ -66,6 +70,14 @@ class StopwatchVisList {
 
         // shuffle hidden ones?
         // this._objects = _.shuffle(this._objects);
+
+        // basic criscross
+        // _.times(this._overallCount / 2, i => {
+        //     const firstIndex = (2 * i + (this._numUpdates % 2 ? 2 : 0)) % this._overallCount;
+        //     const secondIndex = 2 * i + 1;
+        //
+        //     [this._objects[firstIndex], this._objects[secondIndex]] = [this._objects[secondIndex], this._objects[firstIndex]];
+        // });
 
         this._recalculateIndices();
     }

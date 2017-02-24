@@ -26,7 +26,7 @@ class StopwatchParameters extends PieceParameters {
             numVisibleTrails: {
                 type: IntLinearParameter,
                 range: [4, 20],
-                start: 10,
+                start: 16,
                 listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
                 monitorName: '# Visible Trails',
             },
@@ -44,7 +44,7 @@ class StopwatchParameters extends PieceParameters {
             trailLength: {
                 type: IntLinearParameter,
                 range: [1, 64],
-                start: 12,
+                start: 16,
                 listenToLaunchpadFader: [2, {addButtonStatusLight: true}],
                 monitorName: 'Trail Length',
             },

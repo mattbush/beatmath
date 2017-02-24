@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const React = require('react');
-const {lerp} = require('js/core/utils/math');
+const {posMod, lerp, modAndShiftToHalf} = require('js/core/utils/math');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const StopwatchParticle = require('js/stopwatch/components/StopwatchParticle');
 
@@ -19,23 +19,28 @@ const StopwatchTrail = React.createClass({
         this._visibleIndicesByTick = {};
     },
     componentWillUpdate() {
+        const stopwatchParameters = this.context.stopwatchParameters;
         const tempo = this.context.beatmathParameters.tempo;
         const currentTick = tempo.getNumTicks();
 
         if (currentTick !== this._lastTick) {
-            const trailLength = this.context.stopwatchParameters.trailLength.getValue();
-            const numTicksPerShuffle = this.context.stopwatchParameters.numTicksPerShuffle.getValue();
-            const attackPercent = this.context.stopwatchParameters.attackPercent.getValue();
+            const trailLength = stopwatchParameters.trailLength.getValue();
+            const numTicksPerShuffle = stopwatchParameters.numTicksPerShuffle.getValue();
+            const attackPercent = stopwatchParameters.attackPercent.getValue();
             const numTicksToRetain = Math.max(trailLength, numTicksPerShuffle);
 
             const lastIndex = this._visibleIndicesByTick[currentTick - (currentTick % numTicksPerShuffle) - 1];
-            let currentIndex = this.context.stopwatchParameters.getVisibleIndexForTrailId(this.props.trailId);
+            let currentIndex = stopwatchParameters.getVisibleIndexForTrailId(this.props.trailId);
             // const finalIndex = currentIndex;
+
+            const numVisibleTrails = stopwatchParameters.numVisibleTrails.getValue();
 
             const locationLerp = ((currentTick % numTicksPerShuffle + 1) / Math.ceil(numTicksPerShuffle * attackPercent));
             if (lastIndex !== undefined) {
                 if (currentIndex !== undefined) {
-                    currentIndex = lerp(lastIndex, currentIndex, Math.min(locationLerp, 1)); // TODO: lerp this faster, fewer ticks per shuffle
+                    const difference = modAndShiftToHalf(currentIndex - lastIndex, numVisibleTrails);
+                    const lerpedIndex = lerp(lastIndex, lastIndex + difference, Math.min(locationLerp, 1));
+                    currentIndex = posMod(lerpedIndex, numVisibleTrails);
                 }
             } else {
                 if (locationLerp < 1) {
