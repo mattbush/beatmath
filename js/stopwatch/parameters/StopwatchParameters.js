@@ -85,7 +85,7 @@ class StopwatchParameters extends PieceParameters {
             polarGridAmount: {
                 type: MovingLinearParameter,
                 range: [-2, 3],
-                start: 0.5, buildupStart: 0,
+                start: 1, buildupStart: 0,
                 incrementAmount: 0.05,
                 listenToLaunchpadKnob: [1, 0],
                 monitorName: 'Polar Grid %',
