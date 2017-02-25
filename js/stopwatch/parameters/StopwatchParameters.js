@@ -1,5 +1,5 @@
 // const _ = require('lodash');
-const {Parameter, LinearParameter, IntLinearParameter, MovingLinearParameter, MovingColorParameter} = require('js/core/parameters/Parameter');
+const {Parameter, LinearParameter, IntLinearParameter, MovingLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const StopwatchVisList = require('js/stopwatch/parameters/StopwatchVisList');
 const {clamp, modAndShiftToHalf} = require('js/core/utils/math');
@@ -101,6 +101,20 @@ class StopwatchParameters extends PieceParameters {
                 autoupdateOnCue: true,
                 canSmoothUpdate: true,
             },
+            crisscrossPercent: {
+                type: LinearParameter,
+                range: [0, 1],
+                start: 0,
+                listenToLaunchpadKnob: [2, 3],
+                monitorName: 'Crisscross %',
+            },
+            hideRandomly: {
+                type: ToggleParameter,
+                start: true,
+                listenToLaunchpadButton: 3,
+                monitorName: 'Hide Randomly',
+            },
+
         };
     }
     getTrailCount() {

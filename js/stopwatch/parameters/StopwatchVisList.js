@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const {posMod} = require('js/core/utils/math');
 
 class StopwatchVisList {
     constructor(stopwatchParameters) {
@@ -57,10 +58,19 @@ class StopwatchVisList {
 
         const hiddenObjects = this._objects.filter(x => !x.visibility);
 
-        // hide n visible objects
-        const shuffledVisibleObjects = _.shuffle(this._visibleObjects);
-        for (const obj of shuffledVisibleObjects.slice(0, this._hiddenCount)) {
-            obj.visibility = false;
+        if (this._stopwatchParameters.hideRandomly.getValue()) {
+            // hide n visible objects
+            const shuffledVisibleObjects = _.shuffle(this._visibleObjects);
+            for (const obj of shuffledVisibleObjects.slice(0, this._hiddenCount)) {
+                obj.visibility = false;
+            }
+        } else {
+            const numVisiblePerNumHidden = this._visibleCount / this._hiddenCount;
+            _.times(this._hiddenCount, index => {
+                const visibleIndex = index * numVisiblePerNumHidden + this._numUpdates % numVisiblePerNumHidden;
+                const nearestIndex = posMod(Math.round(visibleIndex), this._visibleCount);
+                this._visibleObjects[nearestIndex].visibility = false;
+            });
         }
 
         // show n hidden objets
@@ -72,12 +82,17 @@ class StopwatchVisList {
         // this._objects = _.shuffle(this._objects);
 
         // basic criscross
-        // _.times(this._overallCount / 2, i => {
-        //     const firstIndex = (2 * i + (this._numUpdates % 2 ? 2 : 0)) % this._overallCount;
-        //     const secondIndex = 2 * i + 1;
-        //
-        //     [this._objects[firstIndex], this._objects[secondIndex]] = [this._objects[secondIndex], this._objects[firstIndex]];
-        // });
+        const crisscrossPercent = this._stopwatchParameters.crisscrossPercent.getValue();
+        if (crisscrossPercent > 0) {
+            _.times(this._overallCount / 2, i => {
+                if (crisscrossPercent === 1 || crisscrossPercent >= Math.random()) {
+                    const firstIndex = (2 * i + (this._numUpdates % 2 ? 2 : 0)) % this._overallCount;
+                    const secondIndex = 2 * i + 1;
+
+                    [this._objects[firstIndex], this._objects[secondIndex]] = [this._objects[secondIndex], this._objects[firstIndex]];
+                }
+            });
+        }
 
         this._recalculateIndices();
     }
