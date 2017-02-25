@@ -62,6 +62,13 @@ class StopwatchParameters extends PieceParameters {
                 listenToLaunchpadFader: [4, {addButtonStatusLight: true}],
                 monitorName: 'Attack %',
             },
+            delayCoefficient: {
+                type: LinearParameter,
+                range: [0.5, 1.5],
+                start: 1,
+                listenToLaunchpadKnob: [0, 5],
+                monitorName: 'Delay Coeff',
+            },
             columnColorShift: {
                 type: MovingLinearParameter,
                 range: [-45, 45],
@@ -84,8 +91,8 @@ class StopwatchParameters extends PieceParameters {
             },
             polarGridAmount: {
                 type: MovingLinearParameter,
-                range: [-2, 3],
-                start: 1, buildupStart: 0,
+                range: [0, 1],
+                start: 0, buildupStart: 0,
                 incrementAmount: 0.05,
                 listenToLaunchpadKnob: [1, 0],
                 monitorName: 'Polar Grid %',

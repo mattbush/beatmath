@@ -91,7 +91,7 @@ const StopwatchParticle = React.createClass({
 
         // TODO: instead of passing trailPosition could pass this.props.tick or something else
         const fill = stopwatchParameters.getColorForTrailAndTick(this.props.visibleIndex, trailPosition);
-        const delay = beatmathParameters.tempo.getPeriod();
+        const delay = beatmathParameters.tempo.getPeriod() * stopwatchParameters.delayCoefficient.getValue();
 
         const style = {
             transform: `scale(${o.scale}) rotate(${o.rotation}rad) translate(${o.x}px,${o.y}px)`,
