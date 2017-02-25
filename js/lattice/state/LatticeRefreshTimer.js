@@ -4,7 +4,7 @@ const {MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConsta
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
 const {lerp, dist, manhattanDist, triangularDist, polarAngleDeg, posMod, modAndShiftToHalfZigzag, posModAndBendToLowerHalf} = require('js/core/utils/math');
-const MAX_RIPPLES_TREAT_AS_INFINITE = 40;
+const MAX_RIPPLES_TREAT_AS_INFINITE = 30;
 
 const EPSILON = 0.01;
 
@@ -14,7 +14,7 @@ class LatticeRefreshTimer extends PieceParameters {
             _rippleRadius: {
                 type: MovingLogarithmicParameter,
                 range: [2, MAX_RIPPLES_TREAT_AS_INFINITE],
-                autoupdateRange: [6, MAX_RIPPLES_TREAT_AS_INFINITE],
+                autoupdateRange: [5, MAX_RIPPLES_TREAT_AS_INFINITE],
                 start: 10,
                 monitorName: 'Ripple Radius',
                 listenToLaunchpadFader: [2, {addButtonStatusLight: true, useSnapButton: true}],
@@ -26,7 +26,7 @@ class LatticeRefreshTimer extends PieceParameters {
             _subdivisionSize: {
                 type: MovingLogarithmicParameter,
                 range: [2, MAX_RIPPLES_TREAT_AS_INFINITE],
-                autoupdateRange: [12, MAX_RIPPLES_TREAT_AS_INFINITE],
+                autoupdateRange: [8, MAX_RIPPLES_TREAT_AS_INFINITE],
                 start: MAX_RIPPLES_TREAT_AS_INFINITE,
                 listenToLaunchpadFader: [3, {addButtonStatusLight: true, useSnapButton: true}],
                 monitorName: 'Division Size',
@@ -72,7 +72,7 @@ class LatticeRefreshTimer extends PieceParameters {
             _globalPolarAngles: {
                 type: MovingIntLinearParameter,
                 range: [-12, 12],
-                autoupdateRange: [-8, 8],
+                autoupdateRange: [-5, 5],
                 start: 0,
                 monitorName: '# Global Spirals',
                 listenToLaunchpadKnob: [2, 2],
@@ -84,7 +84,7 @@ class LatticeRefreshTimer extends PieceParameters {
             _localPolarAngles: {
                 type: MovingIntLinearParameter,
                 range: [-12, 12],
-                autoupdateRange: [-8, 8],
+                autoupdateRange: [-5, 5],
                 start: 0,
                 monitorName: '# Local Spirals',
                 listenToLaunchpadKnob: [2, 3],
@@ -219,8 +219,13 @@ class LatticeRefreshTimer extends PieceParameters {
             total += distance / rippleRadius;
         }
 
-        const localPolarAngles = this._localPolarAngles.getValue();
+        let localPolarAngles = this._localPolarAngles.getValue();
         if (localPolarAngles !== 0) {
+            if (localPolarAngles >= 4) { // nobody likes 4-spirals, awkward
+                localPolarAngles++;
+            } else if (localPolarAngles <= -4) {
+                localPolarAngles--;
+            }
             const sectorSize = 360 / localPolarAngles;
             let localPolarAngle = polarAngleDeg(col, row);
             if (this._bendLocalPolarAngles.getValue()) {
