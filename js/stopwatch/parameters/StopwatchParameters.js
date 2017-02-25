@@ -1,5 +1,5 @@
 // const _ = require('lodash');
-const {Parameter, LinearParameter, IntLinearParameter, MovingLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {Parameter, MovingIntLinearParameter, LinearParameter, IntLinearParameter, MovingLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const StopwatchVisList = require('js/stopwatch/parameters/StopwatchVisList');
 const {clamp, modAndShiftToHalf} = require('js/core/utils/math');
@@ -35,11 +35,15 @@ class StopwatchParameters extends PieceParameters {
                 start: null,
             },
             hidePercent: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [0, 1],
+                autoupdateRange: [0, 0.6],
                 start: 0.25,
                 listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
                 monitorName: 'Hide %',
+                variance: 0.02,
+                autoupdateEveryNBeats: 4,
+                autoupdateOnCue: true,
             },
             trailLength: {
                 type: IntLinearParameter,
@@ -49,11 +53,14 @@ class StopwatchParameters extends PieceParameters {
                 monitorName: 'Trail Length',
             },
             numTicksPerShuffle: {
-                type: IntLinearParameter,
+                type: MovingIntLinearParameter,
                 range: [1, 8],
                 start: 4,
                 listenToLaunchpadFader: [3, {addButtonStatusLight: true}],
                 monitorName: 'Num Ticks Per Shuffle',
+                variance: 0.4,
+                autoupdateEveryNBeats: 32,
+                autoupdateOnCue: true,
             },
             attackPercent: {
                 type: LinearParameter,
@@ -61,6 +68,9 @@ class StopwatchParameters extends PieceParameters {
                 start: 0.5,
                 listenToLaunchpadFader: [4, {addButtonStatusLight: true}],
                 monitorName: 'Attack %',
+                variance: 0.05,
+                autoupdateEveryNBeats: 32,
+                autoupdateOnCue: true,
             },
             delayCoefficient: {
                 type: LinearParameter,
@@ -102,11 +112,14 @@ class StopwatchParameters extends PieceParameters {
                 canSmoothUpdate: true,
             },
             crisscrossPercent: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [0, 1],
                 start: 0,
                 listenToLaunchpadKnob: [2, 3],
                 monitorName: 'Crisscross %',
+                variance: 0.02,
+                autoupdateEveryNBeats: 4,
+                autoupdateOnCue: true,
             },
             hideRandomly: {
                 type: ToggleParameter,
