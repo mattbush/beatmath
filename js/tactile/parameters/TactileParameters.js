@@ -67,20 +67,20 @@ class TactileParameters extends PieceParameters {
                 range: [0.1, 0.9],
                 start: 0.3,
                 incrementAmount: 0.05,
-                listenToLaunchpadKnob: [0, 1],
+                listenToLaunchpadFader: [4, {addButtonStatusLight: true}],
                 monitorName: 'Flip Duration %',
             },
             perpendicularFlip: {
                 type: ToggleParameter,
                 start: false,
-                listenToLaunchpadButton: 2,
+                listenToLaunchpadButton: 4,
                 monitorName: 'Perpendicular Flip?',
             },
             varySizePercent: {
                 type: LinearParameter,
                 range: [0, 1],
                 start: 0,
-                listenToLaunchpadKnob: [0, 2],
+                listenToLaunchpadKnob: [0, 4],
                 monitorName: 'Vary Size %',
             },
             latency: {
