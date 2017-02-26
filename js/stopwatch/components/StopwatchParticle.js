@@ -98,6 +98,11 @@ const StopwatchParticle = React.createClass({
             transition: `transform ${delay}ms linear`,
         };
 
+        // stop logspew, TODO look into
+        if ([o.px1, o.py1, o.px2, o.py2, o.px3, o.py3, o.px4, o.py4].some(isNaN)) {
+            return null;
+        }
+
         const points = [
             [o.px1, o.py1],
             [o.px2, o.py2],

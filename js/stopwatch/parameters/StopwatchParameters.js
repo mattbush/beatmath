@@ -63,7 +63,7 @@ class StopwatchParameters extends PieceParameters {
                 autoupdateOnCue: true,
             },
             attackPercent: {
-                type: LinearParameter,
+                type: MovingLinearParameter,
                 range: [0, 1],
                 start: 0.5,
                 listenToLaunchpadFader: [4, {addButtonStatusLight: true}],
