@@ -3,6 +3,7 @@ const MapperShape = require('js/mapper/parameters/MapperShape');
 const {Parameter, LinearParameter} = require('js/core/parameters/Parameter');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
+const {posMod} = require('js/core/utils/math');
 
 const MOVE_SHAPE_POLLING_RATE = 33;
 
@@ -106,7 +107,7 @@ class MapperParameters extends PieceParameters {
         }
         _.each(this._verticesPressed, (ignore, vertex) => {
             const numPoints = currentShape.getNumPoints();
-            const actualVertexIndex = (vertex + this._cursorIndex) % numPoints;
+            const actualVertexIndex = posMod(vertex + this._cursorIndex, numPoints);
 
             _.each(this._directionsPressed, (ignore2, direction) => {
                 switch (direction) {
