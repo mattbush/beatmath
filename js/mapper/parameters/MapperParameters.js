@@ -122,11 +122,15 @@ class MapperParameters extends PieceParameters {
         if (!currentShape) {
             return;
         }
-        if (_.size(this._verticesPressed) * _.size(this._directionsPressed) === 0) {
+        const numPoints = currentShape.getNumPoints();
+        const numVerticesPressed = _.size(this._verticesPressed);
+        if (numVerticesPressed * _.size(this._directionsPressed) === 0) {
             return;
         }
-        _.each(this._verticesPressed, (ignore, vertex) => {
-            const numPoints = currentShape.getNumPoints();
+
+        const verticesToMove = numVerticesPressed === 3 ? _.range(numPoints) : _.keys(this._verticesPressed);
+
+        for (const vertex of verticesToMove) {
             const actualVertexIndex = posMod(Number(vertex) + this._cursorIndex, numPoints);
 
             _.each(this._directionsPressed, (ignore2, direction) => {
@@ -146,7 +150,7 @@ class MapperParameters extends PieceParameters {
                     default:
                 }
             });
-        });
+        }
         this._onMappingChanged();
     }
     getCurrentShape() {
