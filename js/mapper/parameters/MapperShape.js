@@ -5,9 +5,9 @@ class MapperShape {
         } else {
             const offset = index * 50;
             this._vertices = [
-                [-400 + offset, 40],
                 [-350 + offset, -40],
                 [-300 + offset, 40],
+                [-400 + offset, 40],
             ];
         }
 

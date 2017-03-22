@@ -54,7 +54,7 @@ class MapperParameters extends PieceParameters {
 
         const lightValues = [0x03, 0x22, 0x30];
         _.times(3, column => {
-            mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[column], this._onVertexButtonPressed.bind(this, column));
+            mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[column], this._onVertexButtonPressed.bind(this, column - 1));
             mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_CONTROL[column], lightValues[column]);
         });
 

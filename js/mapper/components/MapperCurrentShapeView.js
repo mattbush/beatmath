@@ -10,9 +10,9 @@ const MapperCurrentShapeView = React.createClass({
         const shape = this.props.shape;
         const cursorIndex = this.context.mapperParameters.getCursorIndex();
         const numPoints = shape.getNumPoints();
-        const index0 = posMod(0 + cursorIndex, numPoints);
-        const index1 = posMod(1 + cursorIndex, numPoints);
-        const index2 = posMod(2 + cursorIndex, numPoints);
+        const index0 = posMod(-1 + cursorIndex, numPoints);
+        const index1 = posMod(0 + cursorIndex, numPoints);
+        const index2 = posMod(1 + cursorIndex, numPoints);
         const circleStyle = {
             transition: 'all 200ms ease-out',
         };
