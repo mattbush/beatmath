@@ -13,6 +13,8 @@ class MapperParameters extends PieceParameters {
 
         super(mixboard, beatmathParameters, {numShapes});
 
+        this._cursorIndex = 0;
+
         this._verticesPressed = {};
         this._directionsPressed = {};
         this._shapes = [];
@@ -27,6 +29,7 @@ class MapperParameters extends PieceParameters {
         }
 
         this.numShapes.addListener(this._onNumShapesChange.bind(this));
+        this.currentShapeIndex.addListener(this._onCurrentShapeIndexChange.bind(this));
 
         mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[4], this._onDirectionButtonPressed.bind(this, 'up'));
         mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[3], this._onDirectionButtonPressed.bind(this, 'left'));
@@ -37,6 +40,11 @@ class MapperParameters extends PieceParameters {
         mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_CONTROL[3], 0x12);
         mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_CONTROL[4], 0x12);
         mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_CONTROL[5], 0x12);
+
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[3], this._onCursorShiftButtonPressed.bind(this, -1));
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[5], this._onCursorShiftButtonPressed.bind(this, 1));
+        mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_FOCUS[3], 0x13);
+        mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_FOCUS[5], 0x13);
 
         const lightValues = [0x03, 0x22, 0x30];
         _.times(3, column => {
@@ -68,6 +76,12 @@ class MapperParameters extends PieceParameters {
             },
         };
     }
+    _onCursorShiftButtonPressed(delta, value) {
+        if (value) {
+            this._cursorIndex += delta;
+            this.mapping._updateListeners();
+        }
+    }
     _onDirectionButtonPressed(direction, value) {
         if (value) {
             this._directionsPressed[direction] = true;
@@ -91,19 +105,22 @@ class MapperParameters extends PieceParameters {
             return;
         }
         _.each(this._verticesPressed, (ignore, vertex) => {
+            const numPoints = currentShape.getNumPoints();
+            const actualVertexIndex = (vertex + this._cursorIndex) % numPoints;
+
             _.each(this._directionsPressed, (ignore2, direction) => {
                 switch (direction) {
                     case 'up':
-                        currentShape.moveVertex(vertex, 0, -1);
+                        currentShape.moveVertex(actualVertexIndex, 0, -1);
                         break;
                     case 'down':
-                        currentShape.moveVertex(vertex, 0, 1);
+                        currentShape.moveVertex(actualVertexIndex, 0, 1);
                         break;
                     case 'left':
-                        currentShape.moveVertex(vertex, -1, 0);
+                        currentShape.moveVertex(actualVertexIndex, -1, 0);
                         break;
                     case 'right':
-                        currentShape.moveVertex(vertex, 1, 0);
+                        currentShape.moveVertex(actualVertexIndex, 1, 0);
                         break;
                     default:
                 }
@@ -120,8 +137,14 @@ class MapperParameters extends PieceParameters {
             return null;
         }
     }
+    getCursorIndex() {
+        return this._cursorIndex;
+    }
     mapShapes(fn) {
         return this._shapes.map(fn);
+    }
+    _onCurrentShapeIndexChange() {
+        this._cursorIndex = 0;
     }
     _onNumShapesChange() {
         const numShapes = this.numShapes.getValue();

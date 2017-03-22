@@ -30,6 +30,9 @@ class MapperShape {
     getY(vertex) {
         return this._vertices[vertex][1];
     }
+    getNumPoints() {
+        return 3;
+    }
     serialize() {
         return this._vertices;
     }
