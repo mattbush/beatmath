@@ -18,6 +18,21 @@ class MapperShape {
         this._vertices[vertex][0] += dx;
         this._vertices[vertex][1] += dy;
     }
+    addPoint() {
+        if (this._vertices.length >= 30) {
+            return;
+        }
+        this._vertices.push([
+            (this._vertices[0][0] + this._vertices[this._vertices.length - 1][0]) / 2,
+            (this._vertices[0][1] + this._vertices[this._vertices.length - 1][1]) / 2,
+        ]);
+    }
+    removePoint() {
+        if (this._vertices.length <= 3) {
+            return;
+        }
+        this._vertices.pop();
+    }
     getPointsString() {
         const pointsArray = this._vertices.map(vertex => {
             return `${vertex[0]},${vertex[1]}`;
@@ -31,7 +46,7 @@ class MapperShape {
         return this._vertices[vertex][1];
     }
     getNumPoints() {
-        return 3;
+        return this._vertices.length;
     }
     serialize() {
         return this._vertices;

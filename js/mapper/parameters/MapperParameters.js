@@ -47,6 +47,11 @@ class MapperParameters extends PieceParameters {
         mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_FOCUS[3], 0x13);
         mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_FOCUS[5], 0x13);
 
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[0], this._onNumPointsButtonPressed.bind(this, -1));
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[1], this._onNumPointsButtonPressed.bind(this, 1));
+        mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_FOCUS[0], 0x01);
+        mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_FOCUS[1], 0x10);
+
         const lightValues = [0x03, 0x22, 0x30];
         _.times(3, column => {
             mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[column], this._onVertexButtonPressed.bind(this, column));
@@ -76,6 +81,21 @@ class MapperParameters extends PieceParameters {
                 monitorName: 'Current Shape',
             },
         };
+    }
+    _onNumPointsButtonPressed(delta, value) {
+        const currentShape = this.getCurrentShape();
+        if (!currentShape) {
+            return;
+        }
+
+        if (value) {
+            if (delta === 1) {
+                currentShape.addPoint();
+            } else if (delta === -1) {
+                currentShape.removePoint();
+            }
+            this._onMappingChanged();
+        }
     }
     _onCursorShiftButtonPressed(delta, value) {
         if (value) {
@@ -107,7 +127,7 @@ class MapperParameters extends PieceParameters {
         }
         _.each(this._verticesPressed, (ignore, vertex) => {
             const numPoints = currentShape.getNumPoints();
-            const actualVertexIndex = posMod(vertex + this._cursorIndex, numPoints);
+            const actualVertexIndex = posMod(Number(vertex) + this._cursorIndex, numPoints);
 
             _.each(this._directionsPressed, (ignore2, direction) => {
                 switch (direction) {
@@ -157,6 +177,7 @@ class MapperParameters extends PieceParameters {
         for (let i = this._shapes.length; i > numShapes; i--) {
             this._shapes.pop();
         }
+        this._cursorIndex = 0;
 
         this._onMappingChanged();
     }
