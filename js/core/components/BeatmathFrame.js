@@ -40,7 +40,7 @@ const BeatmathFrame = React.createClass({
         const frameScale = this.getParameterValue('frameScale') * this.getParameterValue('frameScaleAutoupdating');
         const transitionPeriod = this.context.beatmathParameters.tempo.getBasePeriod() / 16;
         const style = {
-            transform: `rotate(${frameRotation}deg) scale(${frameScale})`,
+            transform: `scale(${frameScale})`,
             transition: `transform ${transitionPeriod}ms linear`,
         };
 
@@ -52,9 +52,11 @@ const BeatmathFrame = React.createClass({
                     mapperShapeIndex: index,
                 });
 
+                const combinedRotation = mapperShape.getRotationDeg() + frameRotation;
+
                 const translatedStyle = {
                     ...style,
-                    transform: `translate(${mapperShape.getCenterX()}px, ${mapperShape.getCenterY()}px) ` + style.transform,
+                    transform: `translate(${mapperShape.getCenterX()}px, ${mapperShape.getCenterY()}px) rotate(${combinedRotation}deg) ` + style.transform,
                 };
 
                 return (
@@ -71,9 +73,11 @@ const BeatmathFrame = React.createClass({
 
                 });
 
+                const combinedRotation = mapperShape.getRotationDeg() + frameRotation;
+
                 const translatedStyle = {
                     ...style,
-                    transform: `translate(${mapperShape.getCenterX()}px, ${mapperShape.getCenterY()}px) ` + style.transform,
+                    transform: `translate(${mapperShape.getCenterX()}px, ${mapperShape.getCenterY()}px) rotate(${combinedRotation}deg) ` + style.transform,
                 };
 
                 return (
