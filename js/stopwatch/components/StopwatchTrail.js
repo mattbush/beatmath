@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const React = require('react');
-const {posMod, lerp, modAndShiftToHalf} = require('js/core/utils/math');
+const {posMod, sinerp, modAndShiftToHalf} = require('js/core/utils/math');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const StopwatchParticle = require('js/stopwatch/components/StopwatchParticle');
 
@@ -39,7 +39,7 @@ const StopwatchTrail = React.createClass({
             if (lastIndex !== undefined) {
                 if (currentIndex !== undefined) {
                     const difference = modAndShiftToHalf(currentIndex - lastIndex, numVisibleTrails);
-                    const lerpedIndex = lerp(lastIndex, lastIndex + difference, Math.min(locationLerp, 1));
+                    const lerpedIndex = sinerp(lastIndex, lastIndex + difference, Math.min(locationLerp, 1));
                     currentIndex = posMod(lerpedIndex, numVisibleTrails);
                 }
             } else {

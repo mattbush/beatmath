@@ -15,6 +15,11 @@ const logerp = function(min, max, interpolation) {
     return min * ((max / min) ** interpolation);
 };
 
+const sinerp = function(min, max, interpolation) {
+    interpolation = (1 - Math.cos(interpolation * Math.PI)) / 2;
+    return min + (max - min) * interpolation;
+};
+
 const arclerp = function(min, max, value) {
     return (value - min) / (max - min);
 };
@@ -97,6 +102,7 @@ module.exports = {
     nextFloat,
     lerp,
     logerp,
+    sinerp,
     arclerp,
     clamp,
     dist,
