@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const React = require('react');
 const MonitorValue = require('js/core/outputs/monitor/MonitorValue');
+const PieceNameToLoadInput = require('js/core/outputs/monitor/PieceNameToLoadInput');
 
 const Monitor = React.createClass({
     componentDidMount() {
@@ -9,7 +10,7 @@ const Monitor = React.createClass({
         window.addEventListener('storage', this._onStorage);
     },
     _onStorage(event) {
-        if (event.key === 'mapping') {
+        if (event.key === 'mapping' || event.key === 'pieceNameToLoad') {
             return;
         }
         this._parsedStorage[event.key] = JSON.parse(event.newValue);
@@ -24,6 +25,7 @@ const Monitor = React.createClass({
                         value={value}
                     />
                 )}
+                <PieceNameToLoadInput />
             </div>
         );
     },

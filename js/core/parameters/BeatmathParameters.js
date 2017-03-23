@@ -17,6 +17,8 @@ class BeatmathParameters {
             mixboard.resetLaunchpadLights();
         }
 
+        window.addEventListener('storage', this._onStorage.bind(this));
+
         const existingMapping = JSON.parse(window.localStorage.getItem('mapping'));
         if (existingMapping) {
             this._mapperShapes = [];
@@ -206,6 +208,12 @@ class BeatmathParameters {
             return [];
         }
         return this._mapperMasks.map(fn);
+    }
+    _onStorage(event) {
+        if (event.key === 'pieceNameToLoad') {
+            const path = window.location.href.substr(0, window.location.href.lastIndexOf('/') + 1);
+            window.location = path + event.newValue;
+        }
     }
 }
 
