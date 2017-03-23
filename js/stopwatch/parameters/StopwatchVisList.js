@@ -86,10 +86,12 @@ class StopwatchVisList {
         if (crisscrossPercent > 0) {
             _.times(this._overallCount / 2, i => {
                 if (crisscrossPercent === 1 || crisscrossPercent >= Math.random()) {
-                    const firstIndex = (2 * i + (this._numUpdates % 2 ? 2 : 0)) % this._overallCount;
-                    const secondIndex = 2 * i + 1;
+                    const firstIndex = (2 * i + (this._numUpdates % 2 ? 1 : 0)) % this._overallCount;
+                    const secondIndex = (firstIndex + 1) % this._overallCount;
 
-                    [this._objects[firstIndex], this._objects[secondIndex]] = [this._objects[secondIndex], this._objects[firstIndex]];
+                    if (firstIndex < secondIndex || this._stopwatchParameters.polarGridAmount.getValue() > 0.9) {
+                        [this._objects[firstIndex], this._objects[secondIndex]] = [this._objects[secondIndex], this._objects[firstIndex]];
+                    }
                 }
             });
         }

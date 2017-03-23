@@ -14,7 +14,7 @@ const StopwatchParticle = React.createClass({
     shouldComponentUpdate() {
         const currentTick = this.context.beatmathParameters.tempo.getNumTicks();
         const trailPosition = currentTick - this.props.tick;
-        return trailPosition % UPDATE_EVERY_N === 1;
+        return UPDATE_EVERY_N === 1 || trailPosition % UPDATE_EVERY_N === 1;
     },
     render() {
         if (this.props.visibleIndex === undefined) {
