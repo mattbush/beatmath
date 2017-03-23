@@ -35,6 +35,15 @@ const BeatmathFrame = React.createClass({
             </defs>
         );
     },
+    _renderMasks() {
+        if (this.getParameterValue('mappingMode') === 'off') {
+            return null;
+        }
+
+        return this.context.beatmathParameters.mapMapperMasks((mapperShape, index) =>
+            <polygon fill="#000" key={index} points={mapperShape.getPointsString()} />
+        );
+    },
     _renderChildFrames() {
         const frameRotation = this.getParameterValue('frameRotation');
         const frameScale = this.getParameterValue('frameScale') * this.getParameterValue('frameScaleAutoupdating');
@@ -129,6 +138,7 @@ const BeatmathFrame = React.createClass({
                     <g style={style}>
                         {this._renderDefs()}
                         {this._renderChildFrames()}
+                        {this._renderMasks()}
                     </g>
                 </svg>
             </div>

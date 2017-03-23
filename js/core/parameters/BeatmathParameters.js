@@ -20,9 +20,14 @@ class BeatmathParameters {
         const existingMapping = JSON.parse(window.localStorage.getItem('mapping'));
         if (existingMapping) {
             this._mapperShapes = [];
+            this._mapperMasks = [];
             for (let i = 0; i < existingMapping.length; i++) {
                 const shape = new MapperShape({existingData: existingMapping[i]});
-                this._mapperShapes.push(shape);
+                if (shape.isMask()) {
+                    this._mapperMasks.push(shape);
+                } else {
+                    this._mapperShapes.push(shape);
+                }
             }
         }
 
@@ -195,6 +200,12 @@ class BeatmathParameters {
             return [];
         }
         return this._mapperShapes.map(fn);
+    }
+    mapMapperMasks(fn) {
+        if (!this._mapperMasks) {
+            return [];
+        }
+        return this._mapperMasks.map(fn);
     }
 }
 

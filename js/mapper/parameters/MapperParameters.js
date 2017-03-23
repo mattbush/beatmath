@@ -52,6 +52,9 @@ class MapperParameters extends PieceParameters {
         mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_FOCUS[0], 0x01);
         mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_FOCUS[1], 0x10);
 
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[2], this._onToggleIsMaskPressed.bind(this));
+        mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_FOCUS[2], 0x11);
+
         const lightValues = [0x03, 0x22, 0x30];
         _.times(3, column => {
             mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[column], this._onVertexButtonPressed.bind(this, column - 1));
@@ -84,16 +87,19 @@ class MapperParameters extends PieceParameters {
     }
     _onNumPointsButtonPressed(delta, value) {
         const currentShape = this.getCurrentShape();
-        if (!currentShape) {
-            return;
-        }
-
-        if (value) {
+        if (value && currentShape) {
             if (delta === 1) {
                 currentShape.addPoint();
             } else if (delta === -1) {
                 currentShape.removePoint();
             }
+            this._onMappingChanged();
+        }
+    }
+    _onToggleIsMaskPressed(value) {
+        const currentShape = this.getCurrentShape();
+        if (value && currentShape) {
+            currentShape.toggleIsMask();
             this._onMappingChanged();
         }
     }

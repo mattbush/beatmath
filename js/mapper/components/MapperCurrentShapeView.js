@@ -17,9 +17,11 @@ const MapperCurrentShapeView = React.createClass({
             transition: 'all 200ms ease-out',
         };
 
+        const fill = this.props.shape.isMask() ? '#994499' : '#dd9966';
+
         return (
             <g>
-                <polygon fill="#dd9966" points={shape.getPointsString()} />
+                <polygon fill={fill} points={shape.getPointsString()} />
                 {_.times(numPoints, pointIndex =>
                     <circle key={pointIndex} fill="#f0b080" cx={shape.getX(pointIndex)} cy={shape.getY(pointIndex)} r={3} />
                 )}
