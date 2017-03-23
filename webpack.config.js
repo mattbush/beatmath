@@ -1,6 +1,7 @@
 module.exports = {
     entry: {
         anagrams: './js/anagrams/anagrams',
+        blank: './js/core/blank_piece/blank_piece',
         bricks: './js/bricks/bricks',
         fronds: './js/fronds/fronds',
         honeycomb: './js/honeycomb/honeycomb',
