@@ -83,16 +83,25 @@ class StopwatchVisList {
 
         // basic criscross
         const crisscrossPercent = this._stopwatchParameters.crisscrossPercent.getValue();
+        const groupSize = 4; // TODO turn this into a param
+
         if (crisscrossPercent > 0) {
             _.times(this._overallCount, i => {
                 // should we cross at this offset?
+                // i % 2 === 0
+                // i % 2 === Math.floor(this._numUpdates / 2) % 2
                 if (i % 2 === this._numUpdates % 2) {
                     // whether to cross (random chance)
                     if (crisscrossPercent === 1 || crisscrossPercent >= Math.random()) {
-                        const firstIndex = i % this._overallCount;
-                        const secondIndex = (firstIndex + 1) % this._overallCount;
+                        const startIndexInGroup = i - (i % groupSize);
+                        const actualGroupSize = Math.min(groupSize, this._overallCount - startIndexInGroup);
+                        const firstIndexInGroup = i % actualGroupSize;
+                        const secondIndexInGroup = (firstIndexInGroup + 1) % actualGroupSize;
 
-                        if (firstIndex < secondIndex || this._stopwatchParameters.polarGridAmount.getValue() > 0.9) {
+                        if (firstIndexInGroup < secondIndexInGroup ||
+                            (groupSize === this._overallCount && this._stopwatchParameters.polarGridAmount.getValue() > 0.9)) {
+                            const firstIndex = startIndexInGroup + firstIndexInGroup;
+                            const secondIndex = startIndexInGroup + secondIndexInGroup;
                             [this._objects[firstIndex], this._objects[secondIndex]] = [this._objects[secondIndex], this._objects[firstIndex]];
                         }
                     }
