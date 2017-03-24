@@ -1,4 +1,4 @@
-const {polarAngleDeg} = require('js/core/utils/math');
+const {polarAngleDeg, centerOfPoints} = require('js/core/utils/math');
 
 class MapperShape {
     constructor({index, existingData}) {
@@ -17,8 +17,7 @@ class MapperShape {
         }
 
         // only valid if not modifying, lol
-        this._centerX = (this._vertices[0][0] + this._vertices[1][0] + this._vertices[2][0]) / 3;
-        this._centerY = (this._vertices[0][1] + this._vertices[1][1] + this._vertices[2][1]) / 3;
+        [this._centerX, this._centerY] = centerOfPoints(this._vertices);
 
         this._rotationDeg = polarAngleDeg(
             this._vertices[0][0] - this._centerX,

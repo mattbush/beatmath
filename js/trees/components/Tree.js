@@ -18,7 +18,7 @@ const Tree = React.createClass({
     },
     render: function() {
         const treesParameters = this.context.treesParameters;
-        const widthRad = TWOPI / treesParameters.numColumns.getValue();
+        const widthRad = TWOPI / this.props.numColumns;
         const halfWidthRad = (-Math.PI + widthRad) / 2;
         const negHalfWidthRad = (-Math.PI - widthRad) / 2;
 
@@ -29,7 +29,7 @@ const Tree = React.createClass({
         return (
             <g>
                 {_.times(numRows, rowIndex => {
-                    const fill = treesParameters.getColorForIndexAndRow(this.props.index, rowIndex);
+                    const fill = treesParameters.getColorForIndexAndRow(this.props.index, rowIndex, this.props.numColumns);
 
                     const innerRadius = rowIndex * rowSpacing;
                     const outerRadius = innerRadius + rowHeight;

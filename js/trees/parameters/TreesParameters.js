@@ -245,8 +245,8 @@ class TreesParameters extends PieceParameters {
     getRowHeight() {
         return this.rowHeight.getValue();
     }
-    _getAdjustedStaggerAmount(periodTicks, baseStaggerAmount, polarGridAmount) {
-        const staggerAmountForAFullRotation = periodTicks / this.numColumns.getValue();
+    _getAdjustedStaggerAmount(periodTicks, baseStaggerAmount, polarGridAmount, numColumns) {
+        const staggerAmountForAFullRotation = periodTicks / numColumns;
         const distanceFromClosestMultiple = modAndShiftToHalf(baseStaggerAmount, staggerAmountForAFullRotation);
         return baseStaggerAmount - (distanceFromClosestMultiple * polarGridAmount);
     }
@@ -259,16 +259,15 @@ class TreesParameters extends PieceParameters {
         const sineWaveAngularOffsetPercent = (this._sineNumTicks + columnIndex) / sinePeriodTicks;
         return sineAmplitude * this.numRows.getValue() * Math.sin(sineWaveAngularOffsetPercent * PI_TIMES_2);
     }
-    _getRowIllumination(columnIndex, rowIndex) {
+    _getRowIllumination(columnIndex, rowIndex, numColumns) {
         const periodTicks = this.periodTicks.getValue();
         let staggerAmount = this.staggerAmount.getValue();
         const polarGridAmount = clamp(this.polarGridAmount.getValue(), 0, 1);
         if (this.roundStagger.getValue()) {
             staggerAmount = Math.round(staggerAmount);
         } else if (polarGridAmount > 0) {
-            staggerAmount = this._getAdjustedStaggerAmount(periodTicks, staggerAmount, polarGridAmount);
+            staggerAmount = this._getAdjustedStaggerAmount(periodTicks, staggerAmount, polarGridAmount, numColumns);
         }
-        const numColumns = this.numColumns.getValue();
         if (staggerAmount !== 0) {
             if (this.mirrorStagger.getValue()) {
                 columnIndex = posModAndBendToLowerHalf(columnIndex, numColumns - 1);
@@ -281,30 +280,30 @@ class TreesParameters extends PieceParameters {
     getBorderRadius() {
         return this.getRowHeight() * this.borderRadiusPercent.getValue() / 2;
     }
-    _getColorShiftPerColumn() {
+    _getColorShiftPerColumn(numColumns) {
         const baseColorShift = this.columnColorShift.getValue();
         const polarGridAmount = clamp(this.polarGridAmount.getValue(), 0, 1);
         if (polarGridAmount === 0) {
             return baseColorShift;
         }
-        const colorShiftForAFullRotation = 360 / this.numColumns.getValue();
+        const colorShiftForAFullRotation = 360 / numColumns;
         const distanceFromClosestMultiple = modAndShiftToHalf(baseColorShift, colorShiftForAFullRotation);
         return baseColorShift - (distanceFromClosestMultiple * polarGridAmount);
     }
-    getColorForIndexAndRow(columnIndex, rowIndex) {
+    getColorForIndexAndRow(columnIndex, rowIndex, numColumns) {
         if (this.whiteout.getValue()) {
             return WHITE;
         } else if (this.blackout.getValue()) {
             return BLACK;
         }
         const color = tinycolor(this.baseColor.getValue().toHexString()); // clone
-        const colorShiftPerColumn = this._getColorShiftPerColumn();
+        const colorShiftPerColumn = this._getColorShiftPerColumn(numColumns);
         const colorShiftPerRow = this.rowColorShift.getValue();
         const colorShift = colorShiftPerColumn * columnIndex + colorShiftPerRow * rowIndex;
         if (colorShift !== 0) {
             color.spin(colorShift);
         }
-        const baseRowIllumination = this._getRowIllumination(columnIndex, rowIndex);
+        const baseRowIllumination = this._getRowIllumination(columnIndex, rowIndex, numColumns);
         const revTrailPercent = 1 - this.revTrailPercent.getValue();
         let rowIllumination;
         if (baseRowIllumination > revTrailPercent || revTrailPercent === 0) {
