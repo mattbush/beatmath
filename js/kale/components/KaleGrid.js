@@ -23,6 +23,9 @@ const KaleGrid = React.createClass({
         const mapperShape = this.props.mapperShape;
         const mapperShapeXOffset = mapperShape ? mapperShape.getCenterX() / SCALE : 0;
         const mapperShapeYOffset = mapperShape ? mapperShape.getCenterY() / SCALE : 0;
+        const numPointsInMapperShape = this.props.mapperShape ?
+            this.props.mapperShape.getNumPoints() :
+            null;
 
         if (this.getParameterValue('isInfinite')) {
             kaleCells = (
@@ -31,6 +34,7 @@ const KaleGrid = React.createClass({
                     logicalY={0}
                     mapperShapeXOffset={mapperShapeXOffset}
                     mapperShapeYOffset={mapperShapeYOffset}
+                    numPointsInMapperShape={numPointsInMapperShape}
                 />
             );
         } else {
