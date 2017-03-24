@@ -38,7 +38,7 @@ class StopwatchParameters extends PieceParameters {
                 type: MovingLinearParameter,
                 range: [0, 1],
                 autoupdateRange: [0, 0.6],
-                start: 0.25,
+                start: 0.5,
                 listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
                 monitorName: 'Hide %',
                 variance: 0.02,
@@ -55,7 +55,7 @@ class StopwatchParameters extends PieceParameters {
             numTicksPerShuffle: {
                 type: MovingIntLinearParameter,
                 range: [1, 8],
-                start: 4,
+                start: 3,
                 listenToLaunchpadFader: [3, {addButtonStatusLight: true}],
                 monitorName: 'Num Ticks Per Shuffle',
                 variance: 0.4,
@@ -114,7 +114,7 @@ class StopwatchParameters extends PieceParameters {
             crisscrossPercent: {
                 type: MovingLinearParameter,
                 range: [0, 1],
-                start: 0,
+                start: 1,
                 listenToLaunchpadKnob: [2, 3],
                 monitorName: 'Crisscross %',
                 variance: 0.02,
@@ -123,7 +123,7 @@ class StopwatchParameters extends PieceParameters {
             },
             hideRandomly: {
                 type: ToggleParameter,
-                start: true,
+                start: false,
                 listenToLaunchpadButton: 3,
                 monitorName: 'Hide Randomly',
             },

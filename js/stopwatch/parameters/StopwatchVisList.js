@@ -31,7 +31,7 @@ class StopwatchVisList {
 
         this._objects = _.times(this._overallCount, id => ({
             id: id,
-            visibility: id < this._visibleCount,
+            visibility: id % 3 !== 1, // TODO Fragile
         }));
         this._recalculateIndices();
         this._stopwatchParameters.numTrailsChanged._updateListeners();
@@ -58,24 +58,29 @@ class StopwatchVisList {
 
         const hiddenObjects = this._objects.filter(x => !x.visibility);
 
+        const hideUsingCrisscross = true;
+
         if (this._stopwatchParameters.hideRandomly.getValue()) {
             // hide n visible objects
             const shuffledVisibleObjects = _.shuffle(this._visibleObjects);
             for (const obj of shuffledVisibleObjects.slice(0, this._hiddenCount)) {
                 obj.visibility = false;
             }
-        } else {
+            // show n hidden objets
+            for (let obj of hiddenObjects) {
+                obj.visibility = true;
+            }
+        } else if (!hideUsingCrisscross) {
             const numVisiblePerNumHidden = this._visibleCount / this._hiddenCount;
             _.times(this._hiddenCount, index => {
                 const visibleIndex = index * numVisiblePerNumHidden + this._numUpdates % numVisiblePerNumHidden;
                 const nearestIndex = posMod(Math.round(visibleIndex), this._visibleCount);
                 this._visibleObjects[nearestIndex].visibility = false;
             });
-        }
-
-        // show n hidden objets
-        for (let obj of hiddenObjects) {
-            obj.visibility = true;
+            // show n hidden objets
+            for (let obj of hiddenObjects) {
+                obj.visibility = true;
+            }
         }
 
         // shuffle hidden ones?
@@ -83,26 +88,31 @@ class StopwatchVisList {
 
         // basic criscross
         const crisscrossPercent = this._stopwatchParameters.crisscrossPercent.getValue();
-        const groupSize = 4; // TODO turn this into a param
+        const groupSize = 24; // TODO turn this into a param
 
         if (crisscrossPercent > 0) {
             _.times(this._overallCount, i => {
                 // should we cross at this offset?
                 // i % 2 === 0
                 // i % 2 === Math.floor(this._numUpdates / 2) % 2
-                if (i % 2 === this._numUpdates % 2) {
+                if (i % 3 === 0) {
                     // whether to cross (random chance)
                     if (crisscrossPercent === 1 || crisscrossPercent >= Math.random()) {
                         const startIndexInGroup = i - (i % groupSize);
                         const actualGroupSize = Math.min(groupSize, this._overallCount - startIndexInGroup);
                         const firstIndexInGroup = i % actualGroupSize;
                         const secondIndexInGroup = (firstIndexInGroup + 1) % actualGroupSize;
+                        const thirdIndexInGroup = (firstIndexInGroup + 2) % actualGroupSize;
 
                         if (firstIndexInGroup < secondIndexInGroup ||
                             (groupSize === this._overallCount && this._stopwatchParameters.polarGridAmount.getValue() > 0.9)) {
                             const firstIndex = startIndexInGroup + firstIndexInGroup;
                             const secondIndex = startIndexInGroup + secondIndexInGroup;
-                            [this._objects[firstIndex], this._objects[secondIndex]] = [this._objects[secondIndex], this._objects[firstIndex]];
+                            const thirdIndex = startIndexInGroup + thirdIndexInGroup;
+                            this._objects[firstIndex].visibility = false;
+                            this._objects[secondIndex].visibility = true;
+                            [this._objects[firstIndex], this._objects[secondIndex], this._objects[thirdIndex]] = [this._objects[thirdIndex], this._objects[firstIndex], this._objects[secondIndex]];
+                            console.log(firstIndex, secondIndex, thirdIndex);
                         }
                     }
                 }
