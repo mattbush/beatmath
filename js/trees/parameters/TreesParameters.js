@@ -56,7 +56,7 @@ class TreesParameters extends PieceParameters {
             rowHeight: {
                 type: IntLinearParameter,
                 range: [10, 200],
-                start: 150,
+                start: 200,
                 listenToLaunchpadKnob: [2, 1],
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,
                 monitorName: 'Row Height',

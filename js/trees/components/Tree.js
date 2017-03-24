@@ -1,10 +1,12 @@
 const _ = require('lodash');
 const React = require('react');
-const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
-const {lerp, clamp} = require('js/core/utils/math');
+// const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
+const {xyStringFromAngleRadAndRadius} = require('js/core/utils/math');
+
+const TWOPI = 2 * Math.PI;
 
 const Tree = React.createClass({
-    mixins: [ParameterBindingsMixin],
+    // mixins: [ParameterBindingsMixin],
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
         treesParameters: React.PropTypes.object,
@@ -16,36 +18,34 @@ const Tree = React.createClass({
     },
     render: function() {
         const treesParameters = this.context.treesParameters;
+        const widthRad = TWOPI / treesParameters.numColumns.getValue();
+        const halfWidthRad = widthRad / 2;
+        const negHalfWidthRad = -halfWidthRad;
+
         const numRows = treesParameters.numRows.getValue();
         const rowSpacing = treesParameters.getRowSpacing();
-
-        const polarGridAmount = clamp(treesParameters.polarGridAmount.getValue(), 0, 1);
-        const baseColumnWidth = treesParameters.getColumnWidth();
-
         const rowHeight = treesParameters.getRowHeight();
-
-        const borderRadius = treesParameters.getBorderRadius();
 
         return (
             <g>
                 {_.times(numRows, rowIndex => {
                     const fill = treesParameters.getColorForIndexAndRow(this.props.index, rowIndex);
-                    let columnWidth = baseColumnWidth;
-                    if (polarGridAmount > 0) {
-                        columnWidth = lerp(baseColumnWidth, baseColumnWidth * (rowIndex + 1) / numRows, polarGridAmount);
-                    }
+
+                    const innerRadius = rowIndex * rowSpacing;
+                    const outerRadius = innerRadius + rowHeight;
+
+                    const points = [
+                        xyStringFromAngleRadAndRadius(negHalfWidthRad, innerRadius),
+                        xyStringFromAngleRadAndRadius(halfWidthRad, innerRadius),
+                        xyStringFromAngleRadAndRadius(halfWidthRad, outerRadius),
+                        xyStringFromAngleRadAndRadius(negHalfWidthRad, outerRadius),
+                    ];
 
                     return (
-                        <rect
-                            className="treeRect"
+                        <polygon
+                            points={points.join(' ')}
                             key={rowIndex}
                             fill={fill}
-                            x={-(columnWidth / 2)}
-                            y={rowIndex * rowSpacing + rowHeight / 2}
-                            rx={borderRadius}
-                            ry={borderRadius}
-                            width={columnWidth}
-                            height={rowHeight}
                         />
                     );
                 })}

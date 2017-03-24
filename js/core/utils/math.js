@@ -70,6 +70,10 @@ const xyFromPolarAngleAndRadius = function(polarAngleInDegrees, radius) {
     };
 };
 
+const xyStringFromAngleRadAndRadius = function(angleInRadians, radius) {
+    return (Math.cos(angleInRadians) * radius) + ',' + (Math.sin(angleInRadians) * radius);
+};
+
 const xyRotatedAroundOriginWithAngle = function(x, y, angleInDegrees) {
     const angleInRadians = angleInDegrees * DEG_2_RAD;
     const cos = Math.cos(angleInRadians);
@@ -110,6 +114,7 @@ module.exports = {
     triangularDist,
     polarAngleDeg,
     xyFromPolarAngleAndRadius,
+    xyStringFromAngleRadAndRadius,
     posMod,
     ceilOfMultiple,
     modAndShiftToHalf,
