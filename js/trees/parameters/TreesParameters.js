@@ -31,8 +31,8 @@ class TreesParameters extends PieceParameters {
             },
             numColumns: {
                 type: IntLinearParameter,
-                range: [1, 24],
-                start: 8, buildupStart: 1,
+                range: [3, 24],
+                start: 3, buildupStart: 1,
                 listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
                 listenToMixtrackFader: MixtrackFaders.L_GAIN,
                 monitorName: '# Columns',

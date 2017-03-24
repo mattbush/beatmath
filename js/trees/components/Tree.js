@@ -19,8 +19,8 @@ const Tree = React.createClass({
     render: function() {
         const treesParameters = this.context.treesParameters;
         const widthRad = TWOPI / treesParameters.numColumns.getValue();
-        const halfWidthRad = widthRad / 2;
-        const negHalfWidthRad = -halfWidthRad;
+        const halfWidthRad = (-Math.PI + widthRad) / 2;
+        const negHalfWidthRad = (-Math.PI - widthRad) / 2;
 
         const numRows = treesParameters.numRows.getValue();
         const rowSpacing = treesParameters.getRowSpacing();
