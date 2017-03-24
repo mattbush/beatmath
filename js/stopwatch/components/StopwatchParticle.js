@@ -4,18 +4,21 @@ const {clamp, modAndShiftToHalf, lerp, logerp} = require('js/core/utils/math');
 
 const TWOPI = 2 * Math.PI;
 
-const UPDATE_EVERY_N = 4;
+// fix bugs before changing this back to > 1:
+// * Fix stopwatch colors when UPDATE_EVERY_N is turned on
+// * fade in (start at scale 0 in trailPosition 0) - important if we turn UPDATE_EVERY_N back on
+const UPDATE_EVERY_N = 1;
 
 const StopwatchParticle = React.createClass({
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
         stopwatchParameters: React.PropTypes.object,
     },
-    shouldComponentUpdate() {
-        const currentTick = this.context.beatmathParameters.tempo.getNumTicks();
-        const trailPosition = currentTick - this.props.tick;
-        return UPDATE_EVERY_N === 1 || trailPosition % UPDATE_EVERY_N === 1;
-    },
+    // shouldComponentUpdate() {
+    //     const currentTick = this.context.beatmathParameters.tempo.getNumTicks();
+    //     const trailPosition = currentTick - this.props.tick;
+    //     return UPDATE_EVERY_N === 1 || trailPosition % UPDATE_EVERY_N === 1;
+    // },
     render() {
         if (this.props.visibleIndex === undefined) {
             return null;
