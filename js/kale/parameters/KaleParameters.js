@@ -23,14 +23,14 @@ class KaleParameters extends PieceParameters {
         return {
             numRows: {
                 type: IntLinearParameter,
-                start: 3,
+                start: 0,
                 range: [0, MAX_NUM_ROWS],
                 listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
                 monitorName: '# Rows',
             },
             numColumns: {
                 type: IntLinearParameter,
-                start: 8,
+                start: 0,
                 range: [0, MAX_NUM_COLS],
                 listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
                 monitorName: '# Columns',
@@ -59,13 +59,13 @@ class KaleParameters extends PieceParameters {
             },
             isInfinite: {
                 type: ToggleParameter,
-                start: true,
+                start: false,
                 listenToLaunchpadButton: 0,
                 monitorName: 'Infinite?',
             },
             cellSymmetry: {
                 type: ToggleParameter,
-                start: true,
+                start: false,
                 listenToLaunchpadButton: 3,
                 monitorName: 'Cell Symmetry',
             },

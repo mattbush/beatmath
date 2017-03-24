@@ -53,6 +53,7 @@ const KaleGrid = React.createClass({
                             logicalY={y}
                             mapperShapeXOffset={mapperShapeXOffset}
                             mapperShapeYOffset={mapperShapeYOffset}
+                            numPointsInMapperShape={numPointsInMapperShape}
                         />
                     );
                 }
