@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const mixboard = await Mixboard.getInstanceAsync();
 
     ReactDOM.render(
-        <MixboardContext mixboard={mixboard} hasSpecialMapping={true}>
+        <MixboardContext mixboard={mixboard} bpmMod={2} hasSpecialMapping={true}>
             <TreeSet />
         </MixboardContext>,
         document.getElementById('start')
