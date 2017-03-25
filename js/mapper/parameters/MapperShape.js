@@ -16,6 +16,9 @@ class MapperShape {
             this._isMask = false;
         }
 
+        this._recalculateCenterAndRotation();
+    }
+    _recalculateCenterAndRotation() {
         // only valid if not modifying, lol
         [this._centerX, this._centerY] = centerOfPoints(this._vertices);
 
@@ -27,6 +30,7 @@ class MapperShape {
     moveVertex(vertex, dx, dy) {
         this._vertices[vertex][0] += dx;
         this._vertices[vertex][1] += dy;
+        this._recalculateCenterAndRotation();
     }
     addPoint() {
         if (this._vertices.length >= 30) {
@@ -36,12 +40,14 @@ class MapperShape {
             (this._vertices[0][0] + this._vertices[this._vertices.length - 1][0]) / 2,
             (this._vertices[0][1] + this._vertices[this._vertices.length - 1][1]) / 2,
         ]);
+        this._recalculateCenterAndRotation();
     }
     removePoint() {
         if (this._vertices.length <= 3) {
             return;
         }
         this._vertices.pop();
+        this._recalculateCenterAndRotation();
     }
     getPointsString() {
         const pointsArray = this._vertices.map(vertex => {
