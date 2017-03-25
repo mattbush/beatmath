@@ -19,8 +19,12 @@ class MapperShape {
         this._recalculateCenterAndRotation();
     }
     _recalculateCenterAndRotation() {
-        // only valid if not modifying, lol
-        [this._centerX, this._centerY] = centerOfPoints(this._vertices);
+        // special case for 6-sided shapes
+        if (this.getNumPoints() === 6) {
+            [this._centerX, this._centerY] = [this._vertices[0][0], this._vertices[4][1]];
+        } else {
+            [this._centerX, this._centerY] = centerOfPoints(this._vertices);
+        }
 
         this._rotationDeg = polarAngleDeg(
             this._vertices[0][0] - this._centerX,
