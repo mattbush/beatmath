@@ -24,7 +24,7 @@ const TreeFrame = React.createClass({
         const treesParameters = this.context.treesParameters;
         let numColumns = treesParameters.numColumns.getValue();
         const indexOffsetForMapperShape = this.props.mapperShapeIndex
-            ? numColumns * this.props.mapperShapeIndex
+            ? this.props.mapperShapeIndex
             : 0;
 
         const numPointsInMapperShape = this.props.mapperShape ?

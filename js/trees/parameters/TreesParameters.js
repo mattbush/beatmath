@@ -266,7 +266,7 @@ class TreesParameters extends PieceParameters {
         if (this.roundStagger.getValue()) {
             staggerAmount = Math.round(staggerAmount);
         } else if (polarGridAmount > 0) {
-            staggerAmount = this._getAdjustedStaggerAmount(periodTicks, staggerAmount, polarGridAmount, numColumns);
+            staggerAmount = this._getAdjustedStaggerAmount(periodTicks, staggerAmount, 0, numColumns);
         }
         if (staggerAmount !== 0) {
             if (this.mirrorStagger.getValue()) {
@@ -280,15 +280,16 @@ class TreesParameters extends PieceParameters {
     getBorderRadius() {
         return this.getRowHeight() * this.borderRadiusPercent.getValue() / 2;
     }
-    _getColorShiftPerColumn(numColumns) {
+    _getColorShiftPerColumn() {
         const baseColorShift = this.columnColorShift.getValue();
-        const polarGridAmount = clamp(this.polarGridAmount.getValue(), 0, 1);
-        if (polarGridAmount === 0) {
-            return baseColorShift;
-        }
-        const colorShiftForAFullRotation = 360 / numColumns;
-        const distanceFromClosestMultiple = modAndShiftToHalf(baseColorShift, colorShiftForAFullRotation);
-        return baseColorShift - (distanceFromClosestMultiple * polarGridAmount);
+        return baseColorShift;
+        // const polarGridAmount = clamp(this.polarGridAmount.getValue(), 0, 1);
+        // if (polarGridAmount === 0) {
+        //     return baseColorShift;
+        // }
+        // const colorShiftForAFullRotation = 360 / numColumns;
+        // const distanceFromClosestMultiple = modAndShiftToHalf(baseColorShift, colorShiftForAFullRotation);
+        // return baseColorShift - (distanceFromClosestMultiple * polarGridAmount);
     }
     getColorForIndexAndRow(columnIndex, rowIndex, numColumns) {
         if (this.whiteout.getValue()) {
