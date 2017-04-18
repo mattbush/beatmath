@@ -195,7 +195,7 @@ class LatticeRefreshTimer extends PieceParameters {
             total += distance / rippleRadius;
         }
 
-        let localPolarAngles = this._localPolarAngles.getValue();
+        let localPolarAngles = this.localPolarAngles.getValue();
         if (localPolarAngles !== 0) {
             if (localPolarAngles >= 4) { // nobody likes 4-spirals, awkward
                 localPolarAngles++;
