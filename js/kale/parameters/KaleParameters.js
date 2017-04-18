@@ -22,20 +22,20 @@ class KaleParameters extends PieceParameters {
     }
     _declareParameters() {
         return {
-            0: P.NumColumns({start: 8, max: MAX_NUM_COLS}),
-            1: P.NumRows({start: 3, max: MAX_NUM_ROWS}),
-            2: P.ColumnColorShift({range: 45}),
-            3: P.RowColorShift({range: 45}),
-            6: P.CustomToggle({name: 'isInfinite', button: 0}),
-            7: P.CustomToggle({name: 'cellSymmetry', button: 3, start: true}),
-            4: P.TriangularGridPercent({start: 1, inputPosition: [2, 2]}),
+            ...P.NumColumns({start: 8, max: MAX_NUM_COLS}),
+            ...P.NumRows({start: 3, max: MAX_NUM_ROWS}),
+            ...P.ColumnColorShift({range: 45}),
+            ...P.RowColorShift({range: 45}),
+            ...P.CustomToggle({name: 'isInfinite', button: 0}),
+            ...P.CustomToggle({name: 'cellSymmetry', button: 3, start: true}),
+            ...P.TriangularGridPercent({start: 1, inputPosition: [2, 2]}),
             reflectionsPerCell: {
                 type: CycleParameter,
                 cycleValues: [1, 2, 4, 6],
                 listenToDecrementAndIncrementLaunchpadButtons: 2,
                 monitorName: '# Reflections',
             },
-            5: P.BaseColor(),
+            ...P.BaseColor(),
         };
     }
 }

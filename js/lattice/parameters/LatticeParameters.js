@@ -6,7 +6,7 @@ const P = require('js/core/parameters/P');
 class LatticeParameters extends PieceParameters {
     _declareParameters() {
         return {
-            3: P.CustomToggle({name: 'showInfluences', button: 0}),
+            ...P.CustomToggle({name: 'showInfluences', button: 0}),
             mixCoefficient: {
                 type: LogarithmicParameter,
                 range: [1 / 3, 3],
@@ -23,17 +23,17 @@ class LatticeParameters extends PieceParameters {
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,
                 monitorName: 'Distance Coeff',
             },
-            0: P.NumColumns({start: 12, max: 24}),
-            1: P.NumRows({start: 12, max: 15}),
-            4: P.CustomToggle({name: 'oscillate', button: 1}),
-            2: P.TriangularGridPercent({inputPosition: [0, 0]}),
+            ...P.NumColumns({start: 12, max: 24}),
+            ...P.NumRows({start: 12, max: 15}),
+            ...P.CustomToggle({name: 'oscillate', button: 1}),
+            ...P.TriangularGridPercent({inputPosition: [0, 0]}),
             latency: {
                 type: ManualParameter,
                 start: 0,
                 monitorName: 'Latency',
                 manualMonitorCoords: {x: 5, y: 5},
             },
-            6: P.CustomPercent({name: 'wavePercent', inputPosition: {fader: 5}}),
+            ...P.CustomPercent({name: 'wavePercent', inputPosition: {fader: 5}}),
         };
     }
 }

@@ -45,7 +45,7 @@ class WallLatticeParameters extends PieceParameters {
                 type: Parameter,
                 start: 8,
             },
-            0: P.CustomPercent({name: 'wavePercent', inputPosition: {fader: 5}}),
+            ...P.CustomPercent({name: 'wavePercent', inputPosition: {fader: 5}}),
         };
     }
 }

@@ -23,9 +23,9 @@ class TreesParameters extends PieceParameters {
     }
     _declareParameters() {
         return {
-            5: P.BaseColor(),
-            0: P.NumColumns({start: 16, max: 24}),
-            1: P.NumRows({start: 16, max: 24}),
+            ...P.BaseColor(),
+            ...P.NumColumns({start: 16, max: 24}),
+            ...P.NumRows({start: 16, max: 24}),
             columnWidth: {
                 type: IntLinearParameter,
                 range: [10, 200],
@@ -56,7 +56,7 @@ class TreesParameters extends PieceParameters {
                 listenToMixtrackKnob: MixtrackKnobs.R_MID,
                 monitorName: 'Row Gap',
             },
-            4: P.BorderRadiusPercent(),
+            ...P.BorderRadiusPercent(),
             periodTicks: {type: LogarithmicParameter,
                 range: [2, 16],
                 start: 2,
@@ -64,10 +64,10 @@ class TreesParameters extends PieceParameters {
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
                 monitorName: 'Period Ticks',
             },
-            2: P.ColumnColorShift({range: 180}),
-            3: P.RowColorShift({range: 180}),
-            8: P.CustomPercent({name: 'trailPercent', start: 0.5, inputPosition: [2, 2]}),
-            9: P.CustomPercent({name: 'revTrailPercent', start: 0, inputPosition: [1, 2]}),
+            ...P.ColumnColorShift({range: 180}),
+            ...P.RowColorShift({range: 180}),
+            ...P.CustomPercent({name: 'trailPercent', start: 0.5, inputPosition: [2, 2]}),
+            ...P.CustomPercent({name: 'revTrailPercent', start: 0, inputPosition: [1, 2]}),
             staggerAmount: {
                 type: MovingLinearParameter,
                 range: [-8, 8],
@@ -80,8 +80,8 @@ class TreesParameters extends PieceParameters {
                 autoupdateOnCue: true,
                 canSmoothUpdate: true,
             },
-            6: P.CustomToggle({name: 'mirrorStagger', button: 1}),
-            7: P.CustomToggle({name: 'roundStagger', button: 0, start: true}),
+            ...P.CustomToggle({name: 'mirrorStagger', button: 1}),
+            ...P.CustomToggle({name: 'roundStagger', button: 0, start: true}),
             polarGridAmount: {
                 type: MovingLinearParameter,
                 range: [-2, 3],

@@ -36,7 +36,7 @@ class WallTreesParameters extends PieceParameters {
     }
     _declareParameters() {
         return {
-            0: P.BaseColor(),
+            ...P.BaseColor(),
             periodTicks: {type: LogarithmicParameter,
                 range: [2, 16],
                 start: 2,
@@ -44,10 +44,10 @@ class WallTreesParameters extends PieceParameters {
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
                 monitorName: 'Period Ticks',
             },
-            1: P.ColumnColorShift({range: 45}),
-            2: P.RowColorShift({range: 45}),
-            8: P.CustomPercent({name: 'trailPercent', start: 0.5, inputPosition: [2, 2]}),
-            9: P.CustomPercent({name: 'revTrailPercent', start: 0, inputPosition: [1, 2]}),
+            ...P.ColumnColorShift({range: 45}),
+            ...P.RowColorShift({range: 45}),
+            ...P.CustomPercent({name: 'trailPercent', start: 0.5, inputPosition: [2, 2]}),
+            ...P.CustomPercent({name: 'revTrailPercent', start: 0, inputPosition: [1, 2]}),
             staggerAmount: {
                 type: MovingLinearParameter,
                 range: [-8, 8],
@@ -60,8 +60,8 @@ class WallTreesParameters extends PieceParameters {
                 autoupdateOnCue: true,
                 canSmoothUpdate: true,
             },
-            6: P.CustomToggle({name: 'mirrorStagger', button: 1}),
-            7: P.CustomToggle({name: 'roundStagger', button: 0, start: true}),
+            ...P.CustomToggle({name: 'mirrorStagger', button: 1}),
+            ...P.CustomToggle({name: 'roundStagger', button: 0, start: true}),
             riseDirection: {
                 type: MovingLinearParameter,
                 range: [-1, 1],

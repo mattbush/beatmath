@@ -68,8 +68,8 @@ class SubjectParameters extends PieceParameters {
                 variance: 0.2,
                 autoupdateEveryNBeats: 1,
             },
-            6: P.CustomPercent({name: 'driftPercent', inputPosition: [0, 5]}),
-            0: P.BorderRadiusPercent({start: 0.3, autoupdateMax: 0.6}),
+            ...P.CustomPercent({name: 'driftPercent', inputPosition: [0, 5]}),
+            ...P.BorderRadiusPercent({start: 0.3, autoupdateMax: 0.6}),
             viewpointShiftPercent: {
                 type: MovingLinearParameter,
                 range: [0, 1],

@@ -6,26 +6,23 @@ function camelCaseToHumanReadable(text) {
 }
 
 const P = {
-    NumColumns: ({start, max}) => ({
-        propertyName: 'numColumns',
+    NumColumns: ({start, max}) => ({numColumns: {
         type: IntLinearParameter,
         range: [1, max],
         start: start,
         buildupStart: 1,
         listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
         monitorName: '# Columns',
-    }),
-    NumRows: ({start, max}) => ({
-        propertyName: 'numRows',
+    }}),
+    NumRows: ({start, max}) => ({numRows: {
         type: IntLinearParameter,
         range: [0, max],
         start: start,
         buildupStart: 1,
         listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
         monitorName: '# Rows',
-    }),
-    ColumnColorShift: ({range}) => ({
-        propertyName: 'columnColorShift',
+    }}),
+    ColumnColorShift: ({range}) => ({columnColorShift: {
         type: MovingLinearParameter,
         range: [-range, range],
         start: 0,
@@ -36,9 +33,8 @@ const P = {
         autoupdateEveryNBeats: 8,
         autoupdateOnCue: true,
         canSmoothUpdate: true,
-    }),
-    RowColorShift: ({range}) => ({
-        propertyName: 'rowColorShift',
+    }}),
+    RowColorShift: ({range}) => ({rowColorShift: {
         type: MovingLinearParameter,
         range: [-range, range],
         start: 0,
@@ -49,17 +45,15 @@ const P = {
         autoupdateEveryNBeats: 8,
         autoupdateOnCue: true,
         canSmoothUpdate: true,
-    }),
-    TriangularGridPercent: ({start = 0, inputPosition}) => ({
-        propertyName: 'triangularGridPercent',
+    }}),
+    TriangularGridPercent: ({start = 0, inputPosition}) => ({triangularGridPercent: {
         type: LinearParameter,
         range: [0, 1],
         start: start, buildupStart: 0,
         listenToLaunchpadKnob: inputPosition,
         monitorName: 'Triangle Grid %',
-    }),
-    BorderRadiusPercent: ({start = 0, autoupdateMax = 1} = {}) => ({
-        propertyName: 'borderRadiusPercent',
+    }}),
+    BorderRadiusPercent: ({start = 0, autoupdateMax = 1} = {}) => ({borderRadiusPercent: {
         type: MovingLinearParameter,
         range: [0, 1],
         autoupdateRange: [0, autoupdateMax],
@@ -69,24 +63,21 @@ const P = {
         monitorName: 'Roundness %',
         autoupdateEveryNBeats: 2,
         autoupdateOnCue: true,
-    }),
-    BaseColor: () => ({
-        propertyName: 'baseColor',
+    }}),
+    BaseColor: () => ({baseColor: {
         type: MovingColorParameter,
         start: tinycolor('#5ff'),
         max: 5,
         variance: 1,
         autoupdate: 1000,
-    }),
-    CustomToggle: ({name, button, start = false}) => ({
-        propertyName: name,
+    }}),
+    CustomToggle: ({name, button, start = false}) => ({[name]: {
         type: ToggleParameter,
         start: start,
         listenToLaunchpadButton: button,
         monitorName: camelCaseToHumanReadable(name) + '?',
-    }),
-    CustomPercent: ({name, inputPosition, start = 0, buildupStart = 0}) => ({
-        propertyName: name,
+    }}),
+    CustomPercent: ({name, inputPosition, start = 0, buildupStart = 0}) => ({[name]: {
         type: LinearParameter,
         range: [0, 1],
         start: start, buildupStart: buildupStart,
@@ -95,7 +86,7 @@ const P = {
             {listenToLaunchpadKnob: inputPosition} :
             {listenToLaunchpadFader: [inputPosition.fader, {addButtonStatusLight: true}]}
         ),
-    }),
+    }}),
 };
 
 module.exports = P;

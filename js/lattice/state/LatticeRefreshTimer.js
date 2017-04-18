@@ -89,8 +89,8 @@ class LatticeRefreshTimer extends PieceParameters {
                 autoupdateEveryNBeats: 16,
                 autoupdateOnCue: true,
             },
-            0: P.CustomToggle({name: 'bendGlobalSpirals', button: 2}),
-            1: P.CustomToggle({name: 'bendLocalSpirals', button: 3}),
+            ...P.CustomToggle({name: 'bendGlobalSpirals', button: 2}),
+            ...P.CustomToggle({name: 'bendLocalSpirals', button: 3}),
         };
     }
     constructor(mixboard, beatmathParameters, {pieceParameters}) {
