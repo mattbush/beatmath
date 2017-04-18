@@ -1,9 +1,10 @@
 // const _ = require('lodash');
-const {Parameter, MovingIntLinearParameter, LinearParameter, IntLinearParameter, MovingLinearParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {Parameter, MovingIntLinearParameter, LinearParameter, IntLinearParameter, MovingLinearParameter} = require('js/core/parameters/Parameter');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const StopwatchVisList = require('js/stopwatch/parameters/StopwatchVisList');
 const {clamp, modAndShiftToHalf} = require('js/core/utils/math');
 const tinycolor = require('tinycolor2');
+const P = require('js/core/parameters/P');
 
 class StopwatchParameters extends PieceParameters {
     constructor(...args) {
@@ -16,13 +17,7 @@ class StopwatchParameters extends PieceParameters {
     }
     _declareParameters() {
         return {
-            baseColor: {
-                type: MovingColorParameter,
-                start: tinycolor('#5ff'),
-                max: 5,
-                variance: 1,
-                autoupdate: 1000,
-            },
+            ...P.BaseColor(),
             numVisibleTrails: {
                 type: IntLinearParameter,
                 range: [4, 20],
@@ -79,26 +74,8 @@ class StopwatchParameters extends PieceParameters {
                 listenToLaunchpadKnob: [0, 5],
                 monitorName: 'Delay Coeff',
             },
-            columnColorShift: {
-                type: MovingLinearParameter,
-                range: [-45, 45],
-                start: 0,
-                monitorName: 'Column Color Shift',
-                listenToLaunchpadKnob: [0, 0],
-                variance: 0.25,
-                autoupdateEveryNBeats: 1,
-                autoupdateOnCue: true,
-            },
-            rowColorShift: {
-                type: MovingLinearParameter,
-                range: [-45, 45],
-                start: 0,
-                monitorName: 'Row Color Shift',
-                listenToLaunchpadKnob: [0, 1],
-                variance: 0.25,
-                autoupdateEveryNBeats: 1,
-                autoupdateOnCue: true,
-            },
+            ...P.ColumnColorShift({range: 45}),
+            ...P.RowColorShift({range: 45}),
             polarGridAmount: {
                 type: MovingLinearParameter,
                 range: [0, 1],
@@ -121,13 +98,7 @@ class StopwatchParameters extends PieceParameters {
                 autoupdateEveryNBeats: 4,
                 autoupdateOnCue: true,
             },
-            hideRandomly: {
-                type: ToggleParameter,
-                start: true,
-                listenToLaunchpadButton: 3,
-                monitorName: 'Hide Randomly',
-            },
-
+            ...P.CustomToggle({name: 'hideRandomly', button: 3, start: true}),
         };
     }
     getTrailCount() {

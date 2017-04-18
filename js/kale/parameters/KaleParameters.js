@@ -1,6 +1,7 @@
-const {MovingLinearParameter, IntLinearParameter, CycleParameter, MovingColorParameter, LinearParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {CycleParameter} = require('js/core/parameters/Parameter');
 // const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
+const P = require('js/core/parameters/P');
 const tinycolor = require('tinycolor2');
 const _ = require('lodash');
 const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
@@ -21,74 +22,20 @@ class KaleParameters extends PieceParameters {
     }
     _declareParameters() {
         return {
-            numRows: {
-                type: IntLinearParameter,
-                start: 0,
-                range: [0, MAX_NUM_ROWS],
-                listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
-                monitorName: '# Rows',
-            },
-            numColumns: {
-                type: IntLinearParameter,
-                start: 0,
-                range: [0, MAX_NUM_COLS],
-                listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
-                monitorName: '# Columns',
-            },
-            columnColorShift: {
-                type: MovingLinearParameter,
-                range: [-45, 45],
-                start: 0,
-                incrementAmount: 2.5,
-                monitorName: 'Column Color Shift',
-                listenToLaunchpadKnob: [0, 0],
-                variance: 1,
-                autoupdateEveryNBeats: 1, // TODO
-                autoupdateOnCue: true,
-            },
-            rowColorShift: {
-                type: MovingLinearParameter,
-                range: [-45, 45],
-                start: 0,
-                incrementAmount: 2.5,
-                monitorName: 'Row Color Shift',
-                listenToLaunchpadKnob: [0, 1],
-                variance: 1,
-                autoupdateEveryNBeats: 1, // TODO
-                autoupdateOnCue: true,
-            },
-            isInfinite: {
-                type: ToggleParameter,
-                start: false,
-                listenToLaunchpadButton: 0,
-                monitorName: 'Infinite?',
-            },
-            cellSymmetry: {
-                type: ToggleParameter,
-                start: false,
-                listenToLaunchpadButton: 3,
-                monitorName: 'Cell Symmetry',
-            },
-            triangularGridPercent: {
-                type: LinearParameter,
-                range: [0, 1],
-                start: 1, buildupStart: 0,
-                listenToLaunchpadKnob: [2, 2],
-                monitorName: 'Triangle Grid %',
-            },
+            ...P.NumColumns({start: 0, max: MAX_NUM_COLS}),
+            ...P.NumRows({start: 0, max: MAX_NUM_ROWS}),
+            ...P.ColumnColorShift({range: 45}),
+            ...P.RowColorShift({range: 45}),
+            ...P.CustomToggle({name: 'isInfinite', button: 0}),
+            ...P.CustomToggle({name: 'cellSymmetry', button: 3, start: false}),
+            ...P.TriangularGridPercent({start: 1, inputPosition: [2, 2]}),
             reflectionsPerCell: {
                 type: CycleParameter,
                 cycleValues: [2, 4, 6],
                 listenToDecrementAndIncrementLaunchpadButtons: 2,
                 monitorName: '# Reflections',
             },
-            baseColor: {
-                type: MovingColorParameter,
-                start: tinycolor('#5ff'),
-                max: 6,
-                variance: 1.5,
-                autoupdate: 2000,
-            },
+            ...P.BaseColor(),
         };
     }
 }

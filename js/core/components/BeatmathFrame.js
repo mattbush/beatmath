@@ -36,7 +36,7 @@ const BeatmathFrame = React.createClass({
         );
     },
     _renderMasks() {
-        if (this.getParameterValue('mappingMode') === 'off') {
+        if (location.href.endsWith('mapper')) {
             return null;
         }
 
