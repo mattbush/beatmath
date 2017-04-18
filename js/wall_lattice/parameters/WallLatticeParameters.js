@@ -2,6 +2,7 @@ const _ = require('lodash');
 const {Parameter, LinearParameter} = require('js/core/parameters/Parameter');
 const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
+const P = require('js/core/parameters/P');
 const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
 const updateHue = require('js/core/outputs/updateHue');
 const {NUM_LIGHTS} = require('js/hue_constants');
@@ -44,13 +45,7 @@ class WallLatticeParameters extends PieceParameters {
                 type: Parameter,
                 start: 8,
             },
-            wavePercent: {
-                type: LinearParameter,
-                range: [0, 1],
-                start: 0,
-                listenToLaunchpadFader: [5, {addButtonStatusLight: true}],
-                monitorName: 'Wave %',
-            },
+            ...P.CustomPercent({name: 'wavePercent', inputPosition: {fader: 5}}),
         };
     }
 }
