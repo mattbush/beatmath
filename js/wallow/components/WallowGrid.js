@@ -7,6 +7,9 @@ const hexGrid = require('js/wallow/WallowHexGrid');
 
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 
+const DEBUG_MODE = true;
+const OVERLAP_MODE = false;
+
 const Hex = React.createClass({
     getInitialState() {
         return {
@@ -33,24 +36,31 @@ const Hex = React.createClass({
 
         return (
             <g style={{transform: `translate(${tx}px, ${ty}px)`}}>
-                {this.state.ghostState >= 0.92 &&
+                {!DEBUG_MODE && this.state.ghostState >= 0.92 &&
                     <image
                         xlinkHref={`images/wallow/ghost${ghostNum}.png`}
                         style={{opacity: posModAndBendToLowerHalf(this.state.ghostState - 0.92, 0.08) * 25}}
                         transform={ghostTransform} x="-0.4" y="-0.4" height="0.8px" width="0.8px"
                     />
                 }
-                {/* <g style={{transform: `scale(${1 / 12}, -${1 / 8 * 4 / 3 * Y_AXIS_SCALE})`}}>
+                {DEBUG_MODE && !OVERLAP_MODE && <g style={{transform: `scale(${1 / 12}, -${1 / 8 * 4 / 3 * Y_AXIS_SCALE})`}}>
                     <polygon className="line" points="0,4 6,2 6,-2 0,-4 -6,-2 -6,2" />
-                </g> */}
+                </g>}
                 <g style={{}}>
                     {shapes.map((polygon, index) => {
-                        // const color = tinycolor('#AA5555').saturate(100 * polygon.center[0]).lighten(100 * polygon.yMax);
-                        // return <polygon className="mine" key={index} fill={`#fff`} style={{opacity: '0.5'}} points={polygon.points} />;
-                        return <polygon className="mine" key={index} fill="transparent" points={polygon.points} />;
+                        if (DEBUG_MODE) {
+                            // tinycolor('#AA5555').saturate(100 * polygon.center[0]).lighten(100 * polygon.yMax)
+                            const color = OVERLAP_MODE ? '#fff' : polygon.color;
+                            const opacity = OVERLAP_MODE ? 0.5 : 1;
+                            return <polygon className="mine" key={index} fill={color} style={{opacity: opacity}} points={polygon.points} />;
+                        } else {
+                            return <polygon className="mine" key={index} fill="transparent" points={polygon.points} />;
+                        }
                     })}
                 </g>
-                {/* <text style={{transform: 'scale(0.15, 0.15) translate(-2px, 2px)', fill: '#fff', fontSize: '2px'}}>{this.props.column}</text> */}
+                {DEBUG_MODE &&
+                    <text style={{transform: 'scale(0.15, 0.15) translate(-2px, 2px)', fill: '#fff', fontSize: '2px'}}>{this.props.column}</text>
+                }
             </g>
         );
     },

@@ -75,7 +75,7 @@ const BeatmathPixel = React.createClass({
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
     },
-    render: function() {
+    render() {
         const pixelPointiness = this.context.beatmathParameters.pixelPointiness.getValue();
         const pixelSidedness = this.context.beatmathParameters.pixelSidedness.getValue();
         const colorSpin = this.context.beatmathParameters.colorSpin.getValue();

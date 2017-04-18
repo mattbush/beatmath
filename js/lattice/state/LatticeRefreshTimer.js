@@ -4,8 +4,10 @@ const {MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConsta
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
 
-const {lerp, dist, manhattanDist, triangularDist, polarAngleDeg, posMod, modAndShiftToHalf, posModAndBendToLowerHalf} = require('js/core/utils/math');
-const MAX_RIPPLES_TREAT_AS_INFINITE = 40;
+const {lerp, dist, manhattanDist, triangularDist, polarAngleDeg, posMod, modAndShiftToHalfZigzag, posModAndBendToLowerHalf} = require('js/core/utils/math');
+const MAX_RIPPLES_TREAT_AS_INFINITE = 30;
+
+const EPSILON = 0.01;
 
 class LatticeRefreshTimer extends PieceParameters {
     _declareParameters() {
@@ -13,6 +15,7 @@ class LatticeRefreshTimer extends PieceParameters {
             rippleRadius: {
                 type: MovingLogarithmicParameter,
                 range: [2, MAX_RIPPLES_TREAT_AS_INFINITE],
+                autoupdateRange: [5, MAX_RIPPLES_TREAT_AS_INFINITE],
                 start: 10,
                 monitorName: 'Ripple Radius',
                 listenToLaunchpadFader: [2, {addButtonStatusLight: true, useSnapButton: true}],
@@ -24,6 +27,7 @@ class LatticeRefreshTimer extends PieceParameters {
             subdivisionSize: {
                 type: MovingLogarithmicParameter,
                 range: [2, MAX_RIPPLES_TREAT_AS_INFINITE],
+                autoupdateRange: [8, MAX_RIPPLES_TREAT_AS_INFINITE],
                 start: MAX_RIPPLES_TREAT_AS_INFINITE,
                 listenToLaunchpadFader: [3, {addButtonStatusLight: true, useSnapButton: true}],
                 monitorName: 'Division Size',
@@ -34,6 +38,7 @@ class LatticeRefreshTimer extends PieceParameters {
             manhattanCoefficient: {
                 type: MovingLinearParameter,
                 range: [-3, 3],
+                autoupdateRange: [-0.5, 1.5],
                 start: 0,
                 defaultOn: 1,
                 incrementAmount: 0.25,
@@ -48,6 +53,7 @@ class LatticeRefreshTimer extends PieceParameters {
             logCoefficient: {
                 type: MovingLinearParameter,
                 range: [-3, 3],
+                autoupdateRange: [-0.5, 1.5],
                 start: 0,
                 defaultOn: 1,
                 incrementAmount: 0.25,
@@ -62,6 +68,7 @@ class LatticeRefreshTimer extends PieceParameters {
             globalPolarAngles: {
                 type: MovingIntLinearParameter,
                 range: [-12, 12],
+                autoupdateRange: [-5, 5],
                 start: 0,
                 monitorName: '# Global Spirals',
                 listenToLaunchpadKnob: [2, 2],
@@ -73,6 +80,7 @@ class LatticeRefreshTimer extends PieceParameters {
             localPolarAngles: {
                 type: MovingIntLinearParameter,
                 range: [-12, 12],
+                autoupdateRange: [-5, 5],
                 start: 0,
                 monitorName: '# Local Spirals',
                 listenToLaunchpadKnob: [2, 3],
@@ -85,39 +93,62 @@ class LatticeRefreshTimer extends PieceParameters {
             1: P.CustomToggle({name: 'bendLocalSpirals', button: 3}),
         };
     }
-    constructor(mixboard, beatmathParameters, {latticeParameters}) {
+    constructor(mixboard, beatmathParameters, {pieceParameters}) {
         super(mixboard, beatmathParameters);
         this._refreshOffsetCache = {};
-        this._latticeParameters = latticeParameters;
+        this._refreshGradientCache = {};
+        this._pieceParameters = pieceParameters;
         this._flushCacheIfNewGrid();
         this._flushCache = this._flushCache.bind(this);
 
         _.each(this._declareParameters(), (value, paramName) => {
             this[value.propertyName || paramName].addListener(this._flushCache);
         });
-        if (this._latticeParameters.triangularGridPercent) {
-            this._latticeParameters.triangularGridPercent.addListener(this._flushCacheIfNewGrid.bind(this));
+        if (this._pieceParameters.triangularGridPercent) {
+            this._pieceParameters.triangularGridPercent.addListener(this._flushCacheIfNewGrid.bind(this));
+        }
+        if (this._pieceParameters.perpendicularFlip) {
+            this._pieceParameters.perpendicularFlip.addListener(this._flushCacheIfNewGrid.bind(this));
         }
     }
     _isTriangularGrid() {
-        return this._latticeParameters.triangularGridPercent && this._latticeParameters.triangularGridPercent.getValue() >= 0.5;
+        return this._pieceParameters.triangularGridPercent && this._pieceParameters.triangularGridPercent.getValue() >= 0.5;
+    }
+    _isPerpendicularFlip() {
+        return this._pieceParameters.perpendicularFlip && this._pieceParameters.perpendicularFlip.getValue();
     }
     _flushCacheIfNewGrid() {
+        let didChange = false;
         if (this._cachedIsTriangularGrid !== this._isTriangularGrid()) {
             this._cachedIsTriangularGrid = this._isTriangularGrid();
+            didChange = true;
+        }
+        if (this._cachedPerpendicularFlip !== this._isPerpendicularFlip()) {
+            this._cachedPerpendicularFlip = this._isPerpendicularFlip();
+            didChange = true;
+        }
+        if (didChange) {
             this._flushCache();
         }
     }
     _flushCache() {
         this._refreshOffsetCache = {};
+        this._refreshGradientCache = {};
     }
     getRefreshOffset(row, col) {
         const key = `${row}|${col}`;
         if (!_.has(this._refreshOffsetCache, key)) {
-            this._refreshOffsetCache[key] = this._calculateRefreshOffset(row, col);
+            this._refreshOffsetCache[key] = posMod(this._calculateRefreshOffset(row, col), 1);
         }
         const offset = this._refreshOffsetCache[key];
         return offset * this._beatmathParameters.tempo.getPeriod();
+    }
+    getRefreshGradient(row, col) {
+        const key = `${row}|${col}`;
+        if (!_.has(this._refreshGradientCache, key)) {
+            this._refreshGradientCache[key] = this._calculateRefreshGradient(row, col);
+        }
+        return this._refreshGradientCache[key];
     }
     _calculateRefreshOffset(row, col) {
         let total = 0;
@@ -142,8 +173,8 @@ class LatticeRefreshTimer extends PieceParameters {
         }
 
         if (subdivisionRadius !== false) {
-            row = modAndShiftToHalf(row, subdivisionRadius);
-            col = modAndShiftToHalf(col, subdivisionRadius);
+            row = modAndShiftToHalfZigzag(row, subdivisionRadius);
+            col = modAndShiftToHalfZigzag(col, subdivisionRadius);
         }
 
         if (rippleRadius !== MAX_RIPPLES_TREAT_AS_INFINITE) {
@@ -164,8 +195,13 @@ class LatticeRefreshTimer extends PieceParameters {
             total += distance / rippleRadius;
         }
 
-        const localPolarAngles = this.localPolarAngles.getValue();
+        let localPolarAngles = this._localPolarAngles.getValue();
         if (localPolarAngles !== 0) {
+            if (localPolarAngles >= 4) { // nobody likes 4-spirals, awkward
+                localPolarAngles++;
+            } else if (localPolarAngles <= -4) {
+                localPolarAngles--;
+            }
             const sectorSize = 360 / localPolarAngles;
             let localPolarAngle = polarAngleDeg(col, row);
             if (this.bendLocalSpirals.getValue()) {
@@ -174,7 +210,24 @@ class LatticeRefreshTimer extends PieceParameters {
             total += localPolarAngle / sectorSize;
         }
 
-        return posMod(total, 1);
+        return total;
+    }
+    _calculateRefreshGradient(row, col) {
+        const main = this._calculateRefreshOffset(row, col);
+        const mainPlusDeltaX = this._calculateRefreshOffset(row, col + EPSILON);
+        const mainPlusDeltaY = this._calculateRefreshOffset(row + EPSILON, col);
+
+        if (this._cachedPerpendicularFlip) {
+            return {
+                x: mainPlusDeltaX - main,
+                y: mainPlusDeltaY - main,
+            };
+        } else {
+            return {
+                x: mainPlusDeltaY - main,
+                y: main - mainPlusDeltaX,
+            };
+        }
     }
 }
 

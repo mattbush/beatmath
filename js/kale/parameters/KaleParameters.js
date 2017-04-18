@@ -2,11 +2,24 @@ const {CycleParameter} = require('js/core/parameters/Parameter');
 // const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
+const tinycolor = require('tinycolor2');
+const _ = require('lodash');
+const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
+const updateHue = require('js/core/outputs/updateHue');
+const {NUM_LIGHTS} = require('js/hue_constants');
 
 const MAX_NUM_ROWS = 6;
 const MAX_NUM_COLS = 12;
 
 class KaleParameters extends PieceParameters {
+    constructor(...args) {
+        super(...args);
+        if (ENABLE_HUE) {
+            _.times(NUM_LIGHTS, lightNumber => {
+                updateHue(lightNumber, tinycolor('#000'));
+            });
+        }
+    }
     _declareParameters() {
         return {
             0: P.NumColumns({start: 8, max: MAX_NUM_COLS}),

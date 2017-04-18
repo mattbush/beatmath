@@ -69,7 +69,6 @@
         "no-array-constructor": 2,
         "no-caller": 2,
         "no-catch-shadow": 2,
-        "no-confusing-arrow": 1,
         "no-constant-condition": 1,
         "no-div-regex": 1,
         "no-eq-null": 2,
