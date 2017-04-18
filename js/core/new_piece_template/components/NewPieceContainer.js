@@ -10,17 +10,17 @@ const NewPieceContainer = React.createClass({
         mixboard: React.PropTypes.object,
         beatmathParameters: React.PropTypes.object,
     },
-    getChildContext: function() {
+    getChildContext() {
         return {
             newPieceParameters: this.state.newPieceParameters,
         };
     },
-    getInitialState: function() {
+    getInitialState() {
         return {
             newPieceParameters: new NewPieceParameters(this.context.mixboard, this.context.beatmathParameters),
         };
     },
-    render: function() {
+    render() {
         return (
             <BeatmathFrame>
                 Hello world!

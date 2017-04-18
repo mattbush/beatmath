@@ -1,6 +1,7 @@
 module.exports = {
     entry: {
         anagrams: './js/anagrams/anagrams',
+        blank: './js/core/blank_piece/blank_piece',
         bricks: './js/bricks/bricks',
         fronds: './js/fronds/fronds',
         honeycomb: './js/honeycomb/honeycomb',
@@ -10,6 +11,8 @@ module.exports = {
         nodes: './js/nodes/nodes',
         pinecone: './js/pinecone/pinecone',
         snowstorm: './js/snowstorm/snowstorm',
+        stopwatch: './js/stopwatch/stopwatch',
+        tactile: './js/tactile/tactile',
         text: './js/text/text',
         trees: './js/trees/trees',
         twenty_sixteen: './js/twenty_sixteen/twenty_sixteen',

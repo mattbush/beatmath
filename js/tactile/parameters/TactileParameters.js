@@ -1,32 +1,40 @@
-const {ManualParameter, LogarithmicParameter} = require('js/core/parameters/Parameter');
-const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
+const {ManualParameter, LinearParameter} = require('js/core/parameters/Parameter');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
 
-class LatticeParameters extends PieceParameters {
+class TactileParameters extends PieceParameters {
     _declareParameters() {
         return {
             ...P.CustomToggle({name: 'showInfluences', button: 0}),
             mixCoefficient: {
-                type: LogarithmicParameter,
-                range: [1 / 3, 3],
+                type: LinearParameter,
+                range: [0.2, 2],
                 start: 1,
+                useStartAsMidpoint: true,
                 listenToLaunchpadKnob: [1, 0],
-                listenToMixtrackKnob: MixtrackKnobs.L_BASS,
                 monitorName: 'Mix Coeff',
             },
             distanceCoefficient: {
-                type: LogarithmicParameter,
-                range: [1 / 3, 3],
+                type: LinearParameter,
+                range: [0.2, 3],
                 start: 1,
+                useStartAsMidpoint: true,
                 listenToLaunchpadKnob: [1, 1],
-                listenToMixtrackKnob: MixtrackKnobs.R_BASS,
                 monitorName: 'Distance Coeff',
             },
-            ...P.NumColumns({start: 12, max: 24}),
-            ...P.NumRows({start: 12, max: 15}),
+            ...P.NumColumns({start: 17, max: 32}),
+            ...P.NumRows({start: 10, max: 32}),
             ...P.CustomToggle({name: 'oscillate', button: 1}),
             ...P.TriangularGridPercent({inputPosition: [0, 0]}),
+            flipDurationPercent: {
+                type: LinearParameter,
+                range: [0.1, 0.9],
+                start: 0.3,
+                listenToLaunchpadFader: [4, {addButtonStatusLight: true}],
+                monitorName: 'Flip Duration %',
+            },
+            ...P.CustomToggle({name: 'perpendicularFlip', button: 4}),
+            ...P.CustomPercent({name: 'varySizePercent', inputPosition: [0, 4]}),
             latency: {
                 type: ManualParameter,
                 start: 0,
@@ -38,4 +46,4 @@ class LatticeParameters extends PieceParameters {
     }
 }
 
-module.exports = LatticeParameters;
+module.exports = TactileParameters;

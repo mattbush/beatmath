@@ -19,7 +19,7 @@ const STATUS_TO_COLOR = {
 };
 
 const MonitorValue = React.createClass({
-    render: function() {
+    render() {
         const payload = this.props.value;
         const style = payload.x !== undefined ? {
             left: VALUE_X_SPACING * payload.x,

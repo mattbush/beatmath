@@ -8,7 +8,7 @@ const BeatmathFrame = React.createClass({
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
     },
-    getParameterBindings: function() {
+    getParameterBindings() {
         return {
             width: this.context.beatmathParameters.width,
             height: this.context.beatmathParameters.height,
@@ -35,12 +35,21 @@ const BeatmathFrame = React.createClass({
             </defs>
         );
     },
+    _renderMasks() {
+        if (location.href.endsWith('mapper')) {
+            return null;
+        }
+
+        return this.context.beatmathParameters.mapMapperMasks((mapperShape, index) =>
+            <polygon fill="#000" key={index} points={mapperShape.getPointsString()} />
+        );
+    },
     _renderChildFrames() {
         const frameRotation = this.getParameterValue('frameRotation');
         const frameScale = this.getParameterValue('frameScale') * this.getParameterValue('frameScaleAutoupdating');
         const transitionPeriod = this.context.beatmathParameters.tempo.getBasePeriod() / 16;
         const style = {
-            transform: `rotate(${frameRotation}deg) scale(${frameScale})`,
+            transform: `scale(${frameScale})`,
             transition: `transform ${transitionPeriod}ms linear`,
         };
 
@@ -52,9 +61,11 @@ const BeatmathFrame = React.createClass({
                     mapperShapeIndex: index,
                 });
 
+                const combinedRotation = mapperShape.getRotationDeg() + frameRotation;
+
                 const translatedStyle = {
                     ...style,
-                    transform: `translate(${mapperShape.getCenterX()}px, ${mapperShape.getCenterY()}px) ` + style.transform,
+                    transform: `translate(${mapperShape.getCenterX()}px, ${mapperShape.getCenterY()}px) rotate(${combinedRotation}deg) ` + style.transform,
                 };
 
                 return (
@@ -71,9 +82,11 @@ const BeatmathFrame = React.createClass({
 
                 });
 
+                const combinedRotation = mapperShape.getRotationDeg() + frameRotation;
+
                 const translatedStyle = {
                     ...style,
-                    transform: `translate(${mapperShape.getCenterX()}px, ${mapperShape.getCenterY()}px) ` + style.transform,
+                    transform: `translate(${mapperShape.getCenterX()}px, ${mapperShape.getCenterY()}px) rotate(${combinedRotation}deg) ` + style.transform,
                 };
 
                 return (
@@ -101,7 +114,7 @@ const BeatmathFrame = React.createClass({
             );
         }
     },
-    render: function() {
+    render() {
         const width = this.getParameterValue('width');
         const height = this.getParameterValue('height');
 
@@ -138,6 +151,7 @@ const BeatmathFrame = React.createClass({
                     <g style={style}>
                         {this._renderDefs()}
                         {this._renderChildFrames()}
+                        {this._renderMasks()}
                     </g>
                 </svg>
             </div>

@@ -7,18 +7,18 @@ const {lerp, posMod, modAndShiftToHalf} = require('js/core/utils/math');
 const {CELL_SIZE, ENABLE_HUE, MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
 
 class Influence {
-    constructor({beatmathParameters, latticeParameters, startRow, startCol}) {
+    constructor({beatmathParameters, pieceParameters, startRow, startCol}) {
         this._beatmathParameters = beatmathParameters;
-        this._latticeParameters = latticeParameters;
+        this._pieceParameters = pieceParameters;
 
         this._colParameter = new MovingLinearParameter({
-            range: [new NegatedParameter(latticeParameters.numColumns), latticeParameters.numColumns],
+            range: [new NegatedParameter(pieceParameters.numColumns), pieceParameters.numColumns],
             variance: 0.25,
             startLerp: startCol,
         });
 
         this._rowParameter = new MovingLinearParameter({
-            range: [new NegatedParameter(latticeParameters.numRows), latticeParameters.numRows],
+            range: [new NegatedParameter(pieceParameters.numRows), pieceParameters.numRows],
             variance: 0.25,
             startLerp: startRow,
         });
@@ -47,8 +47,8 @@ class Influence {
         return this._mainParameter;
     }
     mix(pixelState, row, col) {
-        let mixCoefficient = this._latticeParameters.mixCoefficient.getValue();
-        let distanceCoefficient = this._latticeParameters.distanceCoefficient.getValue();
+        let mixCoefficient = this._pieceParameters.mixCoefficient.getValue();
+        let distanceCoefficient = this._pieceParameters.distanceCoefficient.getValue();
 
         let dx = this._colParameter.getValue() - col;
         let dy = this._rowParameter.getValue() - row;
@@ -92,8 +92,10 @@ class Influence {
 class SizeInfluence extends Influence {
     constructor(params) {
         super(params);
+        const min = params.min || 1;
+        const max = params.max || MAX_SIZE;
         this._mainParameter = new MovingLinearParameter({
-            range: [1, MAX_SIZE],
+            range: [min, max],
             variance: 0.25,
             start: params.startValue,
         });
