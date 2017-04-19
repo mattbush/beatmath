@@ -10,7 +10,7 @@ class LatticeParameters extends PieceParameters {
             mixCoefficient: {
                 type: LogarithmicParameter,
                 range: [1 / 3, 3],
-                start: 0.9,
+                start: 1,
                 listenToLaunchpadKnob: [1, 0],
                 listenToMixtrackKnob: MixtrackKnobs.L_BASS,
                 monitorName: 'Mix Coeff',
@@ -18,15 +18,15 @@ class LatticeParameters extends PieceParameters {
             distanceCoefficient: {
                 type: LogarithmicParameter,
                 range: [1 / 3, 3],
-                start: 0.6,
+                start: 1,
                 listenToLaunchpadKnob: [1, 1],
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,
                 monitorName: 'Distance Coeff',
             },
-            ...P.NumColumns({start: 16, max: 24}),
-            ...P.NumRows({start: 10, max: 15}),
+            ...P.NumColumns({start: 12, max: 24}),
+            ...P.NumRows({start: 12, max: 15}),
             ...P.CustomToggle({name: 'oscillate', button: 1}),
-            ...P.TriangularGridPercent({inputPosition: [0, 0], start: 1}),
+            ...P.TriangularGridPercent({inputPosition: [0, 0]}),
             latency: {
                 type: ManualParameter,
                 start: 0,

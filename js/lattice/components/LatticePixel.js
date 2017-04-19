@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const React = require('react');
 const tinycolor = require('tinycolor2');
-const FloraPixel = require('js/lattice/components/FloraPixel');
+const BeatmathPixel = require('js/core/components/BeatmathPixel');
 const {runAtTimestamp} = require('js/core/utils/time');
 const {lerp} = require('js/core/utils/math');
 
@@ -45,8 +45,6 @@ const LatticePixel = React.createClass({
             rotation: 0,
             rowComputed: lerp(this.props.row, rowTriangular, triangularGridPercent),
             colComputed: lerp(this.props.col, colTriangular, triangularGridPercent),
-            aperture: 64,
-            rotundity: 64,
         };
     },
     _update: function() {
@@ -104,7 +102,7 @@ const LatticePixel = React.createClass({
 
         return (
             <g style={style}>
-                <FloraPixel color={fill} aperture={Math.round(this.state.aperture)} rotundity={Math.round(this.state.rotundity)} />
+                <BeatmathPixel color={fill} />
             </g>
         );
     },
