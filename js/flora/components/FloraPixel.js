@@ -3,7 +3,7 @@ const React = require('react');
 const tinycolor = require('tinycolor2');
 const FloraInnerPixel = require('js/flora/components/FloraInnerPixel');
 const {runAtTimestamp} = require('js/core/utils/time');
-const {lerp} = require('js/core/utils/math');
+const {lerp, modAndShiftToHalf} = require('js/core/utils/math');
 
 const CELL_SIZE = 1;
 
@@ -66,13 +66,16 @@ const FloraPixel = React.createClass({
         return influence.mix(this._nextState, this._row, this._col);
     },
     render: function() {
-        const rotation = Math.floor(this.state.rotation);
+        // round to the nearest 30 degrees
+        const rotation = this.state.rotation - modAndShiftToHalf(this.state.rotation, 30);
         const x = this.props.col * CELL_SIZE;
         const y = this.props.row * CELL_SIZE;
         const fill = this.state.color;
+        const transitionTime = this.context.beatmathParameters.tempo.getPeriod() / 3;
 
         const style = {
             transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${this.state.size / 2})`,
+            transition: `transform ${transitionTime}ms ease`,
         };
 
         return (
