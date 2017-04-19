@@ -1,7 +1,7 @@
-const {MovingLinearParameter, MovingColorParameter} = require('js/core/parameters/Parameter');
+const {MovingLinearParameter} = require('js/core/parameters/Parameter');
 // const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
-const tinycolor = require('tinycolor2');
+const P = require('js/core/parameters/P');
 
 class SnowstormParameters extends PieceParameters {
     constructor(mixboard, beatmathParameters, which) {
@@ -92,13 +92,7 @@ class SnowstormParameters extends PieceParameters {
                 autoupdateEveryNBeats: 4,
                 autoupdateOnCue: true,
             },
-            baseColor: {
-                type: MovingColorParameter,
-                start: tinycolor('#3ff'),
-                max: 7,
-                variance: 3,
-                autoupdate: 2000,
-            },
+            ...P.BaseColor(),
         };
     }
 }

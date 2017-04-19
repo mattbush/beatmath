@@ -1,11 +1,12 @@
 const _ = require('lodash');
-const {MovingLinearParameter, LogarithmicParameter, LinearParameter, HoldButtonParameter, MovingColorParameter, ToggleParameter} = require('js/core/parameters/Parameter');
+const {MovingLinearParameter, LogarithmicParameter, HoldButtonParameter} = require('js/core/parameters/Parameter');
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const tinycolor = require('tinycolor2');
 const {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const {arclerp} = require('js/core/utils/math');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
+const P = require('js/core/parameters/P');
 const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
 const updateHue = require('js/core/outputs/updateHue');
 const {NUM_LIGHTS} = require('js/hue_constants');
@@ -35,13 +36,7 @@ class WallTreesParameters extends PieceParameters {
     }
     _declareParameters() {
         return {
-            baseColor: {
-                type: MovingColorParameter,
-                start: tinycolor('#5ff'),
-                max: 5,
-                variance: 1,
-                autoupdate: 1000,
-            },
+            ...P.BaseColor(),
             periodTicks: {type: LogarithmicParameter,
                 range: [2, 16],
                 start: 2,
@@ -49,49 +44,10 @@ class WallTreesParameters extends PieceParameters {
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
                 monitorName: 'Period Ticks',
             },
-            columnColorShift: {
-                type: MovingLinearParameter,
-                range: [-45, 45],
-                start: 0,
-                incrementAmount: 2.5,
-                monitorName: 'Column Color Shift',
-                listenToLaunchpadKnob: [0, 0],
-                listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_DELETE, MixtrackButtons.L_HOT_CUE_1],
-                variance: 5,
-                autoupdateEveryNBeats: 8,
-                autoupdateOnCue: true,
-                canSmoothUpdate: true,
-            },
-            rowColorShift: {
-                type: MovingLinearParameter,
-                range: [-45, 45],
-                start: 0,
-                incrementAmount: 2.5,
-                monitorName: 'Row Color Shift',
-                listenToLaunchpadKnob: [0, 1],
-                listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_HOT_CUE_2, MixtrackButtons.L_HOT_CUE_3],
-                variance: 5,
-                autoupdateEveryNBeats: 8,
-                autoupdateOnCue: true,
-                canSmoothUpdate: true,
-            },
-            trailPercent: {
-                type: LinearParameter,
-                range: [0, 1],
-                start: 0.5, buildupStart: 0,
-                incrementAmount: 0.05,
-                monitorName: 'Trail %',
-                listenToLaunchpadKnob: [2, 2],
-                listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_MANUAL, MixtrackButtons.L_LOOP_IN],
-            },
-            revTrailPercent: {
-                type: LinearParameter,
-                range: [0, 1],
-                start: 0,
-                incrementAmount: 0.05,
-                monitorName: 'Rev Trail %',
-                listenToLaunchpadKnob: [1, 2],
-            },
+            ...P.ColumnColorShift({range: 45}),
+            ...P.RowColorShift({range: 45}),
+            ...P.CustomPercent({name: 'trailPercent', start: 0.5, inputPosition: [2, 2]}),
+            ...P.CustomPercent({name: 'revTrailPercent', start: 0, inputPosition: [1, 2]}),
             staggerAmount: {
                 type: MovingLinearParameter,
                 range: [-8, 8],
@@ -104,19 +60,8 @@ class WallTreesParameters extends PieceParameters {
                 autoupdateOnCue: true,
                 canSmoothUpdate: true,
             },
-            mirrorStagger: {
-                type: ToggleParameter,
-                start: false,
-                listenToLaunchpadButton: 1,
-                listenToMixtrackButton: MixtrackButtons.L_EFFECT,
-                monitorName: 'Mirror Stagger?',
-            },
-            roundStagger: {
-                type: ToggleParameter,
-                start: true,
-                listenToLaunchpadButton: 0,
-                monitorName: 'Round Stagger?',
-            },
+            ...P.CustomToggle({name: 'mirrorStagger', button: 1}),
+            ...P.CustomToggle({name: 'roundStagger', button: 0, start: true}),
             riseDirection: {
                 type: MovingLinearParameter,
                 range: [-1, 1],
