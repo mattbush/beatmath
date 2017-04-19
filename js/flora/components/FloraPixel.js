@@ -5,20 +5,9 @@ const FloraInnerPixel = require('js/flora/components/FloraInnerPixel');
 const {runAtTimestamp} = require('js/core/utils/time');
 const {lerp} = require('js/core/utils/math');
 
-const {CELL_SIZE} = require('js/lattice/parameters/LatticeConstants');
-
-const SQRT_3_OVER_2 = Math.sqrt(3) / 2;
-const SQRT_SQRT_3_OVER_2 = Math.sqrt(SQRT_3_OVER_2);
+const CELL_SIZE = 1;
 
 const gray = tinycolor('#909090');
-
-const calculateRowTriangular = function(row) {
-    return row * SQRT_SQRT_3_OVER_2;
-};
-const calculateColTriangular = function(row, col) {
-    const val = (row % 2) ? (col + 0.25) : (col - 0.25);
-    return val / SQRT_SQRT_3_OVER_2;
-};
 
 const FloraPixel = React.createClass({
     contextTypes: {
@@ -33,18 +22,13 @@ const FloraPixel = React.createClass({
         runAtTimestamp(this._update, tempo.getNextTick() + refreshOffset);
     },
     getInitialState: function() {
-        const rowTriangular = calculateRowTriangular(this.props.row, this.props.col);
-        const colTriangular = calculateColTriangular(this.props.row, this.props.col);
-        const triangularGridPercent = this.context.floraParameters.triangularGridPercent.getValue();
+        this._row = this.props.row * 1; // TODO: lower this once influences can roam
+        this._col = this.props.col * 1;
+
         return {
-            rowTriangular,
-            colTriangular,
-            triangularGridPercent,
             color: gray,
             size: CELL_SIZE * 0.4,
             rotation: 0,
-            rowComputed: lerp(this.props.row, rowTriangular, triangularGridPercent),
-            colComputed: lerp(this.props.col, colTriangular, triangularGridPercent),
             aperture: 64,
             rotundity: 64,
         };
@@ -54,7 +38,6 @@ const FloraPixel = React.createClass({
             return;
         }
         const tempo = this.context.beatmathParameters.tempo;
-        const triangularGridPercent = this.context.floraParameters.triangularGridPercent.getValue();
 
         let refreshOffset = this._getRefreshOffset();
         if (tempo.getNumTicks() % 2 &&
@@ -67,11 +50,6 @@ const FloraPixel = React.createClass({
         }
 
         this._nextState = _.clone(this.state);
-        if (triangularGridPercent !== this.state.triangularGridPercent) {
-            this._nextState.triangularGridPercent = triangularGridPercent;
-            this._nextState.rowComputed = lerp(this.props.row, this.state.rowTriangular, triangularGridPercent);
-            this._nextState.colComputed = lerp(this.props.col, this.state.colTriangular, triangularGridPercent);
-        }
 
         _.each(this.context.influences, this._mixInfluenceIntoNextState);
         const wavePercent = this.context.floraParameters.wavePercent.getValue();
@@ -82,20 +60,15 @@ const FloraPixel = React.createClass({
         this.setState(this._nextState);
     },
     _getRefreshOffset: function() {
-        // just use one or the other, rather than a mix, to take advantage of the cache
-        const useTriangularGrid = this.context.floraParameters.triangularGridPercent.getValue() >= 0.5;
-        return this.context.refreshTimer.getRefreshOffset(
-            useTriangularGrid ? this.state.rowTriangular : this.props.row,
-            useTriangularGrid ? this.state.colTriangular : this.props.col,
-        );
+        return this.context.refreshTimer.getRefreshOffset(this._row, this._col);
     },
     _mixInfluenceIntoNextState: function(influence) {
-        return influence.mix(this._nextState, this.state.rowComputed, this.state.colComputed);
+        return influence.mix(this._nextState, this._row, this._col);
     },
     render: function() {
         const rotation = Math.floor(this.state.rotation);
-        const x = this.state.colComputed * CELL_SIZE;
-        const y = this.state.rowComputed * CELL_SIZE;
+        const x = this.props.col * CELL_SIZE;
+        const y = this.props.row * CELL_SIZE;
         const fill = this.state.color;
 
         const style = {

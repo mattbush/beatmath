@@ -7,10 +7,12 @@ const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const LatticeRefreshTimer = require('js/lattice/state/LatticeRefreshTimer');
 
-const {MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
-
 const tinycolor = require('tinycolor2');
 const {ColorInfluence, RotationInfluence, SizeInfluence, ApertureInfluence, RotundityInfluence} = require('js/lattice/state/Influence');
+
+const Y_AXIS_SCALE = Math.sqrt(3);
+const WALLOW_OFFSET_SCALE = 2;
+const wallowHexGrid = require('js/wallow/WallowHexGrid');
 
 const FloraGrid = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -42,8 +44,8 @@ const FloraGrid = React.createClass({
             new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: tinycolor('#0f0'), lightNumber: 1}),
             new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.8, startValue: tinycolor('#00f'), lightNumber: 2}),
 
-            new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
-            new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
+            new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, min: 0.2, max: 1, startValue: 0.5}),
+            new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, min: 0.2, max: 1, startValue: 0.5}),
 
             new ApertureInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, startValue: 32}),
             new ApertureInfluence({beatmathParameters, pieceParameters, startCol: 0.1, startRow: 0.1, startValue: 96}),
@@ -69,15 +71,22 @@ const FloraGrid = React.createClass({
         const children = [];
         const numRows = this.getParameterValue('numRows');
         const numColumns = this.getParameterValue('numColumns');
-        for (let row = -numRows; row <= numRows; row++) {
+        for (let row = 0; row <= numRows; row++) {
             for (let col = -numColumns; col <= numColumns; col++) {
-                children.push(<FloraPixel row={row} col={col} key={row + '|' + col} />);
+                const wallowCell = wallowHexGrid[row][col + 7];
+                if (wallowCell) {
+                    const [xOffsetFromWallow, yOffsetFromWallow] = wallowCell.offsets;
+                    const colAdjusted = (col * 2) + (row % 2 ? 0.5 : -0.5) + xOffsetFromWallow * WALLOW_OFFSET_SCALE;
+                    const rowAdjusted = (row - 3) * Y_AXIS_SCALE + yOffsetFromWallow * WALLOW_OFFSET_SCALE;
+
+                    children.push(<FloraPixel row={rowAdjusted} col={colAdjusted} key={row + '|' + col} />);
+                }
             }
         }
 
         return (
             <BeatmathFrame>
-                <g>
+                <g transform="scale(38) translate(0, -1.78)">
                     {children}
                     {this.getParameterValue('showInfluences') && <g>
                         {_.map(this.state.influences, (influence, index) =>
