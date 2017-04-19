@@ -3,6 +3,7 @@ const MapperShape = require('js/mapper/parameters/MapperShape');
 const {Parameter, LinearParameter} = require('js/core/parameters/Parameter');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
+const {posMod} = require('js/core/utils/math');
 
 const MOVE_SHAPE_POLLING_RATE = 33;
 
@@ -12,6 +13,8 @@ class MapperParameters extends PieceParameters {
         let numShapes = existingMapping ? existingMapping.length : 1;
 
         super(mixboard, beatmathParameters, {numShapes});
+
+        this._cursorIndex = 0;
 
         this._verticesPressed = {};
         this._directionsPressed = {};
@@ -27,6 +30,7 @@ class MapperParameters extends PieceParameters {
         }
 
         this.numShapes.addListener(this._onNumShapesChange.bind(this));
+        this.currentShapeIndex.addListener(this._onCurrentShapeIndexChange.bind(this));
 
         mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[4], this._onDirectionButtonPressed.bind(this, 'up'));
         mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[3], this._onDirectionButtonPressed.bind(this, 'left'));
@@ -38,9 +42,22 @@ class MapperParameters extends PieceParameters {
         mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_CONTROL[4], 0x12);
         mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_CONTROL[5], 0x12);
 
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[3], this._onCursorShiftButtonPressed.bind(this, -1));
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[5], this._onCursorShiftButtonPressed.bind(this, 1));
+        mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_FOCUS[3], 0x13);
+        mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_FOCUS[5], 0x13);
+
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[0], this._onNumPointsButtonPressed.bind(this, -1));
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[1], this._onNumPointsButtonPressed.bind(this, 1));
+        mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_FOCUS[0], 0x01);
+        mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_FOCUS[1], 0x10);
+
+        mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_FOCUS[2], this._onToggleIsMaskPressed.bind(this));
+        mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_FOCUS[2], 0x11);
+
         const lightValues = [0x03, 0x22, 0x30];
         _.times(3, column => {
-            mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[column], this._onVertexButtonPressed.bind(this, column));
+            mixboard.addLaunchpadButtonListener(LaunchpadButtons.TRACK_CONTROL[column], this._onVertexButtonPressed.bind(this, column - 1));
             mixboard.setLaunchpadLightValue(LaunchpadButtons.TRACK_CONTROL[column], lightValues[column]);
         });
 
@@ -68,6 +85,30 @@ class MapperParameters extends PieceParameters {
             },
         };
     }
+    _onNumPointsButtonPressed(delta, value) {
+        const currentShape = this.getCurrentShape();
+        if (value && currentShape) {
+            if (delta === 1) {
+                currentShape.addPoint();
+            } else if (delta === -1) {
+                currentShape.removePoint();
+            }
+            this._onMappingChanged();
+        }
+    }
+    _onToggleIsMaskPressed(value) {
+        const currentShape = this.getCurrentShape();
+        if (value && currentShape) {
+            currentShape.toggleIsMask();
+            this._onMappingChanged();
+        }
+    }
+    _onCursorShiftButtonPressed(delta, value) {
+        if (value) {
+            this._cursorIndex += delta;
+            this.mapping._updateListeners();
+        }
+    }
     _onDirectionButtonPressed(direction, value) {
         if (value) {
             this._directionsPressed[direction] = true;
@@ -87,28 +128,35 @@ class MapperParameters extends PieceParameters {
         if (!currentShape) {
             return;
         }
-        if (_.size(this._verticesPressed) * _.size(this._directionsPressed) === 0) {
+        const numPoints = currentShape.getNumPoints();
+        const numVerticesPressed = _.size(this._verticesPressed);
+        if (numVerticesPressed * _.size(this._directionsPressed) === 0) {
             return;
         }
-        _.each(this._verticesPressed, (ignore, vertex) => {
+
+        const verticesToMove = numVerticesPressed === 3 ? _.range(numPoints) : _.keys(this._verticesPressed);
+
+        for (const vertex of verticesToMove) {
+            const actualVertexIndex = posMod(Number(vertex) + this._cursorIndex, numPoints);
+
             _.each(this._directionsPressed, (ignore2, direction) => {
                 switch (direction) {
                     case 'up':
-                        currentShape.moveVertex(vertex, 0, -1);
+                        currentShape.moveVertex(actualVertexIndex, 0, -1);
                         break;
                     case 'down':
-                        currentShape.moveVertex(vertex, 0, 1);
+                        currentShape.moveVertex(actualVertexIndex, 0, 1);
                         break;
                     case 'left':
-                        currentShape.moveVertex(vertex, -1, 0);
+                        currentShape.moveVertex(actualVertexIndex, -1, 0);
                         break;
                     case 'right':
-                        currentShape.moveVertex(vertex, 1, 0);
+                        currentShape.moveVertex(actualVertexIndex, 1, 0);
                         break;
                     default:
                 }
             });
-        });
+        }
         this._onMappingChanged();
     }
     getCurrentShape() {
@@ -120,8 +168,14 @@ class MapperParameters extends PieceParameters {
             return null;
         }
     }
+    getCursorIndex() {
+        return this._cursorIndex;
+    }
     mapShapes(fn) {
         return this._shapes.map(fn);
+    }
+    _onCurrentShapeIndexChange() {
+        this._cursorIndex = 0;
     }
     _onNumShapesChange() {
         const numShapes = this.numShapes.getValue();
@@ -133,6 +187,7 @@ class MapperParameters extends PieceParameters {
         for (let i = this._shapes.length; i > numShapes; i--) {
             this._shapes.pop();
         }
+        this._cursorIndex = 0;
 
         this._onMappingChanged();
     }

@@ -29,6 +29,14 @@
     line-height: 36px;
 }
 
+input[type=text] {
+    border: none;
+    font-family: "Lato", "Helvetica";
+    font-size: 24px;
+    background: #222;
+    color: #fff;
+}
+
 .monitorStatus {
     border-radius: 10px;
     border: 1px solid transparent;
