@@ -26,7 +26,7 @@ class LatticeParameters extends PieceParameters {
             ...P.NumColumns({start: 16, max: 24}),
             ...P.NumRows({start: 10, max: 15}),
             ...P.CustomToggle({name: 'oscillate', button: 1}),
-            ...P.TriangularGridPercent({inputPosition: [0, 0], start: 1}), // TODO
+            ...P.TriangularGridPercent({inputPosition: [0, 0], start: 1}),
             latency: {
                 type: ManualParameter,
                 start: 0,
