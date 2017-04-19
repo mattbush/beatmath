@@ -112,6 +112,48 @@ class SizeInfluence extends Influence {
     }
 }
 
+class ApertureInfluence extends Influence {
+    constructor(params) {
+        super(params);
+        this._mainParameter = new MovingLinearParameter({
+            range: [0, 127],
+            variance: 1.25,
+            start: params.startValue,
+        });
+    }
+    _mixByParameterType(pixelParameter, mixAmount) {
+        const influenceParameter = this._mainParameter.getValue();
+        return lerp(pixelParameter, influenceParameter, mixAmount);
+    }
+    getSize() {
+        return this._mainParameter.getValue();
+    }
+    _getPixelStateKey() {
+        return 'aperture';
+    }
+}
+
+class RotundityInfluence extends Influence {
+    constructor(params) {
+        super(params);
+        this._mainParameter = new MovingLinearParameter({
+            range: [0, 127],
+            variance: 1.25,
+            start: params.startValue,
+        });
+    }
+    _mixByParameterType(pixelParameter, mixAmount) {
+        const influenceParameter = this._mainParameter.getValue();
+        return lerp(pixelParameter, influenceParameter, mixAmount);
+    }
+    getSize() {
+        return this._mainParameter.getValue();
+    }
+    _getPixelStateKey() {
+        return 'rotundity';
+    }
+}
+
 class RotationInfluence extends Influence {
     constructor(params) {
         super(params);
@@ -163,4 +205,4 @@ class ColorInfluence extends Influence {
     }
 }
 
-module.exports = {ColorInfluence, RotationInfluence, SizeInfluence};
+module.exports = {ColorInfluence, RotationInfluence, SizeInfluence, ApertureInfluence, RotundityInfluence};
