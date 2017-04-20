@@ -160,6 +160,9 @@ const b9 = {color: '#990077', points: '-3,-1 -6,0 -3,1'};
 const b11 = {color: '#990077', points: '-3,1 -3,3 0,2'};
 
 const c0 = {color: '#666666', points: '0,2 3,1 3,-1 0,-2 -3,-1 -3,1'};
+const ca0 = {color: '#666666', points: '2,2 4,0 2,-2 -2,-2 -4,0 -2,2'};
+const ca12 = {color: '#666666', points: '2,2 4,0 -4,0 -2,2'};
+const ca6 = {color: '#666666', points: '4,0 2,-2 -2,-2 -4,0'};
 
 const cc2 = {color: '#999999', points: '1.5,1.5 3,1 3,0 0,0'};
 const cc4 = {color: '#999999', points: '3,0 3,-1 1.5,-1.5 0,0'};
@@ -230,6 +233,17 @@ const ff11 = {color: '#BB7733', points: '-6,2 0,4 -2,2'};
 const ff12 = {color: '#BB7733', points: '-2,2 0,4 2,2'};
 const ff1 = {color: '#BB7733', points: '2,2 0,4 6,2'};
 
+const ef2a = {color: '#CC9911', points: '4,0 0,0 2,2'};
+const ef6a = {color: '#CC9911', points: '2,-2 0,0 -2,-2'};
+const ef10a = {color: '#CC9911', points: '-2,2 0,0 -4,0'};
+const ff4a = {color: '#CC9911', points: '4,0 0,0 2,-2'};
+const ff8a = {color: '#CC9911', points: '-2,-2 0,0 -4,0'};
+const ff12a = {color: '#CC9911', points: '-2,2 0,0 2,2'};
+
+const e2b = {color: '#CC9911', points: '0,4 6,2 6,-2 4,0 0,0 2,2'};
+const e6b = {color: '#CC9911', points: '6,-2 0,-4 -6,-2 -2,-2 0,0 2,-2'};
+const e10b = {color: '#CC9911', points: '0,4 -6,2 -6,-2 -4,0 0,0 -2,2'};
+
 const g12 = {color: '#669988', points: '0,4 6,2 3,1 0,2 -3,1 -6,2'};
 const g4 = {color: '#669988', points: '3,1 6,2 6,-2 0,-4 0,-2 3,-1'};
 const g8 = {color: '#669988', points: '-3,1 -3,-1 0,-2 0,-4 -6,-2 -6,2'};
@@ -266,6 +280,27 @@ const icca10 = {color: '#AAAAAA', points: '-3,3 -6,0 -6,2'};
 const iccb2 = {color: '#AAAAAA', points: '3,3 6,0 3,-1 3,0 0,0 1.5,1.5 0,2'};
 const iccb6 = {color: '#AAAAAA', points: '-1.5,-1.5 0,0 1.5,-1.5 3,-1 3,-3 -3,-3 -3,-1'};
 const iccb10 = {color: '#AAAAAA', points: '-3,3 0,2 -1.5,1.5 0,0 -3,0 -3,-1 -6,0'};
+
+const isec2 = {color: '#AAAAAA', points: '3,3 6,2 6,0 0,0'};
+const isec6 = {color: '#AAAAAA', points: '3,-3 0,-4 -3,-3 0,0'};
+const isec10 = {color: '#AAAAAA', points: '-3,3 -6,2 -6,0 0,0'};
+
+const iarr4 = {color: '#CCBB77', points: '3,-3 3,-1 6,0 0,0'};
+const iarr8 = {color: '#CCBB77', points: '-3,-3 -3,-1 -6,0 0,0'};
+const iarr12 = {color: '#CCBB77', points: '3,3 0,2 -3,3 0,0'};
+
+const iarr130 = {color: '#DDCC88', points: '3,3 3,1 0,0'};
+const iarr230 = {color: '#DDCC88', points: '3,1 6,0 0,0'};
+const iarr330 = {color: '#DDCC88', points: '3,-1 6,0 0,0'};
+const iarr430 = {color: '#DDCC88', points: '3,-3 3,-1 0,0'};
+const iarr530 = {color: '#DDCC88', points: '3,-3 0,-2 0,0'};
+const iarr630 = {color: '#DDCC88', points: '0,-2 -3,-3 0,0'};
+const iarr730 = {color: '#DDCC88', points: '-3,-3 -3,-1 0,0'};
+const iarr830 = {color: '#DDCC88', points: '-3,-1 -6,0 0,0'};
+const iarr930 = {color: '#DDCC88', points: '-3,1 -6,0 0,0'};
+const iarr1030 = {color: '#DDCC88', points: '-3,3 -3,1 0,0'};
+const iarr1130 = {color: '#DDCC88', points: '0,2 -3,3 0,0'};
+const iarr1230 = {color: '#DDCC88', points: '3,3 0,2 0,0'};
 
 // const cc2 = {color: '#999999', points: '1.5,1.5 3,1 3,0 0,0'};
 // const cc6 = {color: '#999999', points: '1.5,-1.5 0,-2 -1.5,-1.5 0,0'};
@@ -433,8 +468,8 @@ const hexGridShapes = [
     10: [e2, e6, e10, j4, j8, j12, z4, x7, y7], 11: [e2, e6, e10, j4, j8, j12, cc2, cc4, cc6, cc8, cc10, cc12], 12: [x0, y0, z1, i2, i6, i10, cc2, cc4, cc6, cc8, cc10, cc12], 13: [x0, y0, z1, icc2, icc6, icc10, cc4, cc8, cc12], 14: [x0, y0, z1, icca2, icca6, icca10, iccb2, iccb6, iccb10, cc4, cc8, cc12], 15: [/* x0, y0, z1 */]},
 
     {/**/0: [e2, ea2, e6, ea6, w9, w11], 1: [f4, fa4, w7, w9, w11, w1], 2: [f4, fa4, f8, fa8, w11, w1], 3: [f4, f8, f1, f11, ah3, ah9], 4: [f4, f8, f12, a3],
-        5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a3], 6: [ef1, ef2, ef3, ef5, ef6, ef7, ef9, ef10, ef11], 7: [ef1and2, ef3, ef5, ef6, ef7, ef9, ef10and11], 8: [ef1and2, ef3, ef430, ef530, ef6, ef7, ef9, ef10and11], 9: [ef1and2, ef3, ef5, ef6, ef630, ef730, ef9, ef10and11],
-        10: [e2, e6, e10], 11: [], 12: [x0, y0, z1], 13: [x0, y0, z1], 14: []},
+        5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a3], 6: [ef1, ef2, ef3, ef5, ef6, ef7, ef9, ef10, ef11, a1], 7: [ef1and2, ef3, ef5, ef6, ef7, ef9, ef10and11, ag12, ag12a], 8: [ef1and2, ef3, ef430, ef530, ef6, ef7, ef9, ef10and11, ff4, ff8, ag12, ca6], 9: [ef1and2, ef3, ef5, ef6, ef630, ef730, ef9, ef10and11, ff4, ff8, ff12, ca0],
+        10: [e2, e6, e10, ff4, ff8, ff12, ca0], 11: [ff4, ff8, ff12, ff4a, ff8a, ff12a, e2b, e6b, e10b], 12: [x0, y0, z1, isec2, isec6, isec10, iarr4, iarr8, iarr12], 13: [x0, y0, z1, isec2, isec6, isec10, iarr330, iarr430, iarr730, iarr830, iarr1130, iarr1230], 14: [x1, x0, y1, y0, z1, z0, iarr130, iarr230, iarr330, iarr430, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230]},
 
     {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [], 13: [], 14: [], 15: []},
 ];
