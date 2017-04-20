@@ -148,7 +148,9 @@ const ag7 = {color: '#BB00DD', points: '0,-4 -4,0 -6,-2'};
 const ag12 = {color: '#BB00DD', points: '0,4 4,0 -4,0'};
 const ag12a = {color: '#BB00DD', points: '4,0 6,-2 -6,-2 -4,0'};
 const ag3 = {color: '#BB00DD', points: '0,4 6,-2 0,-2'};
-const ag9 = {color: '#BB00DD', points: '0,-4 -6,2 0,2'};
+const ag9 = {color: '#BB00DD', points: '0,4 -6,-2 0,-2'};
+const ah3 = {color: '#BB00DD', points: '0,-4 6,2 0,2'};
+const ah9 = {color: '#BB00DD', points: '0,-4 -6,2 0,2'};
 
 const b1 = {color: '#990077', points: '0,2 3,3 3,1'};
 const b3 = {color: '#990077', points: '3,1 6,0 3,-1'};
@@ -200,9 +202,23 @@ const fa4 = {color: '#884810', points: '6,2 0,0 0,-4'};
 const fa8 = {color: '#884810', points: '0,-4 0,0 -6,2'};
 const fa12 = {color: '#884810', points: '-6,2 0,0 6,2'};
 
+const ef1 = {color: '#BB7733', points: '2,2 6,2 0,4'};
+const ef2 = {color: '#BB7733', points: '4,0 6,2 2,2'};
+const ef3 = {color: '#BB7733', points: '6,-2 6,2 4,0'};
 const ef5 = {color: '#BB7733', points: '6,-2 0,-4 2,-2'};
 const ef6 = {color: '#BB7733', points: '2,-2 0,-4 -2,-2'};
 const ef7 = {color: '#BB7733', points: '-2,-2 0,-4 -6,-2'};
+const ef9 = {color: '#BB7733', points: '-4,0 -6,2 -6,-2'};
+const ef10 = {color: '#BB7733', points: '-2,2 -6,2 -4,0'};
+const ef11 = {color: '#BB7733', points: '0,4 -6,2 -2,2'};
+
+const ef1and2 = {color: '#887733', points: '6,2 0,4 4,0'};
+const ef10and11 = {color: '#887733', points: '-6,2 0,4 -4,0'};
+
+const ef430 = {color: '#EE7733', points: '6,-2 3,-3 2,-2'};
+const ef530 = {color: '#EE7733', points: '3,-3 0,-4 2,-2'};
+const ef630 = {color: '#EE7733', points: '-2,-2 0,-4 -3,-3'};
+const ef730 = {color: '#EE7733', points: '-2,-2 -3,-3 -6,-2'};
 
 const ff3 = {color: '#BB7733', points: '6,2 6,-2 4,0'};
 const ff4 = {color: '#BB7733', points: '4,0 6,-2 2,-2'};
@@ -412,11 +428,13 @@ const hexGridShapes = [
          5: [qd1, qd3, qd5, qd7, qd9, qd11, qd0, qd2, qd6, qd10], 6: [qe1, qe3, qe5, qe7, qe9, qe11, qe0, qe2, qe6, qe10], 7: [qf0, qf2, qf6, qf10], 8: [e1, e3, e5, e7, e9, e11, l4, l8, l12], 9: [e1, e3, e5, e7, e9, e11, j4, j8, j12, z4, x7, y7],
          10: [g12, g4, g8, z4, x7, y7], 11: [z1, z2, z3, z4, x8, x7, y7, y9, x0, x9, y8, y0], 12: [v4x, v8x, v12, x0, x9, y8, y0, z1], 13: [v4, v8, v12, x0, y0, z1], 14: [u4, u8, u12, x1, x0, y1, y0, z1, z0]},
 
-    {0: [/* e2, e6, e10, ea2, ea6, ea10 */], 1: [w1, w3, e6, e10, ea6, ea10], 2: [w1, w3, e6, ea6, w9, w11], 3: [f1, f3, f5, f7, f9, f11, l2, l6, l10], 4: [f1, f3, f5, f7, f9, f11, a3],
-    5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a2, a6, a10, a5], 6: [e2, e5, f8, f11, ag3, ag9], 7: [e2, ef5, ef6, ef7, e10, a1], 8: [e2, ef5, ef6, ef7, e10, ag12, ag12a], 9: [e2, e10, ag12, ag5, ag6, ag7],
+    {0: [e2, e6, e10, ea2, ea6, ea10], 1: [w1, w3, e6, e10, ea6, ea10], 2: [w1, w3, e6, ea6, w9, w11], 3: [f1, f3, f5, f7, f9, f11, l2, l6, l10], 4: [f1, f3, f5, f7, f9, f11, a3],
+    5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a2, a6, a10, a5], 6: [e2, e5, f8, f11, ag3, ah9], 7: [e2, ef5, ef6, ef7, e10, a1], 8: [e2, ef5, ef6, ef7, e10, ag12, ag12a], 9: [e2, e10, ag12, ag5, ag6, ag7],
     10: [e2, e6, e10, j4, j8, j12, z4, x7, y7], 11: [e2, e6, e10, j4, j8, j12, cc2, cc4, cc6, cc8, cc10, cc12], 12: [x0, y0, z1, i2, i6, i10, cc2, cc4, cc6, cc8, cc10, cc12], 13: [x0, y0, z1, icc2, icc6, icc10, cc4, cc8, cc12], 14: [x0, y0, z1, icca2, icca6, icca10, iccb2, iccb6, iccb10, cc4, cc8, cc12], 15: [/* x0, y0, z1 */]},
 
-    {/**/0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [], 13: [], 14: []},
+    {/**/0: [e2, ea2, e6, ea6, w9, w11], 1: [f4, fa4, w7, w9, w11, w1], 2: [f4, fa4, f8, fa8, w11, w1], 3: [f4, f8, f1, f11, ah3, ah9], 4: [f4, f8, f12, a3],
+        5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a3], 6: [ef1, ef2, ef3, ef5, ef6, ef7, ef9, ef10, ef11], 7: [ef1and2, ef3, ef5, ef6, ef7, ef9, ef10and11], 8: [ef1and2, ef3, ef430, ef530, ef6, ef7, ef9, ef10and11], 9: [ef1and2, ef3, ef5, ef6, ef630, ef730, ef9, ef10and11],
+        10: [e2, e6, e10], 11: [], 12: [x0, y0, z1], 13: [x0, y0, z1], 14: []},
 
     {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [], 13: [], 14: [], 15: []},
 ];
