@@ -20,8 +20,8 @@ const WallLatticePixel = React.createClass({
         if (this.props.polygon.center[0] === 0 && this.props.polygon.center[1] === 0) {
             dy = this.props.polygon.yMax;
         }
-        this._x = (this.props.tx + this.props.polygon.center[0] - 7) * 5;
-        this._y = (this.props.ty + this.props.polygon.center[1] + dy - 2) * 5;
+        this._x = (this.props.tx + this.props.polygon.center[0] - 7.5) * 5;
+        this._y = (this.props.ty + this.props.polygon.center[1] + dy - 2.6) * 5;
     },
     componentDidMount: function() {
         const tempo = this.context.beatmathParameters.tempo;
