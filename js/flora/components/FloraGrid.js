@@ -7,7 +7,7 @@ const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const LatticeRefreshTimer = require('js/lattice/state/LatticeRefreshTimer');
 
-const {MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
+const {MAX_SIZE, CELL_SIZE} = require('js/lattice/parameters/LatticeConstants');
 
 const tinycolor = require('tinycolor2');
 const {ColorInfluence, RotationInfluence, SizeInfluence, ApertureInfluence, RotundityInfluence} = require('js/lattice/state/Influence');
@@ -81,7 +81,7 @@ const FloraGrid = React.createClass({
                     {children}
                     {this.getParameterValue('showInfluences') && <g>
                         {_.map(this.state.influences, (influence, index) =>
-                            <InfluenceCircle influence={influence} key={index} />
+                            <InfluenceCircle influence={influence} key={index} cellSize={CELL_SIZE} />
                         )}
                     </g>}
                 </g>

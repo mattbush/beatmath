@@ -7,7 +7,7 @@ const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const LatticeRefreshTimer = require('js/lattice/state/LatticeRefreshTimer');
 
-const {MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
+const {CELL_SIZE, MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
 
 const tinycolor = require('tinycolor2');
 const {ColorInfluence, RotationInfluence, SizeInfluence} = require('js/lattice/state/Influence');
@@ -76,7 +76,7 @@ const LatticeGrid = React.createClass({
                     {children}
                     {this.getParameterValue('showInfluences') && <g>
                         {_.map(this.state.influences, (influence, index) =>
-                            <InfluenceCircle influence={influence} key={index} />
+                            <InfluenceCircle influence={influence} key={index} cellSize={CELL_SIZE} />
                         )}
                     </g>}
                 </g>

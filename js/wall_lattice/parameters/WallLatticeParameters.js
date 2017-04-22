@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const {Parameter, LinearParameter} = require('js/core/parameters/Parameter');
+const {Parameter, LinearParameter, NegatedParameter} = require('js/core/parameters/Parameter');
 const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
@@ -11,6 +11,12 @@ const tinycolor = require('tinycolor2');
 class WallLatticeParameters extends PieceParameters {
     constructor(...args) {
         super(...args);
+
+        this.influenceMinColumn = new NegatedParameter(this.numColumns);
+        this.influenceMaxColumn = this.numColumns;
+        this.influenceMinRow = new NegatedParameter(this.numRows);
+        this.influenceMaxRow = this.numRows;
+
         if (ENABLE_HUE) {
             _.times(NUM_LIGHTS, lightNumber => {
                 updateHue(lightNumber, tinycolor('#000'));
