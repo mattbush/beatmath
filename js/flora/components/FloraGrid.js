@@ -6,6 +6,7 @@ const FloraPixel = require('js/flora/components/FloraPixel');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const LatticeRefreshTimer = require('js/lattice/state/LatticeRefreshTimer');
+const {posMod} = require('js/core/utils/math');
 
 const tinycolor = require('tinycolor2');
 const {ColorInfluence, RotationInfluence, SizeInfluence, ApertureInfluence, RotundityInfluence} = require('js/lattice/state/Influence');
@@ -71,12 +72,15 @@ const FloraGrid = React.createClass({
         const children = [];
         const numRows = this.getParameterValue('numRows');
         const numColumns = this.getParameterValue('numColumns');
-        for (let row = 0; row <= numRows; row++) {
+        for (let row = 0; row < numRows; row++) {
             for (let col = -numColumns; col <= numColumns; col++) {
-                const wallowCell = wallowHexGrid[row][col + 7];
+                if (posMod(col, 2) === posMod(row, 2)) {
+                    continue;
+                }
+                const wallowCell = wallowHexGrid[row][Math.floor(col / 2) + 7];
                 if (wallowCell) {
                     const [xOffsetFromWallow, yOffsetFromWallow] = wallowCell.offsets;
-                    const colAdjusted = (col * 2) + (row % 2 ? 0.5 : -0.5) + xOffsetFromWallow * WALLOW_OFFSET_SCALE;
+                    const colAdjusted = col + xOffsetFromWallow * WALLOW_OFFSET_SCALE;
                     const rowAdjusted = (row - 3) * Y_AXIS_SCALE + yOffsetFromWallow * WALLOW_OFFSET_SCALE;
 
                     children.push(<FloraPixel row={rowAdjusted} col={colAdjusted} key={row + '|' + col} />);
