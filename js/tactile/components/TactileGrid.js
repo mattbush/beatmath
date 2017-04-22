@@ -72,7 +72,7 @@ const TactileGrid = React.createClass({
                     {children}
                     {this.getParameterValue('showInfluences') && <g>
                         {_.map(this.state.influences, (influence, index) =>
-                            <InfluenceCircle influence={influence} key={index} />
+                            <InfluenceCircle influence={influence} key={index} cellSize={CELL_SIZE} />
                         )}
                     </g>}
                 </g>

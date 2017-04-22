@@ -1,8 +1,16 @@
-const {ManualParameter, LinearParameter} = require('js/core/parameters/Parameter');
+const {ManualParameter, LinearParameter, NegatedParameter} = require('js/core/parameters/Parameter');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
 
 class TactileParameters extends PieceParameters {
+    constructor(mixboard, beatmathParameters, opts) {
+        super(mixboard, beatmathParameters, opts);
+
+        this.influenceMinColumn = new NegatedParameter(this.numColumns);
+        this.influenceMaxColumn = this.numColumns;
+        this.influenceMinRow = new NegatedParameter(this.numRows);
+        this.influenceMaxRow = this.numRows;
+    }
     _declareParameters() {
         return {
             ...P.CustomToggle({name: 'showInfluences', button: 0}),

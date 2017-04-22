@@ -1,9 +1,17 @@
-const {ManualParameter, LogarithmicParameter} = require('js/core/parameters/Parameter');
+const {ManualParameter, LogarithmicParameter, NegatedParameter} = require('js/core/parameters/Parameter');
 const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
 
 class FloraParameters extends PieceParameters {
+    constructor(mixboard, beatmathParameters, opts) {
+        super(mixboard, beatmathParameters, opts);
+
+        this.influenceMinColumn = new NegatedParameter(this.numColumns);
+        this.influenceMaxColumn = this.numColumns;
+        this.influenceMinRow = new NegatedParameter(this.numRows);
+        this.influenceMaxRow = this.numRows;
+    }
     _declareParameters() {
         return {
             ...P.CustomToggle({name: 'showInfluences', button: 0}),

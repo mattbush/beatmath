@@ -12,13 +12,13 @@ class Influence {
         this._pieceParameters = pieceParameters;
 
         this._colParameter = new MovingLinearParameter({
-            range: [new NegatedParameter(pieceParameters.numColumns), pieceParameters.numColumns],
+            range: [pieceParameters.influenceMinColumn, pieceParameters.influenceMaxColumn],
             variance: 0.25,
             startLerp: startCol,
         });
 
         this._rowParameter = new MovingLinearParameter({
-            range: [new NegatedParameter(pieceParameters.numRows), pieceParameters.numRows],
+            range: [pieceParameters.influenceMinRow, pieceParameters.influenceMaxRow],
             variance: 0.25,
             startLerp: startRow,
         });
@@ -126,7 +126,7 @@ class ApertureInfluence extends Influence {
         return lerp(pixelParameter, influenceParameter, mixAmount);
     }
     getSize() {
-        return this._mainParameter.getValue();
+        return this._mainParameter.getValue() / 10;
     }
     _getPixelStateKey() {
         return 'aperture';
@@ -147,7 +147,7 @@ class RotundityInfluence extends Influence {
         return lerp(pixelParameter, influenceParameter, mixAmount);
     }
     getSize() {
-        return this._mainParameter.getValue();
+        return this._mainParameter.getValue() / 10;
     }
     _getPixelStateKey() {
         return 'rotundity';
