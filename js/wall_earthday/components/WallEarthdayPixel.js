@@ -3,6 +3,7 @@ const React = require('react');
 const tinycolor = require('tinycolor2');
 const {runAtTimestamp} = require('js/core/utils/time');
 const earth = require('js/wall_earthday/science/earth');
+const {dist, RAD_2_DEG} = require('js/core/utils/math');
 
 const gray = tinycolor('#909090');
 
@@ -60,7 +61,24 @@ const WallEarthdayPixel = React.createClass({
     _getLatLong() {
         const tempo = this.context.beatmathParameters.tempo;
         const earthRotationDeg = tempo.getNumTicksFractional() * DEGREES_PER_TICK;
-        return [20 - this._y * 3, this._x * 3 + earthRotationDeg];
+
+        const SPHERICAL_PROJECTION = true;
+
+        if (SPHERICAL_PROJECTION) {
+            const R = 20;
+            const p = dist(this._x, this._y);
+            if (p >= R) {
+                return [];
+            }
+            const c = Math.asin(p / R);
+            const lat = Math.asin(-this._y * Math.sin(c) / p) * RAD_2_DEG;
+            const long = Math.atan2(this._x * Math.sin(c), p * Math.cos(c)) * RAD_2_DEG;
+            return [lat, long + earthRotationDeg];
+        } else {
+            const NON_SPHERICAL_SCALE = 4;
+            const TILT_DEGREES = 20;
+            return [-this._y * NON_SPHERICAL_SCALE + TILT_DEGREES, this._x * NON_SPHERICAL_SCALE + earthRotationDeg];
+        }
     },
     render: function() {
         const [lat, long] = this._getLatLong();

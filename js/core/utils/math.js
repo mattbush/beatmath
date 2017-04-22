@@ -99,6 +99,8 @@ const centerOfPoints = function(points) {
 };
 
 module.exports = {
+    DEG_2_RAD,
+    RAD_2_DEG,
     nextFloat,
     lerp,
     logerp,
