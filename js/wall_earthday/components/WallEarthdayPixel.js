@@ -5,6 +5,7 @@ const {runAtTimestamp} = require('js/core/utils/time');
 const earth = require('js/wall_earthday/science/earth');
 const {dist, RAD_2_DEG, DEG_2_RAD} = require('js/core/utils/math');
 const {sin, cos, asin, atan2} = Math;
+const mapColorString = require('js/core/utils/mapColorString');
 
 const gray = tinycolor('#909090');
 
@@ -97,8 +98,11 @@ const WallEarthdayPixel = React.createClass({
             transform: `translate(${x}px,${y}px) rotate3d(0,1,0,${rotation}deg)`,
             transition: `all ${transitionTimeMs}ms linear`,
         };
+
+        const fill = mapColorString(this.state.color);
+
         return (
-            <polygon className="mine" style={style} fill={this.state.color} points={this.props.polygon.pointsAroundCenter} />
+            <polygon className="mine" style={style} fill={fill} points={this.props.polygon.pointsAroundCenter} />
         );
     },
 });

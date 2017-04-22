@@ -3,6 +3,7 @@ const React = require('react');
 const tinycolor = require('tinycolor2');
 const {runAtTimestamp} = require('js/core/utils/time');
 const {logerp} = require('js/core/utils/math');
+const mapColorString = require('js/core/utils/mapColorString');
 
 const gray = tinycolor('#909090');
 
@@ -72,8 +73,11 @@ const WallLatticePixel = React.createClass({
             transform: `translate(${x}px,${y}px) rotate3d(${ax},${ay},0,${rotation}deg)`,
             transition: IS_NEGATED ? 'all 0.6s linear' : 'all 1.2s cubic-bezier(1,0,0,1)',
         };
+
+        const fill = mapColorString(this.state.color);
+
         return (
-            <polygon className="mine" style={style} fill={this.state.color} points={this.props.polygon.pointsAroundCenter} />
+            <polygon className="mine" style={style} fill={fill} points={this.props.polygon.pointsAroundCenter} />
         );
     },
 });
