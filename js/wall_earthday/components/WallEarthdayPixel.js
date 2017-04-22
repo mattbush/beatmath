@@ -7,7 +7,7 @@ const {dist, RAD_2_DEG} = require('js/core/utils/math');
 
 const gray = tinycolor('#909090');
 
-const DEGREES_PER_TICK = 10;
+const DEGREES_PER_TICK = 20;
 
 const WallEarthdayPixel = React.createClass({
     contextTypes: {
@@ -87,9 +87,10 @@ const WallEarthdayPixel = React.createClass({
         const rotation = isLand ? 0 : 90;
 
         const [x, y] = this.props.polygon.center;
+        const transitionTimeMs = 5000 / DEGREES_PER_TICK;
         const style = {
             transform: `translate(${x}px,${y}px) rotate3d(0,1,0,${rotation}deg)`,
-            transition: 'all 0.6s linear',
+            transition: `all ${transitionTimeMs}ms linear`,
         };
         return (
             <polygon className="mine" style={style} fill={this.state.color} points={this.props.polygon.pointsAroundCenter} />
