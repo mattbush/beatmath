@@ -3,6 +3,7 @@ const React = require('react');
 const tinycolor = require('tinycolor2');
 const {runAtTimestamp} = require('js/core/utils/time');
 const {logerp} = require('js/core/utils/math');
+const earth = require('js/wall_earthday/science/earth');
 
 const gray = tinycolor('#909090');
 
@@ -64,8 +65,14 @@ const WallEarthdayPixel = React.createClass({
         return influence.mix(this._nextState, this._y, this._x);
     },
     render: function() {
-        const isOdd = this.state.ticks % 2;
-        const rotation = IS_NEGATED ? (isOdd ? -90 : 90) : (isOdd ? 360 : 0);
+        // const isOdd = this.state.ticks % 2;
+        // const rotation = IS_NEGATED ? (isOdd ? -90 : 90) : (isOdd ? 360 : 0);
+        const tempo = this.context.beatmathParameters.tempo;
+        const earthRotationDeg = tempo.getNumTicksFractional() * 2;
+
+        const isLand = earth.isLatLongLand(20 - this._y * 3, this._x * 3 + earthRotationDeg);
+        const rotation = isLand ? 0 : 90;
+
         const [x, y] = this.props.polygon.center;
         const {x: ax, y: ay} = this.context.refreshTimer.getRefreshGradient(this._y, this._x);
         const style = {
