@@ -20,6 +20,7 @@ module.exports = {
         mapper: './js/mapper/mapper',
         mixboard_and_hue: './js/mixboard_and_hue/mixboard_and_hue',
         monitor: './js/core/outputs/monitor',
+        wall_earthday: './js/wall_earthday/wall_earthday',
         wall_lattice: './js/wall_lattice/wall_lattice',
         wall_snowstorm: './js/wall_snowstorm/wall_snowstorm',
         wall_trees: './js/wall_trees/wall_trees',
