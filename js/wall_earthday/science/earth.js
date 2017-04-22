@@ -379,14 +379,20 @@ const longToLongIndex = function(long) {
 };
 
 const isLatLongLand = function(lat, long) {
+    if (lat === undefined) {
+        return false;
+    }
     const latIndex = latToLatIndex(lat);
     const longIndex = longToLongIndex(long);
     return earthLines[latIndex][longIndex] === '#';
 };
 
-const MAX_DEGREES = 10;
+const MAX_DEGREES = 7.5;
 
 const getDLongForNextChange = function(lat, long) {
+    if (lat === undefined) {
+        return MAX_DEGREES * 2;
+    }
     const latIndex = latToLatIndex(lat);
     const longIndex = longToLongIndex(long);
     const latitudeLine = earthLines[latIndex];
