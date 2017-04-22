@@ -5,6 +5,8 @@ const FloraInnerPixel = require('js/flora/components/FloraInnerPixel');
 const {runAtTimestamp} = require('js/core/utils/time');
 const {lerp, modAndShiftToHalf} = require('js/core/utils/math');
 
+const {INFLUENCE_SCALE_FACTOR} = require('js/flora/parameters/FloraConstants');
+
 const CELL_SIZE = 1;
 
 const gray = tinycolor('#909090');
@@ -22,8 +24,8 @@ const FloraPixel = React.createClass({
         runAtTimestamp(this._update, tempo.getNextTick() + refreshOffset);
     },
     getInitialState: function() {
-        this._row = this.props.row * 1; // TODO: lower this once influences can roam
-        this._col = this.props.col * 1;
+        this._row = this.props.row * INFLUENCE_SCALE_FACTOR;
+        this._col = this.props.col * INFLUENCE_SCALE_FACTOR;
 
         return {
             color: gray,

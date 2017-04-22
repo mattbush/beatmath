@@ -1,16 +1,19 @@
-const {ManualParameter, LogarithmicParameter, NegatedParameter} = require('js/core/parameters/Parameter');
+const {ManualParameter, LogarithmicParameter, LambdaParameter} = require('js/core/parameters/Parameter');
 const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
+const {INFLUENCE_SCALE_FACTOR} = require('js/flora/parameters/FloraConstants');
+
+const Y_AXIS_SCALE = Math.sqrt(3);
 
 class FloraParameters extends PieceParameters {
     constructor(mixboard, beatmathParameters, opts) {
         super(mixboard, beatmathParameters, opts);
 
-        this.influenceMinColumn = new NegatedParameter(this.numColumns);
-        this.influenceMaxColumn = this.numColumns;
-        this.influenceMinRow = new NegatedParameter(this.numRows);
-        this.influenceMaxRow = this.numRows;
+        this.influenceMinColumn = new LambdaParameter(this.numColumns, x => x * -1 * INFLUENCE_SCALE_FACTOR);
+        this.influenceMaxColumn = new LambdaParameter(this.numColumns, x => x * INFLUENCE_SCALE_FACTOR);
+        this.influenceMinRow = new LambdaParameter(this.numRows, () => Y_AXIS_SCALE * -3 * INFLUENCE_SCALE_FACTOR);
+        this.influenceMaxRow = new LambdaParameter(this.numRows, x => Y_AXIS_SCALE * (-3.5 + x) * INFLUENCE_SCALE_FACTOR);
     }
     _declareParameters() {
         return {
@@ -26,7 +29,7 @@ class FloraParameters extends PieceParameters {
             distanceCoefficient: {
                 type: LogarithmicParameter,
                 range: [1 / 3, 3],
-                start: 0.6,
+                start: 1.2,
                 listenToLaunchpadKnob: [1, 1],
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,
                 monitorName: 'Distance Coeff',
