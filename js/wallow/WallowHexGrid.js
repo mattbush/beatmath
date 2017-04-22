@@ -87,6 +87,13 @@ const w4 = {color: '#00bb33', points: '6,2 6,-2 0,-4 0,0'};
 const w8 = {color: '#00bb33', points: '0,-4 -6,-2 -6,2 0,0'};
 const w12 = {color: '#00bb33', points: '-6,2 0,4 6,2 0,0'};
 
+const winn2 = {color: '#00bb33', points: '3,3 6,0 0,0'};
+const winn6 = {color: '#00bb33', points: '3,-3 -3,-3 0,0'};
+const winn10 = {color: '#00bb33', points: '-3,3 -6,0 0,0'};
+const winn4 = {color: '#00bb33', points: '3,-3 6,0 0,0'};
+const winn8 = {color: '#00bb33', points: '-3,-3 -6,0 0,0'};
+const winn12 = {color: '#00bb33', points: '-3,3 3,3 0,0'};
+
 // wa: variant of w with an inscribed small upward triangle
 const wa1 = {color: '#00aaaa', points: '0,4 6,2 1.5,0.5 0,2'};
 const wa3 = {color: '#00aaaa', points: '6,2 6,-2 3,-1, 1.5,0.5'};
@@ -128,6 +135,10 @@ const a5 = {color: '#770099', points: '0,2 3,-1 -3,-1'};
 const a3 = {color: '#550077', points: '0,-4 -6,2 6,2'};
 const a7 = {color: '#770099', points: '0,-2 -3,1 3,1'};
 
+const a3h1 = {color: '#770099', points: '-6,2 6,2 3,-1'};
+const a3h7 = {color: '#770099', points: '0,-4 -6,2 3,-1'};
+const a3x6 = {color: '#770099', points: '-6,2 6,2 2,-2 -2,-2'};
+
 const b55 = {color: '#9900BB', points: '0,-1 -1.5,0.5 1.5,0.5'};
 const a54 = {color: '#9900BB', points: '3,-1 0,-1 1.5,0.5'};
 const a58 = {color: '#9900BB', points: '-3,-1 0,-1 -1.5,0.5'};
@@ -163,6 +174,14 @@ const c0 = {color: '#666666', points: '0,2 3,1 3,-1 0,-2 -3,-1 -3,1'};
 const ca0 = {color: '#666666', points: '2,2 4,0 2,-2 -2,-2 -4,0 -2,2'};
 const ca12 = {color: '#666666', points: '2,2 4,0 -4,0 -2,2'};
 const ca6 = {color: '#666666', points: '4,0 2,-2 -2,-2 -4,0'};
+
+const cz0 = {color: '#666666', points: '0,4 6,2 6,-2 0,-4 -6,-2 -6,2'};
+const czh0 = {color: '#666666', points: '6,2 6,-2 -6,-2 -6,2'};
+const czh6 = {color: '#666666', points: '6,0 6,-2 -6,-2 -6,0'};
+const czh12 = {color: '#666666', points: '6,2 6,0 -6,0 -6,2'};
+
+const cah6 = {color: '#666666', points: '3,-3 6,0 -6,0 -3,-3'};
+const cah12 = {color: '#666666', points: '3,3 6,0 -6,0 -3,3'};
 
 const cc2 = {color: '#999999', points: '1.5,1.5 3,1 3,0 0,0'};
 const cc4 = {color: '#999999', points: '3,0 3,-1 1.5,-1.5 0,0'};
@@ -218,10 +237,21 @@ const ef11 = {color: '#BB7733', points: '0,4 -6,2 -2,2'};
 const ef1and2 = {color: '#887733', points: '6,2 0,4 4,0'};
 const ef10and11 = {color: '#887733', points: '-6,2 0,4 -4,0'};
 
+const ef1230 = {color: '#EE7733', points: '3,3 0,4 2,2'};
+const ef130 = {color: '#EE7733', points: '6,2 3,3 2,2'};
+const ef230 = {color: '#EE7733', points: '6,0 6,2 4,0'};
+const ef330 = {color: '#EE7733', points: '6,0 6,-2 4,0'};
 const ef430 = {color: '#EE7733', points: '6,-2 3,-3 2,-2'};
 const ef530 = {color: '#EE7733', points: '3,-3 0,-4 2,-2'};
 const ef630 = {color: '#EE7733', points: '-2,-2 0,-4 -3,-3'};
 const ef730 = {color: '#EE7733', points: '-2,-2 -3,-3 -6,-2'};
+const ef830 = {color: '#EE7733', points: '-6,0 -6,-2 -4,0'};
+const ef930 = {color: '#EE7733', points: '-6,0 -6,2 -4,0'};
+const ef1030 = {color: '#EE7733', points: '-2,2 -3,3 -6,2'};
+const ef1130 = {color: '#EE7733', points: '-2,2 0,4 -3,3'};
+
+const ef2and230 = {color: '#EE7733', points: '4,0 6,0 6,2 2,2'};
+const ef930and10 = {color: '#EE7733', points: '-4,0 -6,0 -6,2 -2,2'};
 
 const ff3 = {color: '#BB7733', points: '6,2 6,-2 4,0'};
 const ff4 = {color: '#BB7733', points: '4,0 6,-2 2,-2'};
@@ -232,6 +262,9 @@ const ff9 = {color: '#BB7733', points: '-4,0 -6,-2 -6,2'};
 const ff11 = {color: '#BB7733', points: '-6,2 0,4 -2,2'};
 const ff12 = {color: '#BB7733', points: '-2,2 0,4 2,2'};
 const ff1 = {color: '#BB7733', points: '2,2 0,4 6,2'};
+
+const ff3and4 = {color: '#BB7733', points: '6,2 6,-2 2,-2'};
+const ff8and9 = {color: '#BB7733', points: '-2,-2 -6,-2 -6,2'};
 
 const ef2a = {color: '#CC9911', points: '4,0 0,0 2,2'};
 const ef6a = {color: '#CC9911', points: '2,-2 0,0 -2,-2'};
@@ -276,6 +309,16 @@ const icc10 = {color: '#AAAAAA', points: '-3,3 0,2 -1.5,1.5 0,0 -3,0 -3,-1 -6,0 
 const icca2 = {color: '#AAAAAA', points: '3,3 6,2 6,0'};
 const icca6 = {color: '#AAAAAA', points: '3,-3 0,-4 -3,-3'};
 const icca10 = {color: '#AAAAAA', points: '-3,3 -6,0 -6,2'};
+const icca4 = {color: '#AAAAAA', points: '3,-3 6,-2 6,0'};
+const icca8 = {color: '#AAAAAA', points: '-3,-3 -6,-0 -6,-2'};
+const icca12 = {color: '#AAAAAA', points: '3,3 0,4 -3,3'};
+
+const iccaa2 = {color: '#AAAAAA', points: '3,3 3,1 6,0'};
+const iccaa6 = {color: '#AAAAAA', points: '3,-3 0,-2 -3,-3'};
+const iccaa10 = {color: '#AAAAAA', points: '-3,3 -6,0 -3,1'};
+const iccaa4 = {color: '#AAAAAA', points: '3,-3 3,-1 6,0'};
+const iccaa8 = {color: '#AAAAAA', points: '-3,-3 -6,-0 -3,-1'};
+const iccaa12 = {color: '#AAAAAA', points: '3,3 0,2 -3,3'};
 
 const iccb2 = {color: '#AAAAAA', points: '3,3 6,0 3,-1 3,0 0,0 1.5,1.5 0,2'};
 const iccb6 = {color: '#AAAAAA', points: '-1.5,-1.5 0,0 1.5,-1.5 3,-1 3,-3 -3,-3 -3,-1'};
@@ -479,7 +522,10 @@ const hexGridShapes = [
         5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a3], 6: [ef1, ef2, ef3, ef5, ef6, ef7, ef9, ef10, ef11, a1], 7: [ef1and2, ef3, ef5, ef6, ef7, ef9, ef10and11, ag12, ag12a], 8: [ef1and2, ef3, ef430, ef530, ef6, ef7, ef9, ef10and11, ff4, ff8, ag12, ca6], 9: [ef1and2, ef3, ef5, ef6, ef630, ef730, ef9, ef10and11, ff4, ff8, ff12, ca0],
         10: [e2, e6, e10, ff4, ff8, ff12, ca0], 11: [ff4, ff8, ff12, ff4a, ff8a, ff12a, e2b, e6b, e10b], 12: [x0, y0, z1, isec2, isec6, isec10, iarr4, iarr8, iarr12], 13: [x0, y0, z1, isec2, isec6, isec10, iarr330, iarr430, iarr730, iarr830, iarr1130, iarr1230], 14: [x1, x0, y1, y0, z1, z0, iarr130, iarr230, iarr330, iarr430, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230]},
 
-    {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [], 13: [], 14: [], 15: []},
+    {0: [cz0], 1: [e2, ea2, w5, w7, e10, ea10], 2: [f4, fa4, w7, w9, f12, fa12], 3: [f4, fa4, f8, fa8, f12, fa12], 4: [f4, f8, f12, a3h1, a3h7],
+        5: [ef5, ef6, ef7, f12, ff3and4, ff8and9, a3x6], 6: [ef1, ef2, ef3, ff4, ef5, ef6, ef7, ff8, ef9, ef10, ef11, ff12, ca0], 7: [f12, e6, czh0], 8: [f12, e6, czh6, czh12], 9: [ef1230, ef130, ef2, ef230, ef330, ff4, ef430, ef530, ef6, ef630, ef730, ff8, ef830, ef930, ef10, ef1030, ef1130, ff12, ef2a, ef6a, ef10a, ff4a, ff8a, ff12a],
+        10: [ef330, e6, ef830, ef11, ff12, ef1, ag12a, ca12, ef2and230, ef930and10], 11: [icca2, icca4, icca6, icca8, icca10, icca12, cah6, cah12], 12: [icca2, icca4, icca6, icca8, icca10, icca12, winn2, winn4, winn6, winn8, winn10, winn12],
+        13: [icca2, icca4, icca6, icca8, icca10, icca12, iccaa4, iccaa8, iccaa12, iarr4, iarr8, iarr12, winn2, winn6, winn10], 14: [icca2, icca4, icca6, icca8, icca10, icca12, iccaa4, iccaa8, iccaa12, iarr330, iarr430, iarr730, iarr830, iarr1130, iarr1230, winn2, winn6, winn10], 15: [icca2, icca4, icca6, icca8, icca10, icca12, iccaa2, iccaa4, iccaa6, iccaa8, iccaa10, iccaa12, iarr130, iarr230, iarr330, iarr430, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230]},
 ];
 
 const hexGridOffsets = [
