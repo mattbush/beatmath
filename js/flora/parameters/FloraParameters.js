@@ -26,6 +26,8 @@ class FloraParameters extends PieceParameters {
             ...P.NumColumns({start: 14, max: 14}),
             ...P.NumRows({start: 5, max: 7}),
             ...P.CustomToggle({name: 'oscillate', button: 1}),
+            ...P.CustomToggle({name: 'showCenters', button: 2, start: true}),
+            ...P.CustomToggle({name: 'showEdges', button: 3, start: false}),
             latency: {
                 type: ManualParameter,
                 start: 0,

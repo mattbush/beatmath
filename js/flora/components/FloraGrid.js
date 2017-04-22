@@ -66,6 +66,8 @@ const FloraGrid = React.createClass({
             showInfluences: this.state.floraParameters.showInfluences,
             numRows: this.state.floraParameters.numRows,
             numColumns: this.state.floraParameters.numColumns,
+            showCenters: this.state.floraParameters.showCenters,
+            showEdges: this.state.floraParameters.showEdges,
         };
     },
     render: function() {
@@ -83,7 +85,26 @@ const FloraGrid = React.createClass({
                     const colAdjusted = col + xOffsetFromWallow * WALLOW_OFFSET_SCALE;
                     const rowAdjusted = (row - 3) * Y_AXIS_SCALE + yOffsetFromWallow * WALLOW_OFFSET_SCALE;
 
-                    children.push(<FloraPixel row={rowAdjusted} col={colAdjusted} key={row + '|' + col} />);
+                    if (this.getParameterValue('showCenters')) {
+                        children.push(<FloraPixel row={rowAdjusted} col={colAdjusted} key={row + '|' + col} />);
+                    }
+                    if (this.getParameterValue('showEdges')) {
+                        children.push(<FloraPixel row={rowAdjusted - (0.333 * Y_AXIS_SCALE)} col={colAdjusted - 1} key={row + '|' + col + 'w'} />);
+                        children.push(<FloraPixel row={rowAdjusted - (0.667 * Y_AXIS_SCALE)} col={colAdjusted} key={row + '|' + col + 'x'} />);
+
+                        if (row === numRows - 1) {
+                            children.push(<FloraPixel row={rowAdjusted + (0.333 * Y_AXIS_SCALE)} col={colAdjusted - 1} key={row + '|' + col + 'y'} />);
+                            children.push(<FloraPixel row={rowAdjusted + (0.667 * Y_AXIS_SCALE)} col={colAdjusted} key={row + '|' + col + 'z'} />);
+                        }
+
+                        if (col >= numColumns - 1) {
+                            children.push(<FloraPixel row={rowAdjusted - (0.333 * Y_AXIS_SCALE)} col={colAdjusted + 1} key={row + '|' + col + 'd'} />);
+                        }
+                        if (col === numColumns) {
+                            children.push(<FloraPixel row={rowAdjusted + (0.333 * Y_AXIS_SCALE)} col={colAdjusted + 1} key={row + '|' + col + 'e'} />);
+                        }
+                    }
+
                 }
             }
         }
