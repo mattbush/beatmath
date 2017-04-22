@@ -384,16 +384,19 @@ const isLatLongLand = function(lat, long) {
     return earthLines[latIndex][longIndex] === '#';
 };
 
+const MAX_DEGREES = 10;
+
 const getDLongForNextChange = function(lat, long) {
     const latIndex = latToLatIndex(lat);
     const longIndex = longToLongIndex(long);
     const latitudeLine = earthLines[latIndex];
     const current = latitudeLine[longIndex];
     let delta = 1;
-    while (delta <= 90) {
+    while (delta <= MAX_DEGREES * 2) {
         if (latitudeLine[posMod(longIndex + delta, 720)] !== current) {
             break;
         }
+        delta++;
     }
     return delta / 2;
 };

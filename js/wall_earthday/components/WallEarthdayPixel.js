@@ -2,12 +2,11 @@ const _ = require('lodash');
 const React = require('react');
 const tinycolor = require('tinycolor2');
 const {runAtTimestamp} = require('js/core/utils/time');
-const {logerp} = require('js/core/utils/math');
 const earth = require('js/wall_earthday/science/earth');
 
 const gray = tinycolor('#909090');
 
-const IS_NEGATED = true;
+const DEGREES_PER_TICK = 10;
 
 const WallEarthdayPixel = React.createClass({
     contextTypes: {
@@ -25,9 +24,7 @@ const WallEarthdayPixel = React.createClass({
         this._y = (this.props.ty + this.props.polygon.center[1] + dy - 2.6) * 5;
     },
     componentDidMount: function() {
-        const tempo = this.context.beatmathParameters.tempo;
-        const refreshOffset = this._getRefreshOffset();
-        runAtTimestamp(this._update, tempo.getNextTick() + refreshOffset);
+        this._scheduleNextUpdate();
     },
     getInitialState: function() {
         return {
@@ -35,49 +32,46 @@ const WallEarthdayPixel = React.createClass({
             ticks: 0,
         };
     },
+    _scheduleNextUpdate: function() {
+        const tempo = this.context.beatmathParameters.tempo;
+
+        const [lat, long] = this._getLatLong();
+        const earthRotationDegreesUntilNextChange = earth.getDLongForNextChange(lat, long);
+        const ticksUntilNextChange = earthRotationDegreesUntilNextChange / DEGREES_PER_TICK;
+        const timeUntilNextChange = ticksUntilNextChange * tempo.getPeriod();
+        runAtTimestamp(this._update, Date.now() + timeUntilNextChange);
+    },
     _update: function() {
         if (!this.isMounted()) {
             return;
         }
-        const tempo = this.context.beatmathParameters.tempo;
 
-        let refreshOffset = this._getRefreshOffset();
-        runAtTimestamp(this._update, tempo.getNextTick() + refreshOffset);
-        // if (Math.random() < 0.01) {
-        //     this.context.wallEarthdayParameters.latency.setValue((Date.now() - tempo.getNextTick()) / 1000);
-        // }
+        this._scheduleNextUpdate();
 
         this._nextState = _.clone(this.state);
         this._nextState.ticks++;
 
         _.each(this.context.influences, this._mixInfluenceIntoNextState);
-        const wavePercent = this.context.wallEarthdayParameters.wavePercent.getValue();
-        if (wavePercent) {
-            const sizeModFromOffset = Math.exp((tempo.getNumTicks() % 2) + (refreshOffset / tempo.getPeriod()) / 2);
-            this._nextState.color = this._nextState.color.spin(logerp(1, sizeModFromOffset, wavePercent));
-        }
         this.setState(this._nextState);
-    },
-    _getRefreshOffset: function() {
-        return this.context.refreshTimer.getRefreshOffset(this._y, this._x);
     },
     _mixInfluenceIntoNextState: function(influence) {
         return influence.mix(this._nextState, this._y, this._x);
     },
-    render: function() {
-        // const isOdd = this.state.ticks % 2;
-        // const rotation = IS_NEGATED ? (isOdd ? -90 : 90) : (isOdd ? 360 : 0);
+    _getLatLong() {
         const tempo = this.context.beatmathParameters.tempo;
-        const earthRotationDeg = tempo.getNumTicksFractional() * 2;
+        const earthRotationDeg = tempo.getNumTicksFractional() * DEGREES_PER_TICK;
+        return [20 - this._y * 3, this._x * 3 + earthRotationDeg];
+    },
+    render: function() {
+        const [lat, long] = this._getLatLong();
 
-        const isLand = earth.isLatLongLand(20 - this._y * 3, this._x * 3 + earthRotationDeg);
+        const isLand = earth.isLatLongLand(lat, long);
         const rotation = isLand ? 0 : 90;
 
         const [x, y] = this.props.polygon.center;
-        const {x: ax, y: ay} = this.context.refreshTimer.getRefreshGradient(this._y, this._x);
         const style = {
-            transform: `translate(${x}px,${y}px) rotate3d(${ax},${ay},0,${rotation}deg)`,
-            transition: IS_NEGATED ? 'all 0.6s linear' : 'all 1.2s cubic-bezier(1,0,0,1)',
+            transform: `translate(${x}px,${y}px) rotate3d(0,1,0,${rotation}deg)`,
+            transition: 'all 0.6s linear',
         };
         return (
             <polygon className="mine" style={style} fill={this.state.color} points={this.props.polygon.pointsAroundCenter} />
