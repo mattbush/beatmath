@@ -153,6 +153,18 @@ class NegatedParameter extends Parameter {
     }
 }
 
+class LambdaParameter extends Parameter {
+    constructor(parameter, lambda) {
+        super({start: undefined}); // unused
+        this._parameter = parameter;
+        this._lambda = lambda;
+        parameter.addListener(this._updateListeners.bind(this));
+    }
+    getValue() {
+        return this._lambda(this._parameter.getValue());
+    }
+}
+
 const wrapParam = function(value) {
     if (!(value instanceof Parameter)) {
         value = new Parameter({start: value});
@@ -720,6 +732,7 @@ class ManualParameter extends Parameter {
 module.exports = {
     Parameter,
     NegatedParameter,
+    LambdaParameter,
     AngleParameter,
     LinearParameter,
     LogarithmicParameter,
