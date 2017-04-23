@@ -59,6 +59,13 @@ class WallEarthdayParameters extends PieceParameters {
                 listenToLaunchpadFader: [7, {addButtonStatusLight: true}],
                 monitorName: 'Scale',
             },
+            tilt: {
+                type: LinearParameter,
+                range: [-90, 90],
+                start: 20,
+                listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
+                monitorName: 'Tilt',
+            },
         };
     }
 }

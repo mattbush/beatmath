@@ -379,7 +379,7 @@ const longToLongIndex = function(long) {
 };
 
 const isLatLongLand = function(lat, long) {
-    if (lat === undefined) {
+    if (lat === undefined || lat > 90 || lat < -90) {
         return false;
     }
     const latIndex = latToLatIndex(lat);

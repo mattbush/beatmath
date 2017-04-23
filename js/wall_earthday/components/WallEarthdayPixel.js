@@ -65,8 +65,8 @@ const WallEarthdayPixel = React.createClass({
         const tempo = this.context.beatmathParameters.tempo;
         const earthRotationDeg = tempo.getNumTicksFractional() * DEGREES_PER_TICK;
 
-        const TILT_DEGREES = 20;
         const scale = this.context.wallEarthdayParameters.scale.getValue();
+        const tilt = this.context.wallEarthdayParameters.tilt.getValue();
 
         if (this.context.wallEarthdayParameters.spherical.getValue()) {
             const x = this._x;
@@ -76,14 +76,14 @@ const WallEarthdayPixel = React.createClass({
             if (p >= R) {
                 return [];
             }
-            const lat0 = DEG_2_RAD * TILT_DEGREES;
+            const lat0 = DEG_2_RAD * tilt;
             const c = asin(p / R);
 
             const lat = asin(cos(c) * sin(lat0) + y * sin(c) * cos(lat0) / p) * RAD_2_DEG;
             const long = atan2(x * sin(c), p * cos(c) * cos(lat0) - y * sin(c) * sin(lat0)) * RAD_2_DEG + earthRotationDeg;
             return [lat, long];
         } else {
-            return [-this._y * scale + TILT_DEGREES, this._x * scale + earthRotationDeg];
+            return [-this._y * (25 / scale) + tilt, this._x * (25 / scale) + earthRotationDeg];
         }
     },
     render: function() {
