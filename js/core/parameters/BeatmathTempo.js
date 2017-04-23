@@ -121,8 +121,8 @@ class BeatmathTempo {
     getNumTicks() {
         return this._numTicks;
     }
-    getNumTicksFractional() {
-        return this._numTicks + (Date.now() - this._currentTick) / this._period;
+    getProgressTowardsNextTick() {
+        return (Date.now() - this._currentTick) / this._period;
     }
     _updateLights() {
         const lightToTurnOff = posMod(this._numTicks - 1, NUM_LIGHTS);

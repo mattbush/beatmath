@@ -9,7 +9,6 @@ const mapColorString = require('js/core/utils/mapColorString');
 
 const gray = tinycolor('#909090');
 
-const DEGREES_PER_TICK = 10;
 const PIXELS_PER_HEX_SCALE = 5;
 
 const WallEarthdayPixel = React.createClass({
@@ -41,7 +40,8 @@ const WallEarthdayPixel = React.createClass({
 
         const [lat, long] = this._getLatLong();
         const earthRotationDegreesUntilNextChange = earth.getDLongForNextChange(lat, long);
-        const ticksUntilNextChange = earthRotationDegreesUntilNextChange / DEGREES_PER_TICK;
+        const degreesPerTick = this.context.wallEarthdayParameters.rotationSpeed.getValue();
+        const ticksUntilNextChange = earthRotationDegreesUntilNextChange / degreesPerTick;
         const timeUntilNextChange = ticksUntilNextChange * tempo.getPeriod();
         runAtTimestamp(this._update, Date.now() + timeUntilNextChange);
     },
@@ -62,8 +62,7 @@ const WallEarthdayPixel = React.createClass({
         return influence.mix(this._nextState, this._y, this._x);
     },
     _getLatLong() {
-        const tempo = this.context.beatmathParameters.tempo;
-        const earthRotationDeg = tempo.getNumTicksFractional() * DEGREES_PER_TICK;
+        const earthRotationDeg = this.context.wallEarthdayParameters.getRotation();
 
         const scale = this.context.wallEarthdayParameters.scale.getValue();
         const tilt = this.context.wallEarthdayParameters.tilt.getValue();
@@ -93,7 +92,8 @@ const WallEarthdayPixel = React.createClass({
         const rotation = isLand ? 0 : 90;
 
         const [x, y] = this.props.polygon.center;
-        const transitionTimeMs = 2500 / DEGREES_PER_TICK;
+        const degreesPerTick = this.context.wallEarthdayParameters.rotationSpeed.getValue();
+        const transitionTimeMs = 2500 / degreesPerTick;
         const style = {
             transform: `translate(${x}px,${y}px) rotate3d(0,1,0,${rotation}deg)`,
             transition: `all ${transitionTimeMs}ms linear`,
