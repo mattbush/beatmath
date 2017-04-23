@@ -397,14 +397,14 @@ const getDLongForNextChange = function(lat, long) {
     const longIndex = longToLongIndex(long);
     const latitudeLine = earthLines[latIndex];
     const current = latitudeLine[longIndex];
-    let delta = 1;
-    while (delta <= MAX_DEGREES * 2) {
+    let delta = -1;
+    while (Math.abs(delta) <= MAX_DEGREES * 2) {
         if (latitudeLine[posMod(longIndex + delta, 720)] !== current) {
             break;
         }
-        delta++;
+        delta--;
     }
-    return delta / 2;
+    return Math.abs(delta / 2);
 };
 
 module.exports = {isLatLongLand, getDLongForNextChange};

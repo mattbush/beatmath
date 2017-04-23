@@ -79,10 +79,10 @@ const WallEarthdayPixel = React.createClass({
             const c = asin(p / R);
 
             const lat = asin(cos(c) * sin(lat0) + y * sin(c) * cos(lat0) / p) * RAD_2_DEG;
-            const long = atan2(x * sin(c), p * cos(c) * cos(lat0) - y * sin(c) * sin(lat0)) * RAD_2_DEG + earthRotationDeg;
+            const long = atan2(x * sin(c), p * cos(c) * cos(lat0) - y * sin(c) * sin(lat0)) * RAD_2_DEG - earthRotationDeg;
             return [lat, long];
         } else {
-            return [-this._y * (25 / scale) + tilt, this._x * (25 / scale) + earthRotationDeg];
+            return [-this._y * (25 / scale) + tilt, this._x * (25 / scale) - earthRotationDeg];
         }
     },
     render: function() {
