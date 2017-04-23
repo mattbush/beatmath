@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const {Parameter, LinearParameter, NegatedParameter} = require('js/core/parameters/Parameter');
+const {Parameter, LinearParameter, NegatedParameter, LogarithmicParameter} = require('js/core/parameters/Parameter');
 const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
@@ -49,9 +49,16 @@ class WallEarthdayParameters extends PieceParameters {
             },
             numRows: {
                 type: Parameter,
-                start: 8,
+                start: 12,
             },
-            ...P.CustomPercent({name: 'wavePercent', inputPosition: {fader: 5}}),
+            ...P.CustomToggle({name: 'spherical', button: 0}),
+            scale: {
+                type: LogarithmicParameter,
+                range: [1, 16],
+                start: 4,
+                listenToLaunchpadFader: [7, {addButtonStatusLight: true}],
+                monitorName: 'Scale',
+            },
         };
     }
 }

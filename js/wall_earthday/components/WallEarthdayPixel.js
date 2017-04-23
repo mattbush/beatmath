@@ -10,6 +10,7 @@ const mapColorString = require('js/core/utils/mapColorString');
 const gray = tinycolor('#909090');
 
 const DEGREES_PER_TICK = 20;
+const PIXELS_PER_HEX_SCALE = 5;
 
 const WallEarthdayPixel = React.createClass({
     contextTypes: {
@@ -23,8 +24,8 @@ const WallEarthdayPixel = React.createClass({
         if (this.props.polygon.center[0] === 0 && this.props.polygon.center[1] === 0) {
             dy = this.props.polygon.yMax;
         }
-        this._x = (this.props.tx + this.props.polygon.center[0] - 7.5) * 5;
-        this._y = (this.props.ty + this.props.polygon.center[1] + dy - 2.6) * 5;
+        this._x = (this.props.tx + this.props.polygon.center[0] - 7.5) * PIXELS_PER_HEX_SCALE;
+        this._y = (this.props.ty + this.props.polygon.center[1] + dy - 2.6) * PIXELS_PER_HEX_SCALE;
     },
     componentDidMount: function() {
         this._scheduleNextUpdate();
@@ -64,13 +65,13 @@ const WallEarthdayPixel = React.createClass({
         const tempo = this.context.beatmathParameters.tempo;
         const earthRotationDeg = tempo.getNumTicksFractional() * DEGREES_PER_TICK;
 
-        const SPHERICAL_PROJECTION = true;
         const TILT_DEGREES = 20;
+        const scale = this.context.wallEarthdayParameters.scale.getValue();
 
-        if (SPHERICAL_PROJECTION) {
+        if (this.context.wallEarthdayParameters.spherical.getValue()) {
             const x = this._x;
             const y = -this._y;
-            const R = 20;
+            const R = PIXELS_PER_HEX_SCALE * scale;
             const p = dist(x, y);
             if (p >= R) {
                 return [];
@@ -82,8 +83,7 @@ const WallEarthdayPixel = React.createClass({
             const long = atan2(x * sin(c), p * cos(c) * cos(lat0) - y * sin(c) * sin(lat0)) * RAD_2_DEG + earthRotationDeg;
             return [lat, long];
         } else {
-            const NON_SPHERICAL_SCALE = 4;
-            return [-this._y * NON_SPHERICAL_SCALE + TILT_DEGREES, this._x * NON_SPHERICAL_SCALE + earthRotationDeg];
+            return [-this._y * scale + TILT_DEGREES, this._x * scale + earthRotationDeg];
         }
     },
     render: function() {

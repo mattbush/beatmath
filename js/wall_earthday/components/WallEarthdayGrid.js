@@ -1,9 +1,33 @@
 const _ = require('lodash');
 const React = require('react');
-// const tinycolor = require('tinycolor2');
-
+const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const hexGrid = require('js/wallow/WallowHexGrid');
 const WallEarthdayHex = require('js/wall_earthday/components/WallEarthdayHex');
+
+const WallEarthdayOcean = React.createClass({
+    mixins: [ParameterBindingsMixin],
+    contextTypes: {
+        beatmathParameters: React.PropTypes.object,
+        wallEarthdayParameters: React.PropTypes.object,
+        influences: React.PropTypes.array,
+        refreshTimer: React.PropTypes.object,
+    },
+    getParameterBindings: function() {
+        return {
+            spherical: this.context.wallEarthdayParameters.spherical,
+            scale: this.context.wallEarthdayParameters.scale,
+        };
+    },
+    render() {
+        if (!this.getParameterValue('spherical')) {
+            return null;
+        }
+
+        return (
+            <circle fill="#028" cx="7.5" cy={1.5 * Math.sqrt(3)} r={this.getParameterValue('scale')} />
+        );
+    },
+});
 
 const WallEarthdayGrid = React.createClass({
     render: function() {
@@ -19,6 +43,7 @@ const WallEarthdayGrid = React.createClass({
 
         return (
             <g style={{transform: `scale(76) translate(${-(_.size(hexGrid[0]) - 1) / 2}px, ${-_.size(hexGrid) / 2}px)`}}>
+                <WallEarthdayOcean />
                 {componentGrid}
             </g>
         );
