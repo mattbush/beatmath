@@ -9,7 +9,7 @@ const mapColorString = require('js/core/utils/mapColorString');
 
 const gray = tinycolor('#909090');
 
-const DEGREES_PER_TICK = 20;
+const DEGREES_PER_TICK = 10;
 const PIXELS_PER_HEX_SCALE = 5;
 
 const WallEarthdayPixel = React.createClass({
@@ -93,7 +93,7 @@ const WallEarthdayPixel = React.createClass({
         const rotation = isLand ? 0 : 90;
 
         const [x, y] = this.props.polygon.center;
-        const transitionTimeMs = 5000 / DEGREES_PER_TICK;
+        const transitionTimeMs = 2500 / DEGREES_PER_TICK;
         const style = {
             transform: `translate(${x}px,${y}px) rotate3d(0,1,0,${rotation}deg)`,
             transition: `all ${transitionTimeMs}ms linear`,
