@@ -98,8 +98,10 @@ const FloraPixel = React.createClass({
         const y = this.state.rowComputed * CELL_SIZE;
         const fill = this.state.color;
 
+        const scale = this.state.size / 2;
+
         const style = {
-            transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${this.state.size / 2})`,
+            transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${scale})`,
         };
 
         return (
