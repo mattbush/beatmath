@@ -55,11 +55,11 @@ class WallEarthdayParameters extends PieceParameters {
                 type: Parameter,
                 start: 12,
             },
-            ...P.CustomToggle({name: 'spherical', button: 0}),
+            ...P.CustomToggle({name: 'spherical', button: 0, start: true}),
             scale: {
                 type: LogarithmicParameter,
                 range: [1, 16],
-                start: 4,
+                start: 3.1,
                 listenToLaunchpadFader: [7, {addButtonStatusLight: true}],
                 monitorName: 'Scale',
             },
