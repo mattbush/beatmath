@@ -30,7 +30,7 @@ const clamp = function(val, min, max) {
 
 const modAndShiftToHalf = function(dividend, divisor) {
     const mod = (dividend + divisor) % divisor;
-    return (mod > divisor / 2) ? (mod - divisor) : mod;
+    return (mod >= divisor / 2) ? (mod - divisor) : mod;
 };
 
 const modAndShiftToHalfZigzag = function(dividend, divisor) {
@@ -99,6 +99,8 @@ const centerOfPoints = function(points) {
 };
 
 module.exports = {
+    DEG_2_RAD,
+    RAD_2_DEG,
     nextFloat,
     lerp,
     logerp,
