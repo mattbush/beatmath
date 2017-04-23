@@ -17,11 +17,15 @@ class WallEarthdayParameters extends PieceParameters {
         this.influenceMinRow = new NegatedParameter(this.numRows);
         this.influenceMaxRow = this.numRows;
 
+        this._currentTickRotationAngle = 0;
+
         if (ENABLE_HUE) {
             _.times(NUM_LIGHTS, lightNumber => {
                 updateHue(lightNumber, tinycolor('#000'));
             });
         }
+
+        this._beatmathParameters.tempo.addListener(this._updateRotation.bind(this));
     }
     _declareParameters() {
         return {
@@ -66,7 +70,21 @@ class WallEarthdayParameters extends PieceParameters {
                 listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
                 monitorName: 'Tilt',
             },
+            rotationSpeed: {
+                type: LinearParameter,
+                range: [2, 45],
+                start: 10,
+                listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
+                monitorName: 'Rotation Speed',
+            },
         };
+    }
+    _updateRotation() {
+        this._currentTickRotationAngle += this.rotationSpeed.getValue();
+    }
+    getRotation() {
+        const progressTowardsNextTick = this._beatmathParameters.tempo.getProgressTowardsNextTick();
+        return this._currentTickRotationAngle + (this.rotationSpeed.getValue() * progressTowardsNextTick);
     }
 }
 
