@@ -75,10 +75,14 @@ const FloraPixel = React.createClass({
         const fill = this.state.color;
         const transitionTime = this.context.beatmathParameters.tempo.getPeriod() / 3;
 
+        const showCenters = this.context.floraParameters.showCenters.getValue();
+        const showEdges = this.context.floraParameters.showEdges.getValue();
+        const scaleMod = (showCenters && showEdges) ? 0.8 : showEdges ? 0.9 : 1.2;
+
         const scale = this.state.size / 2;
 
         const style = {
-            transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${scale})`,
+            transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${scale * scaleMod})`,
             transition: `transform ${transitionTime}ms ease`,
         };
 

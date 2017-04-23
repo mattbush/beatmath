@@ -29,7 +29,7 @@ class FloraParameters extends PieceParameters {
             distanceCoefficient: {
                 type: LogarithmicParameter,
                 range: [1 / 3, 3],
-                start: 1.2,
+                start: 1.5,
                 listenToLaunchpadKnob: [1, 1],
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,
                 monitorName: 'Distance Coeff',
