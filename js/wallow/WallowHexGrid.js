@@ -499,7 +499,7 @@ const tc11 = {color: '#11AA66', points: '0,2 -6,2 -1.5,0.5'};
 
 const hex15 = [icca2, icca4, icca6, icca8, icca10, icca12, iccaa2, iccaa4, iccaa6, iccaa8, iccaa10, iccaa12, iarr130, iarr230, iarr330, iarr430, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230];
 
-const get = index => (index >= 5 && index <= 11 ? hex15 : []);
+const get = index => (index >= 4 && index <= 11 ? hex15 : []);
 
 const hexGridShapes = [
     _.times(16, get),
