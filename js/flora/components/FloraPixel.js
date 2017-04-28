@@ -5,7 +5,7 @@ const FloraInnerPixel = require('js/flora/components/FloraInnerPixel');
 const {runAtTimestamp} = require('js/core/utils/time');
 const {lerp} = require('js/core/utils/math');
 
-const {CELL_SIZE} = require('js/lattice/parameters/LatticeConstants');
+const {CELL_SIZE} = require('js/flora/parameters/FloraConstants');
 
 const SQRT_3_OVER_2 = Math.sqrt(3) / 2;
 const SQRT_SQRT_3_OVER_2 = Math.sqrt(SQRT_3_OVER_2);

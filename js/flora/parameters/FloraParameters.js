@@ -31,8 +31,8 @@ class FloraParameters extends PieceParameters {
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,
                 monitorName: 'Distance Coeff',
             },
-            ...P.NumColumns({start: 16, max: 24}),
-            ...P.NumRows({start: 10, max: 15}),
+            ...P.NumColumns({start: 2, max: 24}),
+            ...P.NumRows({start: 2, max: 15}),
             ...P.CustomToggle({name: 'oscillate', button: 1}),
             ...P.TriangularGridPercent({inputPosition: [0, 0], start: 1}),
             latency: {

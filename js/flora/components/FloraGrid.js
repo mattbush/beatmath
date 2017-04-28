@@ -7,7 +7,7 @@ const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const LatticeRefreshTimer = require('js/lattice/state/LatticeRefreshTimer');
 
-const {MAX_SIZE, CELL_SIZE} = require('js/lattice/parameters/LatticeConstants');
+const {MAX_SIZE, CELL_SIZE} = require('js/flora/parameters/FloraConstants');
 
 const tinycolor = require('tinycolor2');
 const {ColorInfluence, RotationInfluence, SizeInfluence, ApertureInfluence, RotundityInfluence} = require('js/lattice/state/Influence');
@@ -69,8 +69,17 @@ const FloraGrid = React.createClass({
         const children = [];
         const numRows = this.getParameterValue('numRows');
         const numColumns = this.getParameterValue('numColumns');
+        const useTriangularGrid = this.state.floraParameters.triangularGridPercent.getValue() >= 0.5;
+
         for (let row = -numRows; row <= numRows; row++) {
-            for (let col = -numColumns; col <= numColumns; col++) {
+            let minColumn = -numColumns;
+            let maxColumn = numColumns;
+            if (useTriangularGrid) {
+                minColumn += Math.floor((Math.abs(row)) / 2);
+                maxColumn -= Math.floor((Math.abs(row) + 1) / 2);
+            }
+
+            for (let col = minColumn; col <= maxColumn; col++) {
                 children.push(<FloraPixel row={row} col={col} key={row + '|' + col} />);
             }
         }
