@@ -30,8 +30,8 @@ class TactileParameters extends PieceParameters {
                 listenToLaunchpadKnob: [1, 1],
                 monitorName: 'Distance Coeff',
             },
-            ...P.NumColumns({start: 17, max: 32}),
-            ...P.NumRows({start: 10, max: 32}),
+            ...P.NumColumns({start: 9, max: 50}),
+            ...P.NumRows({start: 2, max: 30}),
             ...P.CustomToggle({name: 'oscillate', button: 1}),
             ...P.TriangularGridPercent({inputPosition: [0, 0]}),
             flipDurationPercent: {

@@ -7,6 +7,7 @@ const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const LatticeRefreshTimer = require('js/lattice/state/LatticeRefreshTimer');
 const {CELL_SIZE} = require('js/tactile/parameters/TactileConstants');
+const getMercurialShape = require('js/tactile/tilings/MercurialTiling');
 
 const tinycolor = require('tinycolor2');
 const {ColorInfluence, SizeInfluence} = require('js/lattice/state/Influence');
@@ -62,7 +63,17 @@ const TactileGrid = React.createClass({
         const numColumns = this.getParameterValue('numColumns');
         for (let row = -numRows; row <= numRows; row++) {
             for (let col = -numColumns; col <= numColumns; col++) {
-                children.push(<TactilePixel row={row} col={col} key={row + '|' + col} />);
+                const shape = getMercurialShape(row, col);
+                if (shape) {
+                    children.push(
+                        <TactilePixel
+                            points={shape.pointsAroundCenterString}
+                            row={row + shape.center[1]}
+                            col={col + shape.center[0]}
+                            key={row + '|' + col}
+                        />
+                    );
+                }
             }
         }
 
