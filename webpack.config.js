@@ -3,6 +3,7 @@ module.exports = {
         anagrams: './js/anagrams/anagrams',
         blank: './js/core/blank_piece/blank_piece',
         bricks: './js/bricks/bricks',
+        earthday: './js/earthday/earthday',
         flora: './js/flora/flora',
         fronds: './js/fronds/fronds',
         honeycomb: './js/honeycomb/honeycomb',

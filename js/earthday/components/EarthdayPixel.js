@@ -11,10 +11,10 @@ const gray = tinycolor('#909090');
 
 const PIXELS_PER_HEX_SCALE = 5;
 
-const WallEarthdayPixel = React.createClass({
+const EarthdayPixel = React.createClass({
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
-        wallEarthdayParameters: React.PropTypes.object,
+        earthdayParameters: React.PropTypes.object,
         influences: React.PropTypes.array,
         refreshTimer: React.PropTypes.object,
     },
@@ -40,7 +40,7 @@ const WallEarthdayPixel = React.createClass({
 
         const [lat, long] = this._getLatLong();
         const earthRotationDegreesUntilNextChange = earth.getDLongForNextChange(lat, long);
-        const degreesPerTick = this.context.wallEarthdayParameters.rotationSpeed.getValue();
+        const degreesPerTick = this.context.earthdayParameters.rotationSpeed.getValue();
         const ticksUntilNextChange = earthRotationDegreesUntilNextChange / degreesPerTick;
         const timeUntilNextChange = ticksUntilNextChange * tempo.getPeriod();
         runAtTimestamp(this._update, Date.now() + timeUntilNextChange);
@@ -62,12 +62,12 @@ const WallEarthdayPixel = React.createClass({
         return influence.mix(this._nextState, this._y, this._x);
     },
     _getLatLong() {
-        const earthRotationDeg = this.context.wallEarthdayParameters.getRotation();
+        const earthRotationDeg = this.context.earthdayParameters.getRotation();
 
-        const scale = this.context.wallEarthdayParameters.scale.getValue();
-        const tilt = this.context.wallEarthdayParameters.tilt.getValue();
+        const scale = this.context.earthdayParameters.scale.getValue();
+        const tilt = this.context.earthdayParameters.tilt.getValue();
 
-        if (this.context.wallEarthdayParameters.spherical.getValue()) {
+        if (this.context.earthdayParameters.spherical.getValue()) {
             const x = this._x;
             const y = -this._y;
             const R = PIXELS_PER_HEX_SCALE * scale;
@@ -92,7 +92,7 @@ const WallEarthdayPixel = React.createClass({
         const rotation = isLand ? 0 : 90;
 
         const [x, y] = this.props.polygon.center;
-        const degreesPerTick = this.context.wallEarthdayParameters.rotationSpeed.getValue();
+        const degreesPerTick = this.context.earthdayParameters.rotationSpeed.getValue();
         const transitionTimeMs = 2500 / degreesPerTick;
         const style = {
             transform: `translate(${x}px,${y}px) rotate3d(0,1,0,${rotation}deg)`,
@@ -107,4 +107,4 @@ const WallEarthdayPixel = React.createClass({
     },
 });
 
-module.exports = WallEarthdayPixel;
+module.exports = EarthdayPixel;
