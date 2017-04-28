@@ -13,6 +13,14 @@ const mappingPaletteByPieceName = {
     // earthday palette (orange, greens)
     earthday: [35, 115, 100],
     wall_earthday: [35, 115, 100],
+
+    // just for mercury soul
+    // green, blue, purple
+    trees: [110, 170, 280, 220],
+    // orange, green
+    stopwatch: [25, 45, 110, 90],
+    // purple, pink, red, orange
+    tactile: [270, 300, 40, 10],
 };
 
 const MAPPING_PALETTE = mappingPaletteByPieceName[pieceName];

@@ -2,6 +2,7 @@ const _ = require('lodash');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const {lerp, clamp} = require('js/core/utils/math');
+const mapColorString = require('js/core/utils/mapColorString');
 
 const Tree = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -29,7 +30,7 @@ const Tree = React.createClass({
         return (
             <g>
                 {_.times(numRows, rowIndex => {
-                    const fill = treesParameters.getColorForIndexAndRow(this.props.index, rowIndex);
+                    const fill = mapColorString(treesParameters.getColorForIndexAndRow(this.props.index, rowIndex));
                     let columnWidth = baseColumnWidth;
                     if (polarGridAmount > 0) {
                         columnWidth = lerp(baseColumnWidth, baseColumnWidth * (rowIndex + 1) / numRows, polarGridAmount);
