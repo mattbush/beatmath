@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const {Parameter, LinearParameter, NegatedParameter, LogarithmicParameter} = require('js/core/parameters/Parameter');
+const {LinearParameter, NegatedParameter, LogarithmicParameter} = require('js/core/parameters/Parameter');
 const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
@@ -47,15 +47,10 @@ class EarthdayParameters extends PieceParameters {
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,
                 monitorName: 'Distance Coeff',
             },
-            numColumns: {
-                type: Parameter,
-                start: 38,
-            },
-            numRows: {
-                type: Parameter,
-                start: 12,
-            },
+            ...P.NumColumns({start: 18, max: 32}),
+            ...P.NumRows({start: 9, max: 32}),
             ...P.CustomToggle({name: 'spherical', button: 0}),
+            ...P.TriangularGridPercent({inputPosition: [0, 0]}),
             scale: {
                 type: LogarithmicParameter,
                 range: [1, 16],

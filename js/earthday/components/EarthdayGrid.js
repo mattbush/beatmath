@@ -1,8 +1,9 @@
-const _ = require('lodash');
+// const _ = require('lodash');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
-const hexGrid = require('js/wallow/WallowHexGrid');
-const EarthdayHex = require('js/earthday/components/EarthdayHex');
+const EarthdayPixel = require('js/earthday/components/EarthdayPixel');
+
+const {CELL_SIZE} = require('js/earthday/parameters/EarthdayConstants');
 
 const EarthdayOcean = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -24,27 +25,39 @@ const EarthdayOcean = React.createClass({
         }
 
         return (
-            <circle fill="#028" cx="7.5" cy={1.5 * Math.sqrt(3)} r={this.getParameterValue('scale')} />
+            <circle fill="#028" cx="0" cy="0" r={this.getParameterValue('scale') * CELL_SIZE} />
         );
     },
 });
 
 const EarthdayGrid = React.createClass({
+    mixins: [ParameterBindingsMixin],
+    contextTypes: {
+        beatmathParameters: React.PropTypes.object,
+        earthdayParameters: React.PropTypes.object,
+        influences: React.PropTypes.array,
+        refreshTimer: React.PropTypes.object,
+    },
+    getParameterBindings: function() {
+        return {
+            numRows: this.context.earthdayParameters.numRows,
+            numColumns: this.context.earthdayParameters.numColumns,
+        };
+    },
     render: function() {
-        const componentGrid = _.map(hexGrid, (hexes, row) => {
-            return _.map(hexes, (hex, column) => {
-                if (row % 2 && column === _.size(hexGrid[0]) - 1) {
-                    return null;
-                }
-
-                return <EarthdayHex row={row} column={column} />;
-            });
-        });
+        const children = [];
+        const numRows = this.getParameterValue('numRows');
+        const numColumns = this.getParameterValue('numColumns');
+        for (let row = -numRows; row <= numRows; row++) {
+            for (let column = -numColumns; column <= numColumns; column++) {
+                children.push(<EarthdayPixel row={row} col={column} key={row + '|' + column} />);
+            }
+        }
 
         return (
-            <g style={{transform: `scale(76) translate(${-(_.size(hexGrid[0]) - 1) / 2}px, ${-_.size(hexGrid) / 2}px)`}}>
+            <g>
                 <EarthdayOcean />
-                {componentGrid}
+                {children}
             </g>
         );
     },
