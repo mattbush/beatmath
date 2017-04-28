@@ -4,7 +4,6 @@ const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const WallEarthdayGrid = require('js/wall_earthday/components/WallEarthdayGrid');
 const tinycolor = require('tinycolor2');
 const {ColorInfluence} = require('js/lattice/state/Influence');
-const LatticeRefreshTimer = require('js/lattice/state/LatticeRefreshTimer');
 
 const WallEarthdayContainer = React.createClass({
     childContextTypes: {
@@ -28,7 +27,6 @@ const WallEarthdayContainer = React.createClass({
         const beatmathParameters = this.context.beatmathParameters;
         const wallEarthdayParameters = new WallEarthdayParameters(mixboard, beatmathParameters);
         const pieceParameters = wallEarthdayParameters;
-        const refreshTimer = new LatticeRefreshTimer(mixboard, beatmathParameters, {pieceParameters});
 
         const influences = [
             new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.3, startRow: 0.8, startValue: tinycolor('#ff0'), lightNumber: 1}),
@@ -38,7 +36,7 @@ const WallEarthdayContainer = React.createClass({
             new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.8, startValue: tinycolor('#0ff'), lightNumber: 8}),
         ];
 
-        return {wallEarthdayParameters, influences, refreshTimer};
+        return {wallEarthdayParameters, influences};
     },
     getParameterBindings: function() {
         return {

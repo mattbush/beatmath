@@ -4,7 +4,6 @@ const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const EarthdayGrid = require('js/earthday/components/EarthdayGrid');
 const tinycolor = require('tinycolor2');
 const {ColorInfluence} = require('js/lattice/state/Influence');
-const LatticeRefreshTimer = require('js/lattice/state/LatticeRefreshTimer');
 
 const EarthdayContainer = React.createClass({
     childContextTypes: {
@@ -28,7 +27,6 @@ const EarthdayContainer = React.createClass({
         const beatmathParameters = this.context.beatmathParameters;
         const earthdayParameters = new EarthdayParameters(mixboard, beatmathParameters);
         const pieceParameters = earthdayParameters;
-        const refreshTimer = new LatticeRefreshTimer(mixboard, beatmathParameters, {pieceParameters});
 
         const influences = [
             new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.3, startRow: 0.8, startValue: tinycolor('#ff0'), lightNumber: 1}),
@@ -38,7 +36,7 @@ const EarthdayContainer = React.createClass({
             new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.8, startValue: tinycolor('#0ff'), lightNumber: 8}),
         ];
 
-        return {earthdayParameters, influences, refreshTimer};
+        return {earthdayParameters, influences};
     },
     getParameterBindings: function() {
         return {
