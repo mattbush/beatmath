@@ -24,8 +24,8 @@ class TreesParameters extends PieceParameters {
     _declareParameters() {
         return {
             ...P.BaseColor(),
-            ...P.NumColumns({start: 16, max: 24}),
-            ...P.NumRows({start: 16, max: 24}),
+            ...P.NumColumns({start: 2, max: 24}),
+            ...P.NumRows({start: 4, max: 24}),
             columnWidth: {
                 type: IntLinearParameter,
                 range: [10, 200],
@@ -71,7 +71,7 @@ class TreesParameters extends PieceParameters {
             staggerAmount: {
                 type: MovingLinearParameter,
                 range: [-8, 8],
-                start: 0,
+                start: 1,
                 monitorName: 'Stagger Amount',
                 listenToDecrementAndIncrementLaunchpadButtons: 2,
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_PITCH_BEND_MINUS, MixtrackButtons.L_PITCH_BEND_PLUS],
@@ -85,7 +85,7 @@ class TreesParameters extends PieceParameters {
             polarGridAmount: {
                 type: MovingLinearParameter,
                 range: [-2, 3],
-                start: 0.5, buildupStart: 0,
+                start: 0, buildupStart: 0,
                 incrementAmount: 0.05,
                 listenToLaunchpadFader: [2, {addButtonStatusLight: true}],
                 listenToMixtrackWheel: MixtrackWheels.R_CONTROL_2,

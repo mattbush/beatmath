@@ -2,7 +2,7 @@ const _ = require('lodash');
 const tinycolor = require('tinycolor2');
 const {posMod} = require('js/core/utils/math');
 
-const pieceName = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
+const pieceName = window.location.href.substr(window.location.href.lastIndexOf('/') + 1).split('?')[0];
 
 const mappingPaletteByPieceName = {
     // flora palette (red, orange, greens)

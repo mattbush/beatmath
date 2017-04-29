@@ -54,7 +54,7 @@ class EarthdayParameters extends PieceParameters {
             scale: {
                 type: LogarithmicParameter,
                 range: [2, 32],
-                start: 6,
+                start: 4,
                 listenToLaunchpadFader: [5, {addButtonStatusLight: true}],
                 monitorName: 'Scale',
             },
