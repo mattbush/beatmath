@@ -26,7 +26,7 @@ class LatticeRefreshTimer extends PieceParameters {
             },
             subdivisionSize: {
                 type: MovingLogarithmicParameter,
-                range: [2, MAX_RIPPLES_TREAT_AS_INFINITE],
+                range: [8, MAX_RIPPLES_TREAT_AS_INFINITE],
                 autoupdateRange: [8, MAX_RIPPLES_TREAT_AS_INFINITE],
                 start: MAX_RIPPLES_TREAT_AS_INFINITE,
                 listenToLaunchpadFader: [3, {addButtonStatusLight: true, useSnapButton: true}],
