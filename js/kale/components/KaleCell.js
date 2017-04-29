@@ -5,6 +5,7 @@ const KaleSubject = require('js/kale/components/KaleSubject');
 const {dist, lerp, xyRotatedAroundOriginWithAngle} = require('js/core/utils/math');
 const tinycolor = require('tinycolor2');
 const {clipPathXCenters, clipPathYCenters} = require('js/kale/components/KaleClipPaths');
+const mapColorString = require('js/core/utils/mapColorString');
 
 const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
 const updateHue = require('js/core/outputs/updateHue');
@@ -39,7 +40,7 @@ const KaleCell = React.createClass({
         if (colorShift !== 0) {
             color.spin(colorShift);
         }
-        return color.toHexString();
+        return mapColorString(color.toHexString());
     },
     _getColor: function(x, y) {
         return this._getColorByShifting(x, y);

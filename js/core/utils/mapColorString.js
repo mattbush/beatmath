@@ -19,6 +19,7 @@ const mappingPaletteByPieceName = {
     trees: [110, 170, 280, 220],
     // orange, green
     stopwatch: [25, 45, 110, 90],
+    kale: [25, 45, 110, 90],
     // purple, pink, red, orange
     tactile: [270, 300, 40, 10],
 };
