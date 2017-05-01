@@ -5,9 +5,7 @@ const FloraInnerPixel = require('js/flora/components/FloraInnerPixel');
 const {runAtTimestamp} = require('js/core/utils/time');
 const {lerp, modAndShiftToHalf} = require('js/core/utils/math');
 
-const {INFLUENCE_SCALE_FACTOR} = require('js/flora/parameters/FloraConstants');
-
-const CELL_SIZE = 1;
+const {CELL_SIZE, INFLUENCE_SCALE_FACTOR} = require('js/flora/parameters/FloraConstants');
 
 const gray = tinycolor('#909090');
 

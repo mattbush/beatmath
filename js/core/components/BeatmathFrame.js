@@ -47,10 +47,14 @@ const BeatmathFrame = React.createClass({
     _renderChildFrames() {
         const frameRotation = this.getParameterValue('frameRotation');
         const frameScale = this.getParameterValue('frameScale') * this.getParameterValue('frameScaleAutoupdating');
-        const transitionPeriod = this.context.beatmathParameters.tempo.getBasePeriod() / 16;
+        const transitionPeriod = this.context.beatmathParameters.tempo.getPeriod();
         const style = {
             transform: `scale(${frameScale})`,
             transition: `transform ${transitionPeriod}ms linear`,
+        };
+        const rotatedStyle = {
+            ...style,
+            transform: `rotate(${frameRotation}deg) ` + style.transform,
         };
 
         const mappingMode = this.getParameterValue('mappingMode');
@@ -101,14 +105,14 @@ const BeatmathFrame = React.createClass({
         } else if (mappingMode === 'onWithOneFrame') {
             return (
                 <g clipPath={'url(#allMapperShapes)'}>
-                    <g style={style}>
+                    <g style={rotatedStyle}>
                         {this.props.children}
                     </g>
                 </g>
             );
         } else { // off
             return (
-                <g style={style}>
+                <g style={rotatedStyle}>
                     {this.props.children}
                 </g>
             );

@@ -1,13 +1,13 @@
 const React = require('react');
-const WallEarthdayParameters = require('js/wall_earthday/parameters/WallEarthdayParameters');
+const EarthdayParameters = require('js/earthday/parameters/EarthdayParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
-const WallEarthdayGrid = require('js/wall_earthday/components/WallEarthdayGrid');
+const EarthdayGrid = require('js/earthday/components/EarthdayGrid');
 const tinycolor = require('tinycolor2');
 const {ColorInfluence} = require('js/lattice/state/Influence');
 
-const WallEarthdayContainer = React.createClass({
+const EarthdayContainer = React.createClass({
     childContextTypes: {
-        wallEarthdayParameters: React.PropTypes.object,
+        earthdayParameters: React.PropTypes.object,
         influences: React.PropTypes.array,
         refreshTimer: React.PropTypes.object,
     },
@@ -17,7 +17,7 @@ const WallEarthdayContainer = React.createClass({
     },
     getChildContext: function() {
         return {
-            wallEarthdayParameters: this.state.wallEarthdayParameters,
+            earthdayParameters: this.state.earthdayParameters,
             influences: this.state.influences,
             refreshTimer: this.state.refreshTimer,
         };
@@ -25,8 +25,8 @@ const WallEarthdayContainer = React.createClass({
     getInitialState: function() {
         const mixboard = this.context.mixboard;
         const beatmathParameters = this.context.beatmathParameters;
-        const wallEarthdayParameters = new WallEarthdayParameters(mixboard, beatmathParameters);
-        const pieceParameters = wallEarthdayParameters;
+        const earthdayParameters = new EarthdayParameters(mixboard, beatmathParameters);
+        const pieceParameters = earthdayParameters;
 
         const influences = [
             new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.3, startRow: 0.8, startValue: tinycolor('#ff0'), lightNumber: 1}),
@@ -36,7 +36,7 @@ const WallEarthdayContainer = React.createClass({
             new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.8, startValue: tinycolor('#0ff'), lightNumber: 8}),
         ];
 
-        return {wallEarthdayParameters, influences};
+        return {earthdayParameters, influences};
     },
     getParameterBindings: function() {
         return {
@@ -49,10 +49,10 @@ const WallEarthdayContainer = React.createClass({
     render: function() {
         return (
             <BeatmathFrame>
-                <WallEarthdayGrid />
+                <EarthdayGrid />
             </BeatmathFrame>
         );
     },
 });
 
-module.exports = WallEarthdayContainer;
+module.exports = EarthdayContainer;
