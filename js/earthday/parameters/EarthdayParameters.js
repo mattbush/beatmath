@@ -62,14 +62,14 @@ class EarthdayParameters extends PieceParameters {
                 type: LinearParameter,
                 range: [-90, 90],
                 start: 20,
-                listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
+                listenToLaunchpadFader: [2, {addButtonStatusLight: true}],
                 monitorName: 'Tilt',
             },
             rotationSpeed: {
                 type: LinearParameter,
                 range: [2, 45],
                 start: 10,
-                listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
+                listenToLaunchpadFader: [3, {addButtonStatusLight: true}],
                 monitorName: 'Rotation Speed',
             },
         };

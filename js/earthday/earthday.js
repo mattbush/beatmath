@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const mixboard = await Mixboard.getInstanceAsync();
 
     ReactDOM.render(
-        <MixboardContext mixboard={mixboard} bpmMod={0.5} useFrame={false}>
+        <MixboardContext mixboard={mixboard} bpmMod={0.5}>
             <EarthdayContainer />
         </MixboardContext>,
         document.getElementById('start')
