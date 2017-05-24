@@ -21,8 +21,12 @@ const WallLatticePixel = React.createClass({
         if (this.props.polygon.center[0] === 0 && this.props.polygon.center[1] === 0) {
             dy = this.props.polygon.yMax;
         }
-        this._x = (this.props.tx + this.props.polygon.center[0] - 7.5) * 5;
-        this._y = (this.props.ty + this.props.polygon.center[1] + dy - 2.6) * 5;
+
+        this._x = this.props.polygon.center[0] * 6 + (this.props.tx - 7.5) * 0.5;
+        this._y = this.props.polygon.center[1] * 6 + (this.props.ty - 2.6) * 0.5;
+
+        this._refreshX = this.props.polygon.center[0] * 12 + (this.props.tx - 7.5) * 0.12;
+        this._refreshY = (this.props.polygon.center[1] + dy / 2) * 12 + (this.props.ty - 2.6) * 0.12;
     },
     componentDidMount: function() {
         const tempo = this.context.beatmathParameters.tempo;
@@ -59,7 +63,7 @@ const WallLatticePixel = React.createClass({
         this.setState(this._nextState);
     },
     _getRefreshOffset: function() {
-        return this.context.refreshTimer.getRefreshOffset(this._y, this._x);
+        return this.context.refreshTimer.getRefreshOffset(this._refreshY, this._refreshX);
     },
     _mixInfluenceIntoNextState: function(influence) {
         return influence.mix(this._nextState, this._y, this._x);
@@ -68,10 +72,10 @@ const WallLatticePixel = React.createClass({
         const isOdd = this.state.ticks % 2;
         const rotation = IS_NEGATED ? (isOdd ? -90 : 90) : (isOdd ? 360 : 0);
         const [x, y] = this.props.polygon.center;
-        const {x: ax, y: ay} = this.context.refreshTimer.getRefreshGradient(this._y, this._x);
+        const {x: ax, y: ay} = this.context.refreshTimer.getRefreshGradient(this._refreshY, this._refreshX);
         const style = {
             transform: `translate(${x}px,${y}px) rotate3d(${ax},${ay},0,${rotation}deg)`,
-            transition: IS_NEGATED ? 'all 0.6s linear' : 'all 1.2s cubic-bezier(1,0,0,1)',
+            transition: IS_NEGATED ? 'all 2.8s linear' : 'all 1.2s cubic-bezier(1,0,0,1)',
         };
 
         const fill = mapColorString(this.state.color);
