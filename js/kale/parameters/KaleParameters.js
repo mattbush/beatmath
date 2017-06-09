@@ -8,8 +8,8 @@ const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
 const updateHue = require('js/core/outputs/updateHue');
 const {NUM_LIGHTS} = require('js/hue_constants');
 
-const MAX_NUM_ROWS = 6;
-const MAX_NUM_COLS = 12;
+const MAX_NUM_ROWS = 7;
+const MAX_NUM_COLS = 15;
 
 class KaleParameters extends PieceParameters {
     constructor(...args) {
@@ -22,7 +22,7 @@ class KaleParameters extends PieceParameters {
     }
     _declareParameters() {
         return {
-            ...P.NumColumns({start: 8, max: MAX_NUM_COLS}),
+            ...P.NumColumns({start: 15, max: MAX_NUM_COLS}),
             ...P.NumRows({start: 3, max: MAX_NUM_ROWS}),
             ...P.ColumnColorShift({range: 45}),
             ...P.RowColorShift({range: 45}),
