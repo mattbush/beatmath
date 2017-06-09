@@ -2,7 +2,7 @@ const _ = require('lodash');
 const React = require('react');
 const tinycolor = require('tinycolor2');
 const {runAtTimestamp} = require('js/core/utils/time');
-const {logerp} = require('js/core/utils/math');
+const {logerp, lerp} = require('js/core/utils/math');
 const mapColorString = require('js/core/utils/mapColorString');
 
 const gray = tinycolor('#909090');
@@ -19,14 +19,21 @@ const WallLatticePixel = React.createClass({
     componentWillMount() {
         let dy = 0;
         if (this.props.polygon.center[0] === 0 && this.props.polygon.center[1] === 0) {
-            dy = this.props.polygon.yMax;
+            dy = this.props.polygon.yMax / 2;
         }
 
-        this._x = this.props.polygon.center[0] * 6 + (this.props.tx - 7.5) * 0.5;
-        this._y = this.props.polygon.center[1] * 6 + (this.props.ty - 2.6) * 0.5;
+        const cx = this.props.polygon.center[0];
+        const cy = this.props.polygon.center[1] + dy;
+        this._txForInfluence = cx + this.props.tx - 7.5; // full coordinates
+        this._tyForInfluence = cy + this.props.ty - 2.6;
+        this._cxForInfluence = cx * 12; // position within hex only
+        this._cyForInfluence = cy * 12;
 
-        this._refreshX = this.props.polygon.center[0] * 12 + (this.props.tx - 7.5) * 0.12;
-        this._refreshY = (this.props.polygon.center[1] + dy / 2) * 12 + (this.props.ty - 2.6) * 0.12;
+        this._colorX = lerp(this._txForInfluence, this._cxForInfluence, 1.2);
+        this._colorY = lerp(this._txForInfluence, this._cxForInfluence, 1.2);
+
+        this._refreshX = lerp(this._txForInfluence, this._cxForInfluence, 0.5);
+        this._refreshY = lerp(this._txForInfluence, this._cxForInfluence, 0.5);
     },
     componentDidMount: function() {
         const tempo = this.context.beatmathParameters.tempo;
@@ -66,7 +73,7 @@ const WallLatticePixel = React.createClass({
         return this.context.refreshTimer.getRefreshOffset(this._refreshY, this._refreshX);
     },
     _mixInfluenceIntoNextState: function(influence) {
-        return influence.mix(this._nextState, this._y, this._x);
+        return influence.mix(this._nextState, this._colorY, this._colorX);
     },
     render: function() {
         const isOdd = this.state.ticks % 2;
