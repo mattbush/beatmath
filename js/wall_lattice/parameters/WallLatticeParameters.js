@@ -54,7 +54,7 @@ class WallLatticeParameters extends PieceParameters {
             flipDurationPercent: {
                 type: MovingLinearParameter,
                 range: [0.05, 0.95],
-                autoupdateRange: [0.15, 0.55],
+                autoupdateRange: [0.18, 0.82],
                 start: 0.3,
                 listenToLaunchpadFader: [4, {addButtonStatusLight: true}],
                 monitorName: 'Flip Duration %',
