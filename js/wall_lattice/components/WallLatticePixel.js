@@ -26,14 +26,8 @@ const WallLatticePixel = React.createClass({
         const cy = this.props.polygon.center[1] + dy;
         this._txForInfluence = cx + this.props.tx - 7.5; // full coordinates
         this._tyForInfluence = cy + this.props.ty - 2.6;
-        this._cxForInfluence = cx * 12; // position within hex only
-        this._cyForInfluence = cy * 12;
-
-        this._colorX = lerp(this._txForInfluence, this._cxForInfluence, 1.2);
-        this._colorY = lerp(this._txForInfluence, this._cxForInfluence, 1.2);
-
-        this._refreshX = lerp(this._txForInfluence, this._cxForInfluence, 0.5);
-        this._refreshY = lerp(this._txForInfluence, this._cxForInfluence, 0.5);
+        this._cxForInfluence = cx * 20; // position within hex only
+        this._cyForInfluence = cy * 20;
     },
     componentDidMount: function() {
         const tempo = this.context.beatmathParameters.tempo;
@@ -61,6 +55,11 @@ const WallLatticePixel = React.createClass({
         this._nextState = _.clone(this.state);
         this._nextState.ticks++;
 
+        // update influenceX / influenceY
+        const influenceWithinHexPercent = this.context.wallLatticeParameters.influenceWithinHexPercent.getValue();
+        this._influenceX = lerp(this._txForInfluence, this._cxForInfluence, influenceWithinHexPercent);
+        this._influenceY = lerp(this._tyForInfluence, this._cyForInfluence, influenceWithinHexPercent);
+
         _.each(this.context.influences, this._mixInfluenceIntoNextState);
         const wavePercent = this.context.wallLatticeParameters.wavePercent.getValue();
         if (wavePercent) {
@@ -70,10 +69,15 @@ const WallLatticePixel = React.createClass({
         this.setState(this._nextState);
     },
     _getRefreshOffset: function() {
+        // update refreshX / refreshY
+        const refreshWithinHexPercent = this.context.wallLatticeParameters.refreshWithinHexPercent.getValue();
+        this._refreshX = lerp(this._txForInfluence, this._cxForInfluence, refreshWithinHexPercent);
+        this._refreshY = lerp(this._tyForInfluence, this._cyForInfluence, refreshWithinHexPercent);
+
         return this.context.refreshTimer.getRefreshOffset(this._refreshY, this._refreshX);
     },
     _mixInfluenceIntoNextState: function(influence) {
-        return influence.mix(this._nextState, this._colorY, this._colorX);
+        return influence.mix(this._nextState, this._influenceY, this._influenceX);
     },
     render: function() {
         const isOdd = this.state.ticks % 2;
