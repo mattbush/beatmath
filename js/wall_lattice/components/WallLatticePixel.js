@@ -69,9 +69,14 @@ const WallLatticePixel = React.createClass({
         const rotation = IS_NEGATED ? (isOdd ? -90 : 90) : (isOdd ? 360 : 0);
         const [x, y] = this.props.polygon.center;
         const {x: ax, y: ay} = this.context.refreshTimer.getRefreshGradient(this._y, this._x);
+
+        const tempo = this.context.beatmathParameters.tempo;
+        const flipDurationPercent = this.context.wallLatticeParameters.flipDurationPercent.getValue();
+        const duration = flipDurationPercent * tempo.getPeriod();
+
         const style = {
             transform: `translate(${x}px,${y}px) rotate3d(${ax},${ay},0,${rotation}deg)`,
-            transition: IS_NEGATED ? 'all 0.6s linear' : 'all 1.2s cubic-bezier(1,0,0,1)',
+            transition: IS_NEGATED ? `all ${duration}ms linear` : `all ${duration}ms cubic-bezier(1,0,0,1)`,
         };
 
         const fill = mapColorString(this.state.color);
