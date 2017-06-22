@@ -1,4 +1,4 @@
-const {ManualParameter, MovingLinearParameter, LinearParameter, NegatedParameter} = require('js/core/parameters/Parameter');
+const {Parameter, ManualParameter, MovingLinearParameter, LinearParameter, NegatedParameter} = require('js/core/parameters/Parameter');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
 
@@ -30,8 +30,14 @@ class TactileParameters extends PieceParameters {
                 listenToLaunchpadKnob: [1, 1],
                 monitorName: 'Distance Coeff',
             },
-            ...P.NumColumns({start: 17, max: 32}),
-            ...P.NumRows({start: 10, max: 32}),
+            numColumns: {
+                type: Parameter,
+                start: 16,
+            },
+            numRows: {
+                type: Parameter,
+                start: 16,
+            },
             ...P.CustomToggle({name: 'oscillate', button: 1}),
             ...P.TriangularGridPercent({inputPosition: [0, 0]}),
             flipDurationPercent: {

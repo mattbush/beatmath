@@ -63,10 +63,12 @@ const TactilePixel = React.createClass({
             [tx, ty] = [0, 0];
         }
 
+        const APPROX_NUM_SHAPE_LENGTHS_IN_FRAME = 4;
+
         this._txForInfluence = cx + tx; // position within all shapes
         this._tyForInfluence = cy + ty;
-        this._cxForInfluence = cx; // position within current shape, rotated
-        this._cyForInfluence = cy;
+        this._cxForInfluence = cx * APPROX_NUM_SHAPE_LENGTHS_IN_FRAME; // position within current shape, rotated
+        this._cyForInfluence = cy * APPROX_NUM_SHAPE_LENGTHS_IN_FRAME;
     },
     _update() {
         if (!this.isMounted()) {
@@ -94,12 +96,9 @@ const TactilePixel = React.createClass({
             this._nextState.colComputed = lerp(this.props.col, this.state.colTriangular, triangularGridPercent);
         }
 
-        // divide by this since it's easier than scaling influences' boundaries by this
-        const APPROX_NUM_SHAPE_LENGTHS_IN_FRAME = 4;
-
         const influenceWithinShapePercent = this.context.tactileParameters.influenceWithinShapePercent.getValue();
-        this._influenceX = lerp(this._txForInfluence, this._cxForInfluence, influenceWithinShapePercent) / APPROX_NUM_SHAPE_LENGTHS_IN_FRAME;
-        this._influenceY = lerp(this._tyForInfluence, this._cyForInfluence, influenceWithinShapePercent) / APPROX_NUM_SHAPE_LENGTHS_IN_FRAME;
+        this._influenceX = lerp(this._txForInfluence, this._cxForInfluence, influenceWithinShapePercent);
+        this._influenceY = lerp(this._tyForInfluence, this._cyForInfluence, influenceWithinShapePercent);
 
         _.each(this.context.influences, this._mixInfluenceIntoNextState);
         const wavePercent = this.context.tactileParameters.wavePercent.getValue();
