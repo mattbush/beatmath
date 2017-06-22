@@ -33,7 +33,9 @@ const TactileGrid = React.createClass({
         const numColumns = this.getParameterValue('numColumns');
         for (let row = -numRows; row <= numRows; row++) {
             for (let col = -numColumns; col <= numColumns; col++) {
-                children.push(<TactilePixel row={row} col={col} key={row + '|' + col} />);
+                children.push(
+                    <TactilePixel row={row} col={col} key={row + '|' + col} mapperShape={this.props.mapperShape} />
+                );
             }
         }
 
@@ -51,7 +53,6 @@ const TactileGrid = React.createClass({
 });
 
 const TactileContainer = React.createClass({
-    mixins: [ParameterBindingsMixin],
     childContextTypes: {
         tactileParameters: React.PropTypes.object,
         influences: React.PropTypes.array,
