@@ -87,6 +87,13 @@ const w4 = {color: '#00bb33', points: '6,2 6,-2 0,-4 0,0'};
 const w8 = {color: '#00bb33', points: '0,-4 -6,-2 -6,2 0,0'};
 const w12 = {color: '#00bb33', points: '-6,2 0,4 6,2 0,0'};
 
+const winn2 = {color: '#00bb33', points: '3,3 6,0 0,0'};
+const winn6 = {color: '#00bb33', points: '3,-3 -3,-3 0,0'};
+const winn10 = {color: '#00bb33', points: '-3,3 -6,0 0,0'};
+const winn4 = {color: '#00bb33', points: '3,-3 6,0 0,0'};
+const winn8 = {color: '#00bb33', points: '-3,-3 -6,0 0,0'};
+const winn12 = {color: '#00bb33', points: '-3,3 3,3 0,0'};
+
 // wa: variant of w with an inscribed small upward triangle
 const wa1 = {color: '#00aaaa', points: '0,4 6,2 1.5,0.5 0,2'};
 const wa3 = {color: '#00aaaa', points: '6,2 6,-2 3,-1, 1.5,0.5'};
@@ -128,6 +135,10 @@ const a5 = {color: '#770099', points: '0,2 3,-1 -3,-1'};
 const a3 = {color: '#550077', points: '0,-4 -6,2 6,2'};
 const a7 = {color: '#770099', points: '0,-2 -3,1 3,1'};
 
+const a3h1 = {color: '#770099', points: '-6,2 6,2 3,-1'};
+const a3h7 = {color: '#770099', points: '0,-4 -6,2 3,-1'};
+const a3x6 = {color: '#770099', points: '-6,2 6,2 2,-2 -2,-2'};
+
 const b55 = {color: '#9900BB', points: '0,-1 -1.5,0.5 1.5,0.5'};
 const a54 = {color: '#9900BB', points: '3,-1 0,-1 1.5,0.5'};
 const a58 = {color: '#9900BB', points: '-3,-1 0,-1 -1.5,0.5'};
@@ -148,7 +159,9 @@ const ag7 = {color: '#BB00DD', points: '0,-4 -4,0 -6,-2'};
 const ag12 = {color: '#BB00DD', points: '0,4 4,0 -4,0'};
 const ag12a = {color: '#BB00DD', points: '4,0 6,-2 -6,-2 -4,0'};
 const ag3 = {color: '#BB00DD', points: '0,4 6,-2 0,-2'};
-const ag9 = {color: '#BB00DD', points: '0,-4 -6,2 0,2'};
+const ag9 = {color: '#BB00DD', points: '0,4 -6,-2 0,-2'};
+const ah3 = {color: '#BB00DD', points: '0,-4 6,2 0,2'};
+const ah9 = {color: '#BB00DD', points: '0,-4 -6,2 0,2'};
 
 const b1 = {color: '#990077', points: '0,2 3,3 3,1'};
 const b3 = {color: '#990077', points: '3,1 6,0 3,-1'};
@@ -158,6 +171,17 @@ const b9 = {color: '#990077', points: '-3,-1 -6,0 -3,1'};
 const b11 = {color: '#990077', points: '-3,1 -3,3 0,2'};
 
 const c0 = {color: '#666666', points: '0,2 3,1 3,-1 0,-2 -3,-1 -3,1'};
+const ca0 = {color: '#666666', points: '2,2 4,0 2,-2 -2,-2 -4,0 -2,2'};
+const ca12 = {color: '#666666', points: '2,2 4,0 -4,0 -2,2'};
+const ca6 = {color: '#666666', points: '4,0 2,-2 -2,-2 -4,0'};
+
+const cz0 = {color: '#666666', points: '0,4 6,2 6,-2 0,-4 -6,-2 -6,2'};
+const czh0 = {color: '#666666', points: '6,2 6,-2 -6,-2 -6,2'};
+const czh6 = {color: '#666666', points: '6,0 6,-2 -6,-2 -6,0'};
+const czh12 = {color: '#666666', points: '6,2 6,0 -6,0 -6,2'};
+
+const cah6 = {color: '#666666', points: '3,-3 6,0 -6,0 -3,-3'};
+const cah12 = {color: '#666666', points: '3,3 6,0 -6,0 -3,3'};
 
 const cc2 = {color: '#999999', points: '1.5,1.5 3,1 3,0 0,0'};
 const cc4 = {color: '#999999', points: '3,0 3,-1 1.5,-1.5 0,0'};
@@ -200,9 +224,34 @@ const fa4 = {color: '#884810', points: '6,2 0,0 0,-4'};
 const fa8 = {color: '#884810', points: '0,-4 0,0 -6,2'};
 const fa12 = {color: '#884810', points: '-6,2 0,0 6,2'};
 
+const ef1 = {color: '#BB7733', points: '2,2 6,2 0,4'};
+const ef2 = {color: '#BB7733', points: '4,0 6,2 2,2'};
+const ef3 = {color: '#BB7733', points: '6,-2 6,2 4,0'};
 const ef5 = {color: '#BB7733', points: '6,-2 0,-4 2,-2'};
 const ef6 = {color: '#BB7733', points: '2,-2 0,-4 -2,-2'};
 const ef7 = {color: '#BB7733', points: '-2,-2 0,-4 -6,-2'};
+const ef9 = {color: '#BB7733', points: '-4,0 -6,2 -6,-2'};
+const ef10 = {color: '#BB7733', points: '-2,2 -6,2 -4,0'};
+const ef11 = {color: '#BB7733', points: '0,4 -6,2 -2,2'};
+
+const ef1and2 = {color: '#887733', points: '6,2 0,4 4,0'};
+const ef10and11 = {color: '#887733', points: '-6,2 0,4 -4,0'};
+
+const ef1230 = {color: '#EE7733', points: '3,3 0,4 2,2'};
+const ef130 = {color: '#EE7733', points: '6,2 3,3 2,2'};
+const ef230 = {color: '#EE7733', points: '6,0 6,2 4,0'};
+const ef330 = {color: '#EE7733', points: '6,0 6,-2 4,0'};
+const ef430 = {color: '#EE7733', points: '6,-2 3,-3 2,-2'};
+const ef530 = {color: '#EE7733', points: '3,-3 0,-4 2,-2'};
+const ef630 = {color: '#EE7733', points: '-2,-2 0,-4 -3,-3'};
+const ef730 = {color: '#EE7733', points: '-2,-2 -3,-3 -6,-2'};
+const ef830 = {color: '#EE7733', points: '-6,0 -6,-2 -4,0'};
+const ef930 = {color: '#EE7733', points: '-6,0 -6,2 -4,0'};
+const ef1030 = {color: '#EE7733', points: '-2,2 -3,3 -6,2'};
+const ef1130 = {color: '#EE7733', points: '-2,2 0,4 -3,3'};
+
+const ef2and230 = {color: '#EE7733', points: '4,0 6,0 6,2 2,2'};
+const ef930and10 = {color: '#EE7733', points: '-4,0 -6,0 -6,2 -2,2'};
 
 const ff3 = {color: '#BB7733', points: '6,2 6,-2 4,0'};
 const ff4 = {color: '#BB7733', points: '4,0 6,-2 2,-2'};
@@ -213,6 +262,20 @@ const ff9 = {color: '#BB7733', points: '-4,0 -6,-2 -6,2'};
 const ff11 = {color: '#BB7733', points: '-6,2 0,4 -2,2'};
 const ff12 = {color: '#BB7733', points: '-2,2 0,4 2,2'};
 const ff1 = {color: '#BB7733', points: '2,2 0,4 6,2'};
+
+const ff3and4 = {color: '#BB7733', points: '6,2 6,-2 2,-2'};
+const ff8and9 = {color: '#BB7733', points: '-2,-2 -6,-2 -6,2'};
+
+const ef2a = {color: '#CC9911', points: '4,0 0,0 2,2'};
+const ef6a = {color: '#CC9911', points: '2,-2 0,0 -2,-2'};
+const ef10a = {color: '#CC9911', points: '-2,2 0,0 -4,0'};
+const ff4a = {color: '#CC9911', points: '4,0 0,0 2,-2'};
+const ff8a = {color: '#CC9911', points: '-2,-2 0,0 -4,0'};
+const ff12a = {color: '#CC9911', points: '-2,2 0,0 2,2'};
+
+const e2b = {color: '#CC9911', points: '0,4 6,2 6,-2 4,0 0,0 2,2'};
+const e6b = {color: '#CC9911', points: '6,-2 0,-4 -6,-2 -2,-2 0,0 2,-2'};
+const e10b = {color: '#CC9911', points: '0,4 -6,2 -6,-2 -4,0 0,0 -2,2'};
 
 const g12 = {color: '#669988', points: '0,4 6,2 3,1 0,2 -3,1 -6,2'};
 const g4 = {color: '#669988', points: '3,1 6,2 6,-2 0,-4 0,-2 3,-1'};
@@ -246,10 +309,49 @@ const icc10 = {color: '#AAAAAA', points: '-3,3 0,2 -1.5,1.5 0,0 -3,0 -3,-1 -6,0 
 const icca2 = {color: '#AAAAAA', points: '3,3 6,2 6,0'};
 const icca6 = {color: '#AAAAAA', points: '3,-3 0,-4 -3,-3'};
 const icca10 = {color: '#AAAAAA', points: '-3,3 -6,0 -6,2'};
+const icca4 = {color: '#AAAAAA', points: '3,-3 6,-2 6,0'};
+const icca8 = {color: '#AAAAAA', points: '-3,-3 -6,-0 -6,-2'};
+const icca12 = {color: '#AAAAAA', points: '3,3 0,4 -3,3'};
+
+const iccaa2 = {color: '#AAAAAA', points: '3,3 3,1 6,0'};
+const iccaa6 = {color: '#AAAAAA', points: '3,-3 0,-2 -3,-3'};
+const iccaa10 = {color: '#AAAAAA', points: '-3,3 -6,0 -3,1'};
+const iccaa4 = {color: '#AAAAAA', points: '3,-3 3,-1 6,0'};
+const iccaa8 = {color: '#AAAAAA', points: '-3,-3 -6,-0 -3,-1'};
+const iccaa12 = {color: '#AAAAAA', points: '3,3 0,2 -3,3'};
 
 const iccb2 = {color: '#AAAAAA', points: '3,3 6,0 3,-1 3,0 0,0 1.5,1.5 0,2'};
 const iccb6 = {color: '#AAAAAA', points: '-1.5,-1.5 0,0 1.5,-1.5 3,-1 3,-3 -3,-3 -3,-1'};
 const iccb10 = {color: '#AAAAAA', points: '-3,3 0,2 -1.5,1.5 0,0 -3,0 -3,-1 -6,0'};
+
+const iccb2sq = {color: '#AAAAAA', points: '3,3 6,0 3,-1 3,0.5 1.5,0.5 2.25,1.25 0,2'};
+const iccb6sq = {color: '#AAAAAA', points: '-0.75,-1.75 0,-1 0.75,-1.75 3,-1 3,-3 -3,-3 -3,-1'};
+const iccb10sq = {color: '#AAAAAA', points: '-3,3 0,2 -2.25,1.25 -1.5,0.5 -3,0.5 -3,-1 -6,0'};
+const cc4sq = {color: '#999999', points: '3,0.5 3,-1 0.75,-1.75 0,-1 1.5,0.5'};
+const cc8sq = {color: '#999999', points: '-0.75,-1.75 -3,-1 -3,0.5 -1.5,0.5 0,-1'};
+const cc12sq = {color: '#999999', points: '-2.25,1.25 0,2 2.25,1.25 1.5,0.5 -1.5,0.5'};
+const cc0sq = {color: '#999999', points: '-1.5,0.5 1.5,0.5 0,-1'};
+
+const isec2 = {color: '#AAAAAA', points: '3,3 6,2 6,0 0,0'};
+const isec6 = {color: '#AAAAAA', points: '3,-3 0,-4 -3,-3 0,0'};
+const isec10 = {color: '#AAAAAA', points: '-3,3 -6,2 -6,0 0,0'};
+
+const iarr4 = {color: '#CCBB77', points: '3,-3 3,-1 6,0 0,0'};
+const iarr8 = {color: '#CCBB77', points: '-3,-3 -3,-1 -6,0 0,0'};
+const iarr12 = {color: '#CCBB77', points: '3,3 0,2 -3,3 0,0'};
+
+const iarr130 = {color: '#DDCC88', points: '3,3 3,1 0,0'};
+const iarr230 = {color: '#DDCC88', points: '3,1 6,0 0,0'};
+const iarr330 = {color: '#DDCC88', points: '3,-1 6,0 0,0'};
+const iarr430 = {color: '#DDCC88', points: '3,-3 3,-1 0,0'};
+const iarr530 = {color: '#DDCC88', points: '3,-3 0,-2 0,0'};
+const iarr630 = {color: '#DDCC88', points: '0,-2 -3,-3 0,0'};
+const iarr730 = {color: '#DDCC88', points: '-3,-3 -3,-1 0,0'};
+const iarr830 = {color: '#DDCC88', points: '-3,-1 -6,0 0,0'};
+const iarr930 = {color: '#DDCC88', points: '-3,1 -6,0 0,0'};
+const iarr1030 = {color: '#DDCC88', points: '-3,3 -3,1 0,0'};
+const iarr1130 = {color: '#DDCC88', points: '0,2 -3,3 0,0'};
+const iarr1230 = {color: '#DDCC88', points: '3,3 0,2 0,0'};
 
 // const cc2 = {color: '#999999', points: '1.5,1.5 3,1 3,0 0,0'};
 // const cc6 = {color: '#999999', points: '1.5,-1.5 0,-2 -1.5,-1.5 0,0'};
@@ -412,29 +514,34 @@ const hexGridShapes = [
          5: [qd1, qd3, qd5, qd7, qd9, qd11, qd0, qd2, qd6, qd10], 6: [qe1, qe3, qe5, qe7, qe9, qe11, qe0, qe2, qe6, qe10], 7: [qf0, qf2, qf6, qf10], 8: [e1, e3, e5, e7, e9, e11, l4, l8, l12], 9: [e1, e3, e5, e7, e9, e11, j4, j8, j12, z4, x7, y7],
          10: [g12, g4, g8, z4, x7, y7], 11: [z1, z2, z3, z4, x8, x7, y7, y9, x0, x9, y8, y0], 12: [v4x, v8x, v12, x0, x9, y8, y0, z1], 13: [v4, v8, v12, x0, y0, z1], 14: [u4, u8, u12, x1, x0, y1, y0, z1, z0]},
 
-    {0: [/* e2, e6, e10, ea2, ea6, ea10 */], 1: [w1, w3, e6, e10, ea6, ea10], 2: [w1, w3, e6, ea6, w9, w11], 3: [f1, f3, f5, f7, f9, f11, l2, l6, l10], 4: [f1, f3, f5, f7, f9, f11, a3],
-    5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a2, a6, a10, a5], 6: [e2, e5, f8, f11, ag3, ag9], 7: [e2, ef5, ef6, ef7, e10, a1], 8: [e2, ef5, ef6, ef7, e10, ag12, ag12a], 9: [e2, e10, ag12, ag5, ag6, ag7],
-    10: [e2, e6, e10, j4, j8, j12, z4, x7, y7], 11: [e2, e6, e10, j4, j8, j12, cc2, cc4, cc6, cc8, cc10, cc12], 12: [x0, y0, z1, i2, i6, i10, cc2, cc4, cc6, cc8, cc10, cc12], 13: [x0, y0, z1, icc2, icc6, icc10, cc4, cc8, cc12], 14: [x0, y0, z1, icca2, icca6, icca10, iccb2, iccb6, iccb10, cc4, cc8, cc12], 15: [/* x0, y0, z1 */]},
+    {0: [e2, e6, e10, ea2, ea6, ea10], 1: [w1, w3, e6, e10, ea6, ea10], 2: [w1, w3, e6, ea6, w9, w11], 3: [f1, f3, f5, f7, f9, f11, l2, l6, l10], 4: [f1, f3, f5, f7, f9, f11, a3],
+    5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a2, a6, a10, a5], 6: [e2, e5, f8, f11, ag3, ah9], 7: [e2, ef5, ef6, ef7, e10, a1], 8: [e2, ef5, ef6, ef7, e10, ag12, ag12a], 9: [e2, e10, ag12, ag5, ag6, ag7],
+    10: [e2, e6, e10, j4, j8, j12, z4, x7, y7], 11: [e2, e6, e10, j4, j8, j12, cc2, cc4, cc6, cc8, cc10, cc12], 12: [x0, y0, z1, i2, i6, i10, cc2, cc4, cc6, cc8, cc10, cc12], 13: [x0, y0, z1, icc2, icc6, icc10, cc4, cc8, cc12], 14: [x0, y0, z1, icca2, icca6, icca10, iccb2, iccb6, iccb10, cc4, cc8, cc12], 15: [x0, y0, z1, icca2, icca6, icca10, iccb2sq, iccb6sq, iccb10sq, cc4sq, cc8sq, cc12sq, cc0sq]},
 
-    {/**/0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [], 13: [], 14: []},
+    {/**/0: [e2, ea2, e6, ea6, w9, w11], 1: [f4, fa4, w7, w9, w11, w1], 2: [f4, fa4, f8, fa8, w11, w1], 3: [f4, f8, f1, f11, ah3, ah9], 4: [f4, f8, f12, a3],
+        5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a3], 6: [ef1, ef2, ef3, ef5, ef6, ef7, ef9, ef10, ef11, a1], 7: [ef1and2, ef3, ef5, ef6, ef7, ef9, ef10and11, ag12, ag12a], 8: [ef1and2, ef3, ef430, ef530, ef6, ef7, ef9, ef10and11, ff4, ff8, ag12, ca6], 9: [ef1and2, ef3, ef5, ef6, ef630, ef730, ef9, ef10and11, ff4, ff8, ff12, ca0],
+        10: [e2, e6, e10, ff4, ff8, ff12, ca0], 11: [ff4, ff8, ff12, ff4a, ff8a, ff12a, e2b, e6b, e10b], 12: [x0, y0, z1, isec2, isec6, isec10, iarr4, iarr8, iarr12], 13: [x0, y0, z1, isec2, isec6, isec10, iarr330, iarr430, iarr730, iarr830, iarr1130, iarr1230], 14: [x1, x0, y1, y0, z1, z0, iarr130, iarr230, iarr330, iarr430, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230]},
 
-    {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [], 13: [], 14: [], 15: []},
+    {0: [cz0], 1: [e2, ea2, w5, w7, e10, ea10], 2: [f4, fa4, w7, w9, f12, fa12], 3: [f4, fa4, f8, fa8, f12, fa12], 4: [f4, f8, f12, a3h1, a3h7],
+        5: [ef5, ef6, ef7, f12, ff3and4, ff8and9, a3x6], 6: [ef1, ef2, ef3, ff4, ef5, ef6, ef7, ff8, ef9, ef10, ef11, ff12, ca0], 7: [f12, e6, czh0], 8: [f12, e6, czh6, czh12], 9: [ef1230, ef130, ef2, ef230, ef330, ff4, ef430, ef530, ef6, ef630, ef730, ff8, ef830, ef930, ef10, ef1030, ef1130, ff12, ef2a, ef6a, ef10a, ff4a, ff8a, ff12a],
+        10: [ef330, e6, ef830, ef11, ff12, ef1, ag12a, ca12, ef2and230, ef930and10], 11: [icca2, icca4, icca6, icca8, icca10, icca12, cah6, cah12], 12: [icca2, icca4, icca6, icca8, icca10, icca12, winn2, winn4, winn6, winn8, winn10, winn12],
+        13: [icca2, icca4, icca6, icca8, icca10, icca12, iccaa4, iccaa8, iccaa12, iarr4, iarr8, iarr12, winn2, winn6, winn10], 14: [icca2, icca4, icca6, icca8, icca10, icca12, iccaa4, iccaa8, iccaa12, iarr330, iarr430, iarr730, iarr830, iarr1130, iarr1230, winn2, winn6, winn10], 15: [icca2, icca4, icca6, icca8, icca10, icca12, iccaa2, iccaa4, iccaa6, iccaa8, iccaa10, iccaa12, iarr130, iarr230, iarr330, iarr430, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230]},
 ];
 
 const hexGridOffsets = [
-    {0: '15,-3', 1: '10,-2', 2: '8,-2', 3: '6,-2', 4: '3,-1', 5: '1,-2', 6: '-1,-2', 7: '-1,0', 8: '-1,0', 9: '-2,0', 10: '-2,1', 11: '1,3', 12: '3,4', 13: '7,5', 14: '11,6', 15: '16,8'},
+    {0: '15,-5', 1: '10,-4', 2: '8,-4', 3: '6,-4', 4: '3,-4', 5: '1,-3', 6: '-1,-3', 7: '-1,-1', 8: '-1,-1', 9: '-2,0', 10: '-1,0', 11: '2,0', 12: '5,0', 13: '9,2', 14: '15,3', 15: '19,4'},
 
-    {/**/0: '12,-5', 1: '8,-4', 2: '6,-3', 3: '3,-3', 4: '1,-3', 5: '-0.5,-3', 6: '-2,-2', 7: '-4,0', 8: '-4,0', 9: '-3,0', 10: '0,1', 11: '2,4', 12: '6,8', 13: '9,9', 14: '14,10'},
+    {/**/0: '12,-5', 1: '8,-4', 2: '6,-5', 3: '3,-4', 4: '1,-4', 5: '-0.5,-4', 6: '-2,-2', 7: '-3,-1', 8: '-4,0', 9: '-3,0', 10: '0,1', 11: '2,4', 12: '6,8', 13: '9,9', 14: '14,10'},
 
     {0: '13,-8', 1: '11,-8', 2: '7,-7', 3: '5,-6', 4: '3,-6', 5: '1,-5', 6: '0,-3', 7: '-2,-2', 8: '-4,0', 9: '-3,1', 10: '-1,2', 11: '0,5', 12: '3,7', 13: '7,9', 14: '11,10', 15: '16,11'},
 
-    {/**/0: '11,-11', 1: '9,-10', 2: '6,-9', 3: '3,-8', 4: '1,-7', 5: '0,-4', 6: '-1,-3', 7: '-4,-2', 8: '-3,0', 9: '-2,2', 10: '0,4', 11: '2,5', 12: '5,8', 13: '9,10', 14: '15,12'},
+    {/**/0: '12,-11', 1: '9,-10', 2: '6,-9', 3: '3,-8', 4: '1,-7', 5: '0,-4', 6: '-1,-3', 7: '-4,-2', 8: '-3,0', 9: '-2,2', 10: '0,4', 11: '2,5', 12: '5,8', 13: '9,10', 14: '14,12'},
 
-    {0: '10,-15', 1: '9,-13', 2: '7,-12', 3: '5,-10', 4: '1,-8', 5: '0,-7', 6: '-2,-4', 7: '-3,-2', 8: '-4,-1', 9: '-3,1', 10: '-2,4', 11: '0,5', 12: '3,7', 13: '7,9', 14: '10,12', 15: '13,11'},
+    {0: '10,-15', 1: '9,-13', 2: '7,-12', 3: '5,-10', 4: '1,-8', 5: '0,-7', 6: '-2,-6', 7: '-3,-4', 8: '-4,-2', 9: '-3,0', 10: '-3,4', 11: '-1,4', 12: '2,7', 13: '6,9', 14: '9,12', 15: '14,15'},
 
-    {/**/0: '10,-14', 1: '9,-12', 2: '6,-11', 3: '4,-9', 4: '1,-7', 5: '0,-5', 6: '0,-3', 7: '-4,-2', 8: '-3,0', 9: '-2,2', 10: '0,4', 11: '2,5', 12: '5,7', 13: '8,9', 14: '13,11'},
+    {/**/0: '10,-14', 1: '9,-12', 2: '6,-12', 3: '4,-11', 4: '1,-9', 5: '0,-6', 6: '-1,-5', 7: '-5,-3', 8: '-4,-1', 9: '-4,1', 10: '-3,4', 11: '-1,7', 12: '2,10', 13: '6,13', 14: '10,15'},
 
-    {0: '10,-15', 1: '9,-13', 2: '7,-12', 3: '5,-10', 4: '2,-8', 5: '1,-5', 6: '0,-3', 7: '-2,-2', 8: '-3,-1', 9: '-2,1', 10: '-1,3', 11: '1,4', 12: '4,6', 13: '6,8', 14: '10,10', 15: '13,11'},
+    {0: '10,-15', 1: '9,-15', 2: '6,-15', 3: '4,-15', 4: '1,-13', 5: '0,-11', 6: '-3,-9', 7: '-3,-6', 8: '-5,-3', 9: '-6,0', 10: '-5,3', 11: '-2,6', 12: '-1,9', 13: '1,11', 14: '6,14', 15: '9,18'},
 ];
 
 const processShapeIfNeeded = function(shape) {

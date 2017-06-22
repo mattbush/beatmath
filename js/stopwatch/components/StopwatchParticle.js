@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const React = require('react');
 const {clamp, modAndShiftToHalf, lerp, logerp} = require('js/core/utils/math');
+const mapColorString = require('js/core/utils/mapColorString');
 
 const TWOPI = 2 * Math.PI;
 
@@ -132,7 +133,7 @@ const StopwatchParticle = React.createClass({
 
         return (
             <g style={style}>
-                <polygon points={points} fill={fill.toHexString(true)} />
+                <polygon points={points} fill={mapColorString(fill.toHexString(true))} />
             </g>
         );
     },

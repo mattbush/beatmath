@@ -2,8 +2,31 @@ const _ = require('lodash');
 const tinycolor = require('tinycolor2');
 const {posMod} = require('js/core/utils/math');
 
-const USE_COLOR_MAPPING = false;
-const MAPPING_PALETTE = [185, 210, 235, 285];
+const pieceName = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
+
+const mappingPaletteByPieceName = {
+    // flora palette (red, orange, greens)
+    flora: [-15, 45, 115, 100, 25],
+    // snowstorm palette (cyans, blues)
+    snowstorm: [185, 210, 235, 285],
+    wall_snowstorm: [185, 210, 235, 285],
+    // earthday palette (orange, greens)
+    earthday: [35, 115, 100],
+    wall_earthday: [35, 115, 100],
+
+    // just for mercury soul
+    // green, blue, purple
+    trees: [110, 170, 280, 220],
+    // orange, green
+    stopwatch: [25, 45, 110, 90],
+    kale: [25, 45, 110, 90],
+    // purple, pink, red, orange
+    tactile: [270, 300, 40, 10],
+};
+
+const MAPPING_PALETTE = mappingPaletteByPieceName[pieceName];
+
+const USE_COLOR_MAPPING = !!MAPPING_PALETTE;
 
 function mapColorToPalette(color, palette) {
     const paletteSize = palette.length;

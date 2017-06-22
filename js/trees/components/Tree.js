@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const React = require('react');
 // const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
+const mapColorString = require('js/core/utils/mapColorString');
 const {xyStringFromAngleRadAndRadius} = require('js/core/utils/math');
 
 const TWOPI = 2 * Math.PI;
@@ -35,7 +36,7 @@ const Tree = React.createClass({
         return (
             <g>
                 {_.times(numRows, rowIndex => {
-                    const fill = treesParameters.getColorForIndexAndRow(this.props.index, rowIndex, this.props.numColumns);
+                    const fill = mapColorString(treesParameters.getColorForIndexAndRow(this.props.index, rowIndex, this.props.numColumns));
 
                     const innerRadius = rowIndex * rowSpacing;
                     const outerRadius = innerRadius + rowHeight;

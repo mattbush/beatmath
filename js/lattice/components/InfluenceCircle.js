@@ -1,8 +1,6 @@
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 
-const {CELL_SIZE} = require('js/lattice/parameters/LatticeConstants');
-
 const InfluenceCircle = React.createClass({
     mixins: [ParameterBindingsMixin],
     getParameterBindings: function() {
@@ -14,8 +12,9 @@ const InfluenceCircle = React.createClass({
     },
     render: function() {
         const influence = this.props.influence;
-        const x = influence.getCol() * CELL_SIZE + CELL_SIZE / 2;
-        const y = influence.getRow() * CELL_SIZE + CELL_SIZE / 2;
+        const cellSize = this.props.cellSize;
+        const x = influence.getCol() * cellSize;
+        const y = influence.getRow() * cellSize;
         const size = influence.getSize() * 5;
         const style = {
             transition: `transform ${influence.getRefreshRate() / 1000}s linear`,

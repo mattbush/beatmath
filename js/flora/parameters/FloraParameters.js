@@ -3,7 +3,7 @@ const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
 
-class LatticeParameters extends PieceParameters {
+class FloraParameters extends PieceParameters {
     constructor(mixboard, beatmathParameters, opts) {
         super(mixboard, beatmathParameters, opts);
 
@@ -18,7 +18,7 @@ class LatticeParameters extends PieceParameters {
             mixCoefficient: {
                 type: LogarithmicParameter,
                 range: [1 / 3, 3],
-                start: 1,
+                start: 0.9,
                 listenToLaunchpadKnob: [1, 0],
                 listenToMixtrackKnob: MixtrackKnobs.L_BASS,
                 monitorName: 'Mix Coeff',
@@ -26,15 +26,15 @@ class LatticeParameters extends PieceParameters {
             distanceCoefficient: {
                 type: LogarithmicParameter,
                 range: [1 / 3, 3],
-                start: 1,
+                start: 0.6,
                 listenToLaunchpadKnob: [1, 1],
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,
                 monitorName: 'Distance Coeff',
             },
-            ...P.NumColumns({start: 12, max: 24}),
-            ...P.NumRows({start: 12, max: 15}),
+            ...P.NumColumns({start: 2, max: 24}),
+            ...P.NumRows({start: 2, max: 15}),
             ...P.CustomToggle({name: 'oscillate', button: 1}),
-            ...P.TriangularGridPercent({inputPosition: [0, 0]}),
+            ...P.TriangularGridPercent({inputPosition: [0, 0], start: 1}),
             latency: {
                 type: ManualParameter,
                 start: 0,
@@ -46,4 +46,4 @@ class LatticeParameters extends PieceParameters {
     }
 }
 
-module.exports = LatticeParameters;
+module.exports = FloraParameters;

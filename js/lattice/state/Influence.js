@@ -12,13 +12,13 @@ class Influence {
         this._pieceParameters = pieceParameters;
 
         this._colParameter = new MovingLinearParameter({
-            range: [new NegatedParameter(pieceParameters.numColumns), pieceParameters.numColumns],
+            range: [pieceParameters.influenceMinColumn, pieceParameters.influenceMaxColumn],
             variance: 0.25,
             startLerp: startCol,
         });
 
         this._rowParameter = new MovingLinearParameter({
-            range: [new NegatedParameter(pieceParameters.numRows), pieceParameters.numRows],
+            range: [pieceParameters.influenceMinRow, pieceParameters.influenceMaxRow],
             variance: 0.25,
             startLerp: startRow,
         });
@@ -112,6 +112,48 @@ class SizeInfluence extends Influence {
     }
 }
 
+class ApertureInfluence extends Influence {
+    constructor(params) {
+        super(params);
+        this._mainParameter = new MovingLinearParameter({
+            range: [0, 127],
+            variance: 1.25,
+            start: params.startValue,
+        });
+    }
+    _mixByParameterType(pixelParameter, mixAmount) {
+        const influenceParameter = this._mainParameter.getValue();
+        return lerp(pixelParameter, influenceParameter, mixAmount);
+    }
+    getSize() {
+        return this._mainParameter.getValue() / 10;
+    }
+    _getPixelStateKey() {
+        return 'aperture';
+    }
+}
+
+class RotundityInfluence extends Influence {
+    constructor(params) {
+        super(params);
+        this._mainParameter = new MovingLinearParameter({
+            range: [0, 127],
+            variance: 1.25,
+            start: params.startValue,
+        });
+    }
+    _mixByParameterType(pixelParameter, mixAmount) {
+        const influenceParameter = this._mainParameter.getValue();
+        return lerp(pixelParameter, influenceParameter, mixAmount);
+    }
+    getSize() {
+        return this._mainParameter.getValue() / 10;
+    }
+    _getPixelStateKey() {
+        return 'rotundity';
+    }
+}
+
 class RotationInfluence extends Influence {
     constructor(params) {
         super(params);
@@ -163,4 +205,4 @@ class ColorInfluence extends Influence {
     }
 }
 
-module.exports = {ColorInfluence, RotationInfluence, SizeInfluence};
+module.exports = {ColorInfluence, RotationInfluence, SizeInfluence, ApertureInfluence, RotundityInfluence};

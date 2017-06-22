@@ -1,8 +1,16 @@
-const {ManualParameter, LinearParameter} = require('js/core/parameters/Parameter');
+const {ManualParameter, MovingLinearParameter, LinearParameter, NegatedParameter} = require('js/core/parameters/Parameter');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
 
 class TactileParameters extends PieceParameters {
+    constructor(mixboard, beatmathParameters, opts) {
+        super(mixboard, beatmathParameters, opts);
+
+        this.influenceMinColumn = new NegatedParameter(this.numColumns);
+        this.influenceMaxColumn = this.numColumns;
+        this.influenceMinRow = new NegatedParameter(this.numRows);
+        this.influenceMaxRow = this.numRows;
+    }
     _declareParameters() {
         return {
             ...P.CustomToggle({name: 'showInfluences', button: 0}),
@@ -27,11 +35,16 @@ class TactileParameters extends PieceParameters {
             ...P.CustomToggle({name: 'oscillate', button: 1}),
             ...P.TriangularGridPercent({inputPosition: [0, 0]}),
             flipDurationPercent: {
-                type: LinearParameter,
-                range: [0.1, 0.9],
+                type: MovingLinearParameter,
+                range: [0.05, 0.95],
+                autoupdateRange: [0.15, 0.55],
                 start: 0.3,
                 listenToLaunchpadFader: [4, {addButtonStatusLight: true}],
                 monitorName: 'Flip Duration %',
+                variance: 0.01,
+                autoupdateEveryNBeats: 8,
+                autoupdateOnCue: true,
+                canSmoothUpdate: true,
             },
             ...P.CustomToggle({name: 'perpendicularFlip', button: 4}),
             ...P.CustomPercent({name: 'varySizePercent', inputPosition: [0, 4]}),

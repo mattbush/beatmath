@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const {Parameter, MovingLinearParameter, LinearParameter, NegatedParameter} = require('js/core/parameters/Parameter');
+const {Parameter, LinearParameter, NegatedParameter, LogarithmicParameter} = require('js/core/parameters/Parameter');
 const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
@@ -8,7 +8,7 @@ const updateHue = require('js/core/outputs/updateHue');
 const {NUM_LIGHTS} = require('js/hue_constants');
 const tinycolor = require('tinycolor2');
 
-class WallLatticeParameters extends PieceParameters {
+class WallEarthdayParameters extends PieceParameters {
     constructor(...args) {
         super(...args);
 
@@ -17,11 +17,15 @@ class WallLatticeParameters extends PieceParameters {
         this.influenceMinRow = new NegatedParameter(this.numRows);
         this.influenceMaxRow = this.numRows;
 
+        this._currentTickRotationAngle = 0;
+
         if (ENABLE_HUE) {
             _.times(NUM_LIGHTS, lightNumber => {
                 updateHue(lightNumber, tinycolor('#000'));
             });
         }
+
+        this._beatmathParameters.tempo.addListener(this._updateRotation.bind(this));
     }
     _declareParameters() {
         return {
@@ -51,21 +55,37 @@ class WallLatticeParameters extends PieceParameters {
                 type: Parameter,
                 start: 12,
             },
-            flipDurationPercent: {
-                type: MovingLinearParameter,
-                range: [0.05, 0.95],
-                autoupdateRange: [0.15, 0.55],
-                start: 0.3,
-                listenToLaunchpadFader: [4, {addButtonStatusLight: true}],
-                monitorName: 'Flip Duration %',
-                variance: 0.01,
-                autoupdateEveryNBeats: 8,
-                autoupdateOnCue: true,
-                canSmoothUpdate: true,
+            ...P.CustomToggle({name: 'spherical', button: 0}),
+            scale: {
+                type: LogarithmicParameter,
+                range: [1, 16],
+                start: 4,
+                listenToLaunchpadFader: [7, {addButtonStatusLight: true}],
+                monitorName: 'Scale',
             },
-            ...P.CustomPercent({name: 'wavePercent', inputPosition: {fader: 5}}),
+            tilt: {
+                type: LinearParameter,
+                range: [-90, 90],
+                start: 20,
+                listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
+                monitorName: 'Tilt',
+            },
+            rotationSpeed: {
+                type: LinearParameter,
+                range: [2, 45],
+                start: 10,
+                listenToLaunchpadFader: [1, {addButtonStatusLight: true}],
+                monitorName: 'Rotation Speed',
+            },
         };
+    }
+    _updateRotation() {
+        this._currentTickRotationAngle += this.rotationSpeed.getValue();
+    }
+    getRotation() {
+        const progressTowardsNextTick = this._beatmathParameters.tempo.getProgressTowardsNextTick();
+        return this._currentTickRotationAngle + (this.rotationSpeed.getValue() * progressTowardsNextTick);
     }
 }
 
-module.exports = WallLatticeParameters;
+module.exports = WallEarthdayParameters;
