@@ -48,12 +48,17 @@ const TactilePixel = React.createClass({
         };
     },
     componentWillMount() {
+        this._recalculateCoords();
+    },
+    _recalculateCoords() {
         const mapperShape = this.props.mapperShape;
         let cx, cy, tx, ty;
         if (mapperShape) {
-
+            const frameScale = this.context.beatmathParameters.getFrameScale(); // only this can change while operating
             const rotationDeg = mapperShape.getRotationDeg();
             [cx, cy] = xyRotatedAroundOriginWithAngle(this.props.col, this.props.row, rotationDeg);
+            cx *= frameScale;
+            cy *= frameScale;
             [tx, ty] = [
                 mapperShape.getCenterX() / CELL_SIZE,
                 mapperShape.getCenterY() / CELL_SIZE,
@@ -114,7 +119,8 @@ const TactilePixel = React.createClass({
         return this.context.refreshTimer.getRefreshOffset(this._refreshY, this._refreshX);
     },
     _getRefreshGradient() {
-        // assumes this is called before _getRefreshOffset()
+        // assumes this is called before _getRefreshOffset() and _mixInfluenceIntoNextState
+        this._recalculateCoords();
         const refreshWithinShapePercent = this.context.tactileParameters.refreshWithinShapePercent.getValue();
         this._refreshX = lerp(this._txForInfluence, this._cxForInfluence, refreshWithinShapePercent);
         this._refreshY = lerp(this._tyForInfluence, this._cyForInfluence, refreshWithinShapePercent);
