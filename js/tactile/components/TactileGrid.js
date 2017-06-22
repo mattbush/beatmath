@@ -13,6 +13,45 @@ const {ColorInfluence, SizeInfluence} = require('js/lattice/state/Influence');
 
 const TactileGrid = React.createClass({
     mixins: [ParameterBindingsMixin],
+    contextTypes: {
+        tactileParameters: React.PropTypes.object,
+        influences: React.PropTypes.array,
+        refreshTimer: React.PropTypes.object,
+        beatmathParameters: React.PropTypes.object,
+        mixboard: React.PropTypes.object,
+    },
+    getParameterBindings() {
+        return {
+            showInfluences: this.context.tactileParameters.showInfluences,
+            numRows: this.context.tactileParameters.numRows,
+            numColumns: this.context.tactileParameters.numColumns,
+        };
+    },
+    render() {
+        const children = [];
+        const numRows = this.getParameterValue('numRows');
+        const numColumns = this.getParameterValue('numColumns');
+        for (let row = -numRows; row <= numRows; row++) {
+            for (let col = -numColumns; col <= numColumns; col++) {
+                children.push(<TactilePixel row={row} col={col} key={row + '|' + col} />);
+            }
+        }
+
+        return (
+            <g>
+                {children}
+                {this.getParameterValue('showInfluences') && <g>
+                    {_.map(this.context.influences, (influence, index) =>
+                        <InfluenceCircle influence={influence} key={index} cellSize={CELL_SIZE} />
+                    )}
+                </g>}
+            </g>
+        );
+    },
+});
+
+const TactileContainer = React.createClass({
+    mixins: [ParameterBindingsMixin],
     childContextTypes: {
         tactileParameters: React.PropTypes.object,
         influences: React.PropTypes.array,
@@ -49,36 +88,13 @@ const TactileGrid = React.createClass({
 
         return {tactileParameters, influences, refreshTimer};
     },
-    getParameterBindings() {
-        return {
-            showInfluences: this.state.tactileParameters.showInfluences,
-            numRows: this.state.tactileParameters.numRows,
-            numColumns: this.state.tactileParameters.numColumns,
-        };
-    },
     render() {
-        const children = [];
-        const numRows = this.getParameterValue('numRows');
-        const numColumns = this.getParameterValue('numColumns');
-        for (let row = -numRows; row <= numRows; row++) {
-            for (let col = -numColumns; col <= numColumns; col++) {
-                children.push(<TactilePixel row={row} col={col} key={row + '|' + col} />);
-            }
-        }
-
         return (
             <BeatmathFrame>
-                <g>
-                    {children}
-                    {this.getParameterValue('showInfluences') && <g>
-                        {_.map(this.state.influences, (influence, index) =>
-                            <InfluenceCircle influence={influence} key={index} cellSize={CELL_SIZE} />
-                        )}
-                    </g>}
-                </g>
+                <TactileGrid />
             </BeatmathFrame>
         );
     },
 });
 
-module.exports = TactileGrid;
+module.exports = TactileContainer;
