@@ -39,14 +39,7 @@ const TreeFrame = React.createClass({
             const totalColumnSpacing = treesParameters.getTotalColumnSpacing();
             const dx = ((index + 0.5) * columnSpacing - totalColumnSpacing / 2) * (1 - polarGridAmount);
             const dy = treesParameters.getTotalRowSpacing() / 2 * (1 - polarGridAmount);
-            let rotation = ((index + 0.5) - (numColumns / 2)) * (360 / numColumns) * polarGridAmount;
-
-            // special-case cubes
-            if (numPointsInMapperShape === 6) {
-                // rotation = [-180 + 67.5, -180 + 202.5, -180 + 315][index];
-                rotation = [-180 + 67.5, -180 + 202.5, -180 + 315][index];
-            }
-
+            const rotation = ((index + 0.5) - (numColumns / 2)) * (360 / numColumns) * polarGridAmount;
             return {
                 transform: `translate(${dx}px, ${dy}px) rotate(${rotation}deg) scaleY(-1)`,
             };
@@ -56,7 +49,7 @@ const TreeFrame = React.createClass({
             <g>
                 {_.times(numColumns, index =>
                     <g key={index} style={transformations[index]} className="tree">
-                        <Tree originalIndex={index} index={index + indexOffsetForMapperShape} numColumns={numColumns} numPointsInMapperShape={numPointsInMapperShape} />
+                        <Tree index={index + indexOffsetForMapperShape} numColumns={numColumns} />
                     </g>
                 )}
             </g>

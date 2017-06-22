@@ -19,13 +19,7 @@ const Tree = React.createClass({
     },
     render: function() {
         const treesParameters = this.context.treesParameters;
-        let widthRad = TWOPI / this.props.numColumns;
-
-        // special-case cubes
-        if (this.props.numPointsInMapperShape === 6) {
-            widthRad = this.props.originalIndex === 2 ? (TWOPI / 4) : (TWOPI * 3 / 8);
-        }
-
+        const widthRad = TWOPI / this.props.numColumns;
         const halfWidthRad = (-Math.PI + widthRad) / 2;
         const negHalfWidthRad = (-Math.PI - widthRad) / 2;
 
