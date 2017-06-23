@@ -33,7 +33,91 @@ const sectors6 = [
     {pts: '0,0 -3,1 0,4', angles: [0, 120, 240]},
 ];
 
+const grid4 = [
+    {pts: '0,-2 3,1 -3,1', angles: [0]},
+    {pts: '0,4 3,1 -3,1', angles: [0, 120, 240]},
+];
+
+const sectors7 = [
+    {pts: '0,-2 3,1 -3,1', angles: [0]},
+    {pts: '0,1 3,1 0,4', angles: [0, 120, 240]},
+    {pts: '0,1 -3,1 0,4', angles: [0, 120, 240]},
+];
+
+const sectors9 = [
+    {pts: '0,0 4,0 2,2', angles: [0, 120, 240]},
+    {pts: '0,0 2,2 0,4', angles: [0, 120, 240]},
+    {pts: '0,0 -2,2 0,4', angles: [0, 120, 240]},
+];
+
+const fractal7 = [
+    {pts: '0,1 1.5,-0.5 -1.5,-0.5', angles: [0]},
+    {pts: '0,1 1.5,-0.5 3,1', angles: [0, 120, 240]},
+    {pts: '0,4 3,1 -3,1', angles: [0, 120, 240]},
+];
+
+const honeycomb12 = [
+    {pts: '0,0 1.5,-0.5 3,1 0,1', angles: [0, 120, 240]},
+    {pts: '0,2 0,1 3,1 1.5,2.5', angles: [0, 120, 240]},
+    {pts: '0,2 0,1 -3,1 -1.5,2.5', angles: [0, 120, 240]},
+    {pts: '-1.5,2.5 0,2 1.5,2.5 0,4', angles: [0, 120, 240]},
+];
+
+const subSectors6 = [
+    {pts: '0,0 3,1 -3,1', angles: [0, 120, 240]},
+    {pts: '0,4 3,1 -3,1', angles: [0, 120, 240]},
+];
+
+const subSectors9 = [
+    {pts: '0,0 3,1 -3,1', angles: [0, 120, 240]},
+    {pts: '0,1 3,1 0,4', angles: [0, 120, 240]},
+    {pts: '0,1 -3,1 0,4', angles: [0, 120, 240]},
+];
+
+const fractalSectors10 = [
+    {pts: '0,1 1.5,-0.5 -1.5,-0.5', angles: [0]},
+    {pts: '0,1 1.5,-0.5 3,1', angles: [0, 120, 240]},
+    {pts: '0,1 3,1 0,4', angles: [0, 120, 240]},
+    {pts: '0,1 -3,1 0,4', angles: [0, 120, 240]},
+];
+
+const honeycombSectors9 = [
+    {pts: '0,0 1.5,-0.5 3,1 0,1', angles: [0, 120, 240]},
+    {pts: '0,1 3,1 0,4', angles: [0, 120, 240]},
+    {pts: '0,1 -3,1 0,4', angles: [0, 120, 240]},
+];
+
+const grid9 = [
+    {pts: '0,0 4,0 2,2', angles: [0, 120, 240]},
+    {pts: '0,0 2,2 -2,2', angles: [0, 120, 240]},
+    {pts: '0,4 2,2 -2,2', angles: [0, 120, 240]},
+];
+
+const sectorUpCube9 = [
+    {pts: '0,0 3,1 0,2 -3,1', angles: [0, 120, 240]},
+    {pts: '0,4 3,1 0,2', angles: [0, 120, 240]},
+    {pts: '0,4 -3,1 0,2', angles: [0, 120, 240]},
+];
+
+const sectorDownCube9 = [
+    {pts: '0,0 3,1 0,2 -3,1', angles: [60, 180, 300]},
+    {pts: '0,4 3,1 0,2', angles: [0, 120, 240]},
+    {pts: '0,4 -3,1 0,2', angles: [0, 120, 240]},
+];
+
 const triangles = [
+    grid4,
+    sectors7,
+    subSectors6,
+    subSectors9,
+    sectorDownCube9,
+    sectorUpCube9,
+    grid9,
+    honeycombSectors9,
+    fractalSectors10,
+    honeycomb12,
+    fractal7,
+    sectors9,
     downCube6,
     sectors6,
     clearCube9,
