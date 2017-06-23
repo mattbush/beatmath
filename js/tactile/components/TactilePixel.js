@@ -54,21 +54,24 @@ const TactilePixel = React.createClass({
         const mapperShape = this.props.mapperShape;
         let cx, cy, tx, ty;
         if (mapperShape) {
+            this._mapperShapeScale = mapperShape.getRadius() / (CELL_SIZE * 4);
+
             const frameScale = this.context.beatmathParameters.getFrameScale(); // only this can change while operating
             const rotationDeg = mapperShape.getRotationDeg();
             [cx, cy] = xyRotatedAroundOriginWithAngle(this.props.col, this.props.row, rotationDeg);
-            cx *= frameScale;
-            cy *= frameScale;
+            cx *= frameScale * this._mapperShapeScale;
+            cy *= frameScale * this._mapperShapeScale;
             [tx, ty] = [
                 mapperShape.getCenterX() / CELL_SIZE,
                 mapperShape.getCenterY() / CELL_SIZE,
             ];
         } else {
+            this._mapperShapeScale = 1;
             [cx, cy] = [this.props.col, this.props.row];
             [tx, ty] = [0, 0];
         }
 
-        const APPROX_NUM_SHAPE_LENGTHS_IN_FRAME = 4;
+        const APPROX_NUM_SHAPE_LENGTHS_IN_FRAME = 6;
 
         this._txForInfluence = cx + tx; // position within all shapes
         this._tyForInfluence = cy + ty;
@@ -138,13 +141,13 @@ const TactilePixel = React.createClass({
         return mapColorString(hexString);
     },
     render() {
-        const x = this.state.colComputed * CELL_SIZE;
-        const y = this.state.rowComputed * CELL_SIZE;
+        const x = this.state.colComputed * CELL_SIZE * this._mapperShapeScale;
+        const y = this.state.rowComputed * CELL_SIZE * this._mapperShapeScale;
 
         const tempo = this.context.beatmathParameters.tempo;
         const flipDurationPercent = this.context.tactileParameters.flipDurationPercent.getValue();
         const duration = flipDurationPercent * tempo.getPeriod();
-        const size = lerp(CELL_SIZE, this.state.size, this.context.tactileParameters.varySizePercent.getValue());
+        const size = this._mapperShapeScale * lerp(CELL_SIZE, this.state.size, this.context.tactileParameters.varySizePercent.getValue());
 
         const isOdd = this.state.ticks % 2;
         const rotation = isOdd ? 90 : -90;
