@@ -1,4 +1,5 @@
-const {polarAngleDeg, centerOfPoints} = require('js/core/utils/math');
+const _ = require('lodash');
+const {dist, polarAngleDeg, centerOfPoints} = require('js/core/utils/math');
 
 class MapperShape {
     constructor({index, existingData}) {
@@ -25,6 +26,12 @@ class MapperShape {
             this._vertices[0][0] - this._centerX,
             this._vertices[0][1] - this._centerY,
         ) + 90;
+
+        const distancesFromCenter = this._vertices.map(([x, y]) => {
+            return dist(x - this._centerX, y - this._centerY);
+        });
+
+        this._radius = _.sum(distancesFromCenter) / this._vertices.length;
     }
     moveVertex(vertex, dx, dy) {
         this._vertices[vertex][0] += dx;
@@ -83,6 +90,9 @@ class MapperShape {
     }
     getRotationDeg() {
         return this._rotationDeg;
+    }
+    getRadius() {
+        return this._radius;
     }
 }
 
