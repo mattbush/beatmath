@@ -44,7 +44,7 @@ class TactileParameters extends PieceParameters {
                 type: MovingLinearParameter,
                 range: [0.05, 0.95],
                 autoupdateRange: [0.15, 0.55],
-                start: 0.3,
+                start: 0.9,
                 listenToLaunchpadFader: [4, {addButtonStatusLight: true}],
                 monitorName: 'Flip Duration %',
                 variance: 0.01,

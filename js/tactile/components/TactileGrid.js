@@ -10,7 +10,7 @@ const {CELL_SIZE} = require('js/tactile/parameters/TactileConstants');
 
 const tinycolor = require('tinycolor2');
 const {ColorInfluence, SizeInfluence} = require('js/lattice/state/Influence');
-const tilingShapes = require('js/tactile/tilings/PrideTiling');
+const tilingShapeSets = require('js/tactile/tilings/PrideTiling');
 
 const TactileGrid = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -29,13 +29,15 @@ const TactileGrid = React.createClass({
         };
     },
     render() {
+        const mapperShapeIndex = this.props.mapperShapeIndex || 0;
+        const tilingShapes = tilingShapeSets[mapperShapeIndex];
         const children = tilingShapes.map(shape => {
             const col = shape.center[0];
             const row = shape.center[1];
             return (
                 <TactilePixel points={shape.pointsAroundCenterString} row={row} col={col} key={row + '|' + col} mapperShape={this.props.mapperShape} />
             );
-        })
+        });
 
         return (
             <g>
