@@ -150,17 +150,13 @@ const TactilePixel = React.createClass({
         const rotation = isOdd ? 90 : -90;
         const {x: ax, y: ay} = this._getRefreshGradient();
         const style = {
-            transform: `translate(${x}px,${y}px) rotate3d(${ax},${ay},0,${rotation}deg) scale(${size / 2})`,
+            transform: `translate(${x}px,${y}px) rotate3d(${ax},${ay},0,${rotation}deg) scale(${size})`,
             transition: `all ${duration}ms linear`,
         };
 
-        const shape = this.context.tactileParameters.triangularGridPercent.getValue() >= 0.5 ?
-            <circle cx="0" cy="0" r="1" fill={this._getColorHexString()} /> :
-            <rect x="-1" y="-1" width="2" height="2" fill={this._getColorHexString()} />;
-
         return (
             <g style={style}>
-                {shape}
+                <polygon points={this.props.points} fill={this._getColorHexString()} />
             </g>
         );
     },
