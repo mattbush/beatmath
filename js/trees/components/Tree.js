@@ -18,40 +18,72 @@ const Tree = React.createClass({
         };
     },
     render: function() {
+        const numRows = this.props.numRows;
         const treesParameters = this.context.treesParameters;
-        const widthRad = TWOPI / this.props.numColumns;
-        const halfWidthRad = (-Math.PI + widthRad) / 2;
-        const negHalfWidthRad = (-Math.PI - widthRad) / 2;
 
-        const numRows = treesParameters.numRows.getValue();
-        const rowSpacing = treesParameters.getRowSpacing();
-        const rowHeight = treesParameters.getRowHeight();
+        if (this.props.polarGridAmount) {
+            const widthRad = TWOPI / this.props.numColumns;
+            const halfWidthRad = (-Math.PI + widthRad) / 2;
+            const negHalfWidthRad = (-Math.PI - widthRad) / 2;
 
-        return (
-            <g>
-                {_.times(numRows, rowIndex => {
-                    const fill = mapColorString(treesParameters.getColorForIndexAndRow(this.props.index, rowIndex, this.props.numColumns));
+            const rowSpacing = treesParameters.getRowSpacing();
+            const rowHeight = treesParameters.getRowHeight();
 
-                    const innerRadius = rowIndex * rowSpacing;
-                    const outerRadius = innerRadius + rowHeight;
+            return (
+                <g>
+                    {_.times(numRows, rowIndex => {
+                        const fill = mapColorString(treesParameters.getColorForIndexAndRow(this.props.index, rowIndex, this.props.numColumns));
 
-                    const points = [
-                        xyStringFromAngleRadAndRadius(negHalfWidthRad, innerRadius),
-                        xyStringFromAngleRadAndRadius(halfWidthRad, innerRadius),
-                        xyStringFromAngleRadAndRadius(halfWidthRad, outerRadius),
-                        xyStringFromAngleRadAndRadius(negHalfWidthRad, outerRadius),
-                    ];
+                        const innerRadius = rowIndex * rowSpacing;
+                        const outerRadius = innerRadius + rowHeight;
 
-                    return (
-                        <polygon
-                            points={points.join(' ')}
-                            key={rowIndex}
-                            fill={fill}
-                        />
-                    );
-                })}
-            </g>
-        );
+                        const points = [
+                            xyStringFromAngleRadAndRadius(negHalfWidthRad, innerRadius),
+                            xyStringFromAngleRadAndRadius(halfWidthRad, innerRadius),
+                            xyStringFromAngleRadAndRadius(halfWidthRad, outerRadius),
+                            xyStringFromAngleRadAndRadius(negHalfWidthRad, outerRadius),
+                        ];
+
+                        return (
+                            <polygon
+                                points={points.join(' ')}
+                                key={rowIndex}
+                                fill={fill}
+                            />
+                        );
+                    })}
+                </g>
+            );
+
+        } else {
+            const rowSpacing = treesParameters.getRowSpacing();
+            const baseColumnWidth = treesParameters.getColumnWidth();
+            const rowHeight = treesParameters.getRowHeight();
+            const borderRadius = treesParameters.getBorderRadius();
+
+            return (
+                <g>
+                    {_.times(numRows, rowIndex => {
+                        const fill = mapColorString(treesParameters.getColorForIndexAndRow(this.props.index, rowIndex, this.props.numColumns));
+                        const columnWidth = baseColumnWidth;
+
+                        return (
+                            <rect
+                                className="treeRect"
+                                key={rowIndex}
+                                fill={fill}
+                                x={-(columnWidth / 2)}
+                                y={rowIndex * rowSpacing}
+                                rx={borderRadius}
+                                ry={borderRadius}
+                                width={columnWidth}
+                                height={rowHeight}
+                            />
+                        );
+                    })}
+                </g>
+            );
+        }
     },
 });
 

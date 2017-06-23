@@ -4,7 +4,7 @@ const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const TreesParameters = require('js/trees/parameters/TreesParameters');
 const Tree = require('js/trees/components/Tree');
-const {clamp} = require('js/core/utils/math');
+// const {clamp} = require('js/core/utils/math');
 
 // const {manhattanDist, posMod} = require('js/core/utils/math');
 
@@ -22,26 +22,24 @@ const TreeFrame = React.createClass({
     },
     render: function() {
         const treesParameters = this.context.treesParameters;
-        let numColumns = treesParameters.numColumns.getValue();
-        const indexOffsetForMapperShape = this.props.mapperShapeIndex
-            ? this.props.mapperShapeIndex
+        let numColumns = this.props.mapperShapeIndex === 0 ? 12 : 1;
+        let numRows = this.props.mapperShapeIndex >= 5 ? 12 : 1;
+
+        const indexOffsetForMapperShape = this.props.mapperShapeIndex >= 1
+            ? this.props.mapperShapeIndex + 12
             : 0;
 
-        const numPointsInMapperShape = this.props.mapperShape ?
-            this.props.mapperShape.getNumPoints() :
-            null;
-        numColumns = (numPointsInMapperShape === 3) ? 3 : numColumns;
-
         const columnSpacing = treesParameters.getColumnSpacing();
-        const polarGridAmount = clamp(treesParameters.polarGridAmount.getValue(), 0, 1);
+        const polarGridAmount = this.props.mapperShapeIndex === 0 ? 1 : 0;
+        const extraScale = this.props.mapperShapeIndex < 5 ? 10 : 1;
 
         const transformations = _.times(numColumns, index => {
-            const totalColumnSpacing = treesParameters.getTotalColumnSpacing();
+            const totalColumnSpacing = treesParameters.getColumnSpacing() * numColumns;
             const dx = ((index + 0.5) * columnSpacing - totalColumnSpacing / 2) * (1 - polarGridAmount);
-            const dy = treesParameters.getTotalRowSpacing() / 2 * (1 - polarGridAmount);
+            const dy = treesParameters.getRowSpacing() * numRows / 2 * (1 - polarGridAmount);
             const rotation = ((index + 0.5) - (numColumns / 2)) * (360 / numColumns) * polarGridAmount;
             return {
-                transform: `translate(${dx}px, ${dy}px) rotate(${rotation}deg) scaleY(-1)`,
+                transform: `scale(${extraScale}) translate(${dx}px, ${dy}px) rotate(${rotation}deg) scaleY(-1)`,
             };
         });
 
@@ -49,7 +47,7 @@ const TreeFrame = React.createClass({
             <g>
                 {_.times(numColumns, index =>
                     <g key={index} style={transformations[index]} className="tree">
-                        <Tree index={index + indexOffsetForMapperShape} numColumns={numColumns} />
+                        <Tree index={index + indexOffsetForMapperShape} numColumns={numColumns} numRows={numRows} polarGridAmount={polarGridAmount} />
                     </g>
                 )}
             </g>

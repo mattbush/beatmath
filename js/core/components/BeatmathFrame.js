@@ -65,7 +65,8 @@ const BeatmathFrame = React.createClass({
                     mapperShapeIndex: index,
                 });
 
-                const combinedRotation = mapperShape.getRotationDeg() + frameRotation;
+                // const combinedRotation = mapperShape.getRotationDeg() + frameRotation;
+                const combinedRotation = frameRotation;
 
                 const translatedStyle = {
                     ...style,
