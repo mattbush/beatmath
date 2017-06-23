@@ -34,9 +34,9 @@ const sectors6 = [
 ];
 
 const triangles = [
+    downCube6,
     sectors6,
     clearCube9,
-    downCube6,
     upCube6,
     original18,
 ];
