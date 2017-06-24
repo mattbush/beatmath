@@ -106,22 +106,24 @@ const sectorDownCube9 = [
 ];
 
 const triangles = [
-    grid4,
-    sectors7,
-    subSectors6,
-    subSectors9,
-    sectorDownCube9,
-    sectorUpCube9,
-    grid9,
     honeycombSectors9,
-    fractalSectors10,
-    honeycomb12,
-    fractal7,
     sectors9,
-    downCube6,
+    honeycomb12,
+    subSectors6,
     sectors6,
-    clearCube9,
+    subSectors9,
+    sectors7,
+    downCube6,
     upCube6,
+    sectorUpCube9,
+    fractalSectors10,
+    fractal7,
+
+    // not used
+    grid4,
+    sectorDownCube9,
+    grid9,
+    clearCube9,
     original18,
 ];
 
