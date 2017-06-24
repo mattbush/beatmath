@@ -54,24 +54,29 @@ const TactilePixel = React.createClass({
         const mapperShape = this.props.mapperShape;
         let cx, cy, tx, ty;
         if (mapperShape) {
+            this._mapperShapeScale = mapperShape.getRadius() / (CELL_SIZE * 4);
+
             const frameScale = this.context.beatmathParameters.getFrameScale(); // only this can change while operating
             const rotationDeg = mapperShape.getRotationDeg();
             [cx, cy] = xyRotatedAroundOriginWithAngle(this.props.col, this.props.row, rotationDeg);
-            cx *= frameScale;
-            cy *= frameScale;
+            cx *= frameScale * this._mapperShapeScale;
+            cy *= frameScale * this._mapperShapeScale;
             [tx, ty] = [
                 mapperShape.getCenterX() / CELL_SIZE,
                 mapperShape.getCenterY() / CELL_SIZE,
             ];
         } else {
+            this._mapperShapeScale = 1;
             [cx, cy] = [this.props.col, this.props.row];
             [tx, ty] = [0, 0];
         }
 
+        const APPROX_NUM_SHAPE_LENGTHS_IN_FRAME = 6;
+
         this._txForInfluence = cx + tx; // position within all shapes
         this._tyForInfluence = cy + ty;
-        this._cxForInfluence = cx; // position within current shape, rotated
-        this._cyForInfluence = cy;
+        this._cxForInfluence = cx * APPROX_NUM_SHAPE_LENGTHS_IN_FRAME; // position within current shape, rotated
+        this._cyForInfluence = cy * APPROX_NUM_SHAPE_LENGTHS_IN_FRAME;
     },
     _update() {
         if (!this.isMounted()) {
@@ -99,12 +104,9 @@ const TactilePixel = React.createClass({
             this._nextState.colComputed = lerp(this.props.col, this.state.colTriangular, triangularGridPercent);
         }
 
-        // divide by this since it's easier than scaling influences' boundaries by this
-        const APPROX_NUM_SHAPE_LENGTHS_IN_FRAME = 4;
-
         const influenceWithinShapePercent = this.context.tactileParameters.influenceWithinShapePercent.getValue();
-        this._influenceX = lerp(this._txForInfluence, this._cxForInfluence, influenceWithinShapePercent) / APPROX_NUM_SHAPE_LENGTHS_IN_FRAME;
-        this._influenceY = lerp(this._tyForInfluence, this._cyForInfluence, influenceWithinShapePercent) / APPROX_NUM_SHAPE_LENGTHS_IN_FRAME;
+        this._influenceX = lerp(this._txForInfluence, this._cxForInfluence, influenceWithinShapePercent);
+        this._influenceY = lerp(this._tyForInfluence, this._cyForInfluence, influenceWithinShapePercent);
 
         _.each(this.context.influences, this._mixInfluenceIntoNextState);
         const wavePercent = this.context.tactileParameters.wavePercent.getValue();
@@ -139,29 +141,25 @@ const TactilePixel = React.createClass({
         return mapColorString(hexString);
     },
     render() {
-        const x = this.state.colComputed * CELL_SIZE;
-        const y = this.state.rowComputed * CELL_SIZE;
+        const x = this.state.colComputed * CELL_SIZE * this._mapperShapeScale;
+        const y = this.state.rowComputed * CELL_SIZE * this._mapperShapeScale;
 
         const tempo = this.context.beatmathParameters.tempo;
         const flipDurationPercent = this.context.tactileParameters.flipDurationPercent.getValue();
         const duration = flipDurationPercent * tempo.getPeriod();
-        const size = lerp(CELL_SIZE, this.state.size, this.context.tactileParameters.varySizePercent.getValue());
+        const size = this._mapperShapeScale * lerp(CELL_SIZE, this.state.size, this.context.tactileParameters.varySizePercent.getValue());
 
         const isOdd = this.state.ticks % 2;
         const rotation = isOdd ? 90 : -90;
         const {x: ax, y: ay} = this._getRefreshGradient();
         const style = {
-            transform: `translate(${x}px,${y}px) rotate3d(${ax},${ay},0,${rotation}deg) scale(${size / 2})`,
+            transform: `translate(${x}px,${y}px) rotate3d(${ax},${ay},0,${rotation}deg) scale(${size})`,
             transition: `all ${duration}ms linear`,
         };
 
-        const shape = this.context.tactileParameters.triangularGridPercent.getValue() >= 0.5 ?
-            <circle cx="0" cy="0" r="1" fill={this._getColorHexString()} /> :
-            <rect x="-1" y="-1" width="2" height="2" fill={this._getColorHexString()} />;
-
         return (
             <g style={style}>
-                {shape}
+                <polygon points={this.props.points} fill={this._getColorHexString()} />
             </g>
         );
     },
