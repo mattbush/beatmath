@@ -1,4 +1,4 @@
-const {MovingLinearParameter, LogarithmicParameter, HoldButtonParameter, IntLinearParameter} = require('js/core/parameters/Parameter');
+const {LinearParameter, MovingLinearParameter, LogarithmicParameter, HoldButtonParameter, IntLinearParameter} = require('js/core/parameters/Parameter');
 const {MixtrackKnobs, MixtrackButtons, MixtrackWheels} = require('js/core/inputs/MixtrackConstants');
 const tinycolor = require('tinycolor2');
 const {posMod, posModAndBendToLowerHalf, lerp} = require('js/core/utils/math');
@@ -35,9 +35,9 @@ class TreesParameters extends PieceParameters {
                 monitorName: 'Column Width',
             },
             rowHeight: {
-                type: IntLinearParameter,
+                type: LinearParameter,
                 range: [10, 200],
-                start: 200,
+                start: 19.5,
                 listenToLaunchpadKnob: [2, 1],
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,
                 monitorName: 'Row Height',
