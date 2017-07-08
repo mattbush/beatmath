@@ -74,7 +74,8 @@ const FloraGrid = React.createClass({
         const children = [];
         const numRows = this.getParameterValue('numRows');
         const numColumns = this.getParameterValue('numColumns');
-        for (let row = 0; row < numRows; row++) {
+        const startRow = numRows > 4 ? _.min(_.keys(wallowHexGrid)) : 0;
+        for (let row = startRow; row < numRows; row++) {
             for (let col = -numColumns; col <= numColumns; col++) {
                 if (posMod(col, 2) === posMod(row, 2)) {
                     continue;
