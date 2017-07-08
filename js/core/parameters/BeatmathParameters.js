@@ -215,6 +215,9 @@ class BeatmathParameters {
             window.location = path + event.newValue;
         }
     }
+    getFrameScale() {
+        return this.frameScale.getValue() * this.frameScaleAutoupdating.getValue();
+    }
 }
 
 module.exports = BeatmathParameters;

@@ -31,7 +31,7 @@ const WallTreesGrid = React.createClass({
         }
 
         return (
-            <g style={{transform: `scale(76) translate(${-(_.size(hexGrid[0]) - 1) / 2}px, ${-_.size(hexGrid) / 2}px)`}}>
+            <g style={{transform: 'scale(76) translate(-7.5px, -3.5px)'}}>
                 {componentGrid}
             </g>
         );

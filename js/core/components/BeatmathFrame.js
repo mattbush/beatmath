@@ -46,7 +46,7 @@ const BeatmathFrame = React.createClass({
     },
     _renderChildFrames() {
         const frameRotation = this.getParameterValue('frameRotation');
-        const frameScale = this.getParameterValue('frameScale') * this.getParameterValue('frameScaleAutoupdating');
+        const frameScale = this.context.beatmathParameters.getFrameScale();
         const transitionPeriod = this.context.beatmathParameters.tempo.getPeriod();
         const style = {
             transform: `scale(${frameScale})`,
