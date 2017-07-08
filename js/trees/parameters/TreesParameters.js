@@ -24,8 +24,8 @@ class TreesParameters extends PieceParameters {
     _declareParameters() {
         return {
             ...P.BaseColor(),
-            ...P.NumColumns({start: 16, max: 24}),
-            ...P.NumRows({start: 16, max: 24}),
+            ...P.NumColumns({start: 3, max: 24}),
+            ...P.NumRows({start: 1, max: 24}),
             columnWidth: {
                 type: IntLinearParameter,
                 range: [10, 200],
@@ -37,21 +37,21 @@ class TreesParameters extends PieceParameters {
             rowHeight: {
                 type: IntLinearParameter,
                 range: [10, 200],
-                start: 30,
+                start: 200,
                 listenToLaunchpadKnob: [2, 1],
                 listenToMixtrackKnob: MixtrackKnobs.R_BASS,
                 monitorName: 'Row Height',
             },
             columnGap: {type: IntLinearParameter,
                 range: [0, 200],
-                start: 30,
+                start: 0,
                 listenToLaunchpadKnob: [1, 0],
                 listenToMixtrackKnob: MixtrackKnobs.L_MID,
                 monitorName: 'Column Gap',
             },
             rowGap: {type: IntLinearParameter,
                 range: [0, 200],
-                start: 30,
+                start: 0,
                 listenToLaunchpadKnob: [1, 1],
                 listenToMixtrackKnob: MixtrackKnobs.R_MID,
                 monitorName: 'Row Gap',
@@ -59,19 +59,19 @@ class TreesParameters extends PieceParameters {
             ...P.BorderRadiusPercent(),
             periodTicks: {type: LogarithmicParameter,
                 range: [2, 16],
-                start: 2,
+                start: 4,
                 listenToDecrementAndIncrementLaunchpadButtons: 3,
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
                 monitorName: 'Period Ticks',
             },
-            ...P.ColumnColorShift({range: 180}),
-            ...P.RowColorShift({range: 180}),
-            ...P.CustomPercent({name: 'trailPercent', start: 0.5, inputPosition: [2, 2]}),
+            ...P.ColumnColorShift({range: 180}), // start: 30
+            ...P.RowColorShift({range: 180}), // start: 10
+            ...P.CustomPercent({name: 'trailPercent', start: 1, inputPosition: [2, 2]}),
             ...P.CustomPercent({name: 'revTrailPercent', start: 0, inputPosition: [1, 2]}),
             staggerAmount: {
                 type: MovingLinearParameter,
                 range: [-8, 8],
-                start: 0,
+                start: 1,
                 monitorName: 'Stagger Amount',
                 listenToDecrementAndIncrementLaunchpadButtons: 2,
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_PITCH_BEND_MINUS, MixtrackButtons.L_PITCH_BEND_PLUS],
@@ -81,11 +81,11 @@ class TreesParameters extends PieceParameters {
                 canSmoothUpdate: true,
             },
             ...P.CustomToggle({name: 'mirrorStagger', button: 1}),
-            ...P.CustomToggle({name: 'roundStagger', button: 0, start: true}),
+            ...P.CustomToggle({name: 'roundStagger', button: 0, start: false}),
             polarGridAmount: {
                 type: MovingLinearParameter,
                 range: [-2, 3],
-                start: 0.5, buildupStart: 0,
+                start: 1, buildupStart: 0,
                 incrementAmount: 0.05,
                 listenToLaunchpadFader: [2, {addButtonStatusLight: true}],
                 listenToMixtrackWheel: MixtrackWheels.R_CONTROL_2,
@@ -167,8 +167,8 @@ class TreesParameters extends PieceParameters {
     getRowHeight() {
         return this.rowHeight.getValue();
     }
-    _getAdjustedStaggerAmount(periodTicks, baseStaggerAmount, polarGridAmount) {
-        const staggerAmountForAFullRotation = periodTicks / this.numColumns.getValue();
+    _getAdjustedStaggerAmount(periodTicks, baseStaggerAmount, polarGridAmount, numColumns) {
+        const staggerAmountForAFullRotation = periodTicks / numColumns;
         const distanceFromClosestMultiple = modAndShiftToHalf(baseStaggerAmount, staggerAmountForAFullRotation);
         return baseStaggerAmount - (distanceFromClosestMultiple * polarGridAmount);
     }
@@ -181,16 +181,15 @@ class TreesParameters extends PieceParameters {
         const sineWaveAngularOffsetPercent = (this._sineNumTicks + columnIndex) / sinePeriodTicks;
         return sineAmplitude * this.numRows.getValue() * Math.sin(sineWaveAngularOffsetPercent * PI_TIMES_2);
     }
-    _getRowIllumination(columnIndex, rowIndex) {
+    _getRowIllumination(columnIndex, rowIndex, numColumns) {
         const periodTicks = this.periodTicks.getValue();
         let staggerAmount = this.staggerAmount.getValue();
         const polarGridAmount = clamp(this.polarGridAmount.getValue(), 0, 1);
         if (this.roundStagger.getValue()) {
             staggerAmount = Math.round(staggerAmount);
         } else if (polarGridAmount > 0) {
-            staggerAmount = this._getAdjustedStaggerAmount(periodTicks, staggerAmount, polarGridAmount);
+            staggerAmount = this._getAdjustedStaggerAmount(periodTicks, staggerAmount, 0, numColumns);
         }
-        const numColumns = this.numColumns.getValue();
         if (staggerAmount !== 0) {
             if (this.mirrorStagger.getValue()) {
                 columnIndex = posModAndBendToLowerHalf(columnIndex, numColumns - 1);
@@ -205,28 +204,29 @@ class TreesParameters extends PieceParameters {
     }
     _getColorShiftPerColumn() {
         const baseColorShift = this.columnColorShift.getValue();
-        const polarGridAmount = clamp(this.polarGridAmount.getValue(), 0, 1);
-        if (polarGridAmount === 0) {
-            return baseColorShift;
-        }
-        const colorShiftForAFullRotation = 360 / this.numColumns.getValue();
-        const distanceFromClosestMultiple = modAndShiftToHalf(baseColorShift, colorShiftForAFullRotation);
-        return baseColorShift - (distanceFromClosestMultiple * polarGridAmount);
+        return baseColorShift;
+        // const polarGridAmount = clamp(this.polarGridAmount.getValue(), 0, 1);
+        // if (polarGridAmount === 0) {
+        //     return baseColorShift;
+        // }
+        // const colorShiftForAFullRotation = 360 / numColumns;
+        // const distanceFromClosestMultiple = modAndShiftToHalf(baseColorShift, colorShiftForAFullRotation);
+        // return baseColorShift - (distanceFromClosestMultiple * polarGridAmount);
     }
-    getColorForIndexAndRow(columnIndex, rowIndex) {
+    getColorForIndexAndRow(columnIndex, rowIndex, numColumns) {
         if (this.whiteout.getValue()) {
             return WHITE;
         } else if (this.blackout.getValue()) {
             return BLACK;
         }
         const color = tinycolor(this.baseColor.getValue().toHexString()); // clone
-        const colorShiftPerColumn = this._getColorShiftPerColumn();
+        const colorShiftPerColumn = this._getColorShiftPerColumn(numColumns);
         const colorShiftPerRow = this.rowColorShift.getValue();
         const colorShift = colorShiftPerColumn * columnIndex + colorShiftPerRow * rowIndex;
         if (colorShift !== 0) {
             color.spin(colorShift);
         }
-        const baseRowIllumination = this._getRowIllumination(columnIndex, rowIndex);
+        const baseRowIllumination = this._getRowIllumination(columnIndex, rowIndex, numColumns);
         const revTrailPercent = 1 - this.revTrailPercent.getValue();
         let rowIllumination;
         if (baseRowIllumination > revTrailPercent || revTrailPercent === 0) {

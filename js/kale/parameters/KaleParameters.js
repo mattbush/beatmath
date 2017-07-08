@@ -27,11 +27,11 @@ class KaleParameters extends PieceParameters {
             ...P.ColumnColorShift({range: 45}),
             ...P.RowColorShift({range: 45}),
             ...P.CustomToggle({name: 'isInfinite', button: 0}),
-            ...P.CustomToggle({name: 'cellSymmetry', button: 3, start: true}),
+            ...P.CustomToggle({name: 'cellSymmetry', button: 3, start: false}),
             ...P.TriangularGridPercent({start: 1, inputPosition: [2, 2]}),
             reflectionsPerCell: {
                 type: CycleParameter,
-                cycleValues: [1, 2, 4, 6],
+                cycleValues: [2, 4, 6],
                 listenToDecrementAndIncrementLaunchpadButtons: 2,
                 monitorName: '# Reflections',
             },

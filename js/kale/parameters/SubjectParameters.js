@@ -34,9 +34,9 @@ class SubjectParameters extends PieceParameters {
             },
             outerScaleAmount: {
                 type: MovingLogarithmicParameter,
-                range: [0.25, 4],
+                range: [0.3, 0.5],
                 autoupdateRange: [0.3, 2.4],
-                start: 1,
+                start: 0.4,
                 listenToLaunchpadFader: [4, {addButtonStatusLight: true}],
                 monitorName: 'Outer Scale',
                 variance: 0.15,
@@ -72,9 +72,9 @@ class SubjectParameters extends PieceParameters {
             ...P.BorderRadiusPercent({start: 0.3, autoupdateMax: 0.6}),
             viewpointShiftPercent: {
                 type: MovingLinearParameter,
-                range: [0, 1],
+                range: [0, 0.2],
                 autoupdateRange: [0.05, 0.55],
-                start: 0.3,
+                start: 0.1,
                 buildupStart: 1,
                 listenToLaunchpadFader: [2, {addButtonStatusLight: true}],
                 monitorName: 'View Shift %',

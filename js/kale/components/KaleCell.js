@@ -61,7 +61,9 @@ const KaleCell = React.createClass({
         let triGridPercent = Math.max((triangularGridPercent - 0.5) * 2, 0);
         triGridPercent = Math.round(triGridPercent * 20) / 20;
         const brickGridPercent = Math.min(triangularGridPercent * 2, 1);
-        const reflectionsPerCell = this.getParameterValue('reflectionsPerCell');
+        const reflectionsPerCell = this.props.numPointsInMapperShape === 3 ?
+            6 :
+            this.getParameterValue('reflectionsPerCell');
         const clipPathPrefix = (isInfinite ? 'I' : 'F') + reflectionsPerCell;
 
         const yAxisScale = lerp(2, Y_AXIS_SCALE, triGridPercent);
