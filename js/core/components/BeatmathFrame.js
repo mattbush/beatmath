@@ -151,7 +151,7 @@ const BeatmathFrame = React.createClass({
 
         return (
             <div className="main">
-                <svg width={width} height={height} style={svgStyle}>
+                <svg width={width + 22} height={height} style={svgStyle}>
                     <g style={style}>
                         {this._renderDefs()}
                         {this._renderChildFrames()}
