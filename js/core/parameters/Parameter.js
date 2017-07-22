@@ -210,7 +210,7 @@ class HoldButtonParameter extends ToggleParameter {
 
 class CycleParameter extends Parameter {
     constructor(params) {
-        params.start = params.cycleValues[0];
+        params.start = params.start || params.cycleValues[0];
         super(params);
 
         this._cycleValues = params.cycleValues;
