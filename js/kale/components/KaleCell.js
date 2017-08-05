@@ -102,8 +102,11 @@ const KaleCell = React.createClass({
             const xWithMapperShapeOffset = x + this.props.mapperShapeXOffset;
             const yWithMapperShapeOffset = y + this.props.mapperShapeYOffset;
 
+            const stroke = this._getColor(xWithMapperShapeOffset, yWithMapperShapeOffset);
+            const fill = tinycolor(stroke).spin(180).darken(40).toHexString();
+
             return (
-                <g key={index} transform={`${scale}rotate(${rotationDeg})`} stroke={this._getColor(xWithMapperShapeOffset, yWithMapperShapeOffset)}>
+                <g key={index} transform={`${scale}rotate(${rotationDeg})`} fill={fill} stroke={stroke}>
                     <g clipPath={clipPath}>
                         <KaleSubject cellX={xWithMapperShapeOffset} cellY={yWithMapperShapeOffset} />
                     </g>

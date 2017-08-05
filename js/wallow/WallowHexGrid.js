@@ -179,6 +179,13 @@ const cz0 = {color: '#666666', points: '0,4 6,2 6,-2 0,-4 -6,-2 -6,2'};
 const czh0 = {color: '#666666', points: '6,2 6,-2 -6,-2 -6,2'};
 const czh6 = {color: '#666666', points: '6,0 6,-2 -6,-2 -6,0'};
 const czh12 = {color: '#666666', points: '6,2 6,0 -6,0 -6,2'};
+const czh02 = {color: '#666666', points: '0,4 6,-2 0,-4 -6,2'};
+const czh2 = {color: '#666666', points: '0,4 6,-2 3,-3 -3,3'};
+const czh8 = {color: '#666666', points: '-3,3 -6,2 0,-4 3,-3'};
+
+const czh04 = {color: '#666666', points: '0,4 6,2 0,-4 -6,-2'};
+const czh4 = {color: '#666666', points: '0,4 -6,-2 -3,-3 3,3'};
+const czh10 = {color: '#666666', points: '3,3 6,2 0,-4 -3,-3'};
 
 const cah6 = {color: '#666666', points: '3,-3 6,0 -6,0 -3,-3'};
 const cah12 = {color: '#666666', points: '3,3 6,0 -6,0 -3,3'};
@@ -497,52 +504,76 @@ const tc11 = {color: '#11AA66', points: '0,2 -6,2 -1.5,0.5'};
 
 /* eslint-enable no-unused-vars */
 
-const hexGridShapes = [
-    {0: [sc1, sc3, sc5, sc7, sc9, sc11], 1: [sc4, sc8, sc12], 2: [f4, f8, f12, rc2, rc6, rc10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512, a555], 4: [f1, f3, f5, f7, f9, f11, a2, a6, a10, b55, a54, a58, a512],
+// needs work: -1,6 | -1,9 | -1,13
+// z1 is out of sight
+
+const hexGridShapes = {
+    '-1': {'-1': [e6], 0: [f4, f8, a3], 1: [f4, f8, a3], 2: [f4, f8, a3], 3: [f4, f8, a3], 4: [f4, f8, a3],
+     5: [wa2, wa6, wa10, a5], 6: [wa2, wa6, wa10, a5], 7: [x0, y0, a5, h2, h6, h10], 8: [i2, i6, i10, x0, y0, c0], 9: [x1, x0, y1, y0, z0, b3, b5, b7, b9, c0],
+     10: [x1, x0, y1, y0, z0, b3, b5, b7, b9, c0], 11: [x1, x0, y1, y0, z0, z4, z5, z6, z7, b5, b7], 12: [yy3, xx9, y5, x6, z0], 13: [xx3, zz5, xx9, zz11, v1], 14: [zz1, yy3, zz7, yy9, v5],
+     15: [zz5, xx9, v1]},
+
+    0: {'-1': [w1, f4, fa4], 0: [sc1, sc3, sc5, sc7, sc9, sc11], 1: [sc4, sc8, sc12], 2: [f4, f8, f12, rc2, rc6, rc10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512, a555], 4: [f1, f3, f5, f7, f9, f11, a2, a6, a10, b55, a54, a58, a512],
      5: [wa2, wa6, wa10, b55, a54, a58, a512], 6: [wa2, wa6, wa10, a5], 7: [x0, y0, z1, a5, h2, h6, h10], 8: [i2, i6, i10, x0, y0, z1, k2, k6, k10, a5], 9: [i2, i6, i10, x0, y0, z1, c0],
-     10: [x1, x0, y1, y0, z1, z0, b1, b3, b5, b7, b9, b11, c0], 11: [x1, x0, y1, y0, z1, z0, z4, z5, z6, z7, b1, b5, b7, b11], 12: [x1, y6, x5, y1, x0, y5, x6, y0, z1, z5, z6, z0], 13: [x1, x2, x9, x0, y1, y3, y8, y0, v3], 14: [xx1, yy5, xx7, yy11, v3], 15: [x1, x0, y1, y0, z1, z0, v0]},
+     10: [x1, x0, y1, y0, z1, z0, b1, b3, b5, b7, b9, b11, c0], 11: [x1, x0, y1, y0, z1, z0, z4, z5, z6, z7, b1, b5, b7, b11], 12: [x1, y6, x5, y1, x0, y5, x6, y0, z1, z5, z6, z0], 13: [x1, x2, x9, x0, y1, y3, y8, y0, v3], 14: [xx1, yy5, xx7, yy11, v3],
+     15: [x1, x0, y1, y0, z1, z0, v0], 16: [xx1, yy5, xx7, yy11, v3]},
 
-    {/**/0: [sb1, sb3, sb5, sb7, sb9, sb11], 1: [sb4, sb8, sb12], 2: [f4, f8, f12, l2, l6, l10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512], 4: [wa4, wa8, wa12, b55, a54, a58, a512],
+    1: {/**/'-1': [], 0: [sb1, sb3, sb5, sb7, sb9, sb11], 1: [sb4, sb8, sb12], 2: [f4, f8, f12, l2, l6, l10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512], 4: [wa4, wa8, wa12, b55, a54, a58, a512],
          5: [wa4, wa8, wa12, a5], 6: [wa1, wa3, wa5, wa7, wa9, wa11, a5], 7: [g1, g3, g5, g7, g9, g11, k2, k6, k10, a5], 8: [g1, g3, g5, g7, g9, g11, c0], 9: [g12, g4, g8, c0],
-         10: [z1, z2, z3, x8, x9, x0, y8, y9, y0, c0], 11: [x1, x2, y3, y1, x0, x9, y8, y0, z4, z5, z6, z7], 12: [x1, x0, y1, y0, z4, z5, z6, z7, i6, i12], 13: [x1, x0, y1, y0, i6, i12, v3], 14: [xx3, zz5, xx9, zz11, v1]},
+         10: [z1, z2, z3, x8, x9, x0, y8, y9, y0, c0], 11: [x1, x2, y3, y1, x0, x9, y8, y0, z4, z5, z6, z7], 12: [x1, x0, y1, y0, z4, z5, z6, z7, i6, i12], 13: [x1, x0, y1, y0, i6, i12, v3], 14: [xx3, zz5, xx9, zz11, v1],
+         15: [zz1, yy3, zz7, yy9, v5]},
 
-    {0: [tb2, tb4, tb6, tb8, tb10, tb12, c0], 1: [sa1, sa3, sa5, sa7, sa9, sa11], 2: [sa4, sa8, sa12], 3: [f4, f8, f12, ra2, ra6, ra10], 4: [f4, f8, f12, a2, a6, a10, a5],
-    5: [f4, f8, f12, tc1, tc3, tc5, tc7, tc9, tc11, a5], 6: [e1, e3, e5, e7, e9, e11, a1, a5], 7: [e2, e6, e10, a1, a5], 8: [e2, e6, e10, j4, j8, j12, c0], 9: [e1, e3, e5, e7, e9, e11, j4, j8, j12, c0],
-    10: [g12, g4, g8, x4, y4, z7], 11: [z1, z2, z3, x8, y4, x4, y9, z7, x0, x9, y8, y0], 12: [z1, z2, z3, x8, y4, x4, y9, x0, y5, x6, y0, z0], 13: [x1, x0, y1, y0, z5, z6, c6, c12], 14: [x0, y5, x6, y0, z1, z0, uu1, uu2, uu3, uu4], 15: [x8, x0, z0, y9, y0, g12, u5, u6]},
+    2: {'-1': [tb2, tb4, tb12, c0], 0: [tb2, tb4, tb6, tb8, tb10, tb12, c0], 1: [sa1, sa3, sa5, sa7, sa9, sa11], 2: [sa4, sa8, sa12], 3: [f4, f8, f12, ra2, ra6, ra10], 4: [f4, f8, f12, a2, a6, a10, a5],
+     5: [f4, f8, f12, tc1, tc3, tc5, tc7, tc9, tc11, a5], 6: [e1, e3, e5, e7, e9, e11, a1, a5], 7: [e2, e6, e10, a1, a5], 8: [e2, e6, e10, j4, j8, j12, c0], 9: [e1, e3, e5, e7, e9, e11, j4, j8, j12, c0],
+     10: [g12, g4, g8, x4, y4, z7], 11: [z1, z2, z3, x8, y4, x4, y9, z7, x0, x9, y8, y0], 12: [z1, z2, z3, x8, y4, x4, y9, x0, y5, x6, y0, z0], 13: [x1, x0, y1, y0, z5, z6, c6, c12], 14: [x0, y5, x6, y0, z1, z0, uu1, uu2, uu3, uu4],
+     15: [x8, x0, z0, y9, y0, g12, u5, u6], 16: [x0, yy11]},
 
-    {/**/0: [ta0, ta1, ta3, ta5, ta7, ta9, ta11], 1: [w1, w3, w5, w7, w9, w11], 2: [qa1, qa3, qa5, qa7, qa9, qa11, qa0, qa2, qa6, qa10], 3: [qb1, qb3, qb5, qb7, qb9, qb11, qb0, qb2, qb6, qb10], 4: [qc1, qc3, qc5, qc7, qc9, qc11, qc0, qc2, qc6, qc10],
+    3: {/**/'-1': [ef1and2, ca0], 0: [ta0, ta1, ta3, ta5, ta7, ta9, ta11], 1: [w1, w3, w5, w7, w9, w11], 2: [qa1, qa3, qa5, qa7, qa9, qa11, qa0, qa2, qa6, qa10], 3: [qb1, qb3, qb5, qb7, qb9, qb11, qb0, qb2, qb6, qb10], 4: [qc1, qc3, qc5, qc7, qc9, qc11, qc0, qc2, qc6, qc10],
          5: [qd1, qd3, qd5, qd7, qd9, qd11, qd0, qd2, qd6, qd10], 6: [qe1, qe3, qe5, qe7, qe9, qe11, qe0, qe2, qe6, qe10], 7: [qf0, qf2, qf6, qf10], 8: [e1, e3, e5, e7, e9, e11, l4, l8, l12], 9: [e1, e3, e5, e7, e9, e11, j4, j8, j12, z4, x7, y7],
-         10: [g12, g4, g8, z4, x7, y7], 11: [z1, z2, z3, z4, x8, x7, y7, y9, x0, x9, y8, y0], 12: [v4x, v8x, v12, x0, x9, y8, y0, z1], 13: [v4, v8, v12, x0, y0, z1], 14: [u4, u8, u12, x1, x0, y1, y0, z1, z0]},
+         10: [g12, g4, g8, z4, x7, y7], 11: [z1, z2, z3, z4, x8, x7, y7, y9, x0, x9, y8, y0], 12: [v4x, v8x, v12, x0, x9, y8, y0, z1], 13: [v4, v8, v12, x0, y0, z1], 14: [u4, u8, u12, x1, x0, y1, y0, z1, z0],
+         15: [u4, u8, u12, x1, x0, y1, y0, z1, z0]},
 
-    {0: [e2, e6, e10, ea2, ea6, ea10], 1: [w1, w3, e6, e10, ea6, ea10], 2: [w1, w3, e6, ea6, w9, w11], 3: [f1, f3, f5, f7, f9, f11, l2, l6, l10], 4: [f1, f3, f5, f7, f9, f11, a3],
-    5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a2, a6, a10, a5], 6: [e2, e5, f8, f11, ag3, ah9], 7: [e2, ef5, ef6, ef7, e10, a1], 8: [e2, ef5, ef6, ef7, e10, ag12, ag12a], 9: [e2, e10, ag12, ag5, ag6, ag7],
-    10: [e2, e6, e10, j4, j8, j12, z4, x7, y7], 11: [e2, e6, e10, j4, j8, j12, cc2, cc4, cc6, cc8, cc10, cc12], 12: [x0, y0, z1, i2, i6, i10, cc2, cc4, cc6, cc8, cc10, cc12], 13: [x0, y0, z1, icc2, icc6, icc10, cc4, cc8, cc12], 14: [x0, y0, z1, icca2, icca6, icca10, iccb2, iccb6, iccb10, cc4, cc8, cc12], 15: [x0, y0, z1, icca2, icca6, icca10, iccb2sq, iccb6sq, iccb10sq, cc4sq, cc8sq, cc12sq, cc0sq]},
+    4: {'-1': [e2, e6, a1], 0: [e2, e6, e10, ea2, ea6, ea10], 1: [w1, w3, e6, e10, ea6, ea10], 2: [w1, w3, e6, ea6, w9, w11], 3: [f1, f3, f5, f7, f9, f11, l2, l6, l10], 4: [f1, f3, f5, f7, f9, f11, a3],
+     5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a2, a6, a10, a5], 6: [e2, e5, f8, f11, ag3, ah9], 7: [e2, ef5, ef6, ef7, e10, a1], 8: [e2, ef5, ef6, ef7, e10, ag12, ag12a], 9: [e2, e10, ag12, ag5, ag6, ag7],
+     10: [e2, e6, e10, j4, j8, j12, z4, x7, y7], 11: [e2, e6, e10, j4, j8, j12, cc2, cc4, cc6, cc8, cc10, cc12], 12: [x0, y0, z1, i2, i6, i10, cc2, cc4, cc6, cc8, cc10, cc12], 13: [x0, y0, z1, icc2, icc6, icc10, cc4, cc8, cc12], 14: [x0, y0, z1, icca2, icca6, icca10, iccb2, iccb6, iccb10, cc4, cc8, cc12],
+     15: [x0, y0, z1, icca2, icca6, icca10, iccb2sq, iccb6sq, iccb10sq, cc4sq, cc8sq, cc12sq, cc0sq], 16: [x0, z1]},
 
-    {/**/0: [e2, ea2, e6, ea6, w9, w11], 1: [f4, fa4, w7, w9, w11, w1], 2: [f4, fa4, f8, fa8, w11, w1], 3: [f4, f8, f1, f11, ah3, ah9], 4: [f4, f8, f12, a3],
+    5: {/**/'-1': [e2, e6, e10, ea2, ea6, ea10], 0: [e2, ea2, e6, ea6, w9, w11], 1: [f4, fa4, w7, w9, w11, w1], 2: [f4, fa4, f8, fa8, w11, w1], 3: [f4, f8, f1, f11, ah3, ah9], 4: [f4, f8, f12, a3],
         5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a3], 6: [ef1, ef2, ef3, ef5, ef6, ef7, ef9, ef10, ef11, a1], 7: [ef1and2, ef3, ef5, ef6, ef7, ef9, ef10and11, ag12, ag12a], 8: [ef1and2, ef3, ef430, ef530, ef6, ef7, ef9, ef10and11, ff4, ff8, ag12, ca6], 9: [ef1and2, ef3, ef5, ef6, ef630, ef730, ef9, ef10and11, ff4, ff8, ff12, ca0],
-        10: [e2, e6, e10, ff4, ff8, ff12, ca0], 11: [ff4, ff8, ff12, ff4a, ff8a, ff12a, e2b, e6b, e10b], 12: [x0, y0, z1, isec2, isec6, isec10, iarr4, iarr8, iarr12], 13: [x0, y0, z1, isec2, isec6, isec10, iarr330, iarr430, iarr730, iarr830, iarr1130, iarr1230], 14: [x1, x0, y1, y0, z1, z0, iarr130, iarr230, iarr330, iarr430, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230]},
+        10: [e2, e6, e10, ff4, ff8, ff12, ca0], 11: [ff4, ff8, ff12, ff4a, ff8a, ff12a, e2b, e6b, e10b], 12: [x0, y0, z1, isec2, isec6, isec10, iarr4, iarr8, iarr12], 13: [x0, y0, z1, isec2, isec6, isec10, iarr330, iarr430, iarr730, iarr830, iarr1130, iarr1230], 14: [x1, x0, y1, y0, z1, z0, iarr130, iarr230, iarr330, iarr430, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230],
+        15: [x0, y1, z1, z0, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230]},
 
-    {0: [cz0], 1: [e2, ea2, w5, w7, e10, ea10], 2: [f4, fa4, w7, w9, f12, fa12], 3: [f4, fa4, f8, fa8, f12, fa12], 4: [f4, f8, f12, a3h1, a3h7],
-        5: [ef5, ef6, ef7, f12, ff3and4, ff8and9, a3x6], 6: [ef1, ef2, ef3, ff4, ef5, ef6, ef7, ff8, ef9, ef10, ef11, ff12, ca0], 7: [f12, e6, czh0], 8: [f12, e6, czh6, czh12], 9: [ef1230, ef130, ef2, ef230, ef330, ff4, ef430, ef530, ef6, ef630, ef730, ff8, ef830, ef930, ef10, ef1030, ef1130, ff12, ef2a, ef6a, ef10a, ff4a, ff8a, ff12a],
-        10: [ef330, e6, ef830, ef11, ff12, ef1, ag12a, ca12, ef2and230, ef930and10], 11: [icca2, icca4, icca6, icca8, icca10, icca12, cah6, cah12], 12: [icca2, icca4, icca6, icca8, icca10, icca12, winn2, winn4, winn6, winn8, winn10, winn12],
-        13: [icca2, icca4, icca6, icca8, icca10, icca12, iccaa4, iccaa8, iccaa12, iarr4, iarr8, iarr12, winn2, winn6, winn10], 14: [icca2, icca4, icca6, icca8, icca10, icca12, iccaa4, iccaa8, iccaa12, iarr330, iarr430, iarr730, iarr830, iarr1130, iarr1230, winn2, winn6, winn10], 15: [icca2, icca4, icca6, icca8, icca10, icca12, iccaa2, iccaa4, iccaa6, iccaa8, iccaa10, iccaa12, iarr130, iarr230, iarr330, iarr430, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230]},
-];
+    6: {'-1': [], 0: [cz0], 1: [e2, ea2, w5, w7, e10, ea10], 2: [f4, fa4, w7, w9, f12, fa12], 3: [f4, fa4, f8, fa8, f12, fa12], 4: [f4, f8, f12, a3h1, a3h7],
+     5: [ef5, ef6, ef7, f12, ff3and4, ff8and9, a3x6], 6: [ef1, ef2, ef3, ff4, ef5, ef6, ef7, ff8, ef9, ef10, ef11, ff12, ca0], 7: [f12, e6, czh0], 8: [f12, e6, czh6, czh12], 9: [ef1230, ef130, ef2, ef230, ef330, ff4, ef430, ef530, ef6, ef630, ef730, ff8, ef830, ef930, ef10, ef1030, ef1130, ff12, ef2a, ef6a, ef10a, ff4a, ff8a, ff12a],
+     10: [ef330, e6, ef830, ef11, ff12, ef1, ag12a, ca12, ef2and230, ef930and10], 11: [icca2, icca4, icca6, icca8, icca10, icca12, cah6, cah12], 12: [icca2, icca4, icca6, icca8, icca10, icca12, winn2, winn4, winn6, winn8, winn10, winn12],
+     13: [icca2, icca4, icca6, icca8, icca10, icca12, iccaa4, iccaa8, iccaa12, iarr4, iarr8, iarr12, winn2, winn6, winn10], 14: [icca2, icca4, icca6, icca8, icca10, icca12, iccaa4, iccaa8, iccaa12, iarr330, iarr430, iarr730, iarr830, iarr1130, iarr1230, winn2, winn6, winn10],
+     15: [icca2, icca4, icca6, icca8, icca10, icca12, iccaa2, iccaa4, iccaa6, iccaa8, iccaa10, iccaa12, iarr130, iarr230, iarr330, iarr430, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230], 16: [icca6, icca8, icca10, icca12, winn6, winn8, winn10, winn12]},
 
-const hexGridOffsets = [
-    {0: '15,-5', 1: '10,-4', 2: '8,-4', 3: '6,-4', 4: '3,-4', 5: '1,-3', 6: '-1,-3', 7: '-1,-1', 8: '-1,-1', 9: '-2,0', 10: '-1,0', 11: '2,0', 12: '5,0', 13: '9,2', 14: '15,3', 15: '19,4'},
+    7: {'-1': [], 0: [], 1: [], 2: [], 3: [], 4: [],
+        5: [f4, e10, czh04], 6: [e2, f8, czh02], 7: [e2, e10, a1], 8: [f4, e10, czh4, czh10], 9: [e2, f8, czh2, czh8],
+        10: [], 11: [], 12: [], 13: [], 14: [],
+        15: []},
+};
 
-    {/**/0: '12,-5', 1: '8,-4', 2: '6,-5', 3: '3,-4', 4: '1,-4', 5: '-0.5,-4', 6: '-2,-2', 7: '-3,-1', 8: '-4,0', 9: '-3,0', 10: '0,1', 11: '2,4', 12: '6,8', 13: '9,9', 14: '14,10'},
+const hexGridOffsets = {
+    '-1': {'-1': '14,-6', 0: '14,-6', 1: '10,-4', 2: '8,-4', 3: '6,-4', 4: '3,-4', 5: '0,-3', 6: '-1,-3', 7: '-1,-1', 8: '-1,0', 9: '-2,1', 10: '-1,1', 11: '2,4', 12: '4,2', 13: '5,3', 14: '10,3', 15: '14,4'},
 
-    {0: '13,-8', 1: '11,-8', 2: '7,-7', 3: '5,-6', 4: '3,-6', 5: '1,-5', 6: '0,-3', 7: '-2,-2', 8: '-4,0', 9: '-3,1', 10: '-1,2', 11: '0,5', 12: '3,7', 13: '7,9', 14: '11,10', 15: '16,11'},
+    0: {'-1': '14,-6', 0: '14,-6', 1: '10,-4', 2: '8,-4', 3: '6,-4', 4: '3,-4', 5: '1,-3', 6: '-1,-3', 7: '-1,-1', 8: '-1,-1', 9: '-2,0', 10: '-1,0', 11: '2,1', 12: '3,2', 13: '4,4', 14: '8,5', 15: '13,5', 16: '15,5'},
 
-    {/**/0: '12,-11', 1: '9,-10', 2: '6,-9', 3: '3,-8', 4: '1,-7', 5: '0,-4', 6: '-1,-3', 7: '-4,-2', 8: '-3,0', 9: '-2,2', 10: '0,4', 11: '2,5', 12: '5,8', 13: '9,10', 14: '14,12'},
+    1: {/**/'-1': '11,-7', 0: '11,-7', 1: '8,-4', 2: '6,-5', 3: '3,-4', 4: '1,-4', 5: '-0.5,-4', 6: '-2,-2', 7: '-3,-1', 8: '-4,0', 9: '-3,0', 10: '0,1', 11: '2,3', 12: '4,7', 13: '6,8', 14: '10,9', 15: '11,9'},
 
-    {0: '10,-15', 1: '9,-13', 2: '7,-12', 3: '5,-10', 4: '1,-8', 5: '0,-7', 6: '-2,-6', 7: '-3,-4', 8: '-4,-2', 9: '-3,0', 10: '-3,4', 11: '-1,4', 12: '2,7', 13: '6,9', 14: '9,12', 15: '14,15'},
+    2: {'-1': '12,-9', 0: '12,-9', 1: '9,-9', 2: '7,-7', 3: '5,-6', 4: '3,-6', 5: '1,-5', 6: '0,-3', 7: '-2,-2', 8: '-4,0', 9: '-3,1', 10: '-1,2', 11: '0,5', 12: '3,7', 13: '5,9', 14: '8,10', 15: '13,11', 16: '15,12'},
 
-    {/**/0: '10,-14', 1: '9,-12', 2: '6,-12', 3: '4,-11', 4: '1,-9', 5: '0,-6', 6: '-1,-5', 7: '-5,-3', 8: '-4,-1', 9: '-4,1', 10: '-3,4', 11: '-1,7', 12: '2,10', 13: '6,13', 14: '10,15'},
+    3: {/**/'-1': '12,-11', 0: '12,-11', 1: '9,-10', 2: '6,-9', 3: '3,-8', 4: '1,-7', 5: '0,-4', 6: '-1,-3', 7: '-4,-2', 8: '-3,0', 9: '-2,2', 10: '0,4', 11: '1,5', 12: '4,8', 13: '7,11', 14: '11,13', 15: '15,15'},
 
-    {0: '10,-15', 1: '9,-15', 2: '6,-15', 3: '4,-15', 4: '1,-13', 5: '0,-11', 6: '-3,-9', 7: '-3,-6', 8: '-5,-3', 9: '-6,0', 10: '-5,3', 11: '-2,6', 12: '-1,9', 13: '1,11', 14: '6,14', 15: '9,18'},
-];
+    4: {'-1': '10,-15', 0: '10,-15', 1: '9,-13', 2: '7,-12', 3: '5,-10', 4: '1,-8', 5: '0,-7', 6: '-2,-6', 7: '-3,-4', 8: '-4,-2', 9: '-3,0', 10: '-3,4', 11: '-1,5', 12: '2,9', 13: '6,11', 14: '8,13', 15: '14,16', 16: '14,18'},
+
+    5: {/**/'-1': '10,-14', 0: '10,-14', 1: '9,-12', 2: '6,-12', 3: '4,-11', 4: '1,-9', 5: '0,-6', 6: '-1,-4', 7: '-5,-2', 8: '-4,1', 9: '-4,3', 10: '-3,6', 11: '-1,9', 12: '2,12', 13: '6,15', 14: '10,17', 15: '14,21'},
+
+    6: {'-1': '10,-15', 0: '10,-15', 1: '9,-15', 2: '6,-15', 3: '4,-15', 4: '1,-13', 5: '0,-11', 6: '-3,-7', 7: '-3,-3', 8: '-5,0', 9: '-5,4', 10: '-4,6', 11: '-2,9', 12: '0,11', 13: '2,13', 14: '7,17', 15: '10,21', 16: '8,25'},
+
+    7: {'-1': '10,-15', 0: '10,-15', 1: '9,-15', 2: '6,-15', 3: '4,-15', 4: '1,-13', 5: '0,-11', 6: '-3,-7', 7: '-3,-3', 8: '-5,0', 9: '-5,4', 10: '-4,6', 11: '-2,9', 12: '1,12', 13: '2,15', 14: '8,19', 15: '9,23'},
+};
 
 const processShapeIfNeeded = function(shape) {
     if (shape.processed) {
@@ -566,7 +597,7 @@ const processShapeIfNeeded = function(shape) {
     shape.yMax = yMax;
 };
 
-const hexGrid = _.map(hexGridShapes, (row, rowIndex) => _.mapValues(row, (shapes, colIndex) => {
+const hexGrid = _.mapValues(hexGridShapes, (row, rowIndex) => _.mapValues(row, (shapes, colIndex) => {
 
     shapes.forEach(processShapeIfNeeded);
 
