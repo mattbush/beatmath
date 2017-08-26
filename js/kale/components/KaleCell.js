@@ -36,7 +36,7 @@ const KaleCell = React.createClass({
         const color = tinycolor(this.context.kaleParameters.baseColor.getValue().toHexString()); // clone
         let columnColorShift = this.context.kaleParameters.columnColorShift.getValue();
 
-        let numCellsInFullRotation = (this.context.kaleParameters.numCols.getValue() * 2 + 1);
+        let numCellsInFullRotation = (this.context.kaleParameters.numColumns.getValue() * 2 + 1);
 
         // double numTrees depending on mode
         if (this.context.beatmathParameters.mappingMode.getValue() === 'acrossGroups') {
