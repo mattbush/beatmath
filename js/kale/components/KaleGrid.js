@@ -14,7 +14,7 @@ const KaleGrid = React.createClass({
     getParameterBindings: function() {
         return {
             numRows: this.context.kaleParameters.numRows,
-            numCols: this.context.kaleParameters.numCols,
+            numColumns: this.context.kaleParameters.numColumns,
             isInfinite: this.context.kaleParameters.isInfinite,
         };
     },
@@ -37,14 +37,14 @@ const KaleGrid = React.createClass({
 
             kaleCells = [];
             const numRows = this.getParameterValue('numRows');
-            const numCols = this.getParameterValue('numCols');
+            const numColumns = this.getParameterValue('numColumns');
 
             if (this.context.beatmathParameters.mappingMode.getValue() === 'acrossGroups') {
-                mapperShapeXOffset = this.props.mapperShapeIndex ? (numCols + 0.5) : -(numCols + 0.5);
+                mapperShapeXOffset = this.props.mapperShapeIndex ? (numColumns + 0.5) : -(numColumns + 0.5);
             }
 
             for (let y = -numRows; y <= numRows; y++) {
-                for (let x = -numCols; x <= numCols; x++) {
+                for (let x = -numColumns; x <= numColumns; x++) {
                     if ((x + y) % 2 !== 0) {
                         continue;
                     }

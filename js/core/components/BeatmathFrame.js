@@ -8,7 +8,7 @@ const BeatmathFrame = React.createClass({
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
     },
-    getParameterBindings: function() {
+    getParameterBindings() {
         return {
             width: this.context.beatmathParameters.width,
             height: this.context.beatmathParameters.height,
@@ -77,17 +77,30 @@ const BeatmathFrame = React.createClass({
             );
         }
     },
+    _renderMasks() {
+        if (location.href.endsWith('mapper')) {
+            return null;
+        }
+
+        return this.context.beatmathParameters.mapMapperMasks((mapperShape, index) =>
+            <polygon fill="#000" key={index} points={mapperShape.getPointsString()} />
+        );
+    },
     _renderChildFrames(groupNumber, scaleMod = 1, translateY = 0, groupType) {
         const frameRotation = this.getParameterValue('frameRotation');
-        let frameScale = scaleMod * this.getParameterValue('frameScale') * this.getParameterValue('frameScaleAutoupdating');
+
+        let frameScale = scaleMod * this.context.beatmathParameters.getFrameScale();
         if (groupType === 'tower') {
             frameScale *= this.getParameterValue('towerScale');
         }
-
-        const transitionPeriod = this.context.beatmathParameters.tempo.getBasePeriod() / 16;
+        const transitionPeriod = this.context.beatmathParameters.tempo.getPeriod();
         const style = {
-            transform: `rotate(${frameRotation}deg) scale(${frameScale})`,
+            transform: `scale(${frameScale})`,
             transition: `transform ${transitionPeriod}ms linear`,
+        };
+        const rotatedStyle = {
+            ...style,
+            transform: `rotate(${frameRotation}deg) ` + style.transform,
         };
 
         const mappingMode = this.getParameterValue('mappingMode');
@@ -99,9 +112,11 @@ const BeatmathFrame = React.createClass({
                     groupType: groupType,
                 });
 
+                const combinedRotation = mapperShape.getRotationDeg() + frameRotation;
+
                 const translatedStyle = {
                     ...style,
-                    transform: `translate(${mapperShape.getCenterX()}px, ${mapperShape.getCenterY()}px) ` + style.transform,
+                    transform: `translate(${mapperShape.getCenterX()}px, ${mapperShape.getCenterY()}px) rotate(${combinedRotation}deg) ` + style.transform,
                 };
 
                 return (
@@ -118,9 +133,11 @@ const BeatmathFrame = React.createClass({
 
                 });
 
+                const combinedRotation = mapperShape.getRotationDeg() + frameRotation;
+
                 const translatedStyle = {
                     ...style,
-                    transform: `translate(${mapperShape.getCenterX()}px, ${mapperShape.getCenterY()}px) ` + style.transform,
+                    transform: `translate(${mapperShape.getCenterX()}px, ${mapperShape.getCenterY()}px) rotate(${combinedRotation}deg) ` + style.transform,
                 };
 
                 return (
@@ -135,7 +152,7 @@ const BeatmathFrame = React.createClass({
         } else if (mappingMode === 'onWithOneFrame') {
             return (
                 <g clipPath={'url(#allMapperShapes)'}>
-                    <g style={style}>
+                    <g style={rotatedStyle}>
                         {this.props.children}
                     </g>
                 </g>
@@ -193,13 +210,13 @@ const BeatmathFrame = React.createClass({
             );
         } else { // off
             return (
-                <g style={style}>
+                <g style={rotatedStyle}>
                     {this.props.children}
                 </g>
             );
         }
     },
-    render: function() {
+    render() {
         // From KaleCell
         // const clipPath = `url(#${clipPathPrefixFull}~${triGridPercent})`;
         //
@@ -228,6 +245,7 @@ const BeatmathFrame = React.createClass({
                         <g style={{transform: `scale(${group.scaleFactor}) translate(${group.width / 2}px, ${group.height / 2}px)`}}>
                             {this._renderDefs(groupIndex)}
                             {this._renderChildFrames(groupIndex, 1 / group.scaleFactor, -group.height / 4, group.type)}
+                            {this._renderMasks()}
                         </g>
                     </svg>
                 );
@@ -249,6 +267,7 @@ const BeatmathFrame = React.createClass({
                         <g style={style}>
                             {this._renderDefs()}
                             {this._renderChildFrames()}
+                            {this._renderMasks()}
                         </g>
                     </svg>
                 </div>

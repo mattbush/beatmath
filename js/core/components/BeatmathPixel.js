@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const React = require('react');
 const {lerp} = require('js/core/utils/math');
+const mapColorString = require('js/core/utils/mapColorString');
 
 const POINTINESS_SETTINGS_PER_UNIT = 20;
 const MAX_POINTINESS = 2.5;
@@ -74,7 +75,7 @@ const BeatmathPixel = React.createClass({
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
     },
-    render: function() {
+    render() {
         const pixelPointiness = this.context.beatmathParameters.pixelPointiness.getValue();
         const pixelSidedness = this.context.beatmathParameters.pixelSidedness.getValue();
         const colorSpin = this.context.beatmathParameters.colorSpin.getValue();
@@ -87,7 +88,7 @@ const BeatmathPixel = React.createClass({
         if (brightness !== 1) {
             color = color.darken((1 - brightness) * 100);
         }
-        const fill = color.toHexString(true);
+        const fill = mapColorString(color.toHexString(true));
 
         if (pixelPointiness < 0.5) {
             return <circle cx="0" cy="0" r="1" fill={fill} />;

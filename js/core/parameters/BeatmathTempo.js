@@ -37,6 +37,7 @@ class BeatmathTempo {
         this._pendingBpmMod = this._bpmMod;
         this._period = MS_PER_MINUTE / params.bpm / this._bpmMod;
         this._numTicks = -1;
+        this._currentTick = Date.now();
         this._nextTick = Date.now() + this._period;
         this._tick = this._tick.bind(this);
         this._pendingDiff = 0;
@@ -76,6 +77,7 @@ class BeatmathTempo {
             this._basePeriod = MS_PER_MINUTE / this._bpm;
             this._updateMonitor();
         }
+        this._currentTick = this._nextTick;
         this._nextTick += this._period;
         if (this._pendingDiff !== 0) {
             this._nextTick += this._pendingDiff;
@@ -118,6 +120,9 @@ class BeatmathTempo {
     }
     getNumTicks() {
         return this._numTicks;
+    }
+    getProgressTowardsNextTick() {
+        return (Date.now() - this._currentTick) / this._period;
     }
     _updateLights() {
         const lightToTurnOff = posMod(this._numTicks - 1, NUM_LIGHTS);

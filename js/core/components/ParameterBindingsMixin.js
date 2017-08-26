@@ -4,14 +4,14 @@ const THROTTLE_MS = 16;
 
 const ParameterBindingsMixin = {
     // callers implement this, returns a mapping of string to parameter object
-    // getParameterBindings: function() {},
-    _getParameterBindings: function() {
+    // getParameterBindings() {},
+    _getParameterBindings() {
         if (!this._parameterBindings) {
             this._parameterBindings = this.getParameterBindings();
         }
         return this._parameterBindings;
     },
-    componentDidMount: function() {
+    componentDidMount() {
         const boundForceUpdate = this.forceUpdate.bind(this);
         const updateDelay = this._getUpdateDelay ? this._getUpdateDelay() : null;
         const boundForceUpdateWithDelay = updateDelay ? () => setTimeout(boundForceUpdate, updateDelay) : boundForceUpdate;
@@ -19,10 +19,10 @@ const ParameterBindingsMixin = {
 
         _.each(this._getParameterBindings(), parameter => parameter.addListener(this._boundThrottledForceUpdate));
     },
-    componentWillUnmount: function() {
+    componentWillUnmount() {
         _.each(this._getParameterBindings(), parameter => parameter.removeListener(this._boundThrottledForceUpdate));
     },
-    getParameterValue: function(paramName) {
+    getParameterValue(paramName) {
         return this._getParameterBindings()[paramName].getValue();
     },
 };

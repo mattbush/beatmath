@@ -19,12 +19,19 @@ class BeatmathParameters {
             mixboard.resetLaunchpadLights();
         }
 
+        window.addEventListener('storage', this._onStorage.bind(this));
+
         const existingMapping = JSON.parse(window.localStorage.getItem('mapping'));
         if (existingMapping) {
             this._mapperShapes = [];
+            this._mapperMasks = [];
             for (let i = 0; i < existingMapping.length; i++) {
                 const shape = new MapperShape({existingData: existingMapping[i]});
-                this._mapperShapes.push(shape);
+                if (shape.isMask()) {
+                    this._mapperMasks.push(shape);
+                } else {
+                    this._mapperShapes.push(shape);
+                }
             }
         }
 
@@ -90,14 +97,14 @@ class BeatmathParameters {
             }
             if (mixboard.isLaunchpad()) {
                 this.frameScaleAutoupdating.listenToLaunchpadFader(mixboard, 6, {addButtonStatusLight: true});
+                this.tempo.addListener(() => {
+                    const nTicks = 1;
+                    const tick = this.tempo.getNumTicks();
+                    if (tick % (nTicks * this.tempo._bpmMod) === 0) {
+                        this.frameScaleAutoupdating.update();
+                    }
+                });
             }
-            this.tempo.addListener(() => {
-                const nTicks = 1;
-                const tick = this.tempo.getNumTicks();
-                if (tick % (nTicks * this.tempo._bpmMod) === 0) {
-                    this.frameScaleAutoupdating.update();
-                }
-            });
 
             this.frameRotation = new AngleParameter({
                 start: 0,
@@ -257,6 +264,21 @@ class BeatmathParameters {
     }
     mapMapperShapesInGroup(groupIndex, fn) {
         return this._playaMapping.groups[groupIndex].shapes.map(fn);
+    }
+    mapMapperMasks(fn) {
+        if (!this._mapperMasks) {
+            return [];
+        }
+        return this._mapperMasks.map(fn);
+    }
+    _onStorage(event) {
+        if (event.key === 'pieceNameToLoad') {
+            const path = window.location.href.substr(0, window.location.href.lastIndexOf('/') + 1);
+            window.location = path + event.newValue;
+        }
+    }
+    getFrameScale() {
+        return this.frameScale.getValue() * this.frameScaleAutoupdating.getValue();
     }
 }
 

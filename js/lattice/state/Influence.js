@@ -7,18 +7,18 @@ const {lerp, posMod, modAndShiftToHalf} = require('js/core/utils/math');
 const {CELL_SIZE, ENABLE_HUE, MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
 
 class Influence {
-    constructor({beatmathParameters, latticeParameters, startRow, startCol}) {
+    constructor({beatmathParameters, pieceParameters, startRow, startCol}) {
         this._beatmathParameters = beatmathParameters;
-        this._latticeParameters = latticeParameters;
+        this._pieceParameters = pieceParameters;
 
         this._colParameter = new MovingLinearParameter({
-            range: [new NegatedParameter(latticeParameters.numCols), latticeParameters.numCols],
+            range: [pieceParameters.influenceMinColumn, pieceParameters.influenceMaxColumn],
             variance: 0.25,
             startLerp: startCol,
         });
 
         this._rowParameter = new MovingLinearParameter({
-            range: [new NegatedParameter(latticeParameters.numRows), latticeParameters.numRows],
+            range: [pieceParameters.influenceMinRow, pieceParameters.influenceMaxRow],
             variance: 0.25,
             startLerp: startRow,
         });
@@ -47,8 +47,8 @@ class Influence {
         return this._mainParameter;
     }
     mix(pixelState, row, col) {
-        let mixCoefficient = this._latticeParameters.mixCoefficient.getValue();
-        let distanceCoefficient = this._latticeParameters.distanceCoefficient.getValue();
+        let mixCoefficient = this._pieceParameters.mixCoefficient.getValue();
+        let distanceCoefficient = this._pieceParameters.distanceCoefficient.getValue();
 
         let dx = this._colParameter.getValue() - col;
         let dy = this._rowParameter.getValue() - row;
@@ -92,8 +92,10 @@ class Influence {
 class SizeInfluence extends Influence {
     constructor(params) {
         super(params);
+        const min = params.min || 1;
+        const max = params.max || MAX_SIZE;
         this._mainParameter = new MovingLinearParameter({
-            range: [1, MAX_SIZE],
+            range: [min, max],
             variance: 0.25,
             start: params.startValue,
         });
@@ -107,6 +109,48 @@ class SizeInfluence extends Influence {
     }
     _getPixelStateKey() {
         return 'size';
+    }
+}
+
+class ApertureInfluence extends Influence {
+    constructor(params) {
+        super(params);
+        this._mainParameter = new MovingLinearParameter({
+            range: [0, 127],
+            variance: 1.25,
+            start: params.startValue,
+        });
+    }
+    _mixByParameterType(pixelParameter, mixAmount) {
+        const influenceParameter = this._mainParameter.getValue();
+        return lerp(pixelParameter, influenceParameter, mixAmount);
+    }
+    getSize() {
+        return this._mainParameter.getValue() / 10;
+    }
+    _getPixelStateKey() {
+        return 'aperture';
+    }
+}
+
+class RotundityInfluence extends Influence {
+    constructor(params) {
+        super(params);
+        this._mainParameter = new MovingLinearParameter({
+            range: [0, 127],
+            variance: 1.25,
+            start: params.startValue,
+        });
+    }
+    _mixByParameterType(pixelParameter, mixAmount) {
+        const influenceParameter = this._mainParameter.getValue();
+        return lerp(pixelParameter, influenceParameter, mixAmount);
+    }
+    getSize() {
+        return this._mainParameter.getValue() / 10;
+    }
+    _getPixelStateKey() {
+        return 'rotundity';
     }
 }
 
@@ -141,7 +185,7 @@ class ColorInfluence extends Influence {
             variance: 1,
             start: params.startValue,
         });
-        this._index = params.index;
+        this._lightNumber = params.lightNumber;
     }
     _mixByParameterType(pixelParameter, mixAmount) {
         const influenceParameter = this._mainParameter.getValue();
@@ -150,7 +194,7 @@ class ColorInfluence extends Influence {
     update() {
         super.update();
         if (ENABLE_HUE) {
-            updateHue(this._index, this._mainParameter.getValue());
+            updateHue(this._lightNumber, this._mainParameter.getValue(), {briCoeff: 0.4});
         }
     }
     getColor() {
@@ -161,4 +205,4 @@ class ColorInfluence extends Influence {
     }
 }
 
-module.exports = {ColorInfluence, RotationInfluence, SizeInfluence};
+module.exports = {ColorInfluence, RotationInfluence, SizeInfluence, ApertureInfluence, RotundityInfluence};

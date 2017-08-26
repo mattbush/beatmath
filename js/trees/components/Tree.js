@@ -2,6 +2,7 @@ const _ = require('lodash');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const {lerp, clamp} = require('js/core/utils/math');
+const mapColorString = require('js/core/utils/mapColorString');
 
 const Tree = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -18,33 +19,33 @@ const Tree = React.createClass({
     render: function() {
         const beatmathParameters = this.context.beatmathParameters;
         const treesParameters = this.context.treesParameters;
-        const numLevels = treesParameters.numLevels.getValue();
-        const levelSpacing = treesParameters.getLevelSpacing();
+        const numRows = treesParameters.numRows.getValue();
+        const rowSpacing = treesParameters.getRowSpacing();
 
         const polarGridAmount = clamp(treesParameters.polarGridAmount.getValue(), 0, 1);
-        const baseTreeWidth = treesParameters.getTreeWidth();
+        const baseColumnWidth = treesParameters.getColumnWidth();
 
         const triangleCompressionPercent = beatmathParameters.triangleCompressionPercent.getValue();
 
-        const levelHeight = treesParameters.getLevelHeight();
+        const rowHeight = treesParameters.getRowHeight();
 
         const borderRadius = treesParameters.getBorderRadius();
 
         return (
             <g>
-                {_.times(numLevels, levelIndex => {
-                    const fill = treesParameters.getColorForIndexAndLevel(this.props.index, levelIndex);
+                {_.times(numRows, rowIndex => {
+                    const fill = mapColorString(treesParameters.getColorForIndexAndRow(this.props.index, rowIndex));
                     let xShift = 0;
-                    let treeWidth = baseTreeWidth;
+                    let columnWidth = baseColumnWidth;
                     if (polarGridAmount > 0) {
-                        treeWidth = lerp(baseTreeWidth, baseTreeWidth * (levelIndex + 1) / numLevels, polarGridAmount);
+                        columnWidth = lerp(baseColumnWidth, baseColumnWidth * (rowIndex + 1) / numRows, polarGridAmount);
                     }
 
                     if (this.context.groupType !== 'tower' && triangleCompressionPercent > 0) {
                         const indexForCompression = this.props.index % treesParameters.numTrees.getValue();
-                        const triangleCompressionPercentPerLevel = triangleCompressionPercent * (levelIndex + 1) / numLevels;
+                        const triangleCompressionPercentPerLevel = triangleCompressionPercent * (rowIndex + 1) / numRows;
                         const compressionCoeff = (1 - triangleCompressionPercentPerLevel);
-                        treeWidth *= compressionCoeff;
+                        columnWidth *= compressionCoeff;
 
                         const treeSpacing = treesParameters.getTreeSpacing();
 
@@ -57,14 +58,14 @@ const Tree = React.createClass({
                     return (
                         <rect
                             className="treeRect"
-                            key={levelIndex}
+                            key={rowIndex}
                             fill={fill}
-                            x={-(treeWidth / 2) + xShift}
-                            y={levelIndex * levelSpacing + levelHeight / 2}
+                            x={-(columnWidth / 2) + xShift}
+                            y={rowIndex * rowSpacing + rowHeight / 2}
                             rx={borderRadius}
                             ry={borderRadius}
-                            width={treeWidth}
-                            height={levelHeight}
+                            width={columnWidth}
+                            height={rowHeight}
                         />
                     );
                 })}

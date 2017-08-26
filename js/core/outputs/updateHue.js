@@ -9,13 +9,19 @@ const HUE_TRANSITION_TIME_CS = Math.round(HUE_TRANSITION_TIME_MS / 10);
 
 const updateHueLightHelper = function(lightNumber, color, {satCoeff = 1, briCoeff = 1}) {
     let {h, s, v} = color.toHsv();
-    h = Math.floor(h * 65534 / 360);
-    s = Math.floor(Math.min(s * satCoeff, 1) * 254);
-    v = Math.floor(Math.min(v * briCoeff, 1) * 254);
+    let body;
+
+    if (v > 0) {
+        h = Math.floor(h * 65534 / 360);
+        s = Math.floor(Math.min(s * satCoeff, 1) * 254);
+        v = Math.floor(Math.min(v * briCoeff, 1) * 254);
+        body = JSON.stringify({on: true, hue: h, sat: s, bri: v, transitiontime: HUE_TRANSITION_TIME_CS});
+    } else {
+        body = JSON.stringify({on: false, transitiontime: HUE_TRANSITION_TIME_CS});
+    }
     lightNumber++; // 1-index
 
     const url = `http://${HUE_BRIDGE_IP_ADDRESS}/api/${HUE_API_KEY}/lights/${lightNumber}/state`;
-    const body = JSON.stringify({hue: h, sat: s, bri: v, transitiontime: HUE_TRANSITION_TIME_CS});
 
     const xhr = new XMLHttpRequest();
     xhr.open('PUT', url);

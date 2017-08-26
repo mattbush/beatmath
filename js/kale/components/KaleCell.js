@@ -2,9 +2,13 @@ const _ = require('lodash');
 const React = require('react');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const KaleSubject = require('js/kale/components/KaleSubject');
-const {dist, lerp, posMod, xyRotatedAroundOriginWithAngle, modAndShiftToHalf} = require('js/core/utils/math');
+const {dist, lerp, xyRotatedAroundOriginWithAngle, modAndShiftToHalf} = require('js/core/utils/math');
 const tinycolor = require('tinycolor2');
 const {clipPathXCenters, clipPathYCenters} = require('js/kale/components/KaleClipPaths');
+const mapColorString = require('js/core/utils/mapColorString');
+
+const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
+const updateHue = require('js/core/outputs/updateHue');
 
 const Y_AXIS_SCALE = Math.sqrt(3);
 
@@ -29,9 +33,8 @@ const KaleCell = React.createClass({
         return Math.round(dist(this.props.logicalX, this.props.logicalY)) * 20 % 50;
     },
     _getColorByShifting: function(x, y) {
-        const colorsByCoords = this.context.kaleParameters.colorsByCoords;
-        const color = tinycolor(colorsByCoords['0,0'].getValue().toHexString()); // clone
-        let colColorShift = this.context.kaleParameters.colColorShift.getValue();
+        const color = tinycolor(this.context.kaleParameters.baseColor.getValue().toHexString()); // clone
+        let columnColorShift = this.context.kaleParameters.columnColorShift.getValue();
 
         let numCellsInFullRotation = (this.context.kaleParameters.numCols.getValue() * 2 + 1);
 
@@ -42,81 +45,28 @@ const KaleCell = React.createClass({
 
         if (this.context.beatmathParameters.triangleCompressionPercent.getValue()) {
             const colorShiftForAFullRotation = 360 / numCellsInFullRotation;
-            const distanceFromClosestMultiple = modAndShiftToHalf(colColorShift, colorShiftForAFullRotation);
-            colColorShift = colColorShift - distanceFromClosestMultiple;
+            const distanceFromClosestMultiple = modAndShiftToHalf(columnColorShift, colorShiftForAFullRotation);
+            columnColorShift = columnColorShift - distanceFromClosestMultiple;
         }
         const rowColorShift = this.context.kaleParameters.rowColorShift.getValue();
-        const colorShift = colColorShift * x + rowColorShift * y;
+        const colorShift = columnColorShift * x + rowColorShift * y;
         if (colorShift !== 0) {
             color.spin(colorShift);
         }
-        return color.toHexString();
+        return mapColorString(color.toHexString());
     },
     _getColor: function(x, y) {
         return this._getColorByShifting(x, y);
     },
-    _getColorByAnchor: function() {
-        const x = this.props.logicalX;
-        const y = this.props.logicalY;
-        let xMod6 = posMod(x, 6);
-        const xDiv6 = (x - xMod6) / 6;
-        let yMod6 = posMod(y, 6);
-        const yDiv6 = (y - yMod6) / 6;
-
-        let lowerLeft = [xDiv6 * 6, yDiv6 * 6].join(',');
-        let lowerRight = [xDiv6 * 6 + 6, yDiv6 * 6].join(',');
-        const mid = [xDiv6 * 6 + 3, yDiv6 * 6 + 3].join(',');
-        let upperLeft = [xDiv6 * 6, yDiv6 * 6 + 6].join(',');
-        let upperRight = [xDiv6 * 6 + 6, yDiv6 * 6 + 6].join(',');
-
-        if (xMod6 > 3) {
-            xMod6 = 6 - xMod6;
-            [lowerLeft, lowerRight, upperLeft, upperRight] = [lowerRight, lowerLeft, upperRight, upperLeft];
-        }
-        if (yMod6 > 3) {
-            yMod6 = 6 - yMod6;
-            [lowerLeft, lowerRight, upperLeft, upperRight] = [upperLeft, upperRight, lowerLeft, lowerRight];
-        }
-        switch (`${xMod6},${yMod6}`) {
-            case '0,0':
-                return this._mixColors(lowerLeft);
-            case '0,2':
-                return this._mixColors(lowerLeft, lowerLeft, lowerRight);
-            case '1,1':
-                return this._mixColors(lowerLeft, lowerLeft, mid);
-            case '1,3':
-                return this._mixColors(lowerLeft, mid, lowerRight);
-            case '2,0':
-                return this._mixColors(lowerLeft, lowerLeft, upperLeft);
-            case '2,2':
-                return this._mixColors(lowerLeft, mid, mid);
-            case '3,1':
-                return this._mixColors(lowerLeft, mid, upperLeft);
-            case '3,3':
-                return this._mixColors(mid);
-            default:
-                throw new Error('color combo shouldnt exist');
-        }
-    },
-    _mixColors: function(...coords) {
-        const colorsByCoords = this.context.kaleParameters.colorsByCoords;
-        if (coords.length === 1) {
-            return colorsByCoords[coords[0]].getValue();
-        } else {
-            const initialMix = tinycolor.mix(
-                colorsByCoords[coords[0]].getValue(),
-                colorsByCoords[coords[1]].getValue(),
-                50,
-            );
-
-            return tinycolor.mix(
-                initialMix,
-                colorsByCoords[coords[2]].getValue(),
-                33,
-            );
-        }
-    },
     render: function() {
+        if (ENABLE_HUE && this.props.logicalX === 0 && this.props.logicalY === 0) {
+            const hueInOrder = [8, 1, 2, 7, 6];
+            hueInOrder.forEach((lightNumber, index) => {
+                const color = tinycolor(this._getColor(index * 2, 0));
+                updateHue(lightNumber, color, {briCoeff: 0.3});
+            });
+        }
+
         const isInfinite = this.getParameterValue('isInfinite');
         const triangularGridPercent = this.getParameterValue('triangularGridPercent');
         let triGridPercent = Math.max((triangularGridPercent - 0.5) * 2, 0);
@@ -163,8 +113,11 @@ const KaleCell = React.createClass({
             const xWithMapperShapeOffset = x + this.props.mapperShapeXOffset;
             const yWithMapperShapeOffset = y + this.props.mapperShapeYOffset;
 
+            const stroke = this._getColor(xWithMapperShapeOffset, yWithMapperShapeOffset);
+            const fill = tinycolor(stroke).spin(180).darken(40).toHexString();
+
             return (
-                <g key={index} transform={`${scale}rotate(${rotationDeg})`} stroke={this._getColor(xWithMapperShapeOffset, yWithMapperShapeOffset)}>
+                <g key={index} transform={`${scale}rotate(${rotationDeg})`} fill={fill} stroke={stroke}>
                     <g clipPath={clipPath}>
                         <KaleSubject cellX={xWithMapperShapeOffset} cellY={yWithMapperShapeOffset} />
                     </g>

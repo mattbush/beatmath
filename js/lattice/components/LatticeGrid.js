@@ -25,31 +25,31 @@ const LatticeFrame = React.createClass({
         return {
             showInfluences: this.context.latticeParameters.showInfluences,
             numRows: this.context.latticeParameters.numRows,
-            numCols: this.context.latticeParameters.numCols,
+            numColumns: this.context.latticeParameters.numColumns,
             triangleCompressionPercent: this.context.beatmathParameters.triangleCompressionPercent,
         };
     },
     render: function() {
         const children = [];
         const numRows = this.getParameterValue('numRows');
-        let numCols = this.getParameterValue('numCols');
+        let numColumns = this.getParameterValue('numColumns');
         const triangleCompressionPercent = this.getParameterValue('triangleCompressionPercent');
         const isTower = this.props.groupType === 'tower';
         if (isTower) {
-            numCols = 1;
+            numColumns = 1;
         }
 
         for (let row = -numRows; row <= numRows; row++) {
-            for (let col = -numCols; col <= numCols; col++) {
+            for (let column = -numColumns; column <= numColumns; column++) {
                 // skip triangle-ey ones for perf
                 if (!isTower && triangleCompressionPercent > 0) {
                     const rowPercent = arclerp(-numRows, numRows, row);
-                    const colPercent = Math.abs(col) / numCols;
+                    const colPercent = Math.abs(column) / numColumns;
                     if ((colPercent - rowPercent) > (1 - triangleCompressionPercent)) {
                         continue;
                     }
                 }
-                children.push(<LatticePixel row={row} col={col} key={row + '|' + col} />);
+                children.push(<LatticePixel row={row} col={column} key={row + '|' + column} />);
             }
         }
 
@@ -88,20 +88,21 @@ const LatticeGrid = React.createClass({
         const mixboard = this.context.mixboard;
         const beatmathParameters = this.context.beatmathParameters;
         const latticeParameters = new LatticeParameters(mixboard, beatmathParameters);
-        const refreshTimer = new LatticeRefreshTimer(mixboard, beatmathParameters, {latticeParameters});
+        const pieceParameters = latticeParameters;
+        const refreshTimer = new LatticeRefreshTimer(mixboard, beatmathParameters, {pieceParameters});
 
         const influences = [
-            new ColorInfluence({beatmathParameters, latticeParameters, startCol: 0.2, startRow: 0.2, startValue: tinycolor('#f00'), index: 0}),
-            new ColorInfluence({beatmathParameters, latticeParameters, startCol: 0.8, startRow: 0.2, startValue: tinycolor('#0f0'), index: 1}),
-            new ColorInfluence({beatmathParameters, latticeParameters, startCol: 0.5, startRow: 0.8, startValue: tinycolor('#00f'), index: 2}),
+            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: tinycolor('#f00'), lightNumber: 0}),
+            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: tinycolor('#0f0'), lightNumber: 1}),
+            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.8, startValue: tinycolor('#00f'), lightNumber: 2}),
 
-            new SizeInfluence({beatmathParameters, latticeParameters, startCol: 0.2, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
-            new SizeInfluence({beatmathParameters, latticeParameters, startCol: 0.8, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
-            new SizeInfluence({beatmathParameters, latticeParameters, startCol: 0.5, startRow: 0.8, startValue: MAX_SIZE * 0.5}),
+            new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
+            new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
+            new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.8, startValue: MAX_SIZE * 0.5}),
 
-            new RotationInfluence({beatmathParameters, latticeParameters, startCol: 0.2, startRow: 0.2, startValue: 0}),
-            new RotationInfluence({beatmathParameters, latticeParameters, startCol: 0.8, startRow: 0.2, startValue: 0}),
-            new RotationInfluence({beatmathParameters, latticeParameters, startCol: 0.5, startRow: 0.8, startValue: 0}),
+            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: 0}),
+            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: 0}),
+            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.8, startValue: 0}),
         ];
 
         return {latticeParameters, influences, refreshTimer};
@@ -110,7 +111,7 @@ const LatticeGrid = React.createClass({
         return {
             showInfluences: this.state.latticeParameters.showInfluences,
             numRows: this.state.latticeParameters.numRows,
-            numCols: this.state.latticeParameters.numCols,
+            numColumns: this.state.latticeParameters.numColumns,
         };
     },
     render: function() {
