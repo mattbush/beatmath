@@ -64,15 +64,6 @@ class BeatmathParameters {
         //     this.height.listenToMixtrackFader(mixboard, MixtrackFaders.R_PITCH_BEND);
         // }
 
-        this.towerScale = new LogarithmicParameter({
-            range: [0.25, 4],
-            start: 1,
-            monitorName: 'Tower Scale',
-        });
-        if (mixboard.isLaunchpad()) {
-            this.towerScale.listenToLaunchpadKnob(mixboard, 0, 7);
-        }
-
         if (params.useFrame !== false) {
             this.frameScale = new LogarithmicParameter({
                 range: [0.25, 16],
@@ -173,13 +164,6 @@ class BeatmathParameters {
             monitorName: 'Mapping Mode',
         });
         this.mappingMode.listenToDecrementAndIncrementLaunchpadSideButtons(mixboard, LaunchpadButtons.LEFT, LaunchpadButtons.RIGHT);
-
-        const canopyOrTowerCycleValues = ['both', 'canopy', 'tower'];
-        this.canopyOrTower = new CycleParameter({
-            cycleValues: canopyOrTowerCycleValues,
-            monitorName: 'Canopy/Tower',
-        });
-        this.canopyOrTower.listenToCycleLaunchpadSideButton(mixboard, LaunchpadButtons.UP);
 
         this.mirrorCanopies = new ToggleParameter({
             start: false,

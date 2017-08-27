@@ -15,14 +15,6 @@ const TreeFrame = React.createClass({
         beatmathParameters: React.PropTypes.object,
         mixboard: React.PropTypes.object,
     },
-    childContextTypes: {
-        groupType: React.PropTypes.string,
-    },
-    getChildContext: function() {
-        return {
-            groupType: this.props.groupType || '',
-        };
-    },
     getParameterBindings: function() {
         return {
             tempo: this.context.beatmathParameters.tempo,

@@ -16,8 +16,6 @@ const BeatmathFrame = React.createClass({
             frameScale: this.context.beatmathParameters.frameScale,
             frameScaleAutoupdating: this.context.beatmathParameters.frameScaleAutoupdating,
             mappingMode: this.context.beatmathParameters.mappingMode,
-            towerScale: this.context.beatmathParameters.towerScale,
-            canopyOrTower: this.context.beatmathParameters.canopyOrTower,
             mirrorCanopies: this.context.beatmathParameters.mirrorCanopies,
         };
     },
@@ -86,13 +84,10 @@ const BeatmathFrame = React.createClass({
             <polygon fill="#000" key={index} points={mapperShape.getPointsString()} />
         );
     },
-    _renderChildFrames(groupNumber, scaleMod = 1, translateY = 0, groupType) {
+    _renderChildFrames(groupNumber, scaleMod = 1, translateY = 0) {
         const frameRotation = this.getParameterValue('frameRotation');
 
         let frameScale = scaleMod * this.context.beatmathParameters.getFrameScale();
-        if (groupType === 'tower') {
-            frameScale *= this.getParameterValue('towerScale');
-        }
         const transitionPeriod = this.context.beatmathParameters.tempo.getPeriod();
         const style = {
             transform: `scale(${frameScale})`,
@@ -109,7 +104,6 @@ const BeatmathFrame = React.createClass({
                 const clonedChild = React.cloneElement(React.Children.only(this.props.children), {
                     mapperShape: mapperShape,
                     mapperShapeIndex: index,
-                    groupType: groupType,
                 });
 
                 const combinedRotation = mapperShape.getRotationDeg() + frameRotation;
@@ -158,13 +152,9 @@ const BeatmathFrame = React.createClass({
                 </g>
             );
         } else if (mappingMode === 'inFramesInGroups') {
-            const canopyOrTower = this.getParameterValue('canopyOrTower');
-            const shouldShow = (canopyOrTower === 'both' || canopyOrTower === groupType);
-
             return this.context.beatmathParameters.mapMapperShapesInGroup(groupNumber, (mapperShape, index) => {
                 const clonedChild = React.cloneElement(React.Children.only(this.props.children), {
                     mapperShapeIndex: groupNumber * 4 + index,
-                    groupType: groupType,
                 });
 
                 const centerX = (mapperShape[0][0] + mapperShape[1][0] + mapperShape[2][0]) / 3;
@@ -178,19 +168,15 @@ const BeatmathFrame = React.createClass({
                 return (
                     <g key={index} clipPath={`url(#group${groupNumber}Shape${index})`}>
                         <g style={translatedStyle}>
-                            {shouldShow && clonedChild}
+                            {clonedChild}
                         </g>
                     </g>
                 );
             });
         } else if (mappingMode === 'oneFramePerGroup' || mappingMode === 'acrossGroups') {
             const clonedChild = React.cloneElement(React.Children.only(this.props.children), {
-                groupType: groupType,
                 mapperShapeIndex: (mappingMode === 'acrossGroups' ? groupNumber : null),
             });
-
-            const canopyOrTower = this.getParameterValue('canopyOrTower');
-            const shouldShow = (canopyOrTower === 'both' || canopyOrTower === groupType);
 
             const translatedStyle = {
                 ...style,
@@ -204,7 +190,7 @@ const BeatmathFrame = React.createClass({
             return (
                 <g clipPath={`url(#group${groupNumber}AllShapes)`}>
                     <g style={translatedStyle}>
-                        {shouldShow && clonedChild}
+                        {clonedChild}
                     </g>
                 </g>
             );
@@ -242,11 +228,13 @@ const BeatmathFrame = React.createClass({
                 return (
                     <svg key={groupIndex} style={style} width={width} height={height}>
                         {group.type === 'tower' && <rect fill="#000" x="0" y="0" height={height} width={width} />}
-                        <g style={{transform: `scale(${group.scaleFactor}) translate(${group.width / 2}px, ${group.height / 2}px)`}}>
-                            {this._renderDefs(groupIndex)}
-                            {this._renderChildFrames(groupIndex, 1 / group.scaleFactor, -group.height / 4, group.type)}
-                            {this._renderMasks()}
-                        </g>
+                        {group.type !== 'tower' &&
+                            <g style={{transform: `scale(${group.scaleFactor}) translate(${group.width / 2}px, ${group.height / 2}px)`}}>
+                                {this._renderDefs(groupIndex)}
+                                {this._renderChildFrames(groupIndex, 1 / group.scaleFactor, -group.height / 4)}
+                                {this._renderMasks()}
+                            </g>
+                        }
                     </svg>
                 );
             });

@@ -9,7 +9,6 @@ const Tree = React.createClass({
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
         treesParameters: React.PropTypes.object,
-        groupType: React.PropTypes.string,
     },
     getParameterBindings: function() {
         return {
