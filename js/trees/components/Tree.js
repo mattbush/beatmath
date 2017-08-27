@@ -17,16 +17,13 @@ const Tree = React.createClass({
         };
     },
     render: function() {
-        const beatmathParameters = this.context.beatmathParameters;
+        // const beatmathParameters = this.context.beatmathParameters;
         const treesParameters = this.context.treesParameters;
         const numRows = treesParameters.numRows.getValue();
         const rowSpacing = treesParameters.getRowSpacing();
 
         const polarGridAmount = clamp(treesParameters.polarGridAmount.getValue(), 0, 1);
         const baseColumnWidth = treesParameters.getColumnWidth();
-
-        const triangleCompressionPercent = beatmathParameters.triangleCompressionPercent.getValue();
-
         const rowHeight = treesParameters.getRowHeight();
 
         const borderRadius = treesParameters.getBorderRadius();
@@ -39,20 +36,6 @@ const Tree = React.createClass({
                     let columnWidth = baseColumnWidth;
                     if (polarGridAmount > 0) {
                         columnWidth = lerp(baseColumnWidth, baseColumnWidth * (rowIndex + 1) / numRows, polarGridAmount);
-                    }
-
-                    if (this.context.groupType !== 'tower' && triangleCompressionPercent > 0) {
-                        const indexForCompression = this.props.index % treesParameters.numTrees.getValue();
-                        const triangleCompressionPercentPerLevel = triangleCompressionPercent * (rowIndex + 1) / numRows;
-                        const compressionCoeff = (1 - triangleCompressionPercentPerLevel);
-                        columnWidth *= compressionCoeff;
-
-                        const treeSpacing = treesParameters.getTreeSpacing();
-
-                        const totalTreeSpacing = treesParameters.getTotalTreeSpacing();
-                        const parentDx = ((indexForCompression + 0.5) * treeSpacing - totalTreeSpacing / 2) * (1 - polarGridAmount);
-
-                        xShift = -parentDx * triangleCompressionPercentPerLevel;
                     }
 
                     return (

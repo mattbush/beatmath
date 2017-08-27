@@ -1,6 +1,7 @@
 const React = require('react');
 const KaleCell = require('js/kale/components/KaleCell');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
+const {arclerp} = require('js/core/utils/math');
 
 const SCALE = 64;
 
@@ -48,6 +49,12 @@ const KaleGrid = React.createClass({
                     if ((x + y) % 2 !== 0) {
                         continue;
                     }
+                    const rowPercent = arclerp(-numRows, numRows, y);
+                    const colPercent = Math.abs(x) / numColumns;
+                    if ((colPercent - rowPercent) > 0) {
+                        continue;
+                    }
+
                     kaleCells.push(
                         <KaleCell
                             key={`${x}~${y}`}

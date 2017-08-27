@@ -26,29 +26,22 @@ const LatticeFrame = React.createClass({
             showInfluences: this.context.latticeParameters.showInfluences,
             numRows: this.context.latticeParameters.numRows,
             numColumns: this.context.latticeParameters.numColumns,
-            triangleCompressionPercent: this.context.beatmathParameters.triangleCompressionPercent,
         };
     },
     render: function() {
         const children = [];
         const numRows = this.getParameterValue('numRows');
         let numColumns = this.getParameterValue('numColumns');
-        const triangleCompressionPercent = this.getParameterValue('triangleCompressionPercent');
-        const isTower = this.props.groupType === 'tower';
-        if (isTower) {
-            numColumns = 1;
-        }
 
         for (let row = -numRows; row <= numRows; row++) {
             for (let column = -numColumns; column <= numColumns; column++) {
                 // skip triangle-ey ones for perf
-                if (!isTower && triangleCompressionPercent > 0) {
-                    const rowPercent = arclerp(-numRows, numRows, row);
-                    const colPercent = Math.abs(column) / numColumns;
-                    if ((colPercent - rowPercent) > (1 - triangleCompressionPercent)) {
-                        continue;
-                    }
+                const rowPercent = arclerp(-numRows, numRows, row);
+                const colPercent = Math.abs(column) / numColumns;
+                if ((colPercent - rowPercent) > 0) {
+                    continue;
                 }
+
                 children.push(<LatticePixel row={row} col={column} key={row + '|' + column} />);
             }
         }

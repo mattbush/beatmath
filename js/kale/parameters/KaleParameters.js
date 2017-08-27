@@ -22,8 +22,8 @@ class KaleParameters extends PieceParameters {
     }
     _declareParameters() {
         return {
-            ...P.NumColumns({start: 8, max: MAX_NUM_COLS}),
-            ...P.NumRows({start: 3, max: MAX_NUM_ROWS}),
+            ...P.NumColumns({start: 6, max: MAX_NUM_COLS}),
+            ...P.NumRows({start: 2, max: MAX_NUM_ROWS}),
             ...P.ColumnColorShift({range: 45}),
             ...P.RowColorShift({range: 45}),
             ...P.CustomToggle({name: 'isInfinite', button: 0}),

@@ -205,22 +205,16 @@ class TreesParameters extends PieceParameters {
     }
     _getColorShiftPerColumn() {
         const baseColorShift = this.columnColorShift.getValue();
+        return baseColorShift;
 
-        let polarGridAmount = clamp(this.polarGridAmount.getValue(), 0, 1);
-        let numColumnsInRotation = this.numColumns.getValue();
-        if (polarGridAmount === 0) {
-            if (!this._beatmathParameters.triangleCompressionPercent.getValue()) {
-                return baseColorShift;
-            }
-            polarGridAmount = 1;
-            // double numTrees depending on mode
-            if (this._beatmathParameters.mappingMode.getValue() === 'acrossGroups') {
-                numColumnsInRotation *= 2;
-            }
-        }
-        const colorShiftForAFullRotation = 360 / numColumnsInRotation;
-        const distanceFromClosestMultiple = modAndShiftToHalf(baseColorShift, colorShiftForAFullRotation);
-        return baseColorShift - (distanceFromClosestMultiple * polarGridAmount);
+        // let polarGridAmount = clamp(this.polarGridAmount.getValue(), 0, 1);
+        // let numColumnsInRotation = this.numColumns.getValue();
+        // if (polarGridAmount === 0) {
+        //     return baseColorShift;
+        // }
+        // const colorShiftForAFullRotation = 360 / numColumnsInRotation;
+        // const distanceFromClosestMultiple = modAndShiftToHalf(baseColorShift, colorShiftForAFullRotation);
+        // return baseColorShift - (distanceFromClosestMultiple * polarGridAmount);
     }
     getColorForIndexAndRow(columnIndex, rowIndex) {
         if (this.whiteout.getValue()) {
@@ -231,7 +225,7 @@ class TreesParameters extends PieceParameters {
         const color = tinycolor(this.baseColor.getValue().toHexString()); // clone
         const colorShiftPerColumn = this._getColorShiftPerColumn();
         const colorShiftPerRow = this.rowColorShift.getValue();
-        const colorShift = colorShiftPerColumn * columnIndex + colorShiftPerRow * rowIndex;
+        const colorShift = colorShiftPerColumn * Math.abs(columnIndex - this.numColumns.getValue() / 2) + colorShiftPerRow * rowIndex;
         if (colorShift !== 0) {
             color.spin(colorShift);
         }

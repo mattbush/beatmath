@@ -194,13 +194,6 @@ class BeatmathParameters {
         });
         this.dropOriginPercent.listenToLaunchpadKnob(mixboard, 1, 7);
 
-        this.triangleCompressionPercent = new LinearParameter({
-            range: [0, 1],
-            start: 0,
-            monitorName: 'Tri Cmprs %',
-        });
-        this.triangleCompressionPercent.listenToLaunchpadKnob(mixboard, 2, 7);
-
         if (params.usePixels) {
             this.pixelPointiness = new MovingLinearParameter({
                 range: [0.45, 2.5],
