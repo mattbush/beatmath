@@ -7,6 +7,7 @@ const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const LatticeRefreshTimer = require('js/lattice/state/LatticeRefreshTimer');
 const {CELL_SIZE} = require('js/tactile/parameters/TactileConstants');
+const {arclerp} = require('js/core/utils/math');
 
 const tinycolor = require('tinycolor2');
 const {ColorInfluence, SizeInfluence} = require('js/lattice/state/Influence');
@@ -33,6 +34,13 @@ const TactileGrid = React.createClass({
         const numColumns = this.getParameterValue('numColumns');
         for (let row = -numRows; row <= numRows; row++) {
             for (let col = -numColumns; col <= numColumns; col++) {
+                // skip triangle-ey ones for perf
+                const rowPercent = arclerp(-numRows, numRows, row);
+                const colPercent = Math.abs(col) / numColumns;
+                if ((colPercent - rowPercent) > 0) {
+                    continue;
+                }
+
                 children.push(
                     <TactilePixel row={row} col={col} key={row + '|' + col} mapperShape={this.props.mapperShape} />
                 );

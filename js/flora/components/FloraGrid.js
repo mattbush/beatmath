@@ -6,6 +6,7 @@ const FloraPixel = require('js/flora/components/FloraPixel');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const LatticeRefreshTimer = require('js/lattice/state/LatticeRefreshTimer');
+const {arclerp} = require('js/core/utils/math');
 
 const {MAX_SIZE, CELL_SIZE} = require('js/flora/parameters/FloraConstants');
 
@@ -69,17 +70,24 @@ const FloraGrid = React.createClass({
         const children = [];
         const numRows = this.getParameterValue('numRows');
         const numColumns = this.getParameterValue('numColumns');
-        const useTriangularGrid = this.state.floraParameters.triangularGridPercent.getValue() >= 0.5;
+        // const useTriangularGrid = this.state.floraParameters.triangularGridPercent.getValue() >= 0.5;
 
         for (let row = -numRows; row <= numRows; row++) {
             let minColumn = -numColumns;
             let maxColumn = numColumns;
-            if (useTriangularGrid) {
-                minColumn += Math.floor((Math.abs(row)) / 2);
-                maxColumn -= Math.floor((Math.abs(row) + 1) / 2);
-            }
+            // if (useTriangularGrid) {
+            //     minColumn += Math.floor((Math.abs(row)) / 2);
+            //     maxColumn -= Math.floor((Math.abs(row) + 1) / 2);
+            // }
 
             for (let col = minColumn; col <= maxColumn; col++) {
+                // skip triangle-ey ones for perf
+                const rowPercent = arclerp(-numRows, numRows, row);
+                const colPercent = Math.abs(col) / numColumns;
+                if ((colPercent - rowPercent) > 0) {
+                    continue;
+                }
+
                 children.push(<FloraPixel row={row} col={col} key={row + '|' + col} />);
             }
         }
