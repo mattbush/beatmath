@@ -1,7 +1,7 @@
 // const _ = require('lodash');
 const React = require('react');
 
-const VALUE_X_SPACING = 115;
+const VALUE_X_SPACING = 125;
 const VALUE_Y_SPACING = 100;
 
 const PieceNameToLoadInput = React.createClass({
@@ -17,7 +17,7 @@ const PieceNameToLoadInput = React.createClass({
     },
     render() {
         const style = {
-            left: VALUE_X_SPACING * 9.5,
+            left: VALUE_X_SPACING * 8.5,
             top: VALUE_Y_SPACING * 0,
         };
 
