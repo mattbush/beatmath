@@ -126,7 +126,7 @@ class StopwatchParameters extends PieceParameters {
         const color = tinycolor(this.baseColor.getValue().toHexString()); // clone
         const colorShiftPerColumn = this._getColorShiftPerColumn();
         const colorShiftPerRow = this.rowColorShift.getValue();
-        const colorShift = colorShiftPerColumn * trailIndex + colorShiftPerRow * tickIndex;
+        const colorShift = colorShiftPerColumn * Math.abs(trailIndex - this.numVisibleTrails.getValue() / 2) + colorShiftPerRow * tickIndex;
         if (colorShift !== 0) {
             color.spin(colorShift);
         }
