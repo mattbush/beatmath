@@ -16,7 +16,6 @@ const BeatmathFrame = React.createClass({
             frameScale: this.context.beatmathParameters.frameScale,
             frameScaleAutoupdating: this.context.beatmathParameters.frameScaleAutoupdating,
             mappingMode: this.context.beatmathParameters.mappingMode,
-            mirrorCanopies: this.context.beatmathParameters.mirrorCanopies,
         };
     },
     _serializeTransforms(transforms) {
@@ -182,10 +181,6 @@ const BeatmathFrame = React.createClass({
                 ...style,
                 transform: `translate(0px, ${translateY}px) ` + style.transform,
             };
-
-            if (this.getParameterValue('mirrorCanopies') && groupNumber) {
-                translatedStyle.transform = 'scaleX(-1) ' + translatedStyle.transform;
-            }
 
             return (
                 <g clipPath={`url(#group${groupNumber}AllShapes)`}>

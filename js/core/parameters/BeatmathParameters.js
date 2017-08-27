@@ -1,4 +1,4 @@
-const {Parameter, ToggleParameter, CycleParameter, MovingLinearParameter, LogarithmicParameter, MovingLogarithmicParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
+const {Parameter, CycleParameter, MovingLinearParameter, LogarithmicParameter, MovingLogarithmicParameter, LinearParameter, IntLinearParameter, AngleParameter} = require('js/core/parameters/Parameter');
 const BeatmathTempo = require('js/core/parameters/BeatmathTempo');
 const {WIDTH_PX, HEIGHT_PX, DESIRED_HEIGHT_PX} = require('js/core/parameters/BeatmathConstants');
 const {MixtrackFaders, MixtrackWheels, MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
@@ -164,12 +164,6 @@ class BeatmathParameters {
             monitorName: 'Mapping Mode',
         });
         this.mappingMode.listenToDecrementAndIncrementLaunchpadSideButtons(mixboard, LaunchpadButtons.LEFT, LaunchpadButtons.RIGHT);
-
-        this.mirrorCanopies = new ToggleParameter({
-            start: false,
-            monitorName: 'Mirror Canopies',
-        });
-        this.mirrorCanopies.listenToLaunchpadSideButton(mixboard, LaunchpadButtons.DOWN);
 
         this.dropOriginPercent = new LinearParameter({
             range: [0, 1],
