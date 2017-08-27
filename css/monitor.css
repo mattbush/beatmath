@@ -5,7 +5,7 @@
 
 .monitorCell {
     position: absolute;
-    width: 123px;
+    width: 113px;
     height: 98px;
     border: 2px solid #555;
     text-align: center;
@@ -15,15 +15,15 @@
 
 .monitorName {
     margin: 3px 0 0;
-    font-size: 20px;
+    font-size: 19px;
     line-height: 22px;
-    font-family: "Pragati Narrow", "Helvetica";
+    font-family: "Pragati Narrow", "Arial Narrow", "Helvetica";
     color: #aaa;
 }
 
 .monitorValue {
     margin: 4px 0 0;
-    font-size: 36px;
+    font-size: 32px;
     font-family: "Lato", "Helvetica";
     color: #eee;
     line-height: 36px;

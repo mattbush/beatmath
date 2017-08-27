@@ -4,7 +4,7 @@ const {posMod} = require('js/core/utils/math');
 const AutoupdateStatus = require('js/core/parameters/AutoupdateStatus');
 const ParameterStatus = require('js/core/parameters/ParameterStatus');
 
-const VALUE_X_SPACING = 125;
+const VALUE_X_SPACING = 115;
 const VALUE_Y_SPACING = 100;
 
 const STATUS_TO_COLOR = {
