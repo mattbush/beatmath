@@ -6,7 +6,7 @@ const pieceName = window.location.href.substr(window.location.href.lastIndexOf('
 
 const mappingPaletteByPieceName = {
     // flora palette (red, orange, greens)
-    flora: [-15, 45, 115, 100, 25],
+    // flora: [-15, 45, 115, 100, 25],
     // snowstorm palette (cyans, blues)
     snowstorm: [185, 210, 235, 285],
     wall_snowstorm: [185, 210, 235, 285],

@@ -97,11 +97,13 @@ const FloraPixel = React.createClass({
         const x = this.state.colComputed * CELL_SIZE;
         const y = this.state.rowComputed * CELL_SIZE;
         const fill = this.state.color;
+        const transitionTime = this.context.beatmathParameters.tempo.getPeriod();
 
         const scale = this.state.size / 2;
 
         const style = {
             transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${scale})`,
+            transition: `transform ${transitionTime}ms ease`,
         };
 
         return (
