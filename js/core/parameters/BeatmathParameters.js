@@ -165,12 +165,12 @@ class BeatmathParameters {
         });
         this.mappingMode.listenToDecrementAndIncrementLaunchpadSideButtons(mixboard, LaunchpadButtons.LEFT, LaunchpadButtons.RIGHT);
 
-        this.dropOriginPercent = new LinearParameter({
+        this.raiseOriginPercent = new LinearParameter({
             range: [0, 1],
             start: 0,
             monitorName: 'Drop Origin %',
         });
-        this.dropOriginPercent.listenToLaunchpadKnob(mixboard, 1, 7);
+        this.raiseOriginPercent.listenToLaunchpadKnob(mixboard, 1, 7);
 
         if (params.usePixels) {
             this.pixelPointiness = new MovingLinearParameter({

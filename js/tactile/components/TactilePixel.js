@@ -120,11 +120,13 @@ const TactilePixel = React.createClass({
         return this.context.refreshTimer.getRefreshOffset(this._refreshY, this._refreshX);
     },
     _getRefreshGradient() {
+        const raiseOriginPercent = this.context.beatmathParameters.raiseOriginPercent.getValue();
+
         // assumes this is called before _getRefreshOffset() and _mixInfluenceIntoNextState
         this._recalculateCoords();
         const refreshWithinShapePercent = this.context.tactileParameters.refreshWithinShapePercent.getValue();
         this._refreshX = lerp(this._txForInfluence, this._cxForInfluence, refreshWithinShapePercent);
-        this._refreshY = lerp(this._tyForInfluence, this._cyForInfluence, refreshWithinShapePercent);
+        this._refreshY = lerp(this._tyForInfluence, this._cyForInfluence, refreshWithinShapePercent) + this.context.tactileParameters.numRows.getValue() * raiseOriginPercent;
 
         // just use one or the other, rather than a mix, to take advantage of the cache
         // const useTriangularGrid = this.context.tactileParameters.triangularGridPercent.getValue() >= 0.5;

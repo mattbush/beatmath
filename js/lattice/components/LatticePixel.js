@@ -36,14 +36,19 @@ const LatticePixel = React.createClass({
         const rowTriangular = calculateRowTriangular(this.props.row, this.props.col);
         const colTriangular = calculateColTriangular(this.props.row, this.props.col);
         const triangularGridPercent = this.context.latticeParameters.triangularGridPercent.getValue();
+        const raiseOriginPercent = this.context.beatmathParameters.raiseOriginPercent.getValue();
+        const rowComputed = lerp(this.props.row, rowTriangular, triangularGridPercent);
+
         return {
             rowTriangular,
             colTriangular,
             triangularGridPercent,
+            raiseOriginPercent,
             color: gray,
             size: CELL_SIZE * 0.4,
             rotation: 0,
-            rowComputed: lerp(this.props.row, rowTriangular, triangularGridPercent),
+            rowComputed,
+            rowComputedForRefresh: rowComputed + this.context.latticeParameters.numRows.getValue() * raiseOriginPercent,
             colComputed: lerp(this.props.col, colTriangular, triangularGridPercent),
         };
     },
@@ -53,6 +58,7 @@ const LatticePixel = React.createClass({
         }
         const tempo = this.context.beatmathParameters.tempo;
         const triangularGridPercent = this.context.latticeParameters.triangularGridPercent.getValue();
+        const raiseOriginPercent = this.context.beatmathParameters.raiseOriginPercent.getValue();
 
         let refreshOffset = this._getRefreshOffset();
         if (tempo.getNumTicks() % 2 &&
@@ -65,9 +71,13 @@ const LatticePixel = React.createClass({
         }
 
         this._nextState = _.clone(this.state);
-        if (triangularGridPercent !== this.state.triangularGridPercent) {
+        if (triangularGridPercent !== this.state.triangularGridPercent || raiseOriginPercent !== this.state.raiseOriginPercent) {
+            const rowComputed = lerp(this.props.row, this.state.rowTriangular, triangularGridPercent);
+
             this._nextState.triangularGridPercent = triangularGridPercent;
-            this._nextState.rowComputed = lerp(this.props.row, this.state.rowTriangular, triangularGridPercent);
+            this._nextState.raiseOriginPercent = raiseOriginPercent;
+            this._nextState.rowComputed = rowComputed;
+            this._nextState.rowComputedForRefresh = rowComputed + this.context.latticeParameters.numRows.getValue() * raiseOriginPercent;
             this._nextState.colComputed = lerp(this.props.col, this.state.colTriangular, triangularGridPercent);
         }
 
@@ -83,7 +93,7 @@ const LatticePixel = React.createClass({
         // just use one or the other, rather than a mix, to take advantage of the cache
         const useTriangularGrid = this.context.latticeParameters.triangularGridPercent.getValue() >= 0.5;
         return this.context.refreshTimer.getRefreshOffset(
-            useTriangularGrid ? this.state.rowTriangular : this.props.row,
+            this.state.rowComputedForRefresh,
             useTriangularGrid ? this.state.colTriangular : this.props.col,
         );
     },
