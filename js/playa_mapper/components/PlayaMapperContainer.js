@@ -49,7 +49,7 @@ const PlayaMapperContainer = React.createClass({
     },
     render: function() {
         const playaMapperParameters = this.state.playaMapperParameters;
-        const playaMapping = playaMapperParameters.getPlayaMapping();
+        const playaMapping = playaMapperParameters.getPlayaMapping({splitIntoGroups: true});
         return (
             <div style={{backgroundColor: '#0044aa', width: WIDTH_PX, height: HEIGHT_PX}}>
                 <div style={{transform: `translate(${WIDTH_PX / 2}px, ${HEIGHT_PX * playaMapping.projectorOffset}px)`}}>

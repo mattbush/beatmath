@@ -78,7 +78,7 @@ class PlayaMapperParameters extends PieceParameters {
             },
         };
     }
-    getPlayaMapping() {
+    getPlayaMapping({splitIntoGroups = false} = {}) {
         const towerWidth = this.towerWidth.getValue();
         const groups = [
             {
@@ -95,11 +95,13 @@ class PlayaMapperParameters extends PieceParameters {
                 width: 20,
                 height: 36.5,
                 scaleFactor: CANOPY_SCALE_FACTOR,
-                shapes: [
+                shapes: splitIntoGroups ? [
                     [[0, 0], [-7.692, -4.213], [-10, 0]],
                     [[0, 0], [-7.692, -4.213], [0, -18.26]],
                     [[0, 0], [7.692, -4.213], [10, 0]],
                     [[0, 0], [7.692, -4.213], [0, -18.26]],
+                ] : [
+                    [[-10, 0], [10, 0], [0, -18.26]],
                 ],
             },
             {
@@ -116,11 +118,13 @@ class PlayaMapperParameters extends PieceParameters {
                 width: 20,
                 height: 36.5,
                 scaleFactor: CANOPY_SCALE_FACTOR,
-                shapes: [
+                shapes: splitIntoGroups ? [
                     [[0, 0], [-7.692, -4.213], [-10, 0]],
                     [[0, 0], [-7.692, -4.213], [0, -18.26]],
                     [[0, 0], [7.692, -4.213], [10, 0]],
                     [[0, 0], [7.692, -4.213], [0, -18.26]],
+                ] : [
+                    [[-10, 0], [10, 0], [0, -18.26]],
                 ],
             },
             {
