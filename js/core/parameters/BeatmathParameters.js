@@ -152,7 +152,7 @@ class BeatmathParameters {
         // if (params.hasSpecialMapping) {
         //     mappingModeCycleValues.push('onWithFramesSpecial');
         // }
-        const mappingModeCycleValues = ['off', 'oneFramePerGroup'];
+        const mappingModeCycleValues = ['oneFramePerGroup', 'off'];
         if (params.canMapAcrossGroups) {
             mappingModeCycleValues.push('acrossGroups');
         }
