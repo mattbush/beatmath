@@ -79,8 +79,7 @@ class LatticeRefreshTimer extends PieceParameters {
             },
             localPolarAngles: {
                 type: MovingIntLinearParameter,
-                range: [-12, 12],
-                autoupdateRange: [-5, 5],
+                range: [-2, 2],
                 start: 0,
                 monitorName: '# Local Spirals',
                 listenToLaunchpadKnob: [2, 3],
@@ -195,13 +194,8 @@ class LatticeRefreshTimer extends PieceParameters {
             total += distance / rippleRadius;
         }
 
-        let localPolarAngles = this.localPolarAngles.getValue();
+        let localPolarAngles = this.localPolarAngles.getValue() * 5;
         if (localPolarAngles !== 0) {
-            if (localPolarAngles >= 4) { // nobody likes 4-spirals, awkward
-                localPolarAngles++;
-            } else if (localPolarAngles <= -4) {
-                localPolarAngles--;
-            }
             const sectorSize = 360 / localPolarAngles;
             let localPolarAngle = polarAngleDeg(col, row);
             if (this.bendLocalSpirals.getValue()) {
