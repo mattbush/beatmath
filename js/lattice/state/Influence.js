@@ -1,6 +1,6 @@
 const tinycolor = require('tinycolor2');
 const updateHue = require('js/core/outputs/updateHue');
-const {MovingColorParameter, MovingLinearParameter, MovingAngleParameter, NegatedParameter} = require('js/core/parameters/Parameter');
+const {MovingColorParameter, MovingLinearParameter, MovingAngleParameter} = require('js/core/parameters/Parameter');
 const {runAtTimestamp, setTimeoutAsync} = require('js/core/utils/time');
 const {lerp, posMod, modAndShiftToHalf} = require('js/core/utils/math');
 

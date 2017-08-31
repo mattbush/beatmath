@@ -133,7 +133,7 @@ const TactilePixel = React.createClass({
         return this.context.refreshTimer.getRefreshGradient(this._refreshY, this._refreshX);
     },
     _mixInfluenceIntoNextState(influence) {
-        return influence.mix(this._nextState, this._influenceY, this._influenceX);
+        return influence.mix(this._nextState, this._influenceY, Math.abs(this._influenceX));
     },
     _getColorHexString() {
         const color = this.state.color;

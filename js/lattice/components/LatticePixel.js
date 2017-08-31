@@ -98,7 +98,7 @@ const LatticePixel = React.createClass({
         );
     },
     _mixInfluenceIntoNextState: function(influence) {
-        return influence.mix(this._nextState, this.state.rowComputed, this.state.colComputed);
+        return influence.mix(this._nextState, this.state.rowComputed, Math.abs(this.state.colComputed));
     },
     render: function() {
         const rotation = Math.floor(this.state.rotation);
