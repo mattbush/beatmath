@@ -85,7 +85,7 @@ class TreesParameters extends PieceParameters {
             polarGridAmount: {
                 type: MovingLinearParameter,
                 range: [-2, 3],
-                start: 0.5, buildupStart: 0,
+                start: 1, buildupStart: 0,
                 incrementAmount: 0.05,
                 listenToLaunchpadFader: [2, {addButtonStatusLight: true}],
                 listenToMixtrackWheel: MixtrackWheels.R_CONTROL_2,

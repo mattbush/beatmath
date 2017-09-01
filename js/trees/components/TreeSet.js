@@ -4,7 +4,7 @@ const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const TreesParameters = require('js/trees/parameters/TreesParameters');
 const Tree = require('js/trees/components/Tree');
-const {clamp} = require('js/core/utils/math');
+const {clamp, lerp} = require('js/core/utils/math');
 
 // const {manhattanDist, posMod} = require('js/core/utils/math');
 
@@ -27,14 +27,17 @@ const TreeFrame = React.createClass({
             ? numColumns * this.props.mapperShapeIndex
             : 0;
 
+        const raiseOriginPercent = this.context.beatmathParameters.raiseOriginPercent.getValue();
+
         const columnSpacing = treesParameters.getColumnSpacing();
         const polarGridAmount = clamp(treesParameters.polarGridAmount.getValue(), 0, 1);
 
         const transformations = _.times(numColumns, index => {
             const totalColumnSpacing = treesParameters.getTotalColumnSpacing();
             const dx = ((index + 0.5) * columnSpacing - totalColumnSpacing / 2) * (1 - polarGridAmount);
-            const dy = treesParameters.getTotalRowSpacing() / 2 * (1 - polarGridAmount);
-            const rotation = ((index + 0.5) - (numColumns / 2)) * (360 / numColumns) * polarGridAmount;
+            const dy = treesParameters.getTotalRowSpacing() / 2 * (1 - polarGridAmount - raiseOriginPercent);
+            const totalAngle = lerp(360, 57.4, raiseOriginPercent);
+            const rotation = 180 + ((index + 0.5) - (numColumns / 2)) * (totalAngle / numColumns) * polarGridAmount;
             return {
                 transform: `translate(${dx}px, ${dy}px) rotate(${rotation}deg) scaleY(-1)`,
             };
