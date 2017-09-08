@@ -117,6 +117,10 @@ const StopwatchParticle = React.createClass({
             transition: `transform ${delay}ms ${timing}`,
         };
 
+        if (o.rotation > 2.5 && o.rotation < 7.2) {
+            return null;
+        }
+
         // stop logspew, TODO look into
         if ([o.px1, o.py1, o.px3, o.py3, o.px4, o.py4, o.px6, o.py6].some(isNaN)) {
             return null;

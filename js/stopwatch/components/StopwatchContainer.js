@@ -20,7 +20,7 @@ const Stopwatch = React.createClass({
         const numTrails = this.context.stopwatchParameters.getTrailCount();
 
         return (
-            <g>
+            <g style={{transform: 'translateY(-170px)'}}>
                 {_.times(numTrails, trailId =>
                     <StopwatchTrail trailId={trailId} key={trailId} />
                 )}

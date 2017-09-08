@@ -20,8 +20,8 @@ class StopwatchParameters extends PieceParameters {
             ...P.BaseColor(),
             numVisibleTrails: {
                 type: IntLinearParameter,
-                range: [4, 20],
-                start: 16,
+                range: [4, 24],
+                start: 18,
                 listenToLaunchpadFader: [0, {addButtonStatusLight: true}],
                 monitorName: '# Visible Trails',
             },
@@ -79,7 +79,7 @@ class StopwatchParameters extends PieceParameters {
             polarGridAmount: {
                 type: MovingLinearParameter,
                 range: [0, 1],
-                start: 0, buildupStart: 0,
+                start: 1, buildupStart: 0,
                 incrementAmount: 0.05,
                 listenToLaunchpadKnob: [1, 0],
                 monitorName: 'Polar Grid %',
