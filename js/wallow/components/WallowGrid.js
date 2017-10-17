@@ -35,7 +35,7 @@ const Hex = React.createClass({
         const ghostTransform = ((this.props.row + this.props.column) % 2) ? 'scale(-1,1)' : null;
 
         return (
-            <g style={{transform: `translate(${tx}px, ${ty}px)`}}>
+            <g style={{transform: `translate(${tx}px, ${ty}px) scale(${cell.scale}) rotate(${cell.rotation}deg)`}}>
                 {!DEBUG_MODE && this.state.ghostState >= 0.92 &&
                     <image
                         xlinkHref={`images/wallow/ghost${ghostNum}.png`}
