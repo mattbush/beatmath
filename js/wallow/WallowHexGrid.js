@@ -56,6 +56,7 @@ const yy3 = {color: '#152260', points: '3,-3 6,-2 6,2 3,1'};
 const yy5 = {color: '#152260', points: '6,-2 6,0 0,-2 0,-4'};
 const yy9 = {color: '#152260', points: '-3,3 -6,2 -6,-2 -3,-1'};
 const yy11 = {color: '#152260', points: '-6,2 -6,0 0,2 0,4'};
+const yy90 = {color: '#152260', points: '-3,-3 0,-2 0,2 -3,1'};
 
 const x1 = {color: '#802020', points: '6,2 6,0 3,1 3,3'};
 const x2 = {color: '#802020', points: '3,3 3,1 0,2 0,4'};
@@ -72,6 +73,7 @@ const xx1 = {color: '#601515', points: '6,2 6,0 0,2 0,4'};
 const xx3 = {color: '#601515', points: '3,3 6,2 6,-2 3,-1'};
 const xx7 = {color: '#601515', points: '-6,-2 -6,0 0,-2 0,-4'};
 const xx9 = {color: '#601515', points: '-3,-3 -6,-2 -6,2 -3,1'};
+const xx30 = {color: '#601515', points: '3,-3 0,-2 0,2 3,1'};
 
 const w1 = {color: '#00aaaa', points: '0,4 6,2 0,0'};
 const w3 = {color: '#00aaaa', points: '6,2 6,-2 0,0'};
@@ -109,6 +111,8 @@ const wa4 = {color: '#00bb33', points: '6,2 6,-2 0,-4 0,-1 3,-1 1.5,0.5'};
 const wa8 = {color: '#00bb33', points: '0,-4 -6,-2 -6,2 -1.5,0.5 -3,-1 0,-1'};
 const wa12 = {color: '#00bb33', points: '-6,2 0,4 6,2 1.5,0.5 0,2 -1.5,0.5'};
 
+const h6wa6 = {color: '#44a060', points: '3,-1 3,-3 0,-4 -6,-2 -3,-1'};
+
 const v0 = {color: '#444444', points: '0,2 3,3 3,1 6,0 3,-1 3,-3 0,-2 -3,-3 -3,-1 -6,0 -3,1 -3,3'};
 const v1 = {color: '#444444', points: '3,3 3,-1 -3,-3, -3,1'};
 const v3 = {color: '#444444', points: '0,2 6,0 0,-2 -6,0'};
@@ -119,6 +123,12 @@ const v8 = {color: '#688000', points: '0,0 -6,2 -6,0 -3,-1 -3,-3 0,-4'};
 const v12 = {color: '#688000', points: '0,0 6,2 3,3 0,2 -3,3 -6,2'};
 const v4x = {color: '#688000', points: '0,0 6,2 6,0 0,-2'};
 const v8x = {color: '#688000', points: '0,0 -6,2 -6,0 0,-2'};
+
+const vh10 = {color: '#444444', points: '3,3 3,-1 -3,-3 -6,-2 -6,2 0,4'};
+const vh12 = {color: '#444444', points: '6,0 0,-2 -6,0 -6,2 0,4 6,2'};
+
+const trap45 = {color: '#688000', points: '6,0 6,-2 3,-3 0,-2'};
+const trap78 = {color: '#688000', points: '-6,0 -6,-2 -3,-3 0,-2'};
 
 const uu1 = {color: '#688000', points: '-3,3 -3,-1 -6,0 -6,2'};
 const uu2 = {color: '#688000', points: '-3,3 -3,-1 0,0 0,2'};
@@ -182,6 +192,9 @@ const czh12 = {color: '#666666', points: '6,2 6,0 -6,0 -6,2'};
 const czh02 = {color: '#666666', points: '0,4 6,-2 0,-4 -6,2'};
 const czh2 = {color: '#666666', points: '0,4 6,-2 3,-3 -3,3'};
 const czh8 = {color: '#666666', points: '-3,3 -6,2 0,-4 3,-3'};
+
+const czh1 = {color: '#666666', points: '6,2 6,-2 -6,2'};
+const czh7 = {color: '#666666', points: '6,-2 -6,-2 -6,2'};
 
 const czh04 = {color: '#666666', points: '0,4 6,2 0,-4 -6,-2'};
 const czh4 = {color: '#666666', points: '0,4 -6,-2 -3,-3 3,3'};
@@ -508,9 +521,9 @@ const tc11 = {color: '#11AA66', points: '0,2 -6,2 -1.5,0.5'};
 // z1 is out of sight
 
 const hexGridShapes = {
-    '-1': {'-1': [e6], 0: [f4, f8, a3], 1: [f4, f8, a3], 2: [f4, f8, a3], 3: [f4, f8, a3], 4: [f4, f8, a3],
-     5: [wa2, wa6, wa10, a5], 6: [wa2, wa6, wa10, a5], 7: [x0, y0, a5, h2, h6, h10], 8: [i2, i6, i10, x0, y0, c0], 9: [x1, x0, y1, y0, z0, b3, b5, b7, b9, c0],
-     10: [x1, x0, y1, y0, z0, b3, b5, b7, b9, c0], 11: [x1, x0, y1, y0, z0, z4, z5, z6, z7, b5, b7], 12: [yy3, xx9, y5, x6, z0], 13: [xx3, zz5, xx9, zz11, v1], 14: [zz1, yy3, zz7, yy9, v5],
+    '-1': {'-1': [e6, czh1, czh7], 0: [f4, f8, a3], 1: [f4, f8, a3], 2: [f4, f8, a3], 3: [f4, f8, a3], 4: [f4, f8, a3],
+     5: [wa2, wa6, wa10, a5], 6: [h2, y0, h6wa6, wa10, a5], 7: [x0, y0, a5, h2, h6, h10], 8: [i2, i6, i10, x0, y0, c0], 9: [z0, trap45, trap78, vh12],
+     10: [x1, x0, y1, y0, z0, b3, b5, b7, b9, c0], 11: [x1, x0, y1, y0, z0, z4, z5, z6, z7, b5, b7], 12: [yy3, xx9, xx30, yy90, z0], 13: [xx3, zz5, vh10], 14: [yy3, zz7, yy9, v5],
      15: [zz5, xx9, v1]},
 
     0: {'-1': [w1, f4, fa4], 0: [sc1, sc3, sc5, sc7, sc9, sc11], 1: [sc4, sc8, sc12], 2: [f4, f8, f12, rc2, rc6, rc10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512, a555], 4: [f1, f3, f5, f7, f9, f11, a2, a6, a10, b55, a54, a58, a512],
@@ -543,13 +556,13 @@ const hexGridShapes = {
         10: [e2, e6, e10, ff4, ff8, ff12, ca0], 11: [ff4, ff8, ff12, ff4a, ff8a, ff12a, e2b, e6b, e10b], 12: [x0, y0, z1, isec2, isec6, isec10, iarr4, iarr8, iarr12], 13: [x0, y0, z1, isec2, isec6, isec10, iarr330, iarr430, iarr730, iarr830, iarr1130, iarr1230], 14: [x1, x0, y1, y0, z1, z0, iarr130, iarr230, iarr330, iarr430, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230],
         15: [x0, y1, z1, z0, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230]},
 
-    6: {'-1': [], 0: [cz0], 1: [e2, ea2, w5, w7, e10, ea10], 2: [f4, fa4, w7, w9, f12, fa12], 3: [f4, fa4, f8, fa8, f12, fa12], 4: [f4, f8, f12, a3h1, a3h7],
+    6: {'-1': [w1, w4], 0: [cz0], 1: [e2, ea2, w5, w7, e10, ea10], 2: [f4, fa4, w7, w9, f12, fa12], 3: [f4, fa4, f8, fa8, f12, fa12], 4: [f4, f8, f12, a3h1, a3h7],
      5: [ef5, ef6, ef7, f12, ff3and4, ff8and9, a3x6], 6: [ef1, ef2, ef3, ff4, ef5, ef6, ef7, ff8, ef9, ef10, ef11, ff12, ca0], 7: [f12, e6, czh0], 8: [f12, e6, czh6, czh12], 9: [ef1230, ef130, ef2, ef230, ef330, ff4, ef430, ef530, ef6, ef630, ef730, ff8, ef830, ef930, ef10, ef1030, ef1130, ff12, ef2a, ef6a, ef10a, ff4a, ff8a, ff12a],
      10: [ef330, e6, ef830, ef11, ff12, ef1, ag12a, ca12, ef2and230, ef930and10], 11: [icca2, icca4, icca6, icca8, icca10, icca12, cah6, cah12], 12: [icca2, icca4, icca6, icca8, icca10, icca12, winn2, winn4, winn6, winn8, winn10, winn12],
      13: [icca2, icca4, icca6, icca8, icca10, icca12, iccaa4, iccaa8, iccaa12, iarr4, iarr8, iarr12, winn2, winn6, winn10], 14: [icca2, icca4, icca6, icca8, icca10, icca12, iccaa4, iccaa8, iccaa12, iarr330, iarr430, iarr730, iarr830, iarr1130, iarr1230, winn2, winn6, winn10],
      15: [icca2, icca4, icca6, icca8, icca10, icca12, iccaa2, iccaa4, iccaa6, iccaa8, iccaa10, iccaa12, iarr130, iarr230, iarr330, iarr430, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230], 16: [icca6, icca8, icca10, icca12, winn6, winn8, winn10, winn12]},
 
-    7: {'-1': [], 0: [], 1: [], 2: [], 3: [], 4: [],
+    7: {'-1': [w4, w8, w12], 0: [w4, w8, w12], 1: [w4, w8, w12], 2: [f4, fa4, w8, f12, fa12], 3: [f4, fa4, f8, fa8, f12, fa12], 4: [f4, f8, f12, a3h1, a3h7],
         5: [f4, e10, czh04], 6: [e2, f8, czh02], 7: [e2, e10, a1], 8: [f4, e10, czh4, czh10], 9: [e2, f8, czh2, czh8],
         10: [], 11: [], 12: [], 13: [], 14: [],
         15: []},
@@ -645,7 +658,7 @@ const hexGrid = _.mapValues(hexGridShapes, (row, rowIndex) => _.mapValues(row, (
         shapes: shapes,
         offsets: hexGridOffsets[rowIndex][colIndex].split(',').map(Number).map(x => (USE_OFFSETS ? x / 100 : 0)),
         rotation: USE_OFFSETS ? hexGridRotations[rowIndex][colIndex] : 0,
-        scale: USE_OFFSETS ? hexGridScales[rowIndex][colIndex] : 0,
+        scale: USE_OFFSETS ? hexGridScales[rowIndex][colIndex] : 1,
     };
 }));
 
