@@ -54,7 +54,7 @@ const Hex = React.createClass({
                             // tinycolor('#AA5555').saturate(100 * polygon.center[0]).lighten(100 * polygon.yMax)
                             const color = OVERLAP_MODE ? '#fff' : polygon.color;
                             const opacity = OVERLAP_MODE ? 0.5 : 1;
-                            return <polygon className="mine" key={index} fill={color} style={{opacity: opacity}} points={polygon.points} />;
+                            return <polygon title={polygon.name} className="mine" key={index} fill={color} style={{opacity: opacity}} points={polygon.points} />;
                         } else {
                             return <polygon className="mine" key={index} fill="transparent" points={polygon.points} />;
                         }
