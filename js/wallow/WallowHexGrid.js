@@ -638,14 +638,18 @@ const hexGridScales = {
     '7': {/**/'-1': 1, '0': 1, '1': 1, '2': 1, '3': 1, '4': 1, '5': 1, '6': 1, '7': 1, '8': 1, '9': 1, '10': 1, '11': 1, '12': 1, '13': 1, '14': 1, '15': 1},
 };
 
+const scalePointX = x => x * 1 / 12;
+const scalePointY = y => -y * 1 / 8 * 4 / 3 * Y_AXIS_SCALE;
+
 const processShapeIfNeeded = function(shape) {
     if (shape.processed) {
         return;
     }
 
     shape.processed = true;
-    const pointsUnscaled = _.filter(shape.points.split(' ')).map(x => x.split(','));
-    const points = pointsUnscaled.map(([x, y]) => [x * 1 / 12, -y * 1 / 8 * 4 / 3 * Y_AXIS_SCALE]);
+    const pointsUnscaled = _.filter(shape.points.split(' ')).map(x => x.split(',').map(Number));
+    shape.pointsUnscaled = pointsUnscaled;
+    const points = pointsUnscaled.map(([x, y]) => [scalePointX(x), scalePointY(y)]);
     shape.points = points;
 
     const centerX = points.map(p => p[0]).reduce((x, xx) => x + xx, 0) / points.length;
@@ -660,12 +664,76 @@ const processShapeIfNeeded = function(shape) {
     shape.yMax = yMax;
 };
 
+const processEdgesInShapes = function(shapes, hexCoords) {
+    const edges = [];
+
+    const pointSignaturesAlreadyProcessed = {
+        '[[0,4],[6,2]]': true,
+        '[[0,-4],[6,-2]]': true,
+        '[[6,-2],[6,2]]': true,
+
+        // '[[-6,2],[0,4]]': true,
+        // '[[-6,-2],[0,-4]]': true,
+        // '[[-6,-2],[-6,2]]': true,
+
+        '[[0,4],[3,3]]': true,
+        '[[3,3],[6,2]]': true,
+        '[[0,-4],[3,-3]]': true,
+        '[[3,-3],[6,-2]]': true,
+        '[[6,-2],[6,0]]': true,
+        '[[6,0],[6,2]]': true,
+
+        // '[[-6,2],[-3,3]]': true,
+        // '[[-3,3],[0,4]]': true,
+        // '[[-6,-2],[-3,-3]]': true,
+        // '[[-3,-3],[0,-4]]': true,
+        // '[[-6,-2],[-6,0]]': true,
+        // '[[-6,0],[-6,2]]': true,
+    };
+
+    for (const shape of shapes) {
+        if (_.includes(shape.skipEdgesOnHexCoords, hexCoords)) {
+            continue;
+        }
+
+        const numPoints = shape.pointsUnscaled.length;
+        for (let i = 0; i < numPoints; i++) {
+            let p1 = shape.pointsUnscaled[i];
+            let p2 = shape.pointsUnscaled[(i + 1) % numPoints];
+
+            // normalize so p1 is always to the left of and above p2
+            if (p1[0] > p2[0] || (p1[0] === p2[0] && p1[1] > p2[1])) {
+                [p1, p2] = [p2, p1];
+            }
+
+            const pointSignature = JSON.stringify([p1, p2]);
+
+            if (pointSignaturesAlreadyProcessed[pointSignature]) {
+                continue;
+            }
+            pointSignaturesAlreadyProcessed[pointSignature] = true;
+
+            edges.push({
+                x1: scalePointX(p1[0]),
+                y1: scalePointY(p1[1]),
+                x2: scalePointX(p2[0]),
+                y2: scalePointY(p2[1]),
+            });
+        }
+    }
+
+    return edges;
+};
+
 const hexGrid = _.mapValues(hexGridShapes, (row, rowIndex) => _.mapValues(row, (shapes, colIndex) => {
 
     shapes.forEach(processShapeIfNeeded);
 
+    const edges = processEdgesInShapes(shapes, `${rowIndex},${colIndex}`);
+
     return {
         shapes: shapes,
+        edges: edges,
         offsets: hexGridOffsets[rowIndex][colIndex].split(',').map(Number).map(x => (USE_OFFSETS ? x / 100 : 0)),
         rotation: USE_OFFSETS ? hexGridRotations[rowIndex][colIndex] : 0,
         scale: USE_OFFSETS ? hexGridScales[rowIndex][colIndex] : 1,

@@ -8,3 +8,7 @@
     stroke: #000;
     stroke-width: 0.02px;
 }
+
+.edge {
+    stroke-width: 0.04px;
+}
