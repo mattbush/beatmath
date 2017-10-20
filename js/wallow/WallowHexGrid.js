@@ -96,6 +96,13 @@ const winn4 = {color: '#00bb33', points: '3,-3 6,0 0,0'};
 const winn8 = {color: '#00bb33', points: '-3,-3 -6,0 0,0'};
 const winn12 = {color: '#00bb33', points: '-3,3 3,3 0,0'};
 
+const winn24 = {color: '#00992b', points: '3,3 6,0 3,-3 0,0'};
+const winn24o = {color: '#00992b', points: '3,3 6,0 3,-3'};
+const winn24i = {color: '#00992b', points: '3,3 3,-3 0,0'};
+const winn810 = {color: '#00992b', points: '-3,3 -6,0 -3,-3 0,0'};
+const winn810o = {color: '#00992b', points: '-3,3 -6,0 -3,-3'};
+const winn810i = {color: '#00992b', points: '-3,3 -3,-3 0,0'};
+
 // wa: variant of w with an inscribed small upward triangle
 const wa1 = {color: '#00aaaa', points: '0,4 6,2 1.5,0.5 0,2'};
 const wa3 = {color: '#00aaaa', points: '6,2 6,-2 3,-1, 1.5,0.5'};
@@ -200,6 +207,8 @@ const czh04 = {color: '#666666', points: '0,4 6,2 0,-4 -6,-2'};
 const czh4 = {color: '#666666', points: '0,4 -6,-2 -3,-3 3,3'};
 const czh10 = {color: '#666666', points: '3,3 6,2 0,-4 -3,-3'};
 
+const cah4 = {color: '#666666', points: '3,3 6,0 3,-3 -3,-3'};
+const cah10 = {color: '#666666', points: '-3,-3 -6,0 -3,3 3,3'};
 const cah6 = {color: '#666666', points: '3,-3 6,0 -6,0 -3,-3'};
 const cah12 = {color: '#666666', points: '3,3 6,0 -6,0 -3,3'};
 
@@ -564,8 +573,9 @@ const hexGridShapes = {
 
     7: {'-1': [w4, w8, w12], 0: [w4, w8, w12], 1: [w4, w8, w12], 2: [f4, fa4, w8, f12, fa12], 3: [f4, fa4, f8, fa8, f12, fa12], 4: [f4, f8, f12, a3h1, a3h7],
         5: [f4, e10, czh04], 6: [e2, f8, czh02], 7: [e2, e10, a1], 8: [f4, e10, czh4, czh10], 9: [e2, f8, czh2, czh8],
-        10: [], 11: [], 12: [], 13: [], 14: [],
-        15: []},
+        10: [icca2, icca4], 11: [icca2, icca4, icca8, icca10, icca12, cah4, cah10], 12: [icca2, icca4, icca8, icca10, icca12, winn24, winn6, winn810, winn12],
+        13: [icca2, icca4, icca8, icca10, icca12, winn24, winn6, winn810, iccaa12, iarr1130, iarr1230], 14: [icca2, icca4, icca8, icca10, icca12, winn24o, winn24i, winn6, winn810, iccaa12, iarr1130, iarr1230],
+        15: [icca2, icca10, icca12, winn24, winn6, winn810o, winn810i, iccaa12, iarr1130, iarr1230]},
 };
 
 const hexGridOffsets = {
