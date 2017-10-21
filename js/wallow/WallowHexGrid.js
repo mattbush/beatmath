@@ -162,9 +162,9 @@ const a58 = {name: 'a58', color: '#9900BB', points: '-3,-1 0,-1 -1.5,0.5'};
 const a512 = {name: 'a512', color: '#9900BB', points: '0,2 -1.5,0.5 1.5,0.5'};
 const a555 = {name: 'a555', color: '#BB00DD', points: '0,0.5 0.75,-0.25 -0.75,-0.25'};
 
-const a2 = {name: 'a2', color: '#770099', points: '6,2 3,-1 0,2', skipEdgesOnHexCoords: ['4,5']};
-const a6 = {name: 'a6', color: '#770099', points: '0,-4 -3,-1 3,-1', skipEdgesOnHexCoords: ['4,5']};
-const a10 = {name: 'a10', color: '#770099', points: '-6,2 0,2 -3,-1', skipEdgesOnHexCoords: ['4,5']};
+const a2 = {name: 'a2', color: '#770099', points: '6,2 3,-1 0,2', skipEdgesOnHexCoords: ['4,5', '0,3', '0,4', '1,3', '1,4']};
+const a6 = {name: 'a6', color: '#770099', points: '0,-4 -3,-1 3,-1', skipEdgesOnHexCoords: ['4,5', '0,3', '0,4', '1,3', '1,4']};
+const a10 = {name: 'a10', color: '#770099', points: '-6,2 0,2 -3,-1', skipEdgesOnHexCoords: ['4,5', '0,3', '0,4', '1,3', '1,4']};
 
 const a4 = {name: 'a4', color: '#770099', points: '6,-2 0,-2 3,1'};
 const a8 = {name: 'a8', color: '#770099', points: '-6,-2 -3,1 0,-2'};
@@ -236,9 +236,9 @@ const e7 = {name: 'e7', color: '#AA6622', points: '0,-2 0,-4 -6,-2'};
 const e9 = {name: 'e9', color: '#AA6622', points: '-6,-2 -6,2 -3,1'};
 const e11 = {name: 'e11', color: '#AA6622', points: '-3,1 -6,2 0,4'};
 
-const f4 = {name: 'f4', color: '#773800', points: '6,2 6,-2 0,-4', skipEdgesOnHexCoords: ['0,2', '0,3', '1,2', '1,3', '2,3', '2,4', '2,5']};
-const f8 = {name: 'f8', color: '#773800', points: '0,-4 -6,-2 -6,2', skipEdgesOnHexCoords: ['0,2', '0,3', '1,2', '1,3', '2,3', '2,4', '2,5']};
-const f12 = {name: 'f12', color: '#773800', points: '-6,2 0,4 6,2', skipEdgesOnHexCoords: ['0,2', '0,3', '1,2', '1,3', '2,3', '2,4', '2,5']};
+const f4 = {name: 'f4', color: '#773800', points: '6,2 6,-2 0,-4', skipEdgesOnHexCoords: ['0,2', '1,2', '2,3', '2,4', '2,5']};
+const f8 = {name: 'f8', color: '#773800', points: '0,-4 -6,-2 -6,2', skipEdgesOnHexCoords: ['0,2', '1,2', '2,3', '2,4', '2,5']};
+const f12 = {name: 'f12', color: '#773800', points: '-6,2 0,4 6,2', skipEdgesOnHexCoords: ['0,2', '1,2', '2,3', '2,4', '2,5']};
 const f1 = {name: 'f1', color: '#AA6622', points: '0,2 0,4 6,2'};
 const f3 = {name: 'f3', color: '#AA6622', points: '6,2 6,-2 3,-1'};
 const f5 = {name: 'f5', color: '#AA6622', points: '3,-1 6,-2 0,-4'};
