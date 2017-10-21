@@ -5,6 +5,11 @@ const {polarAngleDeg, posMod, xyRotatedAroundOriginWithAngle, lerp} = require('j
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 const USE_OFFSETS = true;
 
+const PINK = '#ee00ee';
+const CYAN = '#00ccee';
+const ORANGE = '#ee8800';
+const RED = '#ff0000';
+
 /*
    < z1 >
 < z2 >< z3 >
@@ -160,7 +165,7 @@ const b55 = {name: 'b55', color: '#9900BB', points: '0,-1 -1.5,0.5 1.5,0.5'};
 const a54 = {name: 'a54', color: '#9900BB', points: '3,-1 0,-1 1.5,0.5'};
 const a58 = {name: 'a58', color: '#9900BB', points: '-3,-1 0,-1 -1.5,0.5'};
 const a512 = {name: 'a512', color: '#9900BB', points: '0,2 -1.5,0.5 1.5,0.5'};
-const a555 = {name: 'a555', color: '#BB00DD', points: '0,0.5 0.75,-0.25 -0.75,-0.25'};
+const a555 = {name: 'a555', color: '#BB00DD', points: '0,0.5 0.75,-0.25 -0.75,-0.25', edgeColor: RED};
 
 const a2 = {name: 'a2', color: '#770099', points: '6,2 3,-1 0,2', skipEdgesOnHexCoords: ['4,5', '0,3', '0,4', '1,3', '1,4']};
 const a6 = {name: 'a6', color: '#770099', points: '0,-4 -3,-1 3,-1', skipEdgesOnHexCoords: ['4,5', '0,3', '0,4', '1,3', '1,4']};
@@ -408,62 +413,62 @@ const qd0 = {name: 'qd0', color: '#9900BB', points: '0,2.67 4,-1.33 -4,-1.33'};
 const qe0 = {name: 'qe0', color: '#9900BB', points: '0,3.33 5,-1.67 -5,-1.67'};
 const qf0 = {...a1, name: 'qf0'}; // {color: '#550077', points: '0,4 6,-2 -6,-2'};
 
-const qa2 = {name: 'qa2', color: '#993070', points: '0,0.67 6,2 1,-0.33'};
-const qb2 = {name: 'qb2', color: '#993070', points: '0,1.33 6,2 2,-0.67'};
+const qa2 = {name: 'qa2', color: '#993070', points: '0,0.67 6,2 1,-0.33', edgeColor: RED};
+const qb2 = {name: 'qb2', color: '#993070', points: '0,1.33 6,2 2,-0.67', edgeColor: RED};
 const qc2 = {...a2, name: 'qc2'}; // {color: '#770099', points: '0,2 6,2 3,-1'};
-const qd2 = {name: 'qd2', color: '#993070', points: '0,2.67 6,2 4,-1.33'};
-const qe2 = {name: 'qe2', color: '#993070', points: '0,3.33 6,2 5,-1.67'};
+const qd2 = {name: 'qd2', color: '#993070', points: '0,2.67 6,2 4,-1.33', edgeColor: RED};
+const qe2 = {name: 'qe2', color: '#993070', points: '0,3.33 6,2 5,-1.67', edgeColor: RED};
 const qf2 = {...e2, name: 'qf2'}; // {color: '#773800', points: '0,4 6,2 6,-2'};
 
-const qa6 = {name: 'qa6', color: '#993070', points: '1,-0.33 0,-4 -1,-0.33'};
-const qb6 = {name: 'qb6', color: '#993070', points: '2,-0.67 0,-4 -2,-0.67'};
+const qa6 = {name: 'qa6', color: '#993070', points: '1,-0.33 0,-4 -1,-0.33', edgeColor: RED};
+const qb6 = {name: 'qb6', color: '#993070', points: '2,-0.67 0,-4 -2,-0.67', edgeColor: RED};
 const qc6 = {...a6, name: 'qc6'}; // {color: '#770099', points: '3,-1 0,-4 -3,-1'};
-const qd6 = {name: 'qd6', color: '#993070', points: '4,-1.33 0,-4 -4,-1.33'};
-const qe6 = {name: 'qe6', color: '#993070', points: '5,-1.67 0,-4 -5,-1.67'};
+const qd6 = {name: 'qd6', color: '#993070', points: '4,-1.33 0,-4 -4,-1.33', edgeColor: RED};
+const qe6 = {name: 'qe6', color: '#993070', points: '5,-1.67 0,-4 -5,-1.67', edgeColor: RED};
 const qf6 = {...e6, name: 'qf6'}; // {color: '#773800', points: '6,-2 0,-4 -6,-2'};
 
-const qa10 = {name: 'qa10', color: '#993070', points: '0,0.67 -6,2 -1,-0.33'};
-const qb10 = {name: 'qb10', color: '#993070', points: '0,1.33 -6,2 -2,-0.67'};
+const qa10 = {name: 'qa10', color: '#993070', points: '0,0.67 -6,2 -1,-0.33', edgeColor: RED};
+const qb10 = {name: 'qb10', color: '#993070', points: '0,1.33 -6,2 -2,-0.67', edgeColor: RED};
 const qc10 = {...a10, name: 'qc10'}; // {color: '#770099', points: '0,2 -6,2 -3,-1'};
-const qd10 = {name: 'qd10', color: '#993070', points: '0,2.67 -6,2 -4,-1.33'};
-const qe10 = {name: 'qe10', color: '#993070', points: '0,3.33 -6,2 -5,-1.67'};
+const qd10 = {name: 'qd10', color: '#993070', points: '0,2.67 -6,2 -4,-1.33', edgeColor: RED};
+const qe10 = {name: 'qe10', color: '#993070', points: '0,3.33 -6,2 -5,-1.67', edgeColor: RED};
 const qf10 = {...e10, name: 'qf10'}; // {color: '#773800', points: '0,4 -6,2 -6,-2'};
 
-const qa1 = {name: 'qa1', color: '#88AA55', points: '0,4 6,2 0,0.67'};
-const qb1 = {name: 'qb1', color: '#88AA55', points: '0,4 6,2 0,1.33'};
+const qa1 = {name: 'qa1', color: '#88AA55', points: '0,4 6,2 0,0.67', edgeColor: ORANGE};
+const qb1 = {name: 'qb1', color: '#88AA55', points: '0,4 6,2 0,1.33', edgeColor: ORANGE};
 const qc1 = {...f1, name: 'qc1'}; // {color: '#AA6622', points: '0,4 6,2 0,2'};
-const qd1 = {name: 'qd1', color: '#88AA55', points: '0,4 6,2 0,2.67'};
-const qe1 = {name: 'qe1', color: '#88AA55', points: '0,4 6,2 0,3.33'};
+const qd1 = {name: 'qd1', color: '#88AA55', points: '0,4 6,2 0,2.67', edgeColor: ORANGE};
+const qe1 = {name: 'qe1', color: '#88AA55', points: '0,4 6,2 0,3.33', edgeColor: ORANGE};
 
-const qa3 = {name: 'qa3', color: '#88AA55', points: '6,2 6,-2 1,-0.33'};
-const qb3 = {name: 'qb3', color: '#88AA55', points: '6,2 6,-2 2,-0.67'};
+const qa3 = {name: 'qa3', color: '#88AA55', points: '6,2 6,-2 1,-0.33', edgeColor: ORANGE};
+const qb3 = {name: 'qb3', color: '#88AA55', points: '6,2 6,-2 2,-0.67', edgeColor: ORANGE};
 const qc3 = {...f3, name: 'qc3'}; // {color: '#AA6622', points: '6,2 6,-2 3,-1'};
-const qd3 = {name: 'qd3', color: '#88AA55', points: '6,2 6,-2 4,-1.33'};
-const qe3 = {name: 'qe3', color: '#88AA55', points: '6,2 6,-2 5,-1.67'};
+const qd3 = {name: 'qd3', color: '#88AA55', points: '6,2 6,-2 4,-1.33', edgeColor: ORANGE};
+const qe3 = {name: 'qe3', color: '#88AA55', points: '6,2 6,-2 5,-1.67', edgeColor: ORANGE};
 
-const qa5 = {name: 'qa5', color: '#88AA55', points: '6,-2 0,-4 1,-0.33'};
-const qb5 = {name: 'qb5', color: '#88AA55', points: '6,-2 0,-4 2,-0.67'};
+const qa5 = {name: 'qa5', color: '#88AA55', points: '6,-2 0,-4 1,-0.33', edgeColor: ORANGE};
+const qb5 = {name: 'qb5', color: '#88AA55', points: '6,-2 0,-4 2,-0.67', edgeColor: ORANGE};
 const qc5 = {...f5, name: 'qc5'}; // {color: '#AA6622', points: '6,-2 0,-4 3,-1'};
-const qd5 = {name: 'qd5', color: '#88AA55', points: '6,-2 0,-4 4,-1.33'};
-const qe5 = {name: 'qe5', color: '#88AA55', points: '6,-2 0,-4 5,-1.67'};
+const qd5 = {name: 'qd5', color: '#88AA55', points: '6,-2 0,-4 4,-1.33', edgeColor: ORANGE};
+const qe5 = {name: 'qe5', color: '#88AA55', points: '6,-2 0,-4 5,-1.67', edgeColor: ORANGE};
 
-const qa7 = {name: 'qa7', color: '#88AA55', points: '-6,-2 0,-4 -1,-0.33'};
-const qb7 = {name: 'qb7', color: '#88AA55', points: '-6,-2 0,-4 -2,-0.67'};
+const qa7 = {name: 'qa7', color: '#88AA55', points: '-6,-2 0,-4 -1,-0.33', edgeColor: ORANGE};
+const qb7 = {name: 'qb7', color: '#88AA55', points: '-6,-2 0,-4 -2,-0.67', edgeColor: ORANGE};
 const qc7 = {...f7, name: 'qc7'}; // {color: '#AA6622', points: '-6,-2 0,-4 -3,-1'};
-const qd7 = {name: 'qd7', color: '#88AA55', points: '-6,-2 0,-4 -4,-1.33'};
-const qe7 = {name: 'qe7', color: '#88AA55', points: '-6,-2 0,-4 -5,-1.67'};
+const qd7 = {name: 'qd7', color: '#88AA55', points: '-6,-2 0,-4 -4,-1.33', edgeColor: ORANGE};
+const qe7 = {name: 'qe7', color: '#88AA55', points: '-6,-2 0,-4 -5,-1.67', edgeColor: ORANGE};
 
-const qa9 = {name: 'qa9', color: '#88AA55', points: '-6,2 -6,-2 -1,-0.33'};
-const qb9 = {name: 'qb9', color: '#88AA55', points: '-6,2 -6,-2 -2,-0.67'};
+const qa9 = {name: 'qa9', color: '#88AA55', points: '-6,2 -6,-2 -1,-0.33', edgeColor: ORANGE};
+const qb9 = {name: 'qb9', color: '#88AA55', points: '-6,2 -6,-2 -2,-0.67', edgeColor: ORANGE};
 const qc9 = {...f9, name: 'qc9'}; // {color: '#AA6622', points: '-6,2 -6,-2 -3,-1'};
-const qd9 = {name: 'qd9', color: '#88AA55', points: '-6,2 -6,-2 -4,-1.33'};
-const qe9 = {name: 'qe9', color: '#88AA55', points: '-6,2 -6,-2 -5,-1.67'};
+const qd9 = {name: 'qd9', color: '#88AA55', points: '-6,2 -6,-2 -4,-1.33', edgeColor: ORANGE};
+const qe9 = {name: 'qe9', color: '#88AA55', points: '-6,2 -6,-2 -5,-1.67', edgeColor: ORANGE};
 
-const qa11 = {name: 'qa11', color: '#88AA55', points: '0,4 -6,2 0,0.67'};
-const qb11 = {name: 'qb11', color: '#88AA55', points: '0,4 -6,2 0,1.33'};
+const qa11 = {name: 'qa11', color: '#88AA55', points: '0,4 -6,2 0,0.67', edgeColor: ORANGE};
+const qb11 = {name: 'qb11', color: '#88AA55', points: '0,4 -6,2 0,1.33', edgeColor: ORANGE};
 const qc11 = {...f11, name: 'qc11'}; // {color: '#AA6622', points: '0,4 -6,2 0,2'};
-const qd11 = {name: 'qd11', color: '#88AA55', points: '0,4 -6,2 0,2.67'};
-const qe11 = {name: 'qe11', color: '#88AA55', points: '0,4 -6,2 0,3.33'};
+const qd11 = {name: 'qd11', color: '#88AA55', points: '0,4 -6,2 0,2.67', edgeColor: ORANGE};
+const qe11 = {name: 'qe11', color: '#88AA55', points: '0,4 -6,2 0,3.33', edgeColor: ORANGE};
 
 const ra2 = {name: 'ra2', color: '#1166AA', points: '-2,2 6,2 4,0 0,0'};
 const ra6 = {name: 'ra6', color: '#1166AA', points: '0,0 4,0 0,-4 -2,-2'};
@@ -535,7 +540,7 @@ const hexGridShapes = {
      10: [x1, x0, y1, y0, z0, b3, b5, b7, b9, c0], 11: [x1, x0, y1, y0, z0, z4, z5, z6, z7, b5, b7], 12: [yy3, xx9, xx30, yy90, z0], 13: [xx3, zz5, vh10], 14: [yy3, zz7, yy9, v5],
      15: [zz5, xx9, v1]},
 
-    0: {'-1': [w1, f4, fa4], 0: [sc1, sc3, sc5, sc7, sc9, sc11], 1: [sc4, sc8, sc12], 2: [f4, f8, f12, rc2, rc6, rc10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512, a555], 4: [f1, f3, f5, f7, f9, f11, a2, a6, a10, b55, a54, a58, a512],
+    0: {'-1': [w1, f4, fa4], 0: [sc1, sc3, sc5, sc7, sc9, sc11], 1: [sc4, sc8, sc12], 2: [f4, f8, f12, rc2, rc6, rc10], 3: [f4, f8, f12, a2, a6, a10, b55, a555, a54, a58, a512], 4: [f1, f3, f5, f7, f9, f11, a2, a6, a10, b55, a54, a58, a512],
      5: [wa2, wa6, wa10, b55, a54, a58, a512], 6: [wa2, wa6, wa10, a5], 7: [x0, y0, z1, a5, h2, h6, h10], 8: [i2, i6, i10, x0, y0, z1, k2, k6, k10, a5], 9: [i2, i6, i10, x0, y0, z1, c0],
      10: [x1, x0, y1, y0, z1, z0, b1, b3, b5, b7, b9, b11, c0], 11: [x1, x0, y1, y0, z1, z0, z4, z5, z6, z7, b1, b5, b7, b11], 12: [x1, y6, x5, y1, x0, y5, x6, y0, z1, z5, z6, z0], 13: [x1, x2, x9, x0, y1, y3, y8, y0, v3], 14: [xx1, yy5, xx7, yy11, v3],
      15: [x1, x0, y1, y0, z1, z0, v0], 16: [xx1, yy5, xx7, yy11, v3]},
@@ -550,8 +555,8 @@ const hexGridShapes = {
      10: [g12, g4, g8, x4, y4, z7], 11: [z1, z2, z3, x8, y4, x4, y9, z7, x0, x9, y8, y0], 12: [z1, z2, z3, x8, y4, x4, y9, x0, y5, x6, y0, z0], 13: [x1, x0, y1, y0, z5, z6, c6, c12], 14: [x0, y5, x6, y0, z1, z0, uu1, uu2, uu3, uu4],
      15: [x8, x0, z0, y9, y0, g12, u5, u6], 16: [x0, yy11]},
 
-    3: {/**/'-1': [ef1and2, ca0], 0: [ta0, ta1, ta3, ta5, ta7, ta9, ta11], 1: [w1, w3, w5, w7, w9, w11], 2: [qa1, qa3, qa5, qa7, qa9, qa11, qa0, qa2, qa6, qa10], 3: [qb1, qb3, qb5, qb7, qb9, qb11, qb0, qb2, qb6, qb10], 4: [qc1, qc3, qc5, qc7, qc9, qc11, qc0, qc2, qc6, qc10],
-         5: [qd1, qd3, qd5, qd7, qd9, qd11, qd0, qd2, qd6, qd10], 6: [qe1, qe3, qe5, qe7, qe9, qe11, qe0, qe2, qe6, qe10], 7: [qf0, qf2, qf6, qf10], 8: [e1, e3, e5, e7, e9, e11, l4, l8, l12], 9: [e1, e3, e5, e7, e9, e11, j4, j8, j12, z4, x7, y7],
+    3: {/**/'-1': [ef1and2, ca0], 0: [ta0, ta1, ta3, ta5, ta7, ta9, ta11], 1: [w1, w3, w5, w7, w9, w11], 2: [qa1, qa3, qa5, qa7, qa9, qa11, qa2, qa6, qa10, qa0], 3: [qb1, qb3, qb5, qb7, qb9, qb11, qb2, qb6, qb10, qb0], 4: [qc1, qc3, qc5, qc7, qc9, qc11, qc2, qc6, qc10, qc0],
+         5: [qd1, qd3, qd5, qd7, qd9, qd11, qd2, qd6, qd10, qd0], 6: [qe1, qe3, qe5, qe7, qe9, qe11, qe2, qe6, qe10, qe0], 7: [qf0, qf2, qf6, qf10], 8: [e1, e3, e5, e7, e9, e11, l4, l8, l12], 9: [e1, e3, e5, e7, e9, e11, j4, j8, j12, z4, x7, y7],
          10: [g12, g4, g8, z4, x7, y7], 11: [z1, z2, z3, z4, x8, x7, y7, y9, x0, x9, y8, y0], 12: [v4x, v8x, v12, x0, x9, y8, y0, z1], 13: [v4, v8, v12, x0, y0, z1], 14: [u4, u8, u12, x1, x0, y1, y0, z1, z0],
          15: [u4, u8, u12, x1, x0, y1, y0, z1, z0]},
 
@@ -686,7 +691,7 @@ const splitIntoPieces = function(edgeSignature) {
 /* eslint-disable */
 const edgeColors = [
     {
-        color: '#00ccee', // cyan
+        color: CYAN,
         edgeSignatures: [
             '[[0,4],[6,2]]',
             '[[0,-4],[6,-2]]',
@@ -694,7 +699,7 @@ const edgeColors = [
         ],
     },
     {
-        color: '#ee00ee', // magenta
+        color: PINK,
         edgeSignatures: [
             // vertical radial lines
             '[[0,0],[6,2]]',
@@ -705,6 +710,8 @@ const edgeColors = [
             '[[-6,-2],[0,0]]',
 
             '[[0,4],[0,-4]]', // full vertical
+            '[[-6,-2],[6,2]]',
+            '[[-6,2],[6,-2]]',
 
             // horizontal radial lines
             '[[-6,0],[0,0]]',
@@ -721,7 +728,7 @@ const edgeColors = [
         ],
     },
     {
-        color: '#ee8800', // orange
+        color: ORANGE,
         edgeSignatures: [
             // central vertical hexagons
             '[[-3,1],[-3,-1]]',
@@ -746,7 +753,7 @@ const edgeColors = [
         ],
     },
     {
-        color: '#ff0000', // red
+        color: RED,
         edgeSignatures: [
             '[[-6,-2],[0,4]]',
             '[[-6,-2],[6,-2]]',
@@ -846,7 +853,7 @@ const processEdgesInShapes = function(shapes, hexCoords) {
                 y1: scalePointY(p1[1]),
                 x2: scalePointX(p2[0]),
                 y2: scalePointY(p2[1]),
-                color: edgeColorsByEdgeSignature[edgeSignature],
+                color: edgeColorsByEdgeSignature[edgeSignature] || shape.edgeColor || ORANGE,
             });
         }
     }
