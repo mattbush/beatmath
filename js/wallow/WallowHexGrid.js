@@ -147,9 +147,9 @@ const u4 = {name: 'u4', color: '#688000', points: '0,0 3,1 6,0 3,-1 3,-3 0,-2'};
 const u8 = {name: 'u8', color: '#688000', points: '0,0 -3,1 -6,0 -3,-1 -3,-3 0,-2'};
 const u12 = {name: 'u12', color: '#688000', points: '0,0 3,1 3,3 0,2 -3,3 -3,1'};
 
-const a1 = {name: 'a1', color: '#550077', points: '0,4 6,-2 -6,-2'};
-const a5 = {name: 'a5', color: '#770099', points: '0,2 3,-1 -3,-1'};
-const a3 = {name: 'a3', color: '#550077', points: '0,-4 -6,2 6,2'};
+const a1 = {name: 'a1', color: '#550077', points: '0,4 6,-2 -6,-2', skipEdgesOnHexCoords: ['2,6', '5,6']};
+const a5 = {name: 'a5', color: '#770099', points: '0,2 3,-1 -3,-1', skipEdgesOnHexCoords: ['1,5', '1,6']};
+const a3 = {name: 'a3', color: '#550077', points: '0,-4 -6,2 6,2', skipEdgesOnHexCoords: ['4,4', '5,5']};
 const a7 = {name: 'a7', color: '#770099', points: '0,-2 -3,1 3,1'};
 
 const a3h1 = {name: 'a3h1', color: '#770099', points: '-6,2 6,2 3,-1'};
@@ -162,9 +162,9 @@ const a58 = {name: 'a58', color: '#9900BB', points: '-3,-1 0,-1 -1.5,0.5'};
 const a512 = {name: 'a512', color: '#9900BB', points: '0,2 -1.5,0.5 1.5,0.5'};
 const a555 = {name: 'a555', color: '#BB00DD', points: '0,0.5 0.75,-0.25 -0.75,-0.25'};
 
-const a2 = {name: 'a2', color: '#770099', points: '6,2 3,-1 0,2'};
-const a6 = {name: 'a6', color: '#770099', points: '0,-4 -3,-1 3,-1'};
-const a10 = {name: 'a10', color: '#770099', points: '-6,2 0,2 -3,-1'};
+const a2 = {name: 'a2', color: '#770099', points: '6,2 3,-1 0,2', skipEdgesOnHexCoords: ['4,5']};
+const a6 = {name: 'a6', color: '#770099', points: '0,-4 -3,-1 3,-1', skipEdgesOnHexCoords: ['4,5']};
+const a10 = {name: 'a10', color: '#770099', points: '-6,2 0,2 -3,-1', skipEdgesOnHexCoords: ['4,5']};
 
 const a4 = {name: 'a4', color: '#770099', points: '6,-2 0,-2 3,1'};
 const a8 = {name: 'a8', color: '#770099', points: '-6,-2 -3,1 0,-2'};
@@ -226,9 +226,9 @@ const c8 = {name: 'c8', color: '#666666', points: '-3,1  0,0  0,-2 -3,-3 -6,-2 -
 const c10 = {name: 'c10', color: '#666666', points: '-3,3 0,2  0,0 -3,-1 -6,0 -6,2'};
 const c12 = {name: 'c12', color: '#666666', points: '0,4 3,3  3,1 0,0 -3,1 -3,3'};
 
-const e2 = {name: 'e2', color: '#773800', points: '0,4 6,2 6,-2'};
-const e6 = {name: 'e6', color: '#773800', points: '6,-2 0,-4 -6,-2'};
-const e10 = {name: 'e10', color: '#773800', points: '-6,-2 -6,2 0,4'};
+const e2 = {name: 'e2', color: '#773800', points: '0,4 6,2 6,-2', skipEdgesOnHexCoords: ['2,8', '4,8', '4,10', '4,11', '5,10']};
+const e6 = {name: 'e6', color: '#773800', points: '6,-2 0,-4 -6,-2', skipEdgesOnHexCoords: ['2,8', '4,8', '4,10', '4,11', '5,10']};
+const e10 = {name: 'e10', color: '#773800', points: '-6,-2 -6,2 0,4', skipEdgesOnHexCoords: ['2,8', '4,8', '4,10', '4,11', '5,10']};
 const e1 = {name: 'e1', color: '#AA6622', points: '0,4 6,2 3,1'};
 const e3 = {name: 'e3', color: '#AA6622', points: '3,1 6,2 6,-2'};
 const e5 = {name: 'e5', color: '#AA6622', points: '6,-2 0,-4 0,-2'};
@@ -236,9 +236,9 @@ const e7 = {name: 'e7', color: '#AA6622', points: '0,-2 0,-4 -6,-2'};
 const e9 = {name: 'e9', color: '#AA6622', points: '-6,-2 -6,2 -3,1'};
 const e11 = {name: 'e11', color: '#AA6622', points: '-3,1 -6,2 0,4'};
 
-const f4 = {name: 'f4', color: '#773800', points: '6,2 6,-2 0,-4'};
-const f8 = {name: 'f8', color: '#773800', points: '0,-4 -6,-2 -6,2'};
-const f12 = {name: 'f12', color: '#773800', points: '-6,2 0,4 6,2'};
+const f4 = {name: 'f4', color: '#773800', points: '6,2 6,-2 0,-4', skipEdgesOnHexCoords: ['0,2', '0,3', '1,2', '1,3', '2,3', '2,4', '2,5']};
+const f8 = {name: 'f8', color: '#773800', points: '0,-4 -6,-2 -6,2', skipEdgesOnHexCoords: ['0,2', '0,3', '1,2', '1,3', '2,3', '2,4', '2,5']};
+const f12 = {name: 'f12', color: '#773800', points: '-6,2 0,4 6,2', skipEdgesOnHexCoords: ['0,2', '0,3', '1,2', '1,3', '2,3', '2,4', '2,5']};
 const f1 = {name: 'f1', color: '#AA6622', points: '0,2 0,4 6,2'};
 const f3 = {name: 'f3', color: '#AA6622', points: '6,2 6,-2 3,-1'};
 const f5 = {name: 'f5', color: '#AA6622', points: '3,-1 6,-2 0,-4'};
@@ -667,14 +667,14 @@ const processShapeIfNeeded = function(shape) {
 const processEdgesInShapes = function(shapes, hexCoords) {
     const edges = [];
 
-    const pointSignaturesAlreadyProcessed = {
+    const edgeSignaturesAlreadyProcessed = {
         '[[0,4],[6,2]]': true,
         '[[0,-4],[6,-2]]': true,
         '[[6,-2],[6,2]]': true,
 
-        // '[[-6,2],[0,4]]': true,
-        // '[[-6,-2],[0,-4]]': true,
-        // '[[-6,-2],[-6,2]]': true,
+        '[[-6,2],[0,4]]': true,
+        '[[-6,-2],[0,-4]]': true,
+        '[[-6,-2],[-6,2]]': true,
 
         '[[0,4],[3,3]]': true,
         '[[3,3],[6,2]]': true,
@@ -683,13 +683,27 @@ const processEdgesInShapes = function(shapes, hexCoords) {
         '[[6,-2],[6,0]]': true,
         '[[6,0],[6,2]]': true,
 
-        // '[[-6,2],[-3,3]]': true,
-        // '[[-3,3],[0,4]]': true,
-        // '[[-6,-2],[-3,-3]]': true,
-        // '[[-3,-3],[0,-4]]': true,
-        // '[[-6,-2],[-6,0]]': true,
-        // '[[-6,0],[-6,2]]': true,
+        '[[-6,2],[-3,3]]': true,
+        '[[-3,3],[0,4]]': true,
+        '[[-6,-2],[-3,-3]]': true,
+        '[[-3,-3],[0,-4]]': true,
+        '[[-6,-2],[-6,0]]': true,
+        '[[-6,0],[-6,2]]': true,
     };
+
+    for (const edgeSignature of [
+        '[[0,4],[6,2]]',
+        '[[0,-4],[6,-2]]',
+        '[[6,-2],[6,2]]',
+    ]) {
+        const [p1, p2] = JSON.parse(edgeSignature);
+        edges.push({
+            x1: scalePointX(p1[0]),
+            y1: scalePointY(p1[1]),
+            x2: scalePointX(p2[0]),
+            y2: scalePointY(p2[1]),
+        });
+    }
 
     for (const shape of shapes) {
         if (_.includes(shape.skipEdgesOnHexCoords, hexCoords)) {
@@ -708,10 +722,10 @@ const processEdgesInShapes = function(shapes, hexCoords) {
 
             const pointSignature = JSON.stringify([p1, p2]);
 
-            if (pointSignaturesAlreadyProcessed[pointSignature]) {
+            if (edgeSignaturesAlreadyProcessed[pointSignature]) {
                 continue;
             }
-            pointSignaturesAlreadyProcessed[pointSignature] = true;
+            edgeSignaturesAlreadyProcessed[pointSignature] = true;
 
             edges.push({
                 x1: scalePointX(p1[0]),
