@@ -64,7 +64,7 @@ const Hex = React.createClass({
                         const opacity = OVERLAP_MODE ? 0.3 : 1;
                         const points = _.pick(edge, 'x1', 'x2', 'y1', 'y2');
                         return (
-                            <line {...points} className="edge" key={index} stroke={color} style={{opacity: opacity}} />,
+                            <line {...points} className="edge" key={index} stroke={color} style={{opacity: opacity}} />
                         );
                     })}
                 </g>
