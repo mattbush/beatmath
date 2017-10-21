@@ -23,7 +23,7 @@ class KaleParameters extends PieceParameters {
     _declareParameters() {
         return {
             ...P.NumColumns({start: 8, max: MAX_NUM_COLS}),
-            ...P.NumRows({start: 3, max: MAX_NUM_ROWS}),
+            ...P.NumRows({start: 1, max: MAX_NUM_ROWS}),
             ...P.ColumnColorShift({range: 45}),
             ...P.RowColorShift({range: 45}),
             ...P.CustomToggle({name: 'isInfinite', button: 0}),
@@ -32,6 +32,7 @@ class KaleParameters extends PieceParameters {
             reflectionsPerCell: {
                 type: CycleParameter,
                 cycleValues: [1, 2, 4, 6],
+                start: 2,
                 listenToDecrementAndIncrementLaunchpadButtons: 2,
                 monitorName: '# Reflections',
             },
