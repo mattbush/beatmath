@@ -8,6 +8,7 @@ const hexGrid = require('js/wallow/WallowHexGrid');
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 
 const DEBUG_MODE = true;
+const EDGES_MODE = true;
 const OVERLAP_MODE = false;
 
 const Hex = React.createClass({
@@ -17,7 +18,7 @@ const Hex = React.createClass({
         };
     },
     componentDidMount() {
-        setInterval(this._update.bind(this), 100);
+        setInterval(this._update, 100);
     },
     _update() {
         this.setState({ghostState: posMod(this.state.ghostState + Math.random() * 0.001, 1)});
@@ -28,6 +29,7 @@ const Hex = React.createClass({
         }
         const cell = hexGrid[this.props.row][this.props.column];
         const shapes = cell.shapes;
+        const edges = cell.edges;
 
         const tx = Number(this.props.column) + (this.props.row % 2 ? 0.5 : 0) + cell.offsets[0];
         const ty = this.props.row * Y_AXIS_SCALE + cell.offsets[1];
@@ -43,19 +45,27 @@ const Hex = React.createClass({
                         transform={ghostTransform} x="-0.4" y="-0.4" height="0.8px" width="0.8px"
                     />
                 }
-                {DEBUG_MODE && !OVERLAP_MODE && <g style={{transform: `scale(${1 / 12}, -${1 / 8 * 4 / 3 * Y_AXIS_SCALE})`}}>
+                {DEBUG_MODE && !OVERLAP_MODE && !EDGES_MODE && <g style={{transform: `scale(${1 / 12}, -${1 / 8 * 4 / 3 * Y_AXIS_SCALE})`}}>
                     <polygon className="line" points="0,4 6,2 6,-2 0,-4 -6,-2 -6,2" />
                 </g>}
                 <g style={{}}>
-                    {shapes.map((polygon, index) => {
+                    {(!DEBUG_MODE || !EDGES_MODE) && shapes.map((polygon, index) => {
                         if (DEBUG_MODE) {
                             // tinycolor('#AA5555').saturate(100 * polygon.center[0]).lighten(100 * polygon.yMax)
                             const color = OVERLAP_MODE ? '#fff' : polygon.color;
                             const opacity = OVERLAP_MODE ? 0.5 : 1;
-                            return <polygon className="mine" key={index} fill={color} style={{opacity: opacity}} points={polygon.points} />;
+                            return <polygon title={polygon.name} className="mine" key={index} fill={color} style={{opacity: opacity}} points={polygon.points} />;
                         } else {
                             return <polygon className="mine" key={index} fill="transparent" points={polygon.points} />;
                         }
+                    })}
+                    {DEBUG_MODE && EDGES_MODE && edges.map((edge, index) => {
+                        const color = OVERLAP_MODE ? '#fff' : (edge.color || '#808080');
+                        const opacity = OVERLAP_MODE ? 0.3 : 1;
+                        const points = _.pick(edge, 'x1', 'x2', 'y1', 'y2');
+                        return (
+                            <line {...points} className="edge" key={index} stroke={color} style={{opacity: opacity}} />,
+                        );
                     })}
                 </g>
                 {DEBUG_MODE &&
