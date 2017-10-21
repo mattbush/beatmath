@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const _ = require('lodash');
-const {polarAngleDeg, posMod, xyRotatedAroundOriginWithAngle} = require('js/core/utils/math');
+const {polarAngleDeg, posMod, xyRotatedAroundOriginWithAngle, lerp} = require('js/core/utils/math');
 
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 const USE_OFFSETS = true;
@@ -664,26 +664,116 @@ const processShapeIfNeeded = function(shape) {
     shape.yMax = yMax;
 };
 
+const splitIntoPieces = function(edgeSignature) {
+    const [p1, p2] = JSON.parse(edgeSignature);
+
+    const pieceSignatures = [];
+    for (let numSubdivisions = 1; numSubdivisions <= 4; numSubdivisions++) {
+        for (let subdivision = 0; subdivision < numSubdivisions; subdivision++) {
+            for (let numerator = 1; subdivision + numerator <= numSubdivisions; numerator++) {
+                const lerp1 = subdivision / numSubdivisions;
+                const subP1 = [lerp(p1[0], p2[0], lerp1), lerp(p1[1], p2[1], lerp1)];
+                const lerp2 = (subdivision + numerator) / numSubdivisions;
+                const subP2 = [lerp(p1[0], p2[0], lerp2), lerp(p1[1], p2[1], lerp2)];
+                pieceSignatures.push(JSON.stringify([subP1, subP2]));
+            }
+        }
+    }
+
+    return pieceSignatures;
+};
+
+/* eslint-disable */
 const edgeColors = [
     {
         color: '#00ccee', // cyan
         edgeSignatures: [
             '[[0,4],[6,2]]',
             '[[0,-4],[6,-2]]',
-            '[[6,-2],[6,2]]',
+            '[[6,2],[6,-2]]',
         ],
     },
     {
         color: '#ee00ee', // magenta
         edgeSignatures: [
+            // vertical radial lines
+            '[[0,0],[6,2]]',
+            '[[0,0],[0,-4]]',
+            '[[-6,2],[0,0]]',
+            '[[0,0],[6,-2]]',
+            '[[0,4],[0,0]]',
+            '[[-6,-2],[0,0]]',
+
+            '[[0,4],[0,-4]]', // full vertical
+
+            // horizontal radial lines
+            '[[-6,0],[0,0]]',
+            '[[-3,3],[0,0]]',
+            '[[-3,-3],[0,0]]',
+            '[[0,0],[6,0]]',
+            '[[0,0],[3,3]]',
+            '[[0,0],[3,-3]]',
+
+            '[[-6,0],[6,0]]',
+            '[[-4,0],[4,0]]',
+            '[[-3,-3],[3,3]]',
+            '[[-3,3],[3,-3]]',
+        ],
+    },
+    {
+        color: '#ee8800', // orange
+        edgeSignatures: [
+            // central vertical hexagons
+            '[[-3,1],[-3,-1]]',
+            '[[-3,-1],[0,-2]]',
+            '[[0,-2],[3,-1]]',
+            '[[-3,1],[0,2]]',
+            '[[0,2],[3,1]]',
+            '[[3,1],[3,-1]]',
+
+            // downward large triangles
+            '[[-6,2],[0,-4]]',
+            '[[-6,2],[6,2]]',
+            '[[0,-4],[6,2]]',
+
+            // outer horizontal hexagons in lower right
+            '[[-6,0],[-3,3]]',
+            '[[-3,3],[3,3]]',
+            '[[3,3],[6,0]]',
+            '[[-6,0],[-3,-3]]',
+            '[[-3,-3],[3,-3]]',
+            '[[3,-3],[6,0]]',
+        ],
+    },
+    {
+        color: '#ff0000', // red
+        edgeSignatures: [
+            '[[-6,-2],[0,4]]',
+            '[[-6,-2],[6,-2]]',
+            '[[0,4],[6,-2]]',
+
+            '[[-3,-1],[0,2]]',
+            '[[-3,-1],[3,-1]]',
+            '[[0,2],[3,-1]]',
+
+            '[[-3,3],[0,2]]', '[[0,2],[3,3]]',
+            '[[-6,0],[-3,-1]]', '[[-3,-1],[-3,-3]]',
+            '[[3,-1],[6,0]]', '[[3,-1],[3,-3]]',
+
+            '[[-3,-3],[0,-2]]', '[[0,-2],[3,-3]]',
+            '[[-6,0],[-3,1]]', '[[-3,3],[-3,1]]',
+            '[[3,1],[6,0]]', '[[3,3],[3,1]]',
         ],
     },
 ];
+/* eslint-enable */
 
 const edgeColorsByEdgeSignature = {};
 for (const edgeColor of edgeColors) {
     for (const edgeSignature of edgeColor.edgeSignatures) {
-        edgeColorsByEdgeSignature[edgeSignature] = edgeColor.color;
+        for (const pieceSignature of splitIntoPieces(edgeSignature)) {
+            edgeColorsByEdgeSignature[pieceSignature] = edgeColor.color;
+        }
     }
 }
 
@@ -693,31 +783,31 @@ const processEdgesInShapes = function(shapes, hexCoords) {
     const edgeSignaturesAlreadyProcessed = {
         '[[0,4],[6,2]]': true,
         '[[0,-4],[6,-2]]': true,
-        '[[6,-2],[6,2]]': true,
+        '[[6,2],[6,-2]]': true,
 
         '[[-6,2],[0,4]]': true,
         '[[-6,-2],[0,-4]]': true,
-        '[[-6,-2],[-6,2]]': true,
+        '[[-6,2],[-6,-2]]': true,
 
         '[[0,4],[3,3]]': true,
         '[[3,3],[6,2]]': true,
         '[[0,-4],[3,-3]]': true,
         '[[3,-3],[6,-2]]': true,
-        '[[6,-2],[6,0]]': true,
-        '[[6,0],[6,2]]': true,
+        '[[6,2],[6,0]]': true,
+        '[[6,0],[6,-2]]': true,
 
         '[[-6,2],[-3,3]]': true,
         '[[-3,3],[0,4]]': true,
         '[[-6,-2],[-3,-3]]': true,
         '[[-3,-3],[0,-4]]': true,
-        '[[-6,-2],[-6,0]]': true,
-        '[[-6,0],[-6,2]]': true,
+        '[[-6,2],[-6,0]]': true,
+        '[[-6,0],[-6,-2]]': true,
     };
 
     for (const edgeSignature of [
         '[[0,4],[6,2]]',
         '[[0,-4],[6,-2]]',
-        '[[6,-2],[6,2]]',
+        '[[6,2],[6,-2]]',
     ]) {
         const [p1, p2] = JSON.parse(edgeSignature);
         edges.push({
@@ -740,7 +830,7 @@ const processEdgesInShapes = function(shapes, hexCoords) {
             let p2 = shape.pointsUnscaled[(i + 1) % numPoints];
 
             // normalize so p1 is always to the left of and above p2
-            if (p1[0] > p2[0] || (p1[0] === p2[0] && p1[1] > p2[1])) {
+            if (p1[0] > p2[0] || (p1[0] === p2[0] && p1[1] < p2[1])) { // SIC
                 [p1, p2] = [p2, p1];
             }
 
