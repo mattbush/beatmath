@@ -664,6 +664,29 @@ const processShapeIfNeeded = function(shape) {
     shape.yMax = yMax;
 };
 
+const edgeColors = [
+    {
+        color: '#00ccee', // cyan
+        edgeSignatures: [
+            '[[0,4],[6,2]]',
+            '[[0,-4],[6,-2]]',
+            '[[6,-2],[6,2]]',
+        ],
+    },
+    {
+        color: '#ee00ee', // magenta
+        edgeSignatures: [
+        ],
+    },
+];
+
+const edgeColorsByEdgeSignature = {};
+for (const edgeColor of edgeColors) {
+    for (const edgeSignature of edgeColor.edgeSignatures) {
+        edgeColorsByEdgeSignature[edgeSignature] = edgeColor.color;
+    }
+}
+
 const processEdgesInShapes = function(shapes, hexCoords) {
     const edges = [];
 
@@ -702,6 +725,7 @@ const processEdgesInShapes = function(shapes, hexCoords) {
             y1: scalePointY(p1[1]),
             x2: scalePointX(p2[0]),
             y2: scalePointY(p2[1]),
+            color: edgeColorsByEdgeSignature[edgeSignature],
         });
     }
 
@@ -720,18 +744,19 @@ const processEdgesInShapes = function(shapes, hexCoords) {
                 [p1, p2] = [p2, p1];
             }
 
-            const pointSignature = JSON.stringify([p1, p2]);
+            const edgeSignature = JSON.stringify([p1, p2]);
 
-            if (edgeSignaturesAlreadyProcessed[pointSignature]) {
+            if (edgeSignaturesAlreadyProcessed[edgeSignature]) {
                 continue;
             }
-            edgeSignaturesAlreadyProcessed[pointSignature] = true;
+            edgeSignaturesAlreadyProcessed[edgeSignature] = true;
 
             edges.push({
                 x1: scalePointX(p1[0]),
                 y1: scalePointY(p1[1]),
                 x2: scalePointX(p2[0]),
                 y2: scalePointY(p2[1]),
+                color: edgeColorsByEdgeSignature[edgeSignature],
             });
         }
     }

@@ -52,7 +52,7 @@ const Hex = React.createClass({
                     {(!DEBUG_MODE || !EDGES_MODE) && shapes.map((polygon, index) => {
                         if (DEBUG_MODE) {
                             // tinycolor('#AA5555').saturate(100 * polygon.center[0]).lighten(100 * polygon.yMax)
-                            const color = OVERLAP_MODE ? '#fff' : (polygon.color || '#808080');
+                            const color = OVERLAP_MODE ? '#fff' : polygon.color;
                             const opacity = OVERLAP_MODE ? 0.5 : 1;
                             return <polygon title={polygon.name} className="mine" key={index} fill={color} style={{opacity: opacity}} points={polygon.points} />;
                         } else {
@@ -60,7 +60,7 @@ const Hex = React.createClass({
                         }
                     })}
                     {DEBUG_MODE && EDGES_MODE && edges.map((edge, index) => {
-                        const color = OVERLAP_MODE ? '#fff' : '#666'; // edge.color;
+                        const color = OVERLAP_MODE ? '#fff' : (edge.color || '#808080');
                         const opacity = OVERLAP_MODE ? 0.3 : 1;
                         const points = _.pick(edge, 'x1', 'x2', 'y1', 'y2');
                         return (
