@@ -66,8 +66,8 @@ const KaleCell = React.createClass({
 
         const yAxisScale = lerp(2, Y_AXIS_SCALE, triGridPercent);
 
-        const wallowCell = wallowHexGrid[this.props.logicalY + 3][Math.floor((this.props.logicalX + 15) / 2)];
-        const [xOffsetFromWallow, yOffsetFromWallow] = wallowCell.offsets;
+        const cell = wallowHexGrid[this.props.logicalY + 3][Math.floor((this.props.logicalX + 15) / 2)];
+        const [xOffsetFromWallow, yOffsetFromWallow] = cell.offsets;
 
         const centerX = this.props.logicalX + (this.props.logicalY % 2 ? brickGridPercent - 1 : 0) + xOffsetFromWallow * WALLOW_OFFSET_SCALE;
         const centerY = this.props.logicalY * yAxisScale + yOffsetFromWallow * WALLOW_OFFSET_SCALE;
@@ -118,7 +118,7 @@ const KaleCell = React.createClass({
         });
 
         return (
-            <g transform={`translate(${centerX}, ${centerY})`}>
+            <g transform={`translate(${centerX}, ${centerY}) scale(${cell.scale}) rotate(${cell.rotation}deg)`}>
                 {reflectionElements}
             </g>
         );

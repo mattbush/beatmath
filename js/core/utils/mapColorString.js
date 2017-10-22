@@ -25,9 +25,10 @@ const mappingPaletteByPieceName = {
     tactile: [270, 300, 40, 10],
 };
 
-const MAPPING_PALETTE = mappingPaletteByPieceName[pieceName];
+let MAPPING_PALETTE = mappingPaletteByPieceName[pieceName];
+MAPPING_PALETTE = [-50, 0, 30, 165, 195]; // OVERRIDE
 
-const USE_COLOR_MAPPING = false; // !!MAPPING_PALETTE;
+const USE_COLOR_MAPPING = true; // !!MAPPING_PALETTE;
 
 function mapColorToPalette(color, palette) {
     const paletteSize = palette.length;
