@@ -36,7 +36,7 @@ class WallCircuitParameters extends PieceParameters {
             volume: {
                 type: LinearParameter,
                 range: [0, 2],
-                start: 1,
+                start: channel === 0 ? 2 : 0,
                 monitorName: `Ch ${channel} volume`,
                 listenToLaunchpadKnob: [0, channel],
             },
