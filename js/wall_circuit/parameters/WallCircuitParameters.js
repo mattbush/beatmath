@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const {LinearParameter, MovingColorParameter, LogarithmicParameter, MovingAngleParameter} = require('js/core/parameters/Parameter'); // MovingLinearParameter
+const {LinearParameter, MovingColorParameter, LogarithmicParameter, MovingAngleParameter, MovingLogarithmicParameter} = require('js/core/parameters/Parameter'); // MovingLinearParameter
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const tinycolor = require('tinycolor2');
 const {posMod, lerp, xyRotatedAroundOriginWithAngle} = require('js/core/utils/math'); // posModAndBendToLowerHalf
@@ -54,6 +54,16 @@ class WallCircuitParameters extends PieceParameters {
                 variance: 0.1,
                 autoupdate: 500,
             },
+            rippleRadius: {
+                type: MovingLogarithmicParameter,
+                range: [0.25, 16.0],
+                start: 1 + channel / 2,
+                monitorName: `Ch ${channel} Ripple Radius`,
+                listenToLaunchpadFader: [channel, {addButtonStatusLight: true, useSnapButton: true}],
+                variance: 0.2,
+                autoupdateEveryNBeats: 8,
+                autoupdateOnCue: true,
+            },
             // ...P.CustomPercent({name: 'trailPercent', start: 0.5, inputPosition: [2, 2]}),
             // ...P.CustomPercent({name: 'revTrailPercent', start: 0, inputPosition: [1, 2]}),
         };
@@ -63,7 +73,8 @@ class WallCircuitParameters extends PieceParameters {
     }
     _getRowIllumination(columnIndex, rowIndex) {
         const periodTicks = this.periodTicks.getValue();
-        return posMod(this._riseNumTicks - rowIndex, periodTicks) / periodTicks;
+        const rippleRadius = this.rippleRadius.getValue();
+        return posMod(this._riseNumTicks - rowIndex / rippleRadius, periodTicks) / periodTicks;
     }
     getColorForColumnAndRow(column, row) {
         const [columnRot, rowRot] = xyRotatedAroundOriginWithAngle(
