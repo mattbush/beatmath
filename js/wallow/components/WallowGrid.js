@@ -8,7 +8,7 @@ const hexGrid = require('js/wallow/WallowHexGrid');
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 
 const DEBUG_MODE = true;
-const EDGES_MODE = true;
+const EDGES_MODE = false;
 const OVERLAP_MODE = false;
 
 const CYAN = '#00ccee';
