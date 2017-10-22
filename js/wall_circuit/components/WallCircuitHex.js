@@ -9,7 +9,7 @@ const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 
 const WallCircuitHex = React.createClass({
     contextTypes: {
-        wallCircuitParameters: React.PropTypes.object,
+        wallCircuitParametersByChannel: React.PropTypes.object,
     },
     render() {
         if (this.props.row % 2 && this.props.column === _.size(hexGrid[0]) - 1) {
@@ -26,7 +26,7 @@ const WallCircuitHex = React.createClass({
                     const column = (tx + edge.center[0] - 7) / Y_AXIS_SCALE;
                     const row = -(ty + edge.center[1] - 1.5) * 2;
 
-                    const color = this.context.wallCircuitParameters.getColorForColumnAndRow(column, row);
+                    const color = this.context.wallCircuitParametersByChannel[edge.channel].getColorForColumnAndRow(column, row);
 
                     const points = _.pick(edge, 'x1', 'x2', 'y1', 'y2');
                     return (

@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const React = require('react');
 const WallCircuitParameters = require('js/wall_circuit/parameters/WallCircuitParameters');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
@@ -7,7 +8,7 @@ const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixi
 const WallCircuitContainer = React.createClass({
     mixins: [ParameterBindingsMixin],
     childContextTypes: {
-        wallCircuitParameters: React.PropTypes.object,
+        wallCircuitParametersByChannel: React.PropTypes.array,
     },
     contextTypes: {
         beatmathParameters: React.PropTypes.object,
@@ -15,13 +16,17 @@ const WallCircuitContainer = React.createClass({
     },
     getChildContext: function() {
         return {
-            wallCircuitParameters: this.state.wallCircuitParameters,
+            wallCircuitParametersByChannel: this.state.wallCircuitParametersByChannel,
         };
     },
     getInitialState: function() {
         const mixboard = this.context.mixboard;
-        const wallCircuitParameters = new WallCircuitParameters(mixboard, this.context.beatmathParameters, 0);
-        return {wallCircuitParameters};
+        const NUM_CHANNELS = 4;
+
+        const wallCircuitParametersByChannel = _.range(NUM_CHANNELS).map(channel => {
+            return new WallCircuitParameters(mixboard, this.context.beatmathParameters, channel);
+        });
+        return {wallCircuitParametersByChannel};
     },
     getParameterBindings: function() {
         return {

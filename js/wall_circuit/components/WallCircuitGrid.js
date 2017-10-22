@@ -9,7 +9,7 @@ const updateHue = require('js/core/outputs/updateHue');
 
 const WallCircuitGrid = React.createClass({
     contextTypes: {
-        wallCircuitParameters: React.PropTypes.object,
+        wallCircuitParametersByChannel: React.PropTypes.object,
     },
     render: function() {
         const componentGrid = _.map(hexGrid, (hexes, row) => {
@@ -23,9 +23,9 @@ const WallCircuitGrid = React.createClass({
         });
 
         if (ENABLE_HUE) {
-            const hueInOrder = [8, 1, 2, 7, 6];
-            hueInOrder.forEach((lightNumber, index) => {
-                const color = this.context.wallCircuitParameters.getColorForColumnAndRow(index * 2, 0);
+            const hueInOrder = [8, 1, 2, 7];
+            hueInOrder.forEach((lightNumber, channel) => {
+                const color = this.context.wallCircuitParametersByChannel[channel].getColorForColumnAndRow(0, 0);
                 updateHue(lightNumber, color, {briCoeff: 0.4});
             });
         }

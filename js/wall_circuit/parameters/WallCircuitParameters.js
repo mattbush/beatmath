@@ -13,7 +13,8 @@ class WallCircuitParameters extends PieceParameters {
     constructor(mixboard, beatmathParameters, channel) {
         super(mixboard, beatmathParameters, {channel});
 
-        this._riseNumTicks = 0;
+        this._riseNumTicks = -channel * 4;
+        this._channel = channel;
 
         beatmathParameters.tempo.addListener(this._incrementNumTicks.bind(this));
 
@@ -27,7 +28,7 @@ class WallCircuitParameters extends PieceParameters {
         return {
             baseColor: {
                 type: MovingColorParameter,
-                start: tinycolor('#5ff'),
+                start: tinycolor('#f00').spin(channel * 60),
                 max: 5,
                 variance: 1,
                 autoupdate: 1000,
