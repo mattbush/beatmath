@@ -85,7 +85,7 @@ const Snowflake = React.createClass({
         const startTy = cell.offsets[1];
         const startScale = this._scale / 100;
 
-        this._g.style.transform = `translate(${startTx}px, ${startTy}px) scale(${startScale})`;
+        this._g.style.transform = `translate(${startTx}px, ${startTy}px) rotate(${cell.rotation}deg) scale(${cell.scale * startScale})`;
     },
     getBlendedValue(propertyName) {
         return this._blendedValues[propertyName];
@@ -117,7 +117,7 @@ const Snowflake = React.createClass({
                 return;
             }
             this._g.style.transition = `transform ${transitionTime}ms ease-in`;
-            this._g.style.transform = `translate(${tx}px, ${ty}px) scale(${scale}) rotate(${rotation}deg)`;
+            this._g.style.transform = `translate(${tx}px, ${ty}px) scale(${cell.scale * scale}) rotate(${cell.rotation + rotation}deg)`;
         }, delay);
 
         return (
