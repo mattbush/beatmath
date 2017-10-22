@@ -71,7 +71,7 @@ const FloraPixel = React.createClass({
         const x = this.props.col * CELL_SIZE;
         const y = this.props.row * CELL_SIZE;
         const fill = this.state.color;
-        const transitionTime = this.context.beatmathParameters.tempo.getPeriod() / 3;
+        const transitionTime = this.context.beatmathParameters.tempo.getPeriod();
 
         const showCenters = this.context.floraParameters.showCenters.getValue();
         const showEdges = this.context.floraParameters.showEdges.getValue();

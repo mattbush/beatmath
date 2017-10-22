@@ -150,6 +150,7 @@ class BeatmathParameters {
         }
         this.mappingMode = new CycleParameter({
             cycleValues: mappingModeCycleValues,
+            start: 'onWithOneFrame',
             monitorName: 'Mapping Mode',
         });
         this.mappingMode.listenToDecrementAndIncrementLaunchpadSideButtons(mixboard, LaunchpadButtons.LEFT, LaunchpadButtons.RIGHT);

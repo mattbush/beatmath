@@ -41,7 +41,7 @@ const KaleGrid = React.createClass({
             kaleCells = [];
             const numRows = this.getParameterValue('numRows');
             const numColumns = this.getParameterValue('numColumns');
-            const yMin = -3;
+            const yMin = numRows > 4 ? -4 : -3;
             const yMax = yMin + numRows - 1;
             for (let y = yMin; y <= yMax; y++) {
                 for (let x = -numColumns; x <= numColumns; x++) {

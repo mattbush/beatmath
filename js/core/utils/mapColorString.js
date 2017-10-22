@@ -27,7 +27,7 @@ const mappingPaletteByPieceName = {
 
 const MAPPING_PALETTE = mappingPaletteByPieceName[pieceName];
 
-const USE_COLOR_MAPPING = false; // i want full rainbows everywhere
+const USE_COLOR_MAPPING = false; // !!MAPPING_PALETTE;
 
 function mapColorToPalette(color, palette) {
     const paletteSize = palette.length;
