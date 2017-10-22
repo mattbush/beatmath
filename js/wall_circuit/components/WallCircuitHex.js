@@ -15,24 +15,23 @@ const WallCircuitHex = React.createClass({
             return null;
         }
         const cell = hexGrid[this.props.row][this.props.column];
-        const shapes = cell.shapes;
 
         const tx = Number(this.props.column) + (this.props.row % 2 ? 0.5 : 0) + cell.offsets[0];
         const ty = this.props.row * Y_AXIS_SCALE + cell.offsets[1];
 
         return (
             <g style={{transform: `translate(${tx}px, ${ty}px) scale(${cell.scale}) rotate(${cell.rotation}deg)`}}>
-                {shapes.map((polygon, index) => {
-                    let dy = 0;
-                    if (polygon.center[0] === 0 && polygon.center[1] === 0) {
-                        dy = polygon.yMax / 2;
-                    }
-                    const column = (tx + polygon.center[0] - 7) / Y_AXIS_SCALE;
-                    const row = -(ty + polygon.center[1] + dy - 1.5) * 2;
+                {cell.edges.map((edge, index) => {
+                    const column = (tx + edge.center[0] - 7) / Y_AXIS_SCALE;
+                    const row = -(ty + edge.center[1] - 1.5) * 2;
 
-                    const fill = this.context.wallCircuitParameters.getColorForColumnAndRow(column, row);
-                    return <polygon className="mine" key={index} fill={fill} points={polygon.points} />;
-                })}
+                    const color = this.context.wallCircuitParameters.getColorForColumnAndRow(column, row);
+
+                    const points = _.pick(edge, 'x1', 'x2', 'y1', 'y2');
+                    return (
+                        <line {...points} className="edge" key={index} stroke={color} />
+                    );
+                })}}
             </g>
         );
     },

@@ -38,16 +38,16 @@ class WallCircuitParameters extends PieceParameters {
         return {
             ...P.BaseColor(),
             periodTicks: {type: LogarithmicParameter,
-                range: [2, 16],
-                start: 2,
+                range: [2, 64],
+                start: 16,
                 listenToDecrementAndIncrementLaunchpadButtons: 3,
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
                 monitorName: 'Period Ticks',
             },
             ...P.ColumnColorShift({range: 45}),
             ...P.RowColorShift({range: 45}),
-            ...P.CustomPercent({name: 'trailPercent', start: 0.5, inputPosition: [2, 2]}),
-            ...P.CustomPercent({name: 'revTrailPercent', start: 0, inputPosition: [1, 2]}),
+            // ...P.CustomPercent({name: 'trailPercent', start: 0.5, inputPosition: [2, 2]}),
+            // ...P.CustomPercent({name: 'revTrailPercent', start: 0, inputPosition: [1, 2]}),
             staggerAmount: {
                 type: MovingLinearParameter,
                 range: [-8, 8],
@@ -157,7 +157,7 @@ class WallCircuitParameters extends PieceParameters {
             color.spin(colorShift);
         }
         const baseRowIllumination = this._getRowIllumination(column, row);
-        const revTrailPercent = 1 - this.revTrailPercent.getValue();
+        const revTrailPercent = 0.5; // 1 - this.revTrailPercent.getValue();
         let rowIllumination;
         if (baseRowIllumination > revTrailPercent || revTrailPercent === 0) {
             rowIllumination = arclerp(1, revTrailPercent, baseRowIllumination);
@@ -168,7 +168,7 @@ class WallCircuitParameters extends PieceParameters {
         if (rowIllumination === 0) {
             return color;
         }
-        const trailPercent = this.trailPercent.getValue();
+        const trailPercent = 1.0; // this.trailPercent.getValue();
         const defaultDarkenAmount = 50;
         const fullDarkenAmount = 65;
         let darkenAmount;

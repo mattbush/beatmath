@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const mixboard = await Mixboard.getInstanceAsync();
 
     ReactDOM.render(
-        <MixboardContext mixboard={mixboard} useFrame={false}>
+        <MixboardContext mixboard={mixboard} bpmMod={4.0} useFrame={false}>
             <WallCircuitContainer />
         </MixboardContext>,
         document.getElementById('start')

@@ -853,6 +853,7 @@ const processEdgesInShapes = function(shapes, hexCoords) {
             y1: scalePointY(p1[1]),
             x2: scalePointX(p2[0]),
             y2: scalePointY(p2[1]),
+            center: [scalePointX((p1[0] + p2[0]) / 2), scalePointY((p1[1] + p2[1]) / 2)],
             channel: edgeChannelsByEdgeSignature[edgeSignature],
         });
     }
@@ -884,6 +885,7 @@ const processEdgesInShapes = function(shapes, hexCoords) {
                 y1: scalePointY(p1[1]),
                 x2: scalePointX(p2[0]),
                 y2: scalePointY(p2[1]),
+                center: [scalePointX((p1[0] + p2[0]) / 2), scalePointY((p1[1] + p2[1]) / 2)],
                 channel: edgeChannelsByEdgeSignature[edgeSignature] || shape.edgeChannel || ORANGE,
             });
         }
