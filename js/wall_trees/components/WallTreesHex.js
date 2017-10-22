@@ -21,7 +21,7 @@ const WallTreesHex = React.createClass({
         const ty = this.props.row * Y_AXIS_SCALE + cell.offsets[1];
 
         return (
-            <g style={{transform: `translate(${tx}px, ${ty}px)`}}>
+            <g style={{transform: `translate(${tx}px, ${ty}px) scale(${cell.scale}) rotate(${cell.rotation}deg)`}}>
                 {shapes.map((polygon, index) => {
                     let dy = 0;
                     if (polygon.center[0] === 0 && polygon.center[1] === 0) {

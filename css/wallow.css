@@ -1,3 +1,7 @@
+body {
+    pointer-events: all !important;
+}
+
 .line {
     fill: none;
     stroke: #fff;

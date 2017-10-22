@@ -2,6 +2,7 @@ body {
     margin: 0;
     background: #000;
     overflow: hidden;
+    pointer-events: none;
 }
 .main {
     width: 1280px;

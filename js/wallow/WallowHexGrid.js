@@ -5,6 +5,11 @@ const {polarAngleDeg, posMod, xyRotatedAroundOriginWithAngle, lerp} = require('j
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 const USE_OFFSETS = true;
 
+const CYAN = 0;
+const PINK = 1;
+const RED = 2;
+const ORANGE = 3;
+
 /*
    < z1 >
 < z2 >< z3 >
@@ -89,6 +94,11 @@ const w4 = {name: 'w4', color: '#00bb33', points: '6,2 6,-2 0,-4 0,0'};
 const w8 = {name: 'w8', color: '#00bb33', points: '0,-4 -6,-2 -6,2 0,0'};
 const w12 = {name: 'w12', color: '#00bb33', points: '-6,2 0,4 6,2 0,0'};
 
+const w130 = {name: 'w130', color: '#00cc66', points: '0,0 3,3 6,2'};
+const w230 = {name: 'w230', color: '#00cc66', points: '0,0 6,2 6,0'};
+const w330 = {name: 'w330', color: '#00cc66', points: '0,0 6,0 6,-2'};
+const w430 = {name: 'w430', color: '#00cc66', points: '0,0 6,-2 3,-3'};
+
 const winn2 = {name: 'winn2', color: '#00bb33', points: '3,3 6,0 0,0'};
 const winn6 = {name: 'winn6', color: '#00bb33', points: '3,-3 -3,-3 0,0'};
 const winn10 = {name: 'winn10', color: '#00bb33', points: '-3,3 -6,0 0,0'};
@@ -134,6 +144,9 @@ const v8x = {name: 'v8x', color: '#688000', points: '0,0 -6,2 -6,0 0,-2'};
 const vh10 = {name: 'vh10', color: '#444444', points: '3,3 3,-1 -3,-3 -6,-2 -6,2 0,4'};
 const vh12 = {name: 'vh12', color: '#444444', points: '6,0 0,-2 -6,0 -6,2 0,4 6,2'};
 
+const vg690 = {name: 'vg690', color: '#444444', points: '0,-4 0,2 -6,0 -3,-1 -3,-3'};
+const vg691 = {name: 'vg691', color: '#444444', points: '0,-4 0,2 -3,3 -6,2 -6,0 -3,-1 -3,-3'};
+
 const trap45 = {name: 'trap45', color: '#688000', points: '6,0 6,-2 3,-3 0,-2'};
 const trap78 = {name: 'trap78', color: '#688000', points: '-6,0 -6,-2 -3,-3 0,-2'};
 
@@ -160,7 +173,7 @@ const b55 = {name: 'b55', color: '#9900BB', points: '0,-1 -1.5,0.5 1.5,0.5'};
 const a54 = {name: 'a54', color: '#9900BB', points: '3,-1 0,-1 1.5,0.5'};
 const a58 = {name: 'a58', color: '#9900BB', points: '-3,-1 0,-1 -1.5,0.5'};
 const a512 = {name: 'a512', color: '#9900BB', points: '0,2 -1.5,0.5 1.5,0.5'};
-const a555 = {name: 'a555', color: '#BB00DD', points: '0,0.5 0.75,-0.25 -0.75,-0.25'};
+const a555 = {name: 'a555', color: '#BB00DD', points: '0,0.5 0.75,-0.25 -0.75,-0.25', edgeChannel: RED};
 
 const a2 = {name: 'a2', color: '#770099', points: '6,2 3,-1 0,2', skipEdgesOnHexCoords: ['4,5', '0,3', '0,4', '1,3', '1,4']};
 const a6 = {name: 'a6', color: '#770099', points: '0,-4 -3,-1 3,-1', skipEdgesOnHexCoords: ['4,5', '0,3', '0,4', '1,3', '1,4']};
@@ -264,6 +277,12 @@ const ef10 = {name: 'ef10', color: '#BB7733', points: '-2,2 -6,2 -4,0'};
 const ef11 = {name: 'ef11', color: '#BB7733', points: '0,4 -6,2 -2,2'};
 
 const ef1and2 = {name: 'ef1and2', color: '#887733', points: '6,2 0,4 4,0'};
+const ef3and4 = {name: 'ef3and4', color: '#887733', points: '6,-2 6,2 2,-2'};
+const ef5and6 = {name: 'ef5and6', color: '#887733', points: '0,-4 6,-2 -2,-2'};
+const ef7and8 = {name: 'ef7and8', color: '#887733', points: '-6,-2 0,-4 -4,0'};
+const ef9and10 = {name: 'ef9and10', color: '#887733', points: '-6,2 -6,-2 -2,2'};
+const ef11and12 = {name: 'ef11and12', color: '#887733', points: '0,4 -6,2 2,2'};
+
 const ef10and11 = {name: 'ef10and11', color: '#887733', points: '-6,2 0,4 -4,0'};
 
 const ef1230 = {name: 'ef1230', color: '#EE7733', points: '3,3 0,4 2,2'};
@@ -349,6 +368,11 @@ const iccaa4 = {name: 'iccaa4', color: '#AAAAAA', points: '3,-3 3,-1 6,0'};
 const iccaa8 = {name: 'iccaa8', color: '#AAAAAA', points: '-3,-3 -6,-0 -3,-1'};
 const iccaa12 = {name: 'iccaa12', color: '#AAAAAA', points: '3,3 0,2 -3,3'};
 
+const issa0 = {name: 'issa0', color: '#999999', points: '-6,-2 -1,3 3,3 6,0 3,-3 0,-4'};
+const issa10 = {name: 'issa10', color: '#AAAAAA', points: '-6,-2 -6,2 -3,3 -1,3'};
+const issa11 = {name: 'issa11', color: '#AAAAAA', points: '-3,3 -1,3 0,4'};
+const issa12 = {name: 'issa12', color: '#AAAAAA', points: '-1,3 0,4 3,3'};
+
 const iccb2 = {name: 'iccb2', color: '#AAAAAA', points: '3,3 6,0 3,-1 3,0 0,0 1.5,1.5 0,2'};
 const iccb6 = {name: 'iccb6', color: '#AAAAAA', points: '-1.5,-1.5 0,0 1.5,-1.5 3,-1 3,-3 -3,-3 -3,-1'};
 const iccb10 = {name: 'iccb10', color: '#AAAAAA', points: '-3,3 0,2 -1.5,1.5 0,0 -3,0 -3,-1 -6,0'};
@@ -404,66 +428,66 @@ const l10 = {name: 'l10', color: '#66556A', points: '0,0 -3,-1 -6,2 0,2'};
 const qa0 = {name: 'qa0', color: '#9900BB', points: '0,0.67 1,-0.33 -1,-0.33'};
 const qb0 = {name: 'qb0', color: '#9900BB', points: '0,1.33 2,-0.67 -2,-0.67'};
 const qc0 = {...a5, name: 'qc0'}; // {color: '#770099', points: '0,2 3,-1 -3,-1'};
-const qd0 = {name: 'qd0', color: '#9900BB', points: '0,2.67 4,-1.33 -4,-1.33'};
-const qe0 = {name: 'qe0', color: '#9900BB', points: '0,3.33 5,-1.67 -5,-1.67'};
+const qd0 = {name: 'qd0', color: '#9900BB', points: '0,2.665 4,-1.335 -4,-1.335'};
+const qe0 = {name: 'qe0', color: '#9900BB', points: '0,3.3325 5,-1.6675 -5,-1.6675'};
 const qf0 = {...a1, name: 'qf0'}; // {color: '#550077', points: '0,4 6,-2 -6,-2'};
 
-const qa2 = {name: 'qa2', color: '#993070', points: '0,0.67 6,2 1,-0.33'};
-const qb2 = {name: 'qb2', color: '#993070', points: '0,1.33 6,2 2,-0.67'};
+const qa2 = {name: 'qa2', color: '#993070', points: '0,0.67 6,2 1,-0.33', edgeChannel: RED};
+const qb2 = {name: 'qb2', color: '#993070', points: '0,1.33 6,2 2,-0.67', edgeChannel: RED};
 const qc2 = {...a2, name: 'qc2'}; // {color: '#770099', points: '0,2 6,2 3,-1'};
-const qd2 = {name: 'qd2', color: '#993070', points: '0,2.67 6,2 4,-1.33'};
-const qe2 = {name: 'qe2', color: '#993070', points: '0,3.33 6,2 5,-1.67'};
+const qd2 = {name: 'qd2', color: '#993070', points: '0,2.665 6,2 4,-1.335', edgeChannel: RED};
+const qe2 = {name: 'qe2', color: '#993070', points: '0,3.3325 6,2 5,-1.6675', edgeChannel: RED};
 const qf2 = {...e2, name: 'qf2'}; // {color: '#773800', points: '0,4 6,2 6,-2'};
 
-const qa6 = {name: 'qa6', color: '#993070', points: '1,-0.33 0,-4 -1,-0.33'};
-const qb6 = {name: 'qb6', color: '#993070', points: '2,-0.67 0,-4 -2,-0.67'};
+const qa6 = {name: 'qa6', color: '#993070', points: '1,-0.33 0,-4 -1,-0.33', edgeChannel: RED};
+const qb6 = {name: 'qb6', color: '#993070', points: '2,-0.67 0,-4 -2,-0.67', edgeChannel: RED};
 const qc6 = {...a6, name: 'qc6'}; // {color: '#770099', points: '3,-1 0,-4 -3,-1'};
-const qd6 = {name: 'qd6', color: '#993070', points: '4,-1.33 0,-4 -4,-1.33'};
-const qe6 = {name: 'qe6', color: '#993070', points: '5,-1.67 0,-4 -5,-1.67'};
+const qd6 = {name: 'qd6', color: '#993070', points: '4,-1.335 0,-4 -4,-1.335', edgeChannel: RED};
+const qe6 = {name: 'qe6', color: '#993070', points: '5,-1.6675 0,-4 -5,-1.6675', edgeChannel: RED};
 const qf6 = {...e6, name: 'qf6'}; // {color: '#773800', points: '6,-2 0,-4 -6,-2'};
 
-const qa10 = {name: 'qa10', color: '#993070', points: '0,0.67 -6,2 -1,-0.33'};
-const qb10 = {name: 'qb10', color: '#993070', points: '0,1.33 -6,2 -2,-0.67'};
+const qa10 = {name: 'qa10', color: '#993070', points: '0,0.67 -6,2 -1,-0.33', edgeChannel: RED};
+const qb10 = {name: 'qb10', color: '#993070', points: '0,1.33 -6,2 -2,-0.67', edgeChannel: RED};
 const qc10 = {...a10, name: 'qc10'}; // {color: '#770099', points: '0,2 -6,2 -3,-1'};
-const qd10 = {name: 'qd10', color: '#993070', points: '0,2.67 -6,2 -4,-1.33'};
-const qe10 = {name: 'qe10', color: '#993070', points: '0,3.33 -6,2 -5,-1.67'};
+const qd10 = {name: 'qd10', color: '#993070', points: '0,2.665 -6,2 -4,-1.335', edgeChannel: RED};
+const qe10 = {name: 'qe10', color: '#993070', points: '0,3.3325 -6,2 -5,-1.6675', edgeChannel: RED};
 const qf10 = {...e10, name: 'qf10'}; // {color: '#773800', points: '0,4 -6,2 -6,-2'};
 
-const qa1 = {name: 'qa1', color: '#88AA55', points: '0,4 6,2 0,0.67'};
-const qb1 = {name: 'qb1', color: '#88AA55', points: '0,4 6,2 0,1.33'};
+const qa1 = {name: 'qa1', color: '#88AA55', points: '0,4 6,2 0,0.67', edgeChannel: ORANGE};
+const qb1 = {name: 'qb1', color: '#88AA55', points: '0,4 6,2 0,1.33', edgeChannel: ORANGE};
 const qc1 = {...f1, name: 'qc1'}; // {color: '#AA6622', points: '0,4 6,2 0,2'};
-const qd1 = {name: 'qd1', color: '#88AA55', points: '0,4 6,2 0,2.67'};
-const qe1 = {name: 'qe1', color: '#88AA55', points: '0,4 6,2 0,3.33'};
+const qd1 = {name: 'qd1', color: '#88AA55', points: '0,4 6,2 0,2.665', edgeChannel: ORANGE};
+const qe1 = {name: 'qe1', color: '#88AA55', points: '0,4 6,2 0,3.3325', edgeChannel: ORANGE};
 
-const qa3 = {name: 'qa3', color: '#88AA55', points: '6,2 6,-2 1,-0.33'};
-const qb3 = {name: 'qb3', color: '#88AA55', points: '6,2 6,-2 2,-0.67'};
+const qa3 = {name: 'qa3', color: '#88AA55', points: '6,2 6,-2 1,-0.33', edgeChannel: ORANGE};
+const qb3 = {name: 'qb3', color: '#88AA55', points: '6,2 6,-2 2,-0.67', edgeChannel: ORANGE};
 const qc3 = {...f3, name: 'qc3'}; // {color: '#AA6622', points: '6,2 6,-2 3,-1'};
-const qd3 = {name: 'qd3', color: '#88AA55', points: '6,2 6,-2 4,-1.33'};
-const qe3 = {name: 'qe3', color: '#88AA55', points: '6,2 6,-2 5,-1.67'};
+const qd3 = {name: 'qd3', color: '#88AA55', points: '6,2 6,-2 4,-1.335', edgeChannel: ORANGE};
+const qe3 = {name: 'qe3', color: '#88AA55', points: '6,2 6,-2 5,-1.6675', edgeChannel: ORANGE};
 
-const qa5 = {name: 'qa5', color: '#88AA55', points: '6,-2 0,-4 1,-0.33'};
-const qb5 = {name: 'qb5', color: '#88AA55', points: '6,-2 0,-4 2,-0.67'};
+const qa5 = {name: 'qa5', color: '#88AA55', points: '6,-2 0,-4 1,-0.33', edgeChannel: ORANGE};
+const qb5 = {name: 'qb5', color: '#88AA55', points: '6,-2 0,-4 2,-0.67', edgeChannel: ORANGE};
 const qc5 = {...f5, name: 'qc5'}; // {color: '#AA6622', points: '6,-2 0,-4 3,-1'};
-const qd5 = {name: 'qd5', color: '#88AA55', points: '6,-2 0,-4 4,-1.33'};
-const qe5 = {name: 'qe5', color: '#88AA55', points: '6,-2 0,-4 5,-1.67'};
+const qd5 = {name: 'qd5', color: '#88AA55', points: '6,-2 0,-4 4,-1.335', edgeChannel: ORANGE};
+const qe5 = {name: 'qe5', color: '#88AA55', points: '6,-2 0,-4 5,-1.6675', edgeChannel: ORANGE};
 
-const qa7 = {name: 'qa7', color: '#88AA55', points: '-6,-2 0,-4 -1,-0.33'};
-const qb7 = {name: 'qb7', color: '#88AA55', points: '-6,-2 0,-4 -2,-0.67'};
+const qa7 = {name: 'qa7', color: '#88AA55', points: '-6,-2 0,-4 -1,-0.33', edgeChannel: ORANGE};
+const qb7 = {name: 'qb7', color: '#88AA55', points: '-6,-2 0,-4 -2,-0.67', edgeChannel: ORANGE};
 const qc7 = {...f7, name: 'qc7'}; // {color: '#AA6622', points: '-6,-2 0,-4 -3,-1'};
-const qd7 = {name: 'qd7', color: '#88AA55', points: '-6,-2 0,-4 -4,-1.33'};
-const qe7 = {name: 'qe7', color: '#88AA55', points: '-6,-2 0,-4 -5,-1.67'};
+const qd7 = {name: 'qd7', color: '#88AA55', points: '-6,-2 0,-4 -4,-1.335', edgeChannel: ORANGE};
+const qe7 = {name: 'qe7', color: '#88AA55', points: '-6,-2 0,-4 -5,-1.6675', edgeChannel: ORANGE};
 
-const qa9 = {name: 'qa9', color: '#88AA55', points: '-6,2 -6,-2 -1,-0.33'};
-const qb9 = {name: 'qb9', color: '#88AA55', points: '-6,2 -6,-2 -2,-0.67'};
+const qa9 = {name: 'qa9', color: '#88AA55', points: '-6,2 -6,-2 -1,-0.33', edgeChannel: ORANGE};
+const qb9 = {name: 'qb9', color: '#88AA55', points: '-6,2 -6,-2 -2,-0.67', edgeChannel: ORANGE};
 const qc9 = {...f9, name: 'qc9'}; // {color: '#AA6622', points: '-6,2 -6,-2 -3,-1'};
-const qd9 = {name: 'qd9', color: '#88AA55', points: '-6,2 -6,-2 -4,-1.33'};
-const qe9 = {name: 'qe9', color: '#88AA55', points: '-6,2 -6,-2 -5,-1.67'};
+const qd9 = {name: 'qd9', color: '#88AA55', points: '-6,2 -6,-2 -4,-1.335', edgeChannel: ORANGE};
+const qe9 = {name: 'qe9', color: '#88AA55', points: '-6,2 -6,-2 -5,-1.6675', edgeChannel: ORANGE};
 
-const qa11 = {name: 'qa11', color: '#88AA55', points: '0,4 -6,2 0,0.67'};
-const qb11 = {name: 'qb11', color: '#88AA55', points: '0,4 -6,2 0,1.33'};
+const qa11 = {name: 'qa11', color: '#88AA55', points: '0,4 -6,2 0,0.67', edgeChannel: ORANGE};
+const qb11 = {name: 'qb11', color: '#88AA55', points: '0,4 -6,2 0,1.33', edgeChannel: ORANGE};
 const qc11 = {...f11, name: 'qc11'}; // {color: '#AA6622', points: '0,4 -6,2 0,2'};
-const qd11 = {name: 'qd11', color: '#88AA55', points: '0,4 -6,2 0,2.67'};
-const qe11 = {name: 'qe11', color: '#88AA55', points: '0,4 -6,2 0,3.33'};
+const qd11 = {name: 'qd11', color: '#88AA55', points: '0,4 -6,2 0,2.665', edgeChannel: ORANGE};
+const qe11 = {name: 'qe11', color: '#88AA55', points: '0,4 -6,2 0,3.3325', edgeChannel: ORANGE};
 
 const ra2 = {name: 'ra2', color: '#1166AA', points: '-2,2 6,2 4,0 0,0'};
 const ra6 = {name: 'ra6', color: '#1166AA', points: '0,0 4,0 0,-4 -2,-2'};
@@ -502,6 +526,13 @@ const sc5 = {name: 'sc5', color: '#4460DD', points: '0,0 -1.5,-0.5 0,-2 6,-2 0,-
 const sc7 = {name: 'sc7', color: '#4460DD', points: '0,0 -1.5,0.5 -3,-1 0,-4 -6,-2 -3,1 0,1'};
 const sc9 = {name: 'sc9', color: '#4460DD', points: '0,0 0,1 -3,1 -6,-2 -6,2 0,2 1.5,0.5'};
 
+const sd11 = {name: 'sc11', color: '#4460DD', points: '0,0 2,0 3,1 0,4 -6,2 0,2 1,1'};
+const sd1 = {name: 'sd1', color: '#4460DD', points: '0,0 1,-1 3,-1 6,2 0,4 3,1 2,0'};
+const sd3 = {name: 'sd3', color: '#4460DD', points: '0,0 -1,-1 0,-2 6,-2 6,2 3,-1 1,-1'};
+const sd5 = {name: 'sd5', color: '#4460DD', points: '0,0 -2,0 -3,-1 0,-4 6,-2 0,-2 -1,-1'};
+const sd7 = {name: 'sd7', color: '#4460DD', points: '0,0 -1,1 -3,1 -6,-2 0,-4 -3,-1 -2,0'};
+const sd9 = {name: 'sd9', color: '#4460DD', points: '0,0 1,1 0,2 -6,2 -6,-2 -3,1 -1,1'};
+
 const ta0 = {name: 'ta0', color: '#22CC88', points: '2,-0.67 .5,-1.17 -1.5,-0.8 -2,0.67 -.5,1.17 1.5,0.83'};
 const ta1 = {name: 'ta1', color: '#11AA66', points: '0,4 6,2 2,-0.67'};
 const ta3 = {name: 'ta3', color: '#11AA66', points: '6,2 6,-2 .5,-1.17'};
@@ -535,35 +566,35 @@ const hexGridShapes = {
      10: [x1, x0, y1, y0, z0, b3, b5, b7, b9, c0], 11: [x1, x0, y1, y0, z0, z4, z5, z6, z7, b5, b7], 12: [yy3, xx9, xx30, yy90, z0], 13: [xx3, zz5, vh10], 14: [yy3, zz7, yy9, v5],
      15: [zz5, xx9, v1]},
 
-    0: {'-1': [w1, f4, fa4], 0: [sc1, sc3, sc5, sc7, sc9, sc11], 1: [sc4, sc8, sc12], 2: [f4, f8, f12, rc2, rc6, rc10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512, a555], 4: [f1, f3, f5, f7, f9, f11, a2, a6, a10, b55, a54, a58, a512],
+    0: {'-1': [w1, f4, fa4], 0: [sc1, sc3, sc5, sc7, sc9, sc11], 1: [sc4, sc8, sc12], 2: [f4, f8, f12, rc2, rc6, rc10], 3: [f4, f8, f12, a2, a6, a10, b55, a555, a54, a58, a512], 4: [f1, f3, f5, f7, f9, f11, a2, a6, a10, b55, a54, a58, a512],
      5: [wa2, wa6, wa10, b55, a54, a58, a512], 6: [wa2, wa6, wa10, a5], 7: [x0, y0, z1, a5, h2, h6, h10], 8: [i2, i6, i10, x0, y0, z1, k2, k6, k10, a5], 9: [i2, i6, i10, x0, y0, z1, c0],
      10: [x1, x0, y1, y0, z1, z0, b1, b3, b5, b7, b9, b11, c0], 11: [x1, x0, y1, y0, z1, z0, z4, z5, z6, z7, b1, b5, b7, b11], 12: [x1, y6, x5, y1, x0, y5, x6, y0, z1, z5, z6, z0], 13: [x1, x2, x9, x0, y1, y3, y8, y0, v3], 14: [xx1, yy5, xx7, yy11, v3],
      15: [x1, x0, y1, y0, z1, z0, v0], 16: [xx1, yy5, xx7, yy11, v3]},
 
-    1: {/**/'-1': [], 0: [sb1, sb3, sb5, sb7, sb9, sb11], 1: [sb4, sb8, sb12], 2: [f4, f8, f12, l2, l6, l10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512], 4: [wa4, wa8, wa12, b55, a54, a58, a512],
+    1: {/**/'-1': [sd1, sd3, sd5, sd7, sd9, sd11], 0: [sb1, sb3, sb5, sb7, sb9, sb11], 1: [sb4, sb8, sb12], 2: [f4, f8, f12, l2, l6, l10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512], 4: [wa4, wa8, wa12, b55, a54, a58, a512],
          5: [wa4, wa8, wa12, a5], 6: [wa1, wa3, wa5, wa7, wa9, wa11, a5], 7: [g1, g3, g5, g7, g9, g11, k2, k6, k10, a5], 8: [g1, g3, g5, g7, g9, g11, c0], 9: [g12, g4, g8, c0],
          10: [z1, z2, z3, x8, x9, x0, y8, y9, y0, c0], 11: [x1, x2, y3, y1, x0, x9, y8, y0, z4, z5, z6, z7], 12: [x1, x0, y1, y0, z4, z5, z6, z7, i6, i12], 13: [x1, x0, y1, y0, i6, i12, v3], 14: [xx3, zz5, xx9, zz11, v1],
          15: [zz1, yy3, zz7, yy9, v5]},
 
-    2: {'-1': [tb2, tb4, tb12, c0], 0: [tb2, tb4, tb6, tb8, tb10, tb12, c0], 1: [sa1, sa3, sa5, sa7, sa9, sa11], 2: [sa4, sa8, sa12], 3: [f4, f8, f12, ra2, ra6, ra10], 4: [f4, f8, f12, a2, a6, a10, a5],
+    2: {'-1': [tb2, tb4, tb6, tb12, c0], 0: [tb2, tb4, tb6, tb8, tb10, tb12, c0], 1: [sa1, sa3, sa5, sa7, sa9, sa11], 2: [sa4, sa8, sa12], 3: [f4, f8, f12, ra2, ra6, ra10], 4: [f4, f8, f12, a2, a6, a10, a5],
      5: [f4, f8, f12, tc1, tc3, tc5, tc7, tc9, tc11, a5], 6: [e1, e3, e5, e7, e9, e11, a1, a5], 7: [e2, e6, e10, a1, a5], 8: [e2, e6, e10, j4, j8, j12, c0], 9: [e1, e3, e5, e7, e9, e11, j4, j8, j12, c0],
      10: [g12, g4, g8, x4, y4, z7], 11: [z1, z2, z3, x8, y4, x4, y9, z7, x0, x9, y8, y0], 12: [z1, z2, z3, x8, y4, x4, y9, x0, y5, x6, y0, z0], 13: [x1, x0, y1, y0, z5, z6, c6, c12], 14: [x0, y5, x6, y0, z1, z0, uu1, uu2, uu3, uu4],
-     15: [x8, x0, z0, y9, y0, g12, u5, u6], 16: [x0, yy11]},
+     15: [x8, x0, z0, y9, y0, g12, u5, u6], 16: [x0, yy11, vg690]},
 
-    3: {/**/'-1': [ef1and2, ca0], 0: [ta0, ta1, ta3, ta5, ta7, ta9, ta11], 1: [w1, w3, w5, w7, w9, w11], 2: [qa1, qa3, qa5, qa7, qa9, qa11, qa0, qa2, qa6, qa10], 3: [qb1, qb3, qb5, qb7, qb9, qb11, qb0, qb2, qb6, qb10], 4: [qc1, qc3, qc5, qc7, qc9, qc11, qc0, qc2, qc6, qc10],
-         5: [qd1, qd3, qd5, qd7, qd9, qd11, qd0, qd2, qd6, qd10], 6: [qe1, qe3, qe5, qe7, qe9, qe11, qe0, qe2, qe6, qe10], 7: [qf0, qf2, qf6, qf10], 8: [e1, e3, e5, e7, e9, e11, l4, l8, l12], 9: [e1, e3, e5, e7, e9, e11, j4, j8, j12, z4, x7, y7],
+    3: {/**/'-1': [ef1and2, ef3and4, ef5and6, ef7and8, ef9and10, ef11and12, ca0], 0: [ta0, ta1, ta3, ta5, ta7, ta9, ta11], 1: [w1, w3, w5, w7, w9, w11], 2: [qa1, qa3, qa5, qa7, qa9, qa11, qa2, qa6, qa10, qa0], 3: [qb1, qb3, qb5, qb7, qb9, qb11, qb2, qb6, qb10, qb0], 4: [qc1, qc3, qc5, qc7, qc9, qc11, qc2, qc6, qc10, qc0],
+         5: [qd1, qd3, qd5, qd7, qd9, qd11, qd2, qd6, qd10, qd0], 6: [qe1, qe3, qe5, qe7, qe9, qe11, qe2, qe6, qe10, qe0], 7: [qf0, qf2, qf6, qf10], 8: [e1, e3, e5, e7, e9, e11, l4, l8, l12], 9: [e1, e3, e5, e7, e9, e11, j4, j8, j12, z4, x7, y7],
          10: [g12, g4, g8, z4, x7, y7], 11: [z1, z2, z3, z4, x8, x7, y7, y9, x0, x9, y8, y0], 12: [v4x, v8x, v12, x0, x9, y8, y0, z1], 13: [v4, v8, v12, x0, y0, z1], 14: [u4, u8, u12, x1, x0, y1, y0, z1, z0],
          15: [u4, u8, u12, x1, x0, y1, y0, z1, z0]},
 
     4: {'-1': [e2, e6, a1], 0: [e2, e6, e10, ea2, ea6, ea10], 1: [w1, w3, e6, e10, ea6, ea10], 2: [w1, w3, e6, ea6, w9, w11], 3: [f1, f3, f5, f7, f9, f11, l2, l6, l10], 4: [f1, f3, f5, f7, f9, f11, a3],
      5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a2, a6, a10, a5], 6: [e2, e5, f8, f11, ag3, ah9], 7: [e2, ef5, ef6, ef7, e10, a1], 8: [e2, ef5, ef6, ef7, e10, ag12, ag12a], 9: [e2, e10, ag12, ag5, ag6, ag7],
      10: [e2, e6, e10, j4, j8, j12, z4, x7, y7], 11: [e2, e6, e10, j4, j8, j12, cc2, cc4, cc6, cc8, cc10, cc12], 12: [x0, y0, z1, i2, i6, i10, cc2, cc4, cc6, cc8, cc10, cc12], 13: [x0, y0, z1, icc2, icc6, icc10, cc4, cc8, cc12], 14: [x0, y0, z1, icca2, icca6, icca10, iccb2, iccb6, iccb10, cc4, cc8, cc12],
-     15: [x0, y0, z1, icca2, icca6, icca10, iccb2sq, iccb6sq, iccb10sq, cc4sq, cc8sq, cc12sq, cc0sq], 16: [x0, z1]},
+     15: [x0, y0, z1, icca2, icca6, icca10, iccb2sq, iccb6sq, iccb10sq, cc4sq, cc8sq, cc12sq, cc0sq], 16: [x0, z1, vg691]},
 
     5: {/**/'-1': [e2, e6, e10, ea2, ea6, ea10], 0: [e2, ea2, e6, ea6, w9, w11], 1: [f4, fa4, w7, w9, w11, w1], 2: [f4, fa4, f8, fa8, w11, w1], 3: [f4, f8, f1, f11, ah3, ah9], 4: [f4, f8, f12, a3],
         5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a3], 6: [ef1, ef2, ef3, ef5, ef6, ef7, ef9, ef10, ef11, a1], 7: [ef1and2, ef3, ef5, ef6, ef7, ef9, ef10and11, ag12, ag12a], 8: [ef1and2, ef3, ef430, ef530, ef6, ef7, ef9, ef10and11, ff4, ff8, ag12, ca6], 9: [ef1and2, ef3, ef5, ef6, ef630, ef730, ef9, ef10and11, ff4, ff8, ff12, ca0],
         10: [e2, e6, e10, ff4, ff8, ff12, ca0], 11: [ff4, ff8, ff12, ff4a, ff8a, ff12a, e2b, e6b, e10b], 12: [x0, y0, z1, isec2, isec6, isec10, iarr4, iarr8, iarr12], 13: [x0, y0, z1, isec2, isec6, isec10, iarr330, iarr430, iarr730, iarr830, iarr1130, iarr1230], 14: [x1, x0, y1, y0, z1, z0, iarr130, iarr230, iarr330, iarr430, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230],
-        15: [x0, y1, z1, z0, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230]},
+        15: [x0, y1, z1, z0, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230, w130, w230, w330, w430]},
 
     6: {'-1': [w1, w4], 0: [cz0], 1: [e2, ea2, w5, w7, e10, ea10], 2: [f4, fa4, w7, w9, f12, fa12], 3: [f4, fa4, f8, fa8, f12, fa12], 4: [f4, f8, f12, a3h1, a3h7],
      5: [ef5, ef6, ef7, f12, ff3and4, ff8and9, a3x6], 6: [ef1, ef2, ef3, ff4, ef5, ef6, ef7, ff8, ef9, ef10, ef11, ff12, ca0], 7: [f12, e6, czh0], 8: [f12, e6, czh6, czh12], 9: [ef1230, ef130, ef2, ef230, ef330, ff4, ef430, ef530, ef6, ef630, ef730, ff8, ef830, ef930, ef10, ef1030, ef1130, ff12, ef2a, ef6a, ef10a, ff4a, ff8a, ff12a],
@@ -573,7 +604,7 @@ const hexGridShapes = {
 
     7: {'-1': [w4, w8, w12], 0: [w4, w8, w12], 1: [w4, w8, w12], 2: [f4, fa4, w8, f12, fa12], 3: [f4, fa4, f8, fa8, f12, fa12], 4: [f4, f8, f12, a3h1, a3h7],
         5: [f4, e10, czh04], 6: [e2, f8, czh02], 7: [e2, e10, a1], 8: [f4, e10, czh4, czh10], 9: [e2, f8, czh2, czh8],
-        10: [icca2, icca4], 11: [icca2, icca4, icca8, icca10, icca12, cah4, cah10], 12: [icca2, icca4, icca8, icca10, icca12, winn24, winn6, winn810, winn12],
+        10: [icca2, icca4, issa10, issa11, issa12, issa0], 11: [icca2, icca4, icca8, icca10, icca12, cah4, cah10], 12: [icca2, icca4, icca8, icca10, icca12, winn24, winn6, winn810, winn12],
         13: [icca2, icca4, icca8, icca10, icca12, winn24, winn6, winn810, iccaa12, iarr1130, iarr1230], 14: [icca2, icca4, icca8, icca10, icca12, winn24o, winn24i, winn6, winn810, iccaa12, iarr1130, iarr1230],
         15: [icca2, icca10, icca12, winn24, winn6, winn810o, winn810i, iccaa12, iarr1130, iarr1230]},
 };
@@ -684,9 +715,9 @@ const splitIntoPieces = function(edgeSignature) {
 };
 
 /* eslint-disable */
-const edgeColors = [
+const edgeChannels = [
     {
-        color: '#00ccee', // cyan
+        channel: CYAN,
         edgeSignatures: [
             '[[0,4],[6,2]]',
             '[[0,-4],[6,-2]]',
@@ -694,7 +725,7 @@ const edgeColors = [
         ],
     },
     {
-        color: '#ee00ee', // magenta
+        channel: PINK,
         edgeSignatures: [
             // vertical radial lines
             '[[0,0],[6,2]]',
@@ -705,6 +736,13 @@ const edgeColors = [
             '[[-6,-2],[0,0]]',
 
             '[[0,4],[0,-4]]', // full vertical
+            '[[-6,-2],[6,2]]',
+            '[[-6,2],[6,-2]]',
+
+            // for qa-series and qb-qe-series
+            '[[0,4],[0,0.67]]', '[[0,4],[0,1.33]]',
+            '[[-6,-2],[-1,-0.33]]', '[[-6,-2],[-2,-0.67]]',
+            '[[1,-0.33],[6,-2]]', '[[2,-0.67],[6,-2]]',
 
             // horizontal radial lines
             '[[-6,0],[0,0]]',
@@ -721,7 +759,7 @@ const edgeColors = [
         ],
     },
     {
-        color: '#ee8800', // orange
+        channel: ORANGE,
         edgeSignatures: [
             // central vertical hexagons
             '[[-3,1],[-3,-1]]',
@@ -746,7 +784,7 @@ const edgeColors = [
         ],
     },
     {
-        color: '#ff0000', // red
+        channel: RED,
         edgeSignatures: [
             '[[-6,-2],[0,4]]',
             '[[-6,-2],[6,-2]]',
@@ -768,11 +806,11 @@ const edgeColors = [
 ];
 /* eslint-enable */
 
-const edgeColorsByEdgeSignature = {};
-for (const edgeColor of edgeColors) {
-    for (const edgeSignature of edgeColor.edgeSignatures) {
+const edgeChannelsByEdgeSignature = {};
+for (const edgeChannel of edgeChannels) {
+    for (const edgeSignature of edgeChannel.edgeSignatures) {
         for (const pieceSignature of splitIntoPieces(edgeSignature)) {
-            edgeColorsByEdgeSignature[pieceSignature] = edgeColor.color;
+            edgeChannelsByEdgeSignature[pieceSignature] = edgeChannel.channel;
         }
     }
 }
@@ -815,7 +853,8 @@ const processEdgesInShapes = function(shapes, hexCoords) {
             y1: scalePointY(p1[1]),
             x2: scalePointX(p2[0]),
             y2: scalePointY(p2[1]),
-            color: edgeColorsByEdgeSignature[edgeSignature],
+            center: [scalePointX((p1[0] + p2[0]) / 2), scalePointY((p1[1] + p2[1]) / 2)],
+            channel: edgeChannelsByEdgeSignature[edgeSignature],
         });
     }
 
@@ -846,7 +885,8 @@ const processEdgesInShapes = function(shapes, hexCoords) {
                 y1: scalePointY(p1[1]),
                 x2: scalePointX(p2[0]),
                 y2: scalePointY(p2[1]),
-                color: edgeColorsByEdgeSignature[edgeSignature],
+                center: [scalePointX((p1[0] + p2[0]) / 2), scalePointY((p1[1] + p2[1]) / 2)],
+                channel: edgeChannelsByEdgeSignature[edgeSignature] || shape.edgeChannel || ORANGE,
             });
         }
     }
