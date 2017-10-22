@@ -9,7 +9,7 @@ const updateHue = require('js/core/outputs/updateHue');
 
 const WallCircuitGrid = React.createClass({
     contextTypes: {
-        wallCircuitParametersByChannel: React.PropTypes.object,
+        wallCircuitParametersByChannel: React.PropTypes.array,
     },
     render: function() {
         const componentGrid = _.map(hexGrid, (hexes, row) => {

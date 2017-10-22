@@ -9,7 +9,7 @@ const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 
 const WallCircuitHex = React.createClass({
     contextTypes: {
-        wallCircuitParametersByChannel: React.PropTypes.object,
+        wallCircuitParametersByChannel: React.PropTypes.array,
     },
     render() {
         if (this.props.row % 2 && this.props.column === _.size(hexGrid[0]) - 1) {

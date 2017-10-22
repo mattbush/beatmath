@@ -1,8 +1,8 @@
 const _ = require('lodash');
-const {LinearParameter, MovingColorParameter, LogarithmicParameter} = require('js/core/parameters/Parameter'); // MovingLinearParameter
+const {LinearParameter, MovingColorParameter, LogarithmicParameter, MovingAngleParameter} = require('js/core/parameters/Parameter'); // MovingLinearParameter
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const tinycolor = require('tinycolor2');
-const {posMod, lerp} = require('js/core/utils/math'); // posModAndBendToLowerHalf
+const {posMod, lerp, xyRotatedAroundOriginWithAngle} = require('js/core/utils/math'); // posModAndBendToLowerHalf
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const {arclerp} = require('js/core/utils/math');
 const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
@@ -28,7 +28,7 @@ class WallCircuitParameters extends PieceParameters {
         return {
             baseColor: {
                 type: MovingColorParameter,
-                start: tinycolor('#f00').spin(channel * 60),
+                start: tinycolor('#f00').spin(channel * 70),
                 max: 5,
                 variance: 1,
                 autoupdate: 1000,
@@ -47,6 +47,13 @@ class WallCircuitParameters extends PieceParameters {
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
                 monitorName: `Ch ${channel} Period Ticks`,
             },
+            rotation: {
+                type: MovingAngleParameter,
+                start: 60 * channel,
+                max: 1,
+                variance: 0.1,
+                autoupdate: 500,
+            },
             // ...P.CustomPercent({name: 'trailPercent', start: 0.5, inputPosition: [2, 2]}),
             // ...P.CustomPercent({name: 'revTrailPercent', start: 0, inputPosition: [1, 2]}),
         };
@@ -59,8 +66,14 @@ class WallCircuitParameters extends PieceParameters {
         return posMod(this._riseNumTicks - rowIndex, periodTicks) / periodTicks;
     }
     getColorForColumnAndRow(column, row) {
+        const [columnRot, rowRot] = xyRotatedAroundOriginWithAngle(
+            column,
+            row,
+            this.rotation.getValue(),
+        );
+
         const color = tinycolor(this.baseColor.getValue().toHexString()); // clone
-        const baseRowIllumination = this._getRowIllumination(column, row);
+        const baseRowIllumination = this._getRowIllumination(columnRot, rowRot);
         const revTrailPercent = 0.5; // 1 - this.revTrailPercent.getValue();
         let rowIllumination;
         if (baseRowIllumination > revTrailPercent || revTrailPercent === 0) {
