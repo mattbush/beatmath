@@ -8,8 +8,14 @@ const hexGrid = require('js/wallow/WallowHexGrid');
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 
 const DEBUG_MODE = true;
-const EDGES_MODE = true;
+const EDGES_MODE = false;
 const OVERLAP_MODE = false;
+
+const CYAN = '#00ccee';
+const PINK = '#ee00ee';
+const RED = '#ff0000';
+const ORANGE = '#ee8800';
+const edgeColorsByChannel = [CYAN, PINK, RED, ORANGE];
 
 const Hex = React.createClass({
     getInitialState() {
@@ -60,7 +66,7 @@ const Hex = React.createClass({
                         }
                     })}
                     {DEBUG_MODE && EDGES_MODE && edges.map((edge, index) => {
-                        const color = OVERLAP_MODE ? '#fff' : (edge.color || '#808080');
+                        const color = OVERLAP_MODE ? '#fff' : (edgeColorsByChannel[edge.channel] || '#808080');
                         const opacity = OVERLAP_MODE ? 0.3 : 1;
                         const points = _.pick(edge, 'x1', 'x2', 'y1', 'y2');
                         return (

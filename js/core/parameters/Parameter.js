@@ -585,6 +585,10 @@ class MovingAngleParameter extends AngleParameter {
         this._speed = 0;
         this._maxSpeed = params.max;
         this._isUpdatingEnabled = true;
+
+        if (params.autoupdate !== undefined) {
+            this._autoupdateInterval = setInterval(this.update.bind(this), params.autoupdate);
+        }
     }
     update(increment = 1, shouldChangeSpeed = true) {
         if (!this._isUpdatingEnabled) {
@@ -597,6 +601,10 @@ class MovingAngleParameter extends AngleParameter {
             }
         }
         this._spinValue(this._speed * increment);
+    }
+    destroy() {
+        super.destroy();
+        clearInterval(this._autoupdateInterval);
     }
     onResetButtonPress(inputValue) {
         if (!inputValue || this._checkAutopilotToggle()) {
