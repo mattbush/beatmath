@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const {MovingColorParameter, LogarithmicParameter} = require('js/core/parameters/Parameter'); // MovingLinearParameter
+const {LinearParameter, MovingColorParameter, LogarithmicParameter} = require('js/core/parameters/Parameter'); // MovingLinearParameter
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const tinycolor = require('tinycolor2');
 const {posMod, lerp} = require('js/core/utils/math'); // posModAndBendToLowerHalf
@@ -10,8 +10,8 @@ const updateHue = require('js/core/outputs/updateHue');
 const {NUM_LIGHTS} = require('js/hue_constants');
 
 class WallCircuitParameters extends PieceParameters {
-    constructor(mixboard, beatmathParameters) {
-        super(...arguments);
+    constructor(mixboard, beatmathParameters, channel) {
+        super(mixboard, beatmathParameters, {channel});
 
         this._riseNumTicks = 0;
 
@@ -23,7 +23,7 @@ class WallCircuitParameters extends PieceParameters {
             });
         }
     }
-    _declareParameters() {
+    _declareParameters({channel}) {
         return {
             baseColor: {
                 type: MovingColorParameter,
@@ -32,12 +32,19 @@ class WallCircuitParameters extends PieceParameters {
                 variance: 1,
                 autoupdate: 1000,
             },
+            volume: {
+                type: LinearParameter,
+                range: [0, 2],
+                start: 1,
+                monitorName: `Ch ${channel} volume`,
+                listenToLaunchpadKnob: [0, channel],
+            },
             periodTicks: {type: LogarithmicParameter,
                 range: [2, 64],
                 start: 16,
-                listenToDecrementAndIncrementLaunchpadButtons: 3,
+                listenToDecrementAndIncrementLaunchpadButtons: channel,
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
-                monitorName: 'Period Ticks',
+                monitorName: `Ch ${channel} Period Ticks`,
             },
             // ...P.CustomPercent({name: 'trailPercent', start: 0.5, inputPosition: [2, 2]}),
             // ...P.CustomPercent({name: 'revTrailPercent', start: 0, inputPosition: [1, 2]}),
@@ -59,6 +66,13 @@ class WallCircuitParameters extends PieceParameters {
             rowIllumination = arclerp(1, revTrailPercent, baseRowIllumination);
         } else {
             rowIllumination = arclerp(0, revTrailPercent, baseRowIllumination);
+        }
+
+        const volume = 2 - this.volume.getValue();
+        if (volume < 1) {
+            rowIllumination = lerp(0, rowIllumination, volume);
+        } else if (volume > 1) {
+            rowIllumination = lerp(rowIllumination, 1, volume - 1);
         }
 
         if (rowIllumination === 0) {

@@ -20,7 +20,7 @@ const WallCircuitContainer = React.createClass({
     },
     getInitialState: function() {
         const mixboard = this.context.mixboard;
-        const wallCircuitParameters = new WallCircuitParameters(mixboard, this.context.beatmathParameters);
+        const wallCircuitParameters = new WallCircuitParameters(mixboard, this.context.beatmathParameters, 0);
         return {wallCircuitParameters};
     },
     getParameterBindings: function() {

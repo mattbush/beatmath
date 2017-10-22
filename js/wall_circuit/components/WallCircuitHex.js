@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const React = require('react');
 // const tinycolor = require('tinycolor2');
+const mapColorString = require('js/core/utils/mapColorString');
 
 const hexGrid = require('js/wallow/WallowHexGrid');
 
@@ -29,7 +30,7 @@ const WallCircuitHex = React.createClass({
 
                     const points = _.pick(edge, 'x1', 'x2', 'y1', 'y2');
                     return (
-                        <line {...points} className="edge" key={index} stroke={color} />
+                        <line {...points} className="edge" key={index} stroke={mapColorString(color)} />
                     );
                 })}}
             </g>
