@@ -2,6 +2,7 @@ const _ = require('lodash');
 const React = require('react');
 // const tinycolor = require('tinycolor2');
 const mapColorString = require('js/core/utils/mapColorString');
+const {posModAndBendToLowerHalf, posMod} = require('js/core/utils/math');
 
 const hexGrid = require('js/wallow/WallowHexGrid');
 
@@ -11,6 +12,15 @@ const WallCircuitHex = React.createClass({
     contextTypes: {
         wallCircuitParametersByChannel: React.PropTypes.array,
     },
+    componentWillMount() {
+        this._ghostState = Math.random();
+    },
+    componentDidMount() {
+        setInterval(this._update, 100);
+    },
+    _update() {
+        this._ghostState = posMod(this._ghostState + Math.random() * 0.001, 1);
+    },
     render() {
         if (this.props.row % 2 && this.props.column === _.size(hexGrid[0]) - 1) {
             return null;
@@ -19,6 +29,11 @@ const WallCircuitHex = React.createClass({
 
         const tx = Number(this.props.column) + (this.props.row % 2 ? 0.5 : 0) + cell.offsets[0];
         const ty = this.props.row * Y_AXIS_SCALE + cell.offsets[1];
+
+        const ghostNum = posMod(this.props.row, 2) * 2 + posMod(this.props.column, 2);
+        const ghostTransform = ((this.props.row + this.props.column) % 2) ? 'scale(-1,1)' : null;
+
+        const ghostStateDepth = this._ghostState >= 0.92 ? posModAndBendToLowerHalf(this._ghostState - 0.92, 0.08) * 25 : 0;
 
         return (
             <g style={{transform: `translate(${tx}px, ${ty}px) scale(${cell.scale}) rotate(${cell.rotation}deg)`}}>
@@ -33,6 +48,13 @@ const WallCircuitHex = React.createClass({
                         <line {...points} className="edge" key={index} stroke={mapColorString(color)} />
                     );
                 })}}
+                {this._ghostState >= 0.92 &&
+                    <image
+                        xlinkHref={`images/wallow/ghost${ghostNum}.png`}
+                        style={{opacity: ghostStateDepth}}
+                        transform={ghostTransform} x="-0.4" y="-0.4" height="0.8px" width="0.8px"
+                    />
+                }
             </g>
         );
     },
