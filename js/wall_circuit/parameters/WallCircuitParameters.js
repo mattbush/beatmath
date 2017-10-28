@@ -9,6 +9,8 @@ const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
 const updateHue = require('js/core/outputs/updateHue');
 const {NUM_LIGHTS} = require('js/hue_constants');
 
+const COLORS_BY_CHANNEL = ['#73f8fd', '#ec6df8', '#ea3323', '#f2a43a'];
+
 class WallCircuitParameters extends PieceParameters {
     constructor(mixboard, beatmathParameters, channel) {
         super(mixboard, beatmathParameters, {channel});
@@ -28,21 +30,21 @@ class WallCircuitParameters extends PieceParameters {
         return {
             baseColor: {
                 type: MovingColorParameter,
-                start: tinycolor('#f00').spin(channel * 70),
-                max: 5,
-                variance: 1,
-                autoupdate: 1000,
+                start: tinycolor(COLORS_BY_CHANNEL[channel]),
+                // max: 5,
+                // variance: 1,
+                // autoupdate: 1000,
             },
             volume: {
                 type: LinearParameter,
                 range: [0, 2],
-                start: channel === 0 ? 2 : 0,
+                start: 1,
                 monitorName: `Ch ${channel} volume`,
                 listenToLaunchpadKnob: [0, channel],
             },
             periodTicks: {type: LogarithmicParameter,
                 range: [2, 64],
-                start: 16,
+                start: [32, 24, 28, 36][channel],
                 listenToDecrementAndIncrementLaunchpadButtons: channel,
                 listenToDecrementAndIncrementMixtrackButtons: [MixtrackButtons.L_LOOP_OUT, MixtrackButtons.L_LOOP_RELOOP],
                 monitorName: `Ch ${channel} Period Ticks`,
