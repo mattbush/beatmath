@@ -34,7 +34,9 @@ class SnowgridParameters extends PieceParameters {
             ...P.NumColumns({start: 2, max: 10}),
             ...P.NumRows({start: 2, max: 6}),
             ...P.CustomToggle({name: 'oscillate', button: 1}),
+            ...P.CustomToggle({name: 'snapRotation', button: 4, start: true}),
             ...P.TriangularGridPercent({inputPosition: [0, 0], start: 1}),
+            ...P.CustomPercent({start: 1, name: 'animationDurationPercent', inputPosition: [2, 0]}),
             latency: {
                 type: ManualParameter,
                 start: 0,

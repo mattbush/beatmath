@@ -184,12 +184,13 @@ class RotationInfluence extends Influence {
             variance: 0.1,
             start: params.startValue,
         });
+        this._constrainTo360 = params.constrainTo360 !== undefined ? params.constrainTo360 : true;
     }
     _mixByParameterType(pixelParameter, mixAmount) {
         const influenceParameter = this._mainParameter.getValue();
         const differenceWithin180 = modAndShiftToHalf(influenceParameter - pixelParameter, 360);
         const newAngle = lerp(pixelParameter, pixelParameter + differenceWithin180, mixAmount);
-        return posMod(newAngle, 360);
+        return this._constrainTo360 ? posMod(newAngle, 360) : newAngle;
     }
     getRotation() {
         return this._mainParameter.getValue();

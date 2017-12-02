@@ -3,7 +3,7 @@ const React = require('react');
 const tinycolor = require('tinycolor2');
 const SnowgridInnerPixel = require('js/snowgrid/components/SnowgridInnerPixel');
 const {runAtTimestamp} = require('js/core/utils/time');
-const {lerp} = require('js/core/utils/math');
+const {lerp, modAndShiftToHalf} = require('js/core/utils/math');
 
 const {CELL_SIZE} = require('js/snowgrid/parameters/SnowgridConstants');
 
@@ -96,15 +96,20 @@ const SnowgridPixel = React.createClass({
         return influence.mix(this._nextState, this.state.rowComputed, this.state.colComputed);
     },
     render: function() {
-        const rotation = Math.floor(this.state.rotation);
+        const snapRotation = this.context.snowgridParameters.snapRotation.getValue();
+        const rawRotation = this.state.rotation;
+        const rotation = snapRotation ? rawRotation - modAndShiftToHalf(rawRotation, 30) : Math.floor(rawRotation);
         const x = this.state.colComputed * CELL_SIZE;
         const y = this.state.rowComputed * CELL_SIZE;
         const fill = this.state.color;
+        const transitionTime = this.context.beatmathParameters.tempo.getPeriod() *
+            this.context.snowgridParameters.animationDurationPercent.getValue();
 
         const scale = (20 + this.state.size) / 50;
 
         const style = {
             transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${scale})`,
+            transition: `transform ${transitionTime}ms ease`,
         };
 
         return (

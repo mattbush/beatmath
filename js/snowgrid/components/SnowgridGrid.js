@@ -51,9 +51,9 @@ const SnowgridGrid = React.createClass({
             new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'width2', startValue: 6}),
             new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'offset2', startValue: 2}),
 
-            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: 0}),
-            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: 0}),
-            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.8, startValue: 0}),
+            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: 0, constrainTo360: false}),
+            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: 0, constrainTo360: false}),
+            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.8, startValue: 0, constrainTo360: false}),
         ];
 
         return {snowgridParameters, influences, refreshTimer};
