@@ -21,6 +21,7 @@ const Monitor = React.createClass({
         this._parsedStorage = {};
         this._colorsByChannel = {};
         this._channelsByLightIndex = {};
+        this._brightnessPercentsByLightIndex = {};
         this._throttledForceUpdate = _.throttle(this.forceUpdate.bind(this), 60);
         window.addEventListener('storage', this._onStorage);
 
@@ -35,12 +36,19 @@ const Monitor = React.createClass({
         const color = this._colorsByChannel[channelIndex];
         _.each(this._channelsByLightIndex, (channelIndexForLight, lightIndex) => {
             if (channelIndexForLight === channelIndex) {
-                updateHue(Number(lightIndex), color);
+                const rawBrightnessPercent = this._brightnessPercentsByLightIndex[lightIndex];
+                const brightnessPercent = typeof rawBrightnessPercent === 'number' ? rawBrightnessPercent : 1;
+
+                updateHue(Number(lightIndex), color, {briCoeff: brightnessPercent});
             }
         });
     },
     _onMapLightToChannel(lightIndex, channelIndex) {
         this._channelsByLightIndex[lightIndex] = channelIndex;
+        this._throttledForceUpdate();
+    },
+    _onChangeLightBrightnessPercent(lightIndex, brightnessPercent) {
+        this._brightnessPercentsByLightIndex[lightIndex] = brightnessPercent;
         this._throttledForceUpdate();
     },
     _onStorage(event) {
@@ -76,6 +84,8 @@ const Monitor = React.createClass({
                         colorsByChannel={this._colorsByChannel}
                         channelsByLightIndex={this._channelsByLightIndex}
                         onMapLightToChannel={this._onMapLightToChannel}
+                        brightnessPercentsByLightIndex={this._brightnessPercentsByLightIndex}
+                        onChangeLightBrightnessPercent={this._onChangeLightBrightnessPercent}
                     /> :
                     <div>
                         {_.map(_.pickBy(this._parsedStorage), (value, key) =>

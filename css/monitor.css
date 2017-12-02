@@ -156,3 +156,11 @@ input[type=text] {
     width: 32px;
     vertical-align: middle;
 }
+
+.brightnessSlider {
+    display: inline-block;
+    height: 32px;
+    vertical-align: middle;
+    width: 60px;
+    margin-right: 8px;
+}

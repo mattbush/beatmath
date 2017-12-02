@@ -9,11 +9,17 @@ const MonitorChannelLight = React.createClass({
         const newChannel = channelIndex === selectedChannel ? null : channelIndex;
         this.props.onMapLightToChannel(this.props.index, newChannel);
     },
+    _onBrightnessPercentChange(e) {
+        const newPercent = e.target.value / 100;
+        this.props.onChangeLightBrightnessPercent(this.props.index, newPercent);
+    },
     render() {
         const hueConfig = this.props.hueConfig;
         const light = hueConfig.lights[this.props.index];
         const colorsByChannel = this.props.colorsByChannel;
         const selectedChannel = this.props.channelsByLightIndex[this.props.index];
+        const rawBrightnessPercent = this.props.brightnessPercentsByLightIndex[this.props.index];
+        const brightnessPercent = typeof rawBrightnessPercent === 'number' ? rawBrightnessPercent : 1;
 
         return (
             <div className="lightContainer">
@@ -27,6 +33,7 @@ const MonitorChannelLight = React.createClass({
                 <div className="lightName">
                     {light.name}
                 </div>
+                <input className="brightnessSlider" type="range" value={brightnessPercent * 100} onChange={this._onBrightnessPercentChange} />
                 {_.times(NUM_CHANNELS, channelIndex =>
                     <div
                         className="channel"
@@ -67,6 +74,8 @@ const MonitorChannelRoom = React.createClass({
                             colorsByChannel={this.props.colorsByChannel}
                             channelsByLightIndex={this.props.channelsByLightIndex}
                             onMapLightToChannel={this.props.onMapLightToChannel}
+                            brightnessPercentsByLightIndex={this.props.brightnessPercentsByLightIndex}
+                            onChangeLightBrightnessPercent={this.props.onChangeLightBrightnessPercent}
                         />
                     )}
                 </div>
@@ -90,6 +99,8 @@ const MonitorChannelManager = React.createClass({
                             colorsByChannel={this.props.colorsByChannel}
                             channelsByLightIndex={this.props.channelsByLightIndex}
                             onMapLightToChannel={this.props.onMapLightToChannel}
+                            brightnessPercentsByLightIndex={this.props.brightnessPercentsByLightIndex}
+                            onChangeLightBrightnessPercent={this.props.onChangeLightBrightnessPercent}
                         />
                     )}
                 </div>
