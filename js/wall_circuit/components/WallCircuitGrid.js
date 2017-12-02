@@ -4,8 +4,7 @@ const React = require('react');
 
 const hexGrid = require('js/wallow/WallowHexGrid');
 const WallCircuitHex = require('js/wall_circuit/components/WallCircuitHex');
-const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
-const updateHue = require('js/core/outputs/updateHue');
+const updateChannel = require('js/core/outputs/updateChannel');
 
 const WallCircuitGrid = React.createClass({
     contextTypes: {
@@ -22,13 +21,10 @@ const WallCircuitGrid = React.createClass({
             });
         });
 
-        if (ENABLE_HUE) {
-            const hueInOrder = [8, 1, 2, 7];
-            hueInOrder.forEach((lightNumber, channel) => {
-                const color = this.context.wallCircuitParametersByChannel[channel].getColorForColumnAndRow(0, 0);
-                updateHue(lightNumber, color, {briCoeff: 0.4});
-            });
-        }
+        _.times(4, channelIndex => {
+            const color = this.context.wallCircuitParametersByChannel[channelIndex].getColorForColumnAndRow(0, 0);
+            updateChannel(channelIndex, color);
+        });
 
         return (
             <g style={{transform: 'scale(76) translate(-7.5px, -3.5px)'}}>

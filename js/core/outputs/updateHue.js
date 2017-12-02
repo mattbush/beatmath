@@ -1,8 +1,9 @@
 const _ = require('lodash');
 
-const {HUE_BRIDGE_IP_ADDRESS, HUE_API_KEY, NUM_LIGHTS} = require('js/hue_constants');
+const {HUE_BRIDGE_IP_ADDRESS, HUE_API_KEY} = require('js/hue_constants');
+const NUM_LIGHTS = 100; // lol whatever
 
-const HUE_THROTTLE_RATE_MS = 200;
+const HUE_THROTTLE_RATE_MS = 20;
 const HUE_TRANSITION_TIME_MS = 10;
 
 const HUE_TRANSITION_TIME_CS = Math.round(HUE_TRANSITION_TIME_MS / 10);
