@@ -1,38 +1,62 @@
 const _ = require('lodash');
 const React = require('react');
 const mapColorString = require('js/core/utils/mapColorString');
+const {lerp} = require('js/core/utils/math');
 
-const TWOPI = Math.PI * 2;
+function generateSnowflakePoints({width1, length1, width2, length2, offset2}) {
+    const points = [];
+    const HYPOTENUSE = 2 * (3 ** -0.5);
+    const TANGENT = 3 ** -0.5;
+    const SINE = 1 / 2;
+    const COSINE = 3 ** 0.5 / 2;
+    width1 = lerp(0.1, 0.45, width1 / 16);
+    width2 = lerp(0.1, 0.45, width2 / 16);
+    length1 = lerp(0.3, 1.5, length1 / 16) + width1 * HYPOTENUSE;
+    length2 = lerp(0.3, 1.5, length2 / 16) + width2 * HYPOTENUSE;
+    offset2 = offset2 / 16 * length1;
+    const scale = 300 / (5 + (1.5 * length1) + (3 * width1) + (1.5 * offset2) + (3 * width2) + (2 * length2));
 
-function generateFlowerPath(aperture, rotundity) {
-    const aperturePercent = aperture / 128;
-    const rotundityPercent = rotundity / 128;
+    _.times(6, i => {
+        const angle = Math.PI * i / 3;
+        const cos0 = Math.cos(angle);
+        const sin0 = Math.sin(angle);
+        const addPoint = (x, y) => points.push([x * cos0 - y * sin0, y * cos0 + x * sin0]);
 
-    const apertureCoeff = 0.3 * aperturePercent + 0.05;
-    const scale = 2 - apertureCoeff + rotundityPercent / 4;
-    const points = _.times(6, i => {
-        if (i % 2) {
-            return [Math.cos(i / 6 * TWOPI) * scale, Math.sin(i / 6 * TWOPI) * scale].map(x => _.round(x, 5));
-        } else {
-            return [Math.cos(i / 6 * TWOPI) * apertureCoeff * scale, Math.sin(i / 6 * TWOPI) * apertureCoeff * scale].map(x => _.round(x, 5));
-        }
+        // joint
+        addPoint(width1, width1 * TANGENT + width1 * HYPOTENUSE);
+
+        // left wing
+        addPoint(width1, offset2 + width1 * TANGENT - width2 * HYPOTENUSE);
+        addPoint(width1 + length2 * COSINE, offset2 + width1 * TANGENT + length2 * SINE - width2 * HYPOTENUSE);
+        addPoint(width1 + length2 * COSINE, offset2 + width1 * TANGENT + length2 * SINE);
+        addPoint(width1 + length2 * COSINE - width2, offset2 + width1 * TANGENT + length2 * SINE + width2 * TANGENT);
+        addPoint(width1, offset2 + width1 * TANGENT + width2 * HYPOTENUSE);
+
+        // apex
+        addPoint(width1, length1 - width1 * TANGENT);
+        addPoint(0, length1);
+        addPoint(-width1, length1 - width1 * TANGENT);
+
+        // right wing
+        addPoint(-(width1), offset2 + width1 * TANGENT + width2 * HYPOTENUSE);
+        addPoint(-(width1 + length2 * COSINE - width2), offset2 + width1 * TANGENT + length2 * SINE + width2 * TANGENT);
+        addPoint(-(width1 + length2 * COSINE), offset2 + width1 * TANGENT + length2 * SINE);
+        addPoint(-(width1 + length2 * COSINE), offset2 + width1 * TANGENT + length2 * SINE - width2 * HYPOTENUSE);
+        addPoint(-(width1), offset2 + width1 * TANGENT - width2 * HYPOTENUSE);
     });
 
-    let d = '';
-    d += 'M ' + points[points.length - 1].join(' ');
-
-    const arcRadius = (scale / 2) * (3 ** rotundityPercent);
-
-    points.forEach(point => {
-        d += ` A ${arcRadius} ${arcRadius}, 0, 0, 1, ` + point.join(' ');
-    });
-
-    return d;
+    return points.map(p => p.map(x => x * scale).join(',')).join(' ');
 }
 
-const GENERATED_FLOWER_PATHS = _.times(129, aperture => {
-    return _.times(129, rotundity => {
-        return generateFlowerPath(aperture, rotundity);
+const GENERATED_SNOWFLAKE_POINTS = _.times(9, length1 => {
+    return _.times(9, length2 => {
+        return _.times(9, width1 => {
+            return _.times(9, width2 => {
+                return _.times(9, offset2 => {
+                    return generateSnowflakePoints({length1, length2, width1, width2, offset2});
+                });
+            });
+        });
     });
 });
 
@@ -41,22 +65,15 @@ const SnowgridInnerPixel = React.createClass({
         beatmathParameters: React.PropTypes.object,
     },
     render: function() {
-        const colorSpin = this.context.beatmathParameters.colorSpin.getValue();
-        const brightness = this.context.beatmathParameters.brightness.getValue();
+        const {length1, length2, width1, width2, offset2} = this.props;
 
         let color = this.props.color;
-        if (colorSpin !== 0) {
-            color = color.spin(colorSpin);
-        }
-        if (brightness !== 1) {
-            color = color.darken((1 - brightness) * 100);
-        }
         const fill = mapColorString(color.toHexString(true));
 
-        const d = GENERATED_FLOWER_PATHS[this.props.aperture][this.props.rotundity];
+        const points = GENERATED_SNOWFLAKE_POINTS[length1][length2][width1][width2][offset2];
 
         return (
-            <path d={d} fill={fill} />
+            <polygon points={points} fill={fill} />
         );
     },
 });

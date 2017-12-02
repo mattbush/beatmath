@@ -45,8 +45,11 @@ const SnowgridPixel = React.createClass({
             rotation: 0,
             rowComputed: lerp(this.props.row, rowTriangular, triangularGridPercent),
             colComputed: lerp(this.props.col, colTriangular, triangularGridPercent),
-            aperture: 64,
-            rotundity: 64,
+            length1: 4,
+            length2: 4,
+            width1: 4,
+            width2: 4,
+            offset2: 4,
         };
     },
     _update: function() {
@@ -85,8 +88,8 @@ const SnowgridPixel = React.createClass({
         // just use one or the other, rather than a mix, to take advantage of the cache
         const useTriangularGrid = this.context.snowgridParameters.triangularGridPercent.getValue() >= 0.5;
         return this.context.refreshTimer.getRefreshOffset(
-            useTriangularGrid ? this.state.rowTriangular : this.props.row,
-            useTriangularGrid ? this.state.colTriangular : this.props.col,
+            (useTriangularGrid ? this.state.rowTriangular : this.props.row) * 2,
+            (useTriangularGrid ? this.state.colTriangular : this.props.col) * 2,
         );
     },
     _mixInfluenceIntoNextState: function(influence) {
@@ -98,7 +101,7 @@ const SnowgridPixel = React.createClass({
         const y = this.state.rowComputed * CELL_SIZE;
         const fill = this.state.color;
 
-        const scale = this.state.size / 2;
+        const scale = (20 + this.state.size) / 50;
 
         const style = {
             transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${scale})`,
@@ -106,7 +109,14 @@ const SnowgridPixel = React.createClass({
 
         return (
             <g style={style}>
-                <SnowgridInnerPixel color={fill} aperture={Math.round(this.state.aperture)} rotundity={Math.round(this.state.rotundity)} />
+                <SnowgridInnerPixel
+                    color={fill}
+                    length1={Math.round(this.state.length1)}
+                    length2={Math.round(this.state.length2)}
+                    width1={Math.round(this.state.width1)}
+                    width2={Math.round(this.state.width2)}
+                    offset2={Math.round(this.state.offset2)}
+                />
             </g>
         );
     },

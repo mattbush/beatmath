@@ -154,6 +154,28 @@ class RotundityInfluence extends Influence {
     }
 }
 
+class SnowflakeInfluence extends Influence {
+    constructor(params) {
+        super(params);
+        this._stateKey = params.stateKey;
+        this._mainParameter = new MovingLinearParameter({
+            range: [0, 8],
+            variance: 0.15,
+            start: params.startValue,
+        });
+    }
+    _mixByParameterType(pixelParameter, mixAmount) {
+        const influenceParameter = this._mainParameter.getValue();
+        return lerp(pixelParameter, influenceParameter, mixAmount);
+    }
+    getSize() {
+        return this._mainParameter.getValue() / 10;
+    }
+    _getPixelStateKey() {
+        return this._stateKey;
+    }
+}
+
 class RotationInfluence extends Influence {
     constructor(params) {
         super(params);
@@ -203,4 +225,4 @@ class ColorInfluence extends Influence {
     }
 }
 
-module.exports = {ColorInfluence, RotationInfluence, SizeInfluence, ApertureInfluence, RotundityInfluence};
+module.exports = {ColorInfluence, RotationInfluence, SizeInfluence, ApertureInfluence, RotundityInfluence, SnowflakeInfluence};

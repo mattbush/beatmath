@@ -10,7 +10,7 @@ const LatticeRefreshTimer = require('js/lattice/state/LatticeRefreshTimer');
 const {MAX_SIZE, CELL_SIZE} = require('js/snowgrid/parameters/SnowgridConstants');
 
 const tinycolor = require('tinycolor2');
-const {ColorInfluence, RotationInfluence, SizeInfluence, ApertureInfluence, RotundityInfluence} = require('js/lattice/state/Influence');
+const {ColorInfluence, RotationInfluence, SizeInfluence, SnowflakeInfluence} = require('js/lattice/state/Influence');
 
 const SnowgridGrid = React.createClass({
     mixins: [ParameterBindingsMixin],
@@ -45,11 +45,11 @@ const SnowgridGrid = React.createClass({
             new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
             new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
 
-            new ApertureInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, startValue: 32}),
-            new ApertureInfluence({beatmathParameters, pieceParameters, startCol: 0.1, startRow: 0.1, startValue: 96}),
-
-            new RotundityInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.1, startValue: 32}),
-            new RotundityInfluence({beatmathParameters, pieceParameters, startCol: 0.1, startRow: 0.9, startValue: 96}),
+            new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'length1', startValue: 6}),
+            new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'length2', startValue: 6}),
+            new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'width1', startValue: 2}),
+            new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'width2', startValue: 6}),
+            new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'offset2', startValue: 2}),
 
             new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: 0}),
             new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: 0}),
