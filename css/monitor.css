@@ -69,3 +69,19 @@ input[type=text] {
     background-color: #46e;
     color: #000;
 }
+
+.tab {
+    font-size: 15px;
+    font-family: "Lato", "Helvetica";
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    display: inline-block;
+    padding: 8px 30px;
+    background-color: #222;
+}
+
+.tab.sel {
+    background-color: #666;
+    color: #ccc;
+}
