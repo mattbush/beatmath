@@ -3,8 +3,8 @@ const _ = require('lodash');
 const {HUE_BRIDGE_IP_ADDRESS, HUE_API_KEY} = require('js/hue_constants');
 const NUM_LIGHTS = 100; // lol whatever
 
-const HUE_THROTTLE_RATE_MS = 20;
-const HUE_TRANSITION_TIME_MS = 10;
+const HUE_THROTTLE_RATE_MS = 1000;
+const HUE_TRANSITION_TIME_MS = 500;
 
 const HUE_TRANSITION_TIME_CS = Math.round(HUE_TRANSITION_TIME_MS / 10);
 
@@ -20,7 +20,6 @@ const updateHueLightHelper = function(lightNumber, color, {satCoeff = 1, briCoef
     } else {
         body = JSON.stringify({on: false, transitiontime: HUE_TRANSITION_TIME_CS});
     }
-    lightNumber++; // 1-index
 
     const url = `http://${HUE_BRIDGE_IP_ADDRESS}/api/${HUE_API_KEY}/lights/${lightNumber}/state`;
 

@@ -35,12 +35,13 @@ const Monitor = React.createClass({
         const color = this._colorsByChannel[channelIndex];
         _.each(this._channelsByLightIndex, (channelIndexForLight, lightIndex) => {
             if (channelIndexForLight === channelIndex) {
-                updateHue(lightIndex, color);
+                updateHue(Number(lightIndex), color);
             }
         });
     },
     _onMapLightToChannel(lightIndex, channelIndex) {
         this._channelsByLightIndex[lightIndex] = channelIndex;
+        this._throttledForceUpdate();
     },
     _onStorage(event) {
         if (event.key === 'mapping' || event.key === 'pieceNameToLoad') {
@@ -73,6 +74,7 @@ const Monitor = React.createClass({
                     <MonitorChannelManager
                         hueConfig={this.state.hueConfig}
                         colorsByChannel={this._colorsByChannel}
+                        channelsByLightIndex={this._channelsByLightIndex}
                         onMapLightToChannel={this._onMapLightToChannel}
                     /> :
                     <div>

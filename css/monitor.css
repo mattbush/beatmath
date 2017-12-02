@@ -141,8 +141,18 @@ input[type=text] {
     color: #888;
 }
 
+.channelContainer {
+
+}
+
+.channel:hover {
+    background: #303030;
+    cursor: pointer;
+}
+
 .channel {
     display: inline-block;
     height: 32px;
+    width: 32px;
     vertical-align: middle;
 }

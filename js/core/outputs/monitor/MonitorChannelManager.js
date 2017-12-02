@@ -4,10 +4,16 @@ const React = require('react');
 const {NUM_CHANNELS} = require('js/core/outputs/updateChannel');
 
 const MonitorChannelLight = React.createClass({
+    _onClickChannelIndex(channelIndex) {
+        const selectedChannel = this.props.channelsByLightIndex[this.props.index];
+        const newChannel = channelIndex === selectedChannel ? null : channelIndex;
+        this.props.onMapLightToChannel(this.props.index, newChannel);
+    },
     render() {
         const hueConfig = this.props.hueConfig;
         const light = hueConfig.lights[this.props.index];
         const colorsByChannel = this.props.colorsByChannel;
+        const selectedChannel = this.props.channelsByLightIndex[this.props.index];
 
         return (
             <div className="lightContainer">
@@ -25,12 +31,17 @@ const MonitorChannelLight = React.createClass({
                     <div
                         className="channel"
                         key={channelIndex}
-                        style={{
-                            width: 5,
-                            margin: '0px 12px',
-                            backgroundColor: colorsByChannel[channelIndex] ? colorsByChannel[channelIndex].toHexString() : null,
-                        }}
-                    />
+                        onClick={() => this._onClickChannelIndex(channelIndex)}>
+                        <div
+                            style={{
+                                width: (channelIndex === selectedChannel) ? 32 : 4,
+                                height: 32,
+                                margin: (channelIndex === selectedChannel) ? null : '0px 14px',
+                                borderRadius: (channelIndex === selectedChannel) ? 18 : null,
+                                backgroundColor: colorsByChannel[channelIndex] ? colorsByChannel[channelIndex].toHexString() : null,
+                            }}
+                        />
+                    </div>
                 )}
             </div>
         );
@@ -54,6 +65,8 @@ const MonitorChannelRoom = React.createClass({
                             index={index}
                             hueConfig={hueConfig}
                             colorsByChannel={this.props.colorsByChannel}
+                            channelsByLightIndex={this.props.channelsByLightIndex}
+                            onMapLightToChannel={this.props.onMapLightToChannel}
                         />
                     )}
                 </div>
@@ -75,6 +88,8 @@ const MonitorChannelManager = React.createClass({
                             index={index}
                             hueConfig={hueConfig}
                             colorsByChannel={this.props.colorsByChannel}
+                            channelsByLightIndex={this.props.channelsByLightIndex}
+                            onMapLightToChannel={this.props.onMapLightToChannel}
                         />
                     )}
                 </div>
