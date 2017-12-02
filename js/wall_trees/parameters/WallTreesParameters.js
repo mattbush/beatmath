@@ -1,4 +1,4 @@
-const _ = require('lodash');
+// const _ = require('lodash');
 const {MovingLinearParameter, LogarithmicParameter, HoldButtonParameter} = require('js/core/parameters/Parameter');
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const tinycolor = require('tinycolor2');
@@ -7,9 +7,6 @@ const PieceParameters = require('js/core/parameters/PieceParameters');
 const {arclerp} = require('js/core/utils/math');
 const {LaunchpadButtons} = require('js/core/inputs/LaunchpadConstants');
 const P = require('js/core/parameters/P');
-const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
-const updateHue = require('js/core/outputs/updateHue');
-const {NUM_LIGHTS} = require('js/hue_constants');
 
 const NUM_TREES = 15;
 const NUM_LEVELS = 8;
@@ -27,12 +24,6 @@ class WallTreesParameters extends PieceParameters {
         this._sineNumTicks = 0;
 
         beatmathParameters.tempo.addListener(this._incrementNumTicks.bind(this));
-
-        if (ENABLE_HUE) {
-            _.times(NUM_LIGHTS, lightNumber => {
-                updateHue(lightNumber, tinycolor('#000'));
-            });
-        }
     }
     _declareParameters() {
         return {
@@ -143,7 +134,7 @@ class WallTreesParameters extends PieceParameters {
     _getColorShiftPerColumn() {
         return this.columnColorShift.getValue();
     }
-    getColorForColumnAndRow(column, row) {
+    getColorForColumnAndRow(column, row, skipIllumination) {
         if (this.whiteout.getValue()) {
             return WHITE;
         } else if (this.blackout.getValue()) {
@@ -165,7 +156,7 @@ class WallTreesParameters extends PieceParameters {
             rowIllumination = arclerp(0, revTrailPercent, baseRowIllumination);
         }
 
-        if (rowIllumination === 0) {
+        if (rowIllumination === 0 || skipIllumination) {
             return color;
         }
         const trailPercent = this.trailPercent.getValue();

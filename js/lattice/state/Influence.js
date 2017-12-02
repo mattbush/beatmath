@@ -1,10 +1,10 @@
 const tinycolor = require('tinycolor2');
-const updateHue = require('js/core/outputs/updateHue');
-const {MovingColorParameter, MovingLinearParameter, MovingAngleParameter, NegatedParameter} = require('js/core/parameters/Parameter');
+const {MovingColorParameter, MovingLinearParameter, MovingAngleParameter} = require('js/core/parameters/Parameter');
 const {runAtTimestamp, setTimeoutAsync} = require('js/core/utils/time');
 const {lerp, posMod, modAndShiftToHalf} = require('js/core/utils/math');
 
-const {CELL_SIZE, ENABLE_HUE, MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
+const {CELL_SIZE, MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
+const updateChannel = require('js/core/outputs/updateChannel');
 
 class Influence {
     constructor({beatmathParameters, pieceParameters, startRow, startCol}) {
@@ -185,7 +185,7 @@ class ColorInfluence extends Influence {
             variance: 1,
             start: params.startValue,
         });
-        this._lightNumber = params.lightNumber;
+        this._channelNumber = params.channelNumber;
     }
     _mixByParameterType(pixelParameter, mixAmount) {
         const influenceParameter = this._mainParameter.getValue();
@@ -193,9 +193,7 @@ class ColorInfluence extends Influence {
     }
     update() {
         super.update();
-        if (ENABLE_HUE) {
-            updateHue(this._lightNumber, this._mainParameter.getValue(), {briCoeff: 0.4});
-        }
+        updateChannel(this._channelNumber, this._mainParameter.getValue());
     }
     getColor() {
         return this._mainParameter.getValue();

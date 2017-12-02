@@ -1,12 +1,8 @@
-const _ = require('lodash');
+// const _ = require('lodash');
 const {LinearParameter, NegatedParameter, LogarithmicParameter} = require('js/core/parameters/Parameter');
 const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
-const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
-const updateHue = require('js/core/outputs/updateHue');
-const {NUM_LIGHTS} = require('js/hue_constants');
-const tinycolor = require('tinycolor2');
 
 class EarthdayParameters extends PieceParameters {
     constructor(...args) {
@@ -18,12 +14,6 @@ class EarthdayParameters extends PieceParameters {
         this.influenceMaxRow = this.numRows;
 
         this._currentTickRotationAngle = 0;
-
-        if (ENABLE_HUE) {
-            _.times(NUM_LIGHTS, lightNumber => {
-                updateHue(lightNumber, tinycolor('#000'));
-            });
-        }
 
         this._beatmathParameters.tempo.addListener(this._updateRotation.bind(this));
     }

@@ -77,10 +77,10 @@ const TactileContainer = React.createClass({
         const refreshTimer = new LatticeRefreshTimer(mixboard, beatmathParameters, {pieceParameters});
 
         const influences = [
-            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.25, startRow: 0.25, startValue: tinycolor('#f00'), lightNumber: 0}),
-            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.75, startRow: 0.25, startValue: tinycolor('#0f0'), lightNumber: 1}),
-            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.25, startRow: 0.75, startValue: tinycolor('#00f'), lightNumber: 2}),
-            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.75, startRow: 0.75, startValue: tinycolor('#ff0'), lightNumber: 3}),
+            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.25, startRow: 0.25, startValue: tinycolor('#f00'), channelNumber: 0}),
+            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.75, startRow: 0.25, startValue: tinycolor('#0f0'), channelNumber: 1}),
+            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.25, startRow: 0.75, startValue: tinycolor('#00f'), channelNumber: 2}),
+            new ColorInfluence({beatmathParameters, pieceParameters, startCol: 0.75, startRow: 0.75, startValue: tinycolor('#ff0'), channelNumber: 3}),
             new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.25, startRow: 0.5, startValue: 0.8 * CELL_SIZE, min: 0.6 * CELL_SIZE, max: CELL_SIZE}),
             new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.75, startRow: 0.5, startValue: 0.8 * CELL_SIZE, min: 0.6 * CELL_SIZE, max: CELL_SIZE}),
             new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.25, startValue: 0.8 * CELL_SIZE, min: 0.6 * CELL_SIZE, max: CELL_SIZE}),
