@@ -22,7 +22,8 @@ const WallCircuitGrid = React.createClass({
         });
 
         _.times(4, channelIndex => {
-            const color = this.context.wallCircuitParametersByChannel[channelIndex].getColorForColumnAndRow(0, 0);
+            // const color = this.context.wallCircuitParametersByChannel[channelIndex].getColorForColumnAndRow(0, 0);
+            const color = this.context.wallCircuitParametersByChannel[channelIndex].baseColor.getValue();
             updateChannel(channelIndex, color);
         });
 

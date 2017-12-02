@@ -1,4 +1,5 @@
 const NUM_CHANNELS = 4;
+const mapColorString = require('js/core/utils/mapColorString');
 
 const updateChannel = function(channelIndex, color) {
     if (channelIndex < 0 || channelIndex >= NUM_CHANNELS || typeof channelIndex !== 'number') {
@@ -7,7 +8,7 @@ const updateChannel = function(channelIndex, color) {
 
     const payload = {
         channelIndex,
-        color: color.toHexString(),
+        color: mapColorString(color.toHexString()),
     };
     window.localStorage.setItem('channelColor', JSON.stringify(payload));
 
