@@ -1,3 +1,7 @@
+body {
+    pointer-events: all !important;
+}
+
 .main {
     position: relative;
     margin: 15px 30px;
@@ -64,4 +68,99 @@ input[type=text] {
 .smooth {
     background-color: #46e;
     color: #000;
+}
+
+.tab {
+    font-size: 15px;
+    font-family: "Lato", "Helvetica";
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    display: inline-block;
+    padding: 8px 30px;
+    background-color: #222;
+}
+
+.tab.sel {
+    background-color: #666;
+    color: #ccc;
+}
+
+.roomList {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-height: 640px;
+}
+
+.roomContainer {
+    border: 2px solid #555;
+    width: 550px;
+    flex: auto;
+    text-align: left;
+    padding: 8px 16px;
+    margin: 8px 16px;
+}
+
+.roomName {
+    font-size: 16px;
+    font-family: "Lato", "Helvetica";
+    color: #aaa;
+    margin-bottom: 8px;
+}
+
+.lightList {
+
+}
+
+.lightContainer {
+    height: 32px;
+}
+
+.lightStatus {
+    vertical-align: middle;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin: 6px;
+    border-radius: 20px;
+    border-width: 2px;
+    box-sizing: border-box;
+    border-style: solid;
+}
+
+.lightName {
+    width: 140px;
+    text-align: center;
+    display: inline-block;
+    height: 32px;
+    line-height: 32px;
+    font-size: 14px;
+    font-family: "Pragati Narrow", "Helvetica";
+    color: #888;
+}
+
+.channelContainer {
+
+}
+
+.channel:hover {
+    background: #303030;
+    cursor: pointer;
+}
+
+.channel {
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    vertical-align: middle;
+}
+
+.brightnessSlider {
+    display: inline-block;
+    height: 32px;
+    vertical-align: middle;
+    width: 60px;
+    margin-right: 8px;
 }

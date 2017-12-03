@@ -3,13 +3,12 @@ const React = require('react');
 // const tinycolor = require('tinycolor2');
 
 const hexGrid = require('js/wallow/WallowHexGrid');
-const WallTreesHex = require('js/wall_trees/components/WallTreesHex');
+const WallCircuitHex = require('js/wall_circuit/components/WallCircuitHex');
 const updateChannel = require('js/core/outputs/updateChannel');
-const {NUM_CHANNELS} = updateChannel;
 
-const WallTreesGrid = React.createClass({
+const WallCircuitGrid = React.createClass({
     contextTypes: {
-        wallTreesParameters: React.PropTypes.object,
+        wallCircuitParametersByChannel: React.PropTypes.array,
     },
     render: function() {
         const componentGrid = _.map(hexGrid, (hexes, row) => {
@@ -18,14 +17,13 @@ const WallTreesGrid = React.createClass({
                     return null;
                 }
 
-                return <WallTreesHex row={row} column={column} />;
+                return <WallCircuitHex row={row} column={column} />;
             });
         });
 
-        const skipIllumination = true;
-        _.times(NUM_CHANNELS, channelIndex => {
-            const columnIndex = (-NUM_CHANNELS / 2 + 0.5 + channelIndex) * 4;
-            const color = this.context.wallTreesParameters.getColorForColumnAndRow(columnIndex, 0, skipIllumination);
+        _.times(4, channelIndex => {
+            // const color = this.context.wallCircuitParametersByChannel[channelIndex].getColorForColumnAndRow(0, 0);
+            const color = this.context.wallCircuitParametersByChannel[channelIndex].baseColor.getValue();
             updateChannel(channelIndex, color);
         });
 
@@ -37,4 +35,4 @@ const WallTreesGrid = React.createClass({
     },
 });
 
-module.exports = WallTreesGrid;
+module.exports = WallCircuitGrid;

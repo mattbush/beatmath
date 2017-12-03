@@ -1,10 +1,10 @@
 const tinycolor = require('tinycolor2');
-const updateHue = require('js/core/outputs/updateHue');
-const {MovingColorParameter, MovingLinearParameter, MovingAngleParameter, NegatedParameter} = require('js/core/parameters/Parameter');
+const {MovingColorParameter, MovingLinearParameter, MovingAngleParameter} = require('js/core/parameters/Parameter');
 const {runAtTimestamp, setTimeoutAsync} = require('js/core/utils/time');
 const {lerp, posMod, modAndShiftToHalf} = require('js/core/utils/math');
 
-const {CELL_SIZE, ENABLE_HUE, MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
+const {CELL_SIZE, MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
+const updateChannel = require('js/core/outputs/updateChannel');
 
 class Influence {
     constructor({beatmathParameters, pieceParameters, startRow, startCol}) {
@@ -154,6 +154,28 @@ class RotundityInfluence extends Influence {
     }
 }
 
+class SnowflakeInfluence extends Influence {
+    constructor(params) {
+        super(params);
+        this._stateKey = params.stateKey;
+        this._mainParameter = new MovingLinearParameter({
+            range: [0, 8],
+            variance: 0.15,
+            start: params.startValue,
+        });
+    }
+    _mixByParameterType(pixelParameter, mixAmount) {
+        const influenceParameter = this._mainParameter.getValue();
+        return lerp(pixelParameter, influenceParameter, mixAmount);
+    }
+    getSize() {
+        return this._mainParameter.getValue() / 10;
+    }
+    _getPixelStateKey() {
+        return this._stateKey;
+    }
+}
+
 class RotationInfluence extends Influence {
     constructor(params) {
         super(params);
@@ -162,12 +184,13 @@ class RotationInfluence extends Influence {
             variance: 0.1,
             start: params.startValue,
         });
+        this._constrainTo360 = params.constrainTo360 !== undefined ? params.constrainTo360 : true;
     }
     _mixByParameterType(pixelParameter, mixAmount) {
         const influenceParameter = this._mainParameter.getValue();
         const differenceWithin180 = modAndShiftToHalf(influenceParameter - pixelParameter, 360);
         const newAngle = lerp(pixelParameter, pixelParameter + differenceWithin180, mixAmount);
-        return posMod(newAngle, 360);
+        return this._constrainTo360 ? posMod(newAngle, 360) : newAngle;
     }
     getRotation() {
         return this._mainParameter.getValue();
@@ -185,7 +208,7 @@ class ColorInfluence extends Influence {
             variance: 1,
             start: params.startValue,
         });
-        this._lightNumber = params.lightNumber;
+        this._channelNumber = params.channelNumber;
     }
     _mixByParameterType(pixelParameter, mixAmount) {
         const influenceParameter = this._mainParameter.getValue();
@@ -193,9 +216,7 @@ class ColorInfluence extends Influence {
     }
     update() {
         super.update();
-        if (ENABLE_HUE) {
-            updateHue(this._lightNumber, this._mainParameter.getValue(), {briCoeff: 0.4});
-        }
+        updateChannel(this._channelNumber, this._mainParameter.getValue());
     }
     getColor() {
         return this._mainParameter.getValue();
@@ -205,4 +226,4 @@ class ColorInfluence extends Influence {
     }
 }
 
-module.exports = {ColorInfluence, RotationInfluence, SizeInfluence, ApertureInfluence, RotundityInfluence};
+module.exports = {ColorInfluence, RotationInfluence, SizeInfluence, ApertureInfluence, RotundityInfluence, SnowflakeInfluence};

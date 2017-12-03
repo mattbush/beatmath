@@ -2,11 +2,11 @@ const _ = require('lodash');
 const React = require('react');
 const WallSnowflake = require('js/wall_snowstorm/components/WallSnowflake');
 const {NUM_ROWS, NUM_COLUMNS, BEATS_PER_ROW} = require('js/wall_snowstorm/parameters/WallSnowstormConstants');
-const hexGrid = require('js/wallow/WallowHexGrid');
+// const hexGrid = require('js/wallow/WallowHexGrid');
 
-const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
-const updateHue = require('js/core/outputs/updateHue');
 const tinycolor = require('tinycolor2');
+const updateChannel = require('js/core/outputs/updateChannel');
+const {NUM_CHANNELS} = updateChannel;
 
 const WallSnowflakeContainer = React.createClass({
     contextTypes: {
@@ -36,20 +36,17 @@ const WallSnowflakeContainer = React.createClass({
             );
         }
 
-        if (ENABLE_HUE) {
-            const hueInOrder = [1, 6, 7, 8, 2];
-            hueInOrder.forEach((lightNumber, index) => {
-                const baseColor = tinycolor.mix(
-                    this.context.snowflakeParameters[0].baseColor.getValue(),
-                    this.context.snowflakeParameters[1].baseColor.getValue(),
-                    index / (hueInOrder.length - 1) * 100,
-                );
-                updateHue(lightNumber, baseColor, {briCoeff: 0.4});
-            });
-        }
+        _.times(NUM_CHANNELS, channelIndex => {
+            const baseColor = tinycolor.mix(
+                this.context.snowflakeParameters[0].baseColor.getValue(),
+                this.context.snowflakeParameters[1].baseColor.getValue(),
+                channelIndex / (NUM_CHANNELS - 1) * 100,
+            );
+            updateChannel(channelIndex, baseColor);
+        });
 
         return (
-            <g style={{transform: `scale(76) translate(${-(_.size(hexGrid[0]) - 1) / 2}px, ${-_.size(hexGrid) / 2}px)`}}>
+            <g style={{transform: 'scale(76) translate(-7.5px, -3.5px)'}}>
                 {rows}
             </g>
         );

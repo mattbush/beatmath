@@ -1,21 +1,21 @@
 const _ = require('lodash');
 const React = require('react');
-const FloraParameters = require('js/flora/parameters/FloraParameters');
+const SnowgridParameters = require('js/snowgrid/parameters/SnowgridParameters');
 const InfluenceCircle = require('js/lattice/components/InfluenceCircle');
-const FloraPixel = require('js/flora/components/FloraPixel');
+const SnowgridPixel = require('js/snowgrid/components/SnowgridPixel');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const LatticeRefreshTimer = require('js/lattice/state/LatticeRefreshTimer');
 
-const {MAX_SIZE, CELL_SIZE} = require('js/flora/parameters/FloraConstants');
+const {MAX_SIZE, CELL_SIZE} = require('js/snowgrid/parameters/SnowgridConstants');
 
 const tinycolor = require('tinycolor2');
-const {ColorInfluence, RotationInfluence, SizeInfluence, ApertureInfluence, RotundityInfluence} = require('js/lattice/state/Influence');
+const {ColorInfluence, RotationInfluence, SizeInfluence, SnowflakeInfluence} = require('js/lattice/state/Influence');
 
-const FloraGrid = React.createClass({
+const SnowgridGrid = React.createClass({
     mixins: [ParameterBindingsMixin],
     childContextTypes: {
-        floraParameters: React.PropTypes.object,
+        snowgridParameters: React.PropTypes.object,
         influences: React.PropTypes.array,
         refreshTimer: React.PropTypes.object,
     },
@@ -25,7 +25,7 @@ const FloraGrid = React.createClass({
     },
     getChildContext: function() {
         return {
-            floraParameters: this.state.floraParameters,
+            snowgridParameters: this.state.snowgridParameters,
             influences: this.state.influences,
             refreshTimer: this.state.refreshTimer,
         };
@@ -33,8 +33,8 @@ const FloraGrid = React.createClass({
     getInitialState: function() {
         const mixboard = this.context.mixboard;
         const beatmathParameters = this.context.beatmathParameters;
-        const floraParameters = new FloraParameters(mixboard, beatmathParameters);
-        const pieceParameters = floraParameters;
+        const snowgridParameters = new SnowgridParameters(mixboard, beatmathParameters);
+        const pieceParameters = snowgridParameters;
         const refreshTimer = new LatticeRefreshTimer(mixboard, beatmathParameters, {pieceParameters});
 
         const influences = [
@@ -45,31 +45,31 @@ const FloraGrid = React.createClass({
             new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
             new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
 
-            new ApertureInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, startValue: 32}),
-            new ApertureInfluence({beatmathParameters, pieceParameters, startCol: 0.1, startRow: 0.1, startValue: 96}),
+            new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'length1', startValue: 6}),
+            new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'length2', startValue: 6}),
+            new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'width1', startValue: 2}),
+            new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'width2', startValue: 6}),
+            new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'offset2', startValue: 2}),
 
-            new RotundityInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.1, startValue: 32}),
-            new RotundityInfluence({beatmathParameters, pieceParameters, startCol: 0.1, startRow: 0.9, startValue: 96}),
-
-            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: 0}),
-            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: 0}),
-            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.8, startValue: 0}),
+            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: 0, constrainTo360: false}),
+            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: 0, constrainTo360: false}),
+            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.8, startValue: 0, constrainTo360: false}),
         ];
 
-        return {floraParameters, influences, refreshTimer};
+        return {snowgridParameters, influences, refreshTimer};
     },
     getParameterBindings: function() {
         return {
-            showInfluences: this.state.floraParameters.showInfluences,
-            numRows: this.state.floraParameters.numRows,
-            numColumns: this.state.floraParameters.numColumns,
+            showInfluences: this.state.snowgridParameters.showInfluences,
+            numRows: this.state.snowgridParameters.numRows,
+            numColumns: this.state.snowgridParameters.numColumns,
         };
     },
     render: function() {
         const children = [];
         const numRows = this.getParameterValue('numRows');
         const numColumns = this.getParameterValue('numColumns');
-        const useTriangularGrid = this.state.floraParameters.triangularGridPercent.getValue() >= 0.5;
+        const useTriangularGrid = this.state.snowgridParameters.triangularGridPercent.getValue() >= 0.5;
 
         for (let row = -numRows; row <= numRows; row++) {
             let minColumn = -numColumns;
@@ -80,7 +80,7 @@ const FloraGrid = React.createClass({
             }
 
             for (let col = minColumn; col <= maxColumn; col++) {
-                children.push(<FloraPixel row={row} col={col} key={row + '|' + col} />);
+                children.push(<SnowgridPixel row={row} col={col} key={row + '|' + col} />);
             }
         }
 
@@ -99,4 +99,4 @@ const FloraGrid = React.createClass({
     },
 });
 
-module.exports = FloraGrid;
+module.exports = SnowgridGrid;
