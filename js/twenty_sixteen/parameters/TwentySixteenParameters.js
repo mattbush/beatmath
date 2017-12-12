@@ -6,14 +6,10 @@ const IndexMappingParameter = require('js/twenty_sixteen/parameters/IndexMapping
 const tinycolor = require('tinycolor2');
 const {posMod} = require('js/core/utils/math');
 const {setTimeoutAsync} = require('js/core/utils/time');
-const updateHue = require('js/core/outputs/updateHue');
+const updateChannel = require('js/core/outputs/updateChannel');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 
 const {incrementGoldUp, incrementBlueUp, incrementGoldDown, incrementBlueDown} = require('js/twenty_sixteen/state/IndexMappingFunctions');
-
-const SAT_COEFF = 1.5;
-const BRI_COEFF = 0.6;
-const HUE_COEFFS = {satCoeff: SAT_COEFF, briCoeff: BRI_COEFF};
 
 const ARRANGEMENTS = require('js/twenty_sixteen/state/arrangements');
 
@@ -22,8 +18,6 @@ const NUM_PRESET_ARRANGEMENTS = MIXTRACK_SET_ARRANGEMENT_BUTTONS.length;
 
 const NUM_GOLD = 20;
 const NUM_BLUE = 16;
-
-const ENABLE_HUE = false;
 
 const AUTOPILOT_FREQ_MAX = 5;
 
@@ -216,15 +210,13 @@ class TwentySixteenParameters extends PieceParameters {
             this._updateLightForAutopilot(MixtrackButtons.L_LOOP_RELOOP);
         }
 
-        if (ENABLE_HUE) {
-            const goldColor = tinycolor(this.goldColor.getValue().toHexString()); // clone
-            const blueColor = tinycolor(goldColor.toHexString()).spin(180); // clone
+        const goldColor = tinycolor(this.goldColor.getValue().toHexString()); // clone
+        const blueColor = tinycolor(goldColor.toHexString()).spin(180); // clone
 
-            if (ticks % 2) {
-                updateHue(posMod(ticks, 3), goldColor, HUE_COEFFS);
-            } else {
-                updateHue(posMod(ticks, 3), blueColor, HUE_COEFFS);
-            }
+        if (ticks % 2) {
+            updateChannel(posMod(ticks, 3), goldColor);
+        } else {
+            updateChannel(posMod(ticks, 3), blueColor);
         }
     }
 }

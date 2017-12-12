@@ -4,8 +4,8 @@ const React = require('react');
 
 const hexGrid = require('js/wallow/WallowHexGrid');
 const WallTreesHex = require('js/wall_trees/components/WallTreesHex');
-const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
-const updateHue = require('js/core/outputs/updateHue');
+const updateChannel = require('js/core/outputs/updateChannel');
+const {NUM_CHANNELS} = updateChannel;
 
 const WallTreesGrid = React.createClass({
     contextTypes: {
@@ -22,13 +22,12 @@ const WallTreesGrid = React.createClass({
             });
         });
 
-        if (ENABLE_HUE) {
-            const hueInOrder = [8, 1, 2, 7, 6];
-            hueInOrder.forEach((lightNumber, index) => {
-                const color = this.context.wallTreesParameters.getColorForColumnAndRow(index * 2, 0);
-                updateHue(lightNumber, color, {briCoeff: 0.4});
-            });
-        }
+        const skipIllumination = true;
+        _.times(NUM_CHANNELS, channelIndex => {
+            const columnIndex = (-NUM_CHANNELS / 2 + 0.5 + channelIndex) * 4;
+            const color = this.context.wallTreesParameters.getColorForColumnAndRow(columnIndex, 0, skipIllumination);
+            updateChannel(channelIndex, color);
+        });
 
         return (
             <g style={{transform: 'scale(76) translate(-7.5px, -3.5px)'}}>

@@ -1,21 +1,21 @@
 const _ = require('lodash');
 const React = require('react');
-const LatticeParameters = require('js/lattice/parameters/LatticeParameters');
+const SnowgridParameters = require('js/snowgrid/parameters/SnowgridParameters');
 const InfluenceCircle = require('js/lattice/components/InfluenceCircle');
-const LatticePixel = require('js/lattice/components/LatticePixel');
+const SnowgridPixel = require('js/snowgrid/components/SnowgridPixel');
 const BeatmathFrame = require('js/core/components/BeatmathFrame');
 const ParameterBindingsMixin = require('js/core/components/ParameterBindingsMixin');
 const LatticeRefreshTimer = require('js/lattice/state/LatticeRefreshTimer');
 
-const {CELL_SIZE, MAX_SIZE} = require('js/lattice/parameters/LatticeConstants');
+const {MAX_SIZE, CELL_SIZE} = require('js/snowgrid/parameters/SnowgridConstants');
 
 const tinycolor = require('tinycolor2');
-const {ColorInfluence, RotationInfluence, SizeInfluence} = require('js/lattice/state/Influence');
+const {ColorInfluence, RotationInfluence, SizeInfluence, SnowflakeInfluence} = require('js/lattice/state/Influence');
 
-const LatticeGrid = React.createClass({
+const SnowgridGrid = React.createClass({
     mixins: [ParameterBindingsMixin],
     childContextTypes: {
-        latticeParameters: React.PropTypes.object,
+        snowgridParameters: React.PropTypes.object,
         influences: React.PropTypes.array,
         refreshTimer: React.PropTypes.object,
     },
@@ -25,7 +25,7 @@ const LatticeGrid = React.createClass({
     },
     getChildContext: function() {
         return {
-            latticeParameters: this.state.latticeParameters,
+            snowgridParameters: this.state.snowgridParameters,
             influences: this.state.influences,
             refreshTimer: this.state.refreshTimer,
         };
@@ -33,8 +33,8 @@ const LatticeGrid = React.createClass({
     getInitialState: function() {
         const mixboard = this.context.mixboard;
         const beatmathParameters = this.context.beatmathParameters;
-        const latticeParameters = new LatticeParameters(mixboard, beatmathParameters);
-        const pieceParameters = latticeParameters;
+        const snowgridParameters = new SnowgridParameters(mixboard, beatmathParameters);
+        const pieceParameters = snowgridParameters;
         const refreshTimer = new LatticeRefreshTimer(mixboard, beatmathParameters, {pieceParameters});
 
         const influences = [
@@ -44,29 +44,43 @@ const LatticeGrid = React.createClass({
 
             new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
             new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: MAX_SIZE * 0.5}),
-            new SizeInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.8, startValue: MAX_SIZE * 0.5}),
 
-            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: 0}),
-            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: 0}),
-            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.8, startValue: 0}),
+            new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'length1', startValue: 6}),
+            new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'length2', startValue: 6}),
+            new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'width1', startValue: 2}),
+            new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'width2', startValue: 6}),
+            new SnowflakeInfluence({beatmathParameters, pieceParameters, startCol: 0.9, startRow: 0.9, stateKey: 'offset2', startValue: 2}),
+
+            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.2, startRow: 0.2, startValue: 0, constrainTo360: false}),
+            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.8, startRow: 0.2, startValue: 0, constrainTo360: false}),
+            new RotationInfluence({beatmathParameters, pieceParameters, startCol: 0.5, startRow: 0.8, startValue: 0, constrainTo360: false}),
         ];
 
-        return {latticeParameters, influences, refreshTimer};
+        return {snowgridParameters, influences, refreshTimer};
     },
     getParameterBindings: function() {
         return {
-            showInfluences: this.state.latticeParameters.showInfluences,
-            numRows: this.state.latticeParameters.numRows,
-            numColumns: this.state.latticeParameters.numColumns,
+            showInfluences: this.state.snowgridParameters.showInfluences,
+            numRows: this.state.snowgridParameters.numRows,
+            numColumns: this.state.snowgridParameters.numColumns,
         };
     },
     render: function() {
         const children = [];
         const numRows = this.getParameterValue('numRows');
         const numColumns = this.getParameterValue('numColumns');
+        const useTriangularGrid = this.state.snowgridParameters.triangularGridPercent.getValue() >= 0.5;
+
         for (let row = -numRows; row <= numRows; row++) {
-            for (let col = -numColumns; col <= numColumns; col++) {
-                children.push(<LatticePixel row={row} col={col} key={row + '|' + col} />);
+            let minColumn = -numColumns;
+            let maxColumn = numColumns;
+            if (useTriangularGrid) {
+                minColumn += Math.floor((Math.abs(row)) / 2);
+                maxColumn -= Math.floor((Math.abs(row) + 1) / 2);
+            }
+
+            for (let col = minColumn; col <= maxColumn; col++) {
+                children.push(<SnowgridPixel row={row} col={col} key={row + '|' + col} />);
             }
         }
 
@@ -85,4 +99,4 @@ const LatticeGrid = React.createClass({
     },
 });
 
-module.exports = LatticeGrid;
+module.exports = SnowgridGrid;

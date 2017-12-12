@@ -1,13 +1,10 @@
-const _ = require('lodash');
+// const _ = require('lodash');
 const {LinearParameter, MovingColorParameter, LogarithmicParameter, MovingAngleParameter, MovingLogarithmicParameter} = require('js/core/parameters/Parameter'); // MovingLinearParameter
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const tinycolor = require('tinycolor2');
 const {posMod, lerp, xyRotatedAroundOriginWithAngle} = require('js/core/utils/math'); // posModAndBendToLowerHalf
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const {arclerp} = require('js/core/utils/math');
-const {ENABLE_HUE} = require('js/lattice/parameters/LatticeConstants');
-const updateHue = require('js/core/outputs/updateHue');
-const {NUM_LIGHTS} = require('js/hue_constants');
 
 class WallCircuitParameters extends PieceParameters {
     constructor(mixboard, beatmathParameters, channel) {
@@ -17,12 +14,6 @@ class WallCircuitParameters extends PieceParameters {
         this._channel = channel;
 
         beatmathParameters.tempo.addListener(this._incrementNumTicks.bind(this));
-
-        if (ENABLE_HUE) {
-            _.times(NUM_LIGHTS, lightNumber => {
-                updateHue(lightNumber, tinycolor('#000'));
-            });
-        }
     }
     _declareParameters({channel}) {
         return {

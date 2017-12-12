@@ -10,6 +10,7 @@ const mappingPaletteByPieceName = {
     // snowstorm palette (cyans, blues)
     snowstorm: [185, 210, 235, 285],
     wall_snowstorm: [185, 210, 235, 285],
+    snowgrid: [185, 210, 235, 285],
     // earthday palette (orange, greens)
     earthday: [35, 115, 100],
     wall_earthday: [35, 115, 100],

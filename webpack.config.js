@@ -12,6 +12,7 @@ module.exports = {
         lattice: './js/lattice/lattice',
         nodes: './js/nodes/nodes',
         pinecone: './js/pinecone/pinecone',
+        snowgrid: './js/snowgrid/snowgrid',
         snowstorm: './js/snowstorm/snowstorm',
         stopwatch: './js/stopwatch/stopwatch',
         tactile: './js/tactile/tactile',
