@@ -3,7 +3,7 @@ const _ = require('lodash');
 const {polarAngleDeg, posMod, xyRotatedAroundOriginWithAngle, lerp} = require('js/core/utils/math');
 
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
-const USE_OFFSETS = false;
+const USE_OFFSETS = true;
 
 const CYAN = 0;
 const PINK = 1;
