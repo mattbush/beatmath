@@ -124,7 +124,7 @@ const BeatmathFrame = React.createClass({
 
         const persp = width * 0.52;
         const pitchAngle = 8.75;
-        const dx = -23;
+        const dx = -22.2;
         const dy = -30.6;
         const scaleX = 0.95;
         const scaleY = 1.067;

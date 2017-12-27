@@ -1,13 +1,13 @@
 const _ = require('lodash');
 const React = require('react');
 // const tinycolor = require('tinycolor2');
-const {posModAndBendToLowerHalf, posMod} = require('js/core/utils/math');
+const {posMod} = require('js/core/utils/math');
 
 const hexGrid = require('js/wallow/WallowHexGrid');
 
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 const EDGES_MODE = false;
 const OVERLAP_MODE = false;
 
@@ -20,11 +20,11 @@ const edgeColorsByChannel = [CYAN, PINK, RED, ORANGE];
 const Hex = React.createClass({
     getInitialState() {
         return {
-            ghostState: Math.random(),
+            ghostState: 0.96, // Math.random(),
         };
     },
     componentDidMount() {
-        setInterval(this._update, 100);
+        // setInterval(this._update, 100);
     },
     _update() {
         this.setState({ghostState: posMod(this.state.ghostState + Math.random() * 0.001, 1)});
@@ -39,16 +39,16 @@ const Hex = React.createClass({
 
         const tx = Number(this.props.column) + (this.props.row % 2 ? 0.5 : 0) + cell.offsets[0];
         const ty = this.props.row * Y_AXIS_SCALE + cell.offsets[1];
-        const ghostNum = this.props.row % 2 * 2 + (this.props.column % 2);
-        const ghostTransform = ((this.props.row + this.props.column) % 2) ? 'scale(-1,1)' : null;
+
+        const shouldShowLogo = this.props.column >= 0 && this.props.column <= 15 &&
+            (this.props.row >= 0 && this.props.row <= 3);
 
         return (
             <g style={{transform: `translate(${tx}px, ${ty}px) scale(${cell.scale}) rotate(${cell.rotation}deg)`}}>
-                {!DEBUG_MODE && this.state.ghostState >= 0.92 &&
+                {!DEBUG_MODE && shouldShowLogo &&
                     <image
-                        xlinkHref={`images/wallow/ghost${ghostNum}.png`}
-                        style={{opacity: posModAndBendToLowerHalf(this.state.ghostState - 0.92, 0.08) * 25}}
-                        transform={ghostTransform} x="-0.4" y="-0.4" height="0.8px" width="0.8px"
+                        xlinkHref="images/wallow/Airtable.png"
+                        transform="scale(1.085,1.34)" x="-0.5" y="-0.5" height="1px" width="1px"
                     />
                 }
                 {DEBUG_MODE && !OVERLAP_MODE && !EDGES_MODE && <g style={{transform: `scale(${1 / 12}, -${1 / 8 * 4 / 3 * Y_AXIS_SCALE})`}}>
