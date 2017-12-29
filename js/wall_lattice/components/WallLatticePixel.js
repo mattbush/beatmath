@@ -68,7 +68,16 @@ const WallLatticePixel = React.createClass({
         const isOdd = this.state.ticks % 2;
         const rotation = IS_NEGATED ? (isOdd ? -90 : 90) : (isOdd ? 360 : 0);
         const [x, y] = this.props.polygonOrEdge.center;
-        const {x: ax, y: ay} = this.context.refreshTimer.getRefreshGradient(this._y, this._x);
+        let ax, ay;
+        if (this.props.type === 'polygon') {
+            const refreshGradient = this.context.refreshTimer.getRefreshGradient(this._y, this._x);
+            ax = refreshGradient.x;
+            ay = refreshGradient.y;
+        } else {
+            const refreshGradient = this.props.polygonOrEdge.refreshGradient;
+            ax = refreshGradient.x;
+            ay = refreshGradient.y;
+        }
 
         const tempo = this.context.beatmathParameters.tempo;
         const flipDurationPercent = this.context.wallLatticeParameters.flipDurationPercent.getValue();

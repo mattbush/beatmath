@@ -848,12 +848,30 @@ const processEdgesInShapes = function(shapes, hexCoords) {
         '[[6,2],[6,-2]]',
     ]) {
         const [p1, p2] = JSON.parse(edgeSignature);
+
+        const x1 = scalePointX(p1[0]);
+        const y1 = scalePointY(p1[1]);
+        const x2 = scalePointX(p2[0]);
+        const y2 = scalePointY(p2[1]);
+        const centerX = (x1 + x2) / 2;
+        const centerY = (y1 + y2) / 2;
+
         edges.push({
-            x1: scalePointX(p1[0]),
-            y1: scalePointY(p1[1]),
-            x2: scalePointX(p2[0]),
-            y2: scalePointY(p2[1]),
-            center: [scalePointX((p1[0] + p2[0]) / 2), scalePointY((p1[1] + p2[1]) / 2)],
+            x1,
+            y1,
+            x2,
+            y2,
+            x1x2y1y2AroundCenter: {
+                x1: x1 - centerX,
+                y1: y1 - centerY,
+                x2: x2 - centerX,
+                y2: y2 - centerY,
+            },
+            refreshGradient: {
+                x: x1 - centerX,
+                y: y1 - centerY,
+            },
+            center: [centerX, centerY],
             channel: edgeChannelsByEdgeSignature[edgeSignature],
         });
     }
@@ -897,6 +915,10 @@ const processEdgesInShapes = function(shapes, hexCoords) {
                     y1: y1 - centerY,
                     x2: x2 - centerX,
                     y2: y2 - centerY,
+                },
+                refreshGradient: {
+                    x: x1 - centerX,
+                    y: y1 - centerY,
                 },
                 center: [centerX, centerY],
                 channel: edgeChannelsByEdgeSignature[edgeSignature] || shape.edgeChannel || ORANGE,
