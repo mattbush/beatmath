@@ -18,11 +18,11 @@ const WallLatticePixel = React.createClass({
     },
     componentWillMount() {
         let dy = 0;
-        if (this.props.polygon.center[0] === 0 && this.props.polygon.center[1] === 0) {
-            dy = this.props.polygon.yMax;
+        if (this.props.polygonOrEdge.pointsAroundCenter && this.props.polygonOrEdge.center[0] === 0 && this.props.polygonOrEdge.center[1] === 0) {
+            dy = this.props.polygonOrEdge.yMax;
         }
-        this._x = (this.props.tx + this.props.polygon.center[0] - 7.5) * 5;
-        this._y = (this.props.ty + this.props.polygon.center[1] + dy - 2.6) * 5;
+        this._x = (this.props.tx + this.props.polygonOrEdge.center[0] - 7.5) * 5;
+        this._y = (this.props.ty + this.props.polygonOrEdge.center[1] + dy - 2.6) * 5;
     },
     componentDidMount: function() {
         const tempo = this.context.beatmathParameters.tempo;
@@ -67,7 +67,7 @@ const WallLatticePixel = React.createClass({
     render: function() {
         const isOdd = this.state.ticks % 2;
         const rotation = IS_NEGATED ? (isOdd ? -90 : 90) : (isOdd ? 360 : 0);
-        const [x, y] = this.props.polygon.center;
+        const [x, y] = this.props.polygonOrEdge.center;
         const {x: ax, y: ay} = this.context.refreshTimer.getRefreshGradient(this._y, this._x);
 
         const tempo = this.context.beatmathParameters.tempo;
@@ -79,11 +79,17 @@ const WallLatticePixel = React.createClass({
             transition: IS_NEGATED ? `all ${duration}ms linear` : `all ${duration}ms cubic-bezier(1,0,0,1)`,
         };
 
-        const fill = mapColorString(this.state.color);
+        const color = mapColorString(this.state.color);
 
-        return (
-            <polygon className="mine" style={style} fill={fill} points={this.props.polygon.pointsAroundCenter} />
-        );
+        if (this.props.type === 'polygon') {
+            return (
+                <polygon className="mine" style={style} fill={color} points={this.props.polygonOrEdge.pointsAroundCenter} />
+            );
+        } else {
+            return (
+                <line {...this.props.polygonOrEdge.x1x2y1y2AroundCenter} style={style} className="edge" stroke={color} />
+            );
+        }
     },
 });
 

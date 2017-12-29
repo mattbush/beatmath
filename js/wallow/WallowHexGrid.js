@@ -46,8 +46,8 @@ const zz5 = {name: 'zz5', color: '#806800', points: '-3,-3 0,-4 6,-2 3,-1'};
 const zz7 = {name: 'zz7', color: '#806800', points: '3,-3 -0,-4 -6,-2 -3,-1'};
 const zz11 = {name: 'zz11', color: '#806800', points: '3,3 -0,4 -6,2 -3,1'};
 
-const y1 = {name: 'y1', color: '#203080', points: '-6,2 -6,0 -3,1 -3,3'};
-const y2 = {name: 'y2', color: '#203080', points: '-6,0 -6,-2 -3,-1 -3,1'};
+const y01 = {name: 'y01', color: '#203080', points: '-6,2 -6,0 -3,1 -3,3'};
+const y02 = {name: 'y02', color: '#203080', points: '-6,0 -6,-2 -3,-1 -3,1'};
 const y3 = {name: 'y3', color: '#203080', points: '-3,3 -3,1 0,2 0,4'};
 const y4 = {name: 'y4', color: '#203080', points: '-3,1 -3,-1 0,0 0,2'};
 const y5 = {name: 'y5', color: '#203080', points: '-3,-1 -3,-3 0,-2 0,0'};
@@ -63,8 +63,8 @@ const yy9 = {name: 'yy9', color: '#152260', points: '-3,3 -6,2 -6,-2 -3,-1'};
 const yy11 = {name: 'yy11', color: '#152260', points: '-6,2 -6,0 0,2 0,4'};
 const yy90 = {name: 'yy90', color: '#152260', points: '-3,-3 0,-2 0,2 -3,1'};
 
-const x1 = {name: 'x1', color: '#802020', points: '6,2 6,0 3,1 3,3'};
-const x2 = {name: 'x2', color: '#802020', points: '3,3 3,1 0,2 0,4'};
+const x01 = {name: 'x01', color: '#802020', points: '6,2 6,0 3,1 3,3'};
+const x02 = {name: 'x02', color: '#802020', points: '3,3 3,1 0,2 0,4'};
 const x3 = {name: 'x3', color: '#802020', points: '6,0 6,-2 3,-1 3,1'};
 const x4 = {name: 'x4', color: '#802020', points: '3,1 3,-1 0,0 0,2'};
 const x5 = {name: 'x5', color: '#802020', points: '0,2 0,0 -3,1 -3,3'};
@@ -563,28 +563,28 @@ const tc11 = {name: 'tc11', color: '#11AA66', points: '0,2 -6,2 -1.5,0.5'};
 const hexGridShapes = {
     '-1': {'-1': [e6, czh1, czh7], 0: [f4, f8, a3], 1: [f4, f8, a3], 2: [f4, f8, a3], 3: [f4, f8, a3], 4: [f4, f8, a3],
      5: [wa2, wa6, wa10, a5], 6: [h2, y0, h6wa6, wa10, a5], 7: [x0, y0, a5, h2, h6, h10], 8: [i2, i6, i10, x0, y0, c0], 9: [z0, trap45, trap78, vh12],
-     10: [x1, x0, y1, y0, z0, b3, b5, b7, b9, c0], 11: [x1, x0, y1, y0, z0, z4, z5, z6, z7, b5, b7], 12: [yy3, xx9, xx30, yy90, z0], 13: [xx3, zz5, vh10], 14: [yy3, zz7, yy9, v5],
+     10: [x01, x0, y01, y0, z0, b3, b5, b7, b9, c0], 11: [x01, x0, y01, y0, z0, z4, z5, z6, z7, b5, b7], 12: [yy3, xx9, xx30, yy90, z0], 13: [xx3, zz5, vh10], 14: [yy3, zz7, yy9, v5],
      15: [zz5, xx9, v1]},
 
     0: {'-1': [w1, f4, fa4], 0: [sc1, sc3, sc5, sc7, sc9, sc11], 1: [sc4, sc8, sc12], 2: [f4, f8, f12, rc2, rc6, rc10], 3: [f4, f8, f12, a2, a6, a10, b55, a555, a54, a58, a512], 4: [f1, f3, f5, f7, f9, f11, a2, a6, a10, b55, a54, a58, a512],
      5: [wa2, wa6, wa10, b55, a54, a58, a512], 6: [wa2, wa6, wa10, a5], 7: [x0, y0, z1, a5, h2, h6, h10], 8: [i2, i6, i10, x0, y0, z1, k2, k6, k10, a5], 9: [i2, i6, i10, x0, y0, z1, c0],
-     10: [x1, x0, y1, y0, z1, z0, b1, b3, b5, b7, b9, b11, c0], 11: [x1, x0, y1, y0, z1, z0, z4, z5, z6, z7, b1, b5, b7, b11], 12: [x1, y6, x5, y1, x0, y5, x6, y0, z1, z5, z6, z0], 13: [x1, x2, x9, x0, y1, y3, y8, y0, v3], 14: [xx1, yy5, xx7, yy11, v3],
-     15: [x1, x0, y1, y0, z1, z0, v0], 16: [xx1, yy5, xx7, yy11, v3]},
+     10: [x01, x0, y01, y0, z1, z0, b1, b3, b5, b7, b9, b11, c0], 11: [x01, x0, y01, y0, z1, z0, z4, z5, z6, z7, b1, b5, b7, b11], 12: [x01, y6, x5, y01, x0, y5, x6, y0, z1, z5, z6, z0], 13: [x01, x02, x9, x0, y01, y3, y8, y0, v3], 14: [xx1, yy5, xx7, yy11, v3],
+     15: [x01, x0, y01, y0, z1, z0, v0], 16: [xx1, yy5, xx7, yy11, v3]},
 
     1: {/**/'-1': [sd1, sd3, sd5, sd7, sd9, sd11], 0: [sb1, sb3, sb5, sb7, sb9, sb11], 1: [sb4, sb8, sb12], 2: [f4, f8, f12, l2, l6, l10], 3: [f4, f8, f12, a2, a6, a10, b55, a54, a58, a512], 4: [wa4, wa8, wa12, b55, a54, a58, a512],
          5: [wa4, wa8, wa12, a5], 6: [wa1, wa3, wa5, wa7, wa9, wa11, a5], 7: [g1, g3, g5, g7, g9, g11, k2, k6, k10, a5], 8: [g1, g3, g5, g7, g9, g11, c0], 9: [g12, g4, g8, c0],
-         10: [z1, z2, z3, x8, x9, x0, y8, y9, y0, c0], 11: [x1, x2, y3, y1, x0, x9, y8, y0, z4, z5, z6, z7], 12: [x1, x0, y1, y0, z4, z5, z6, z7, i6, i12], 13: [x1, x0, y1, y0, i6, i12, v3], 14: [xx3, zz5, xx9, zz11, v1],
+         10: [z1, z2, z3, x8, x9, x0, y8, y9, y0, c0], 11: [x01, x02, y3, y01, x0, x9, y8, y0, z4, z5, z6, z7], 12: [x01, x0, y01, y0, z4, z5, z6, z7, i6, i12], 13: [x01, x0, y01, y0, i6, i12, v3], 14: [xx3, zz5, xx9, zz11, v1],
          15: [zz1, yy3, zz7, yy9, v5]},
 
     2: {'-1': [tb2, tb4, tb6, tb12, c0], 0: [tb2, tb4, tb6, tb8, tb10, tb12, c0], 1: [sa1, sa3, sa5, sa7, sa9, sa11], 2: [sa4, sa8, sa12], 3: [f4, f8, f12, ra2, ra6, ra10], 4: [f4, f8, f12, a2, a6, a10, a5],
      5: [f4, f8, f12, tc1, tc3, tc5, tc7, tc9, tc11, a5], 6: [e1, e3, e5, e7, e9, e11, a1, a5], 7: [e2, e6, e10, a1, a5], 8: [e2, e6, e10, j4, j8, j12, c0], 9: [e1, e3, e5, e7, e9, e11, j4, j8, j12, c0],
-     10: [g12, g4, g8, x4, y4, z7], 11: [z1, z2, z3, x8, y4, x4, y9, z7, x0, x9, y8, y0], 12: [z1, z2, z3, x8, y4, x4, y9, x0, y5, x6, y0, z0], 13: [x1, x0, y1, y0, z5, z6, c6, c12], 14: [x0, y5, x6, y0, z1, z0, uu1, uu2, uu3, uu4],
+     10: [g12, g4, g8, x4, y4, z7], 11: [z1, z2, z3, x8, y4, x4, y9, z7, x0, x9, y8, y0], 12: [z1, z2, z3, x8, y4, x4, y9, x0, y5, x6, y0, z0], 13: [x01, x0, y01, y0, z5, z6, c6, c12], 14: [x0, y5, x6, y0, z1, z0, uu1, uu2, uu3, uu4],
      15: [x8, x0, z0, y9, y0, g12, u5, u6], 16: [x0, yy11, vg690]},
 
     3: {/**/'-1': [ef1and2, ef3and4, ef5and6, ef7and8, ef9and10, ef11and12, ca0], 0: [ta0, ta1, ta3, ta5, ta7, ta9, ta11], 1: [w1, w3, w5, w7, w9, w11], 2: [qa1, qa3, qa5, qa7, qa9, qa11, qa2, qa6, qa10, qa0], 3: [qb1, qb3, qb5, qb7, qb9, qb11, qb2, qb6, qb10, qb0], 4: [qc1, qc3, qc5, qc7, qc9, qc11, qc2, qc6, qc10, qc0],
          5: [qd1, qd3, qd5, qd7, qd9, qd11, qd2, qd6, qd10, qd0], 6: [qe1, qe3, qe5, qe7, qe9, qe11, qe2, qe6, qe10, qe0], 7: [qf0, qf2, qf6, qf10], 8: [e1, e3, e5, e7, e9, e11, l4, l8, l12], 9: [e1, e3, e5, e7, e9, e11, j4, j8, j12, z4, x7, y7],
-         10: [g12, g4, g8, z4, x7, y7], 11: [z1, z2, z3, z4, x8, x7, y7, y9, x0, x9, y8, y0], 12: [v4x, v8x, v12, x0, x9, y8, y0, z1], 13: [v4, v8, v12, x0, y0, z1], 14: [u4, u8, u12, x1, x0, y1, y0, z1, z0],
-         15: [u4, u8, u12, x1, x0, y1, y0, z1, z0]},
+         10: [g12, g4, g8, z4, x7, y7], 11: [z1, z2, z3, z4, x8, x7, y7, y9, x0, x9, y8, y0], 12: [v4x, v8x, v12, x0, x9, y8, y0, z1], 13: [v4, v8, v12, x0, y0, z1], 14: [u4, u8, u12, x01, x0, y01, y0, z1, z0],
+         15: [u4, u8, u12, x01, x0, y01, y0, z1, z0]},
 
     4: {'-1': [e2, e6, a1], 0: [e2, e6, e10, ea2, ea6, ea10], 1: [w1, w3, e6, e10, ea6, ea10], 2: [w1, w3, e6, ea6, w9, w11], 3: [f1, f3, f5, f7, f9, f11, l2, l6, l10], 4: [f1, f3, f5, f7, f9, f11, a3],
      5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a2, a6, a10, a5], 6: [e2, e5, f8, f11, ag3, ah9], 7: [e2, ef5, ef6, ef7, e10, a1], 8: [e2, ef5, ef6, ef7, e10, ag12, ag12a], 9: [e2, e10, ag12, ag5, ag6, ag7],
@@ -593,8 +593,8 @@ const hexGridShapes = {
 
     5: {/**/'-1': [e2, e6, e10, ea2, ea6, ea10], 0: [e2, ea2, e6, ea6, w9, w11], 1: [f4, fa4, w7, w9, w11, w1], 2: [f4, fa4, f8, fa8, w11, w1], 3: [f4, f8, f1, f11, ah3, ah9], 4: [f4, f8, f12, a3],
         5: [ff11, ff12, ff1, ff3, ff4, ff5, ff7, ff8, ff9, a3], 6: [ef1, ef2, ef3, ef5, ef6, ef7, ef9, ef10, ef11, a1], 7: [ef1and2, ef3, ef5, ef6, ef7, ef9, ef10and11, ag12, ag12a], 8: [ef1and2, ef3, ef430, ef530, ef6, ef7, ef9, ef10and11, ff4, ff8, ag12, ca6], 9: [ef1and2, ef3, ef5, ef6, ef630, ef730, ef9, ef10and11, ff4, ff8, ff12, ca0],
-        10: [e2, e6, e10, ff4, ff8, ff12, ca0], 11: [ff4, ff8, ff12, ff4a, ff8a, ff12a, e2b, e6b, e10b], 12: [x0, y0, z1, isec2, isec6, isec10, iarr4, iarr8, iarr12], 13: [x0, y0, z1, isec2, isec6, isec10, iarr330, iarr430, iarr730, iarr830, iarr1130, iarr1230], 14: [x1, x0, y1, y0, z1, z0, iarr130, iarr230, iarr330, iarr430, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230],
-        15: [x0, y1, z1, z0, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230, w130, w230, w330, w430]},
+        10: [e2, e6, e10, ff4, ff8, ff12, ca0], 11: [ff4, ff8, ff12, ff4a, ff8a, ff12a, e2b, e6b, e10b], 12: [x0, y0, z1, isec2, isec6, isec10, iarr4, iarr8, iarr12], 13: [x0, y0, z1, isec2, isec6, isec10, iarr330, iarr430, iarr730, iarr830, iarr1130, iarr1230], 14: [x01, x0, y01, y0, z1, z0, iarr130, iarr230, iarr330, iarr430, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230],
+        15: [x0, y01, z1, z0, iarr530, iarr630, iarr730, iarr830, iarr930, iarr1030, iarr1130, iarr1230, w130, w230, w330, w430]},
 
     6: {'-1': [w1, w4], 0: [cz0], 1: [e2, ea2, w5, w7, e10, ea10], 2: [f4, fa4, w7, w9, f12, fa12], 3: [f4, fa4, f8, fa8, f12, fa12], 4: [f4, f8, f12, a3h1, a3h7],
      5: [ef5, ef6, ef7, f12, ff3and4, ff8and9, a3x6], 6: [ef1, ef2, ef3, ff4, ef5, ef6, ef7, ff8, ef9, ef10, ef11, ff12, ca0], 7: [f12, e6, czh0], 8: [f12, e6, czh6, czh12], 9: [ef1230, ef130, ef2, ef230, ef330, ff4, ef430, ef530, ef6, ef630, ef730, ff8, ef830, ef930, ef10, ef1030, ef1130, ff12, ef2a, ef6a, ef10a, ff4a, ff8a, ff12a],
@@ -880,12 +880,25 @@ const processEdgesInShapes = function(shapes, hexCoords) {
             }
             edgeSignaturesAlreadyProcessed[edgeSignature] = true;
 
+            const x1 = scalePointX(p1[0]);
+            const y1 = scalePointY(p1[1]);
+            const x2 = scalePointX(p2[0]);
+            const y2 = scalePointY(p2[1]);
+            const centerX = (x1 + x2) / 2;
+            const centerY = (y1 + y2) / 2;
+
             edges.push({
-                x1: scalePointX(p1[0]),
-                y1: scalePointY(p1[1]),
-                x2: scalePointX(p2[0]),
-                y2: scalePointY(p2[1]),
-                center: [scalePointX((p1[0] + p2[0]) / 2), scalePointY((p1[1] + p2[1]) / 2)],
+                x1,
+                y1,
+                x2,
+                y2,
+                x1x2y1y2AroundCenter: {
+                    x1: x1 - centerX,
+                    y1: y1 - centerY,
+                    x2: x2 - centerX,
+                    y2: y2 - centerY,
+                },
+                center: [centerX, centerY],
                 channel: edgeChannelsByEdgeSignature[edgeSignature] || shape.edgeChannel || ORANGE,
             });
         }
