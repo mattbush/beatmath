@@ -43,9 +43,9 @@ const WallLatticePixel = React.createClass({
 
         let refreshOffset = this._getRefreshOffset();
         runAtTimestamp(this._update, tempo.getNextTick() + refreshOffset);
-        // if (Math.random() < 0.01) {
-        //     this.context.wallLatticeParameters.latency.setValue((Date.now() - tempo.getNextTick()) / 1000);
-        // }
+        if (this.props.isLatencyMaster) {
+            this.context.wallLatticeParameters.latency.setValue((Date.now() - tempo.getNextTick()) / 1000);
+        }
 
         this._nextState = _.clone(this.state);
         this._nextState.ticks++;
