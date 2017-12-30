@@ -12,6 +12,9 @@ const WallCircuitGrid = React.createClass({
     },
     render: function() {
         const componentGrid = _.map(hexGrid, (hexes, row) => {
+            if (row >= 6) {
+                return null;
+            }
             return _.map(hexes, (hex, column) => {
                 if (row % 2 && column === _.size(hexGrid[0]) - 1) {
                     return null;

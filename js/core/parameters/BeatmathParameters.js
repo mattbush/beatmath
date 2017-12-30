@@ -34,7 +34,7 @@ class BeatmathParameters {
         }
 
         this.tempo = new BeatmathTempo(mixboard, {
-            bpm: 120,
+            bpm: 123,
             bpmMod: params.bpmMod,
         });
 
