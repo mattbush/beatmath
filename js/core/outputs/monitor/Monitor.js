@@ -7,8 +7,8 @@ const PieceNameToLoadInput = require('js/core/outputs/monitor/PieceNameToLoadInp
 const MonitorChannelManager = require('js/core/outputs/monitor/MonitorChannelManager');
 const {HUE_BRIDGE_IP_ADDRESS, HUE_API_KEY} = require('js/hue_constants');
 
-// const IS_TESTING_CHANNEL_MANAGER = false;
-const IS_TESTING_CHANNEL_MANAGER = true;
+const IS_TESTING_CHANNEL_MANAGER = false;
+// const IS_TESTING_CHANNEL_MANAGER = true;
 
 const Monitor = React.createClass({
     getInitialState() {
