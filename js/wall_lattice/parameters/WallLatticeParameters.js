@@ -1,5 +1,5 @@
 // const _ = require('lodash');
-const {Parameter, MovingLinearParameter, LinearParameter, NegatedParameter} = require('js/core/parameters/Parameter');
+const {Parameter, ManualParameter, MovingLinearParameter, LinearParameter, NegatedParameter} = require('js/core/parameters/Parameter');
 const {MixtrackKnobs} = require('js/core/inputs/MixtrackConstants');
 const PieceParameters = require('js/core/parameters/PieceParameters');
 const P = require('js/core/parameters/P');
@@ -54,6 +54,12 @@ class WallLatticeParameters extends PieceParameters {
                 canSmoothUpdate: true,
             },
             ...P.CustomPercent({name: 'wavePercent', inputPosition: {fader: 5}}),
+            latency: {
+                type: ManualParameter,
+                start: 0,
+                monitorName: 'Latency',
+                manualMonitorCoords: {x: 5, y: 5},
+            },
         };
     }
 }
