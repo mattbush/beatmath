@@ -719,7 +719,7 @@ const edgeChannels = [
     {
         channel: CYAN,
         edgeSignatures: [
-            '[[0,4],[6,2]]',
+            '[[-6,-2],[0,-4]]',
             '[[0,-4],[6,-2]]',
             '[[6,2],[6,-2]]',
         ],
@@ -843,7 +843,7 @@ const processEdgesInShapes = function(shapes, hexCoords) {
     };
 
     for (const edgeSignature of [
-        '[[0,4],[6,2]]',
+        '[[-6,-2],[0,-4]]',
         '[[0,-4],[6,-2]]',
         '[[6,2],[6,-2]]',
     ]) {
