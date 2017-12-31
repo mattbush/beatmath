@@ -10,6 +10,8 @@ const {HUE_BRIDGE_IP_ADDRESS, HUE_API_KEY} = require('js/hue_constants');
 const IS_TESTING_CHANNEL_MANAGER = false;
 // const IS_TESTING_CHANNEL_MANAGER = true;
 
+const BLACK = tinycolor('#000');
+
 const Monitor = React.createClass({
     getInitialState() {
         return {
@@ -43,6 +45,33 @@ const Monitor = React.createClass({
             }
         });
     },
+    _tickChannels(numTicks) {
+        const halfNumTicks = Math.floor(numTicks / 2);
+        const isTurningOn = numTicks % 2 === 0;
+        let targetMod4;
+        if (isTurningOn) {
+            targetMod4 = halfNumTicks % 4;
+        } else {
+            targetMod4 = halfNumTicks % 4;
+        }
+
+        _.each(this._channelsByLightIndex, (channelIndex, lightIndex) => {
+            if (lightIndex % 4 !== targetMod4) {
+                return;
+            }
+            if (typeof channelIndex !== 'number') {
+                return;
+            }
+            const color = this._colorsByChannel[channelIndex];
+            const rawBrightnessPercent = this._brightnessPercentsByLightIndex[lightIndex];
+            const brightnessPercent = typeof rawBrightnessPercent === 'number' ? rawBrightnessPercent : 1;
+            if (isTurningOn) {
+                updateHue(Number(lightIndex), color, {briCoeff: brightnessPercent});
+            } else {
+                updateHue(Number(lightIndex), BLACK);
+            }
+        });
+    },
     _onMapLightToChannel(lightIndex, channelIndex) {
         this._channelsByLightIndex[lightIndex] = channelIndex;
         this._throttledForceUpdate();
@@ -59,6 +88,8 @@ const Monitor = React.createClass({
             const {channelIndex, color} = JSON.parse(event.newValue);
             this._colorsByChannel[channelIndex] = tinycolor(color);
             this._broadcastChannelColor(channelIndex);
+        } else if (event.key === 'tick') {
+            this._tickChannels(JSON.parse(event.newValue));
         } else {
             this._parsedStorage[event.key] = JSON.parse(event.newValue);
         }

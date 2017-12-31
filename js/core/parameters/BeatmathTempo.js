@@ -36,10 +36,15 @@ class BeatmathTempo {
         this._bpmMod = _.isNumber(params.bpmMod) ? params.bpmMod : 1;
         this._pendingBpmMod = this._bpmMod;
         this._period = MS_PER_MINUTE / params.bpm / this._bpmMod;
+        this._basePeriod = MS_PER_MINUTE / params.bpm;
         this._numTicks = -1;
+        this._numBaseTicks = -1;
         this._currentTick = Date.now();
         this._nextTick = Date.now() + this._period;
+        this._currentBaseTick = Date.now();
+        this._nextBaseTick = Date.now() + this._basePeriod;
         this._tick = this._tick.bind(this);
+        this._baseTick = this._baseTick.bind(this);
         this._pendingDiff = 0;
         this._resetMeasure = false;
 
@@ -47,6 +52,7 @@ class BeatmathTempo {
         this._modButton = mixboard.isLaunchpad() ? LaunchpadMapping.MOD : MixtrackMapping.MOD;
 
         runAtTimestamp(this._tick, this._nextTick);
+        runAtTimestamp(this._baseTick, this._nextBaseTick);
         _.times(NUM_LIGHTS, lightNum => mixboard.toggleLight(this._buttons[lightNum], false));
         this._updateMonitor();
 
@@ -94,6 +100,13 @@ class BeatmathTempo {
         this._updateLights();
         this._updateListeners();
         runAtTimestamp(this._tick, this._nextTick);
+    }
+    _baseTick() {
+        this._currentBaseTick = this._nextBaseTick;
+        this._nextBaseTick += this._basePeriod;
+        this._numBaseTicks++;
+        window.localStorage.setItem('tick', this._numBaseTicks);
+        runAtTimestamp(this._baseTick, this._nextBaseTick);
     }
     _updateMonitor() {
         window.localStorage.setItem('BPM', JSON.stringify({

@@ -10,6 +10,13 @@ const WallCircuitGrid = React.createClass({
     contextTypes: {
         wallCircuitParametersByChannel: React.PropTypes.array,
     },
+    componentDidMount() {
+        _.times(4, channelIndex => {
+            // const color = this.context.wallCircuitParametersByChannel[channelIndex].getColorForColumnAndRow(0, 0);
+            const color = this.context.wallCircuitParametersByChannel[channelIndex].baseColor.getValue();
+            updateChannel(channelIndex, color);
+        });
+    },
     render: function() {
         const componentGrid = _.map(hexGrid, (hexes, row) => {
             if (row >= 6) {
@@ -22,12 +29,6 @@ const WallCircuitGrid = React.createClass({
 
                 return <WallCircuitHex row={row} column={column} />;
             });
-        });
-
-        _.times(4, channelIndex => {
-            // const color = this.context.wallCircuitParametersByChannel[channelIndex].getColorForColumnAndRow(0, 0);
-            const color = this.context.wallCircuitParametersByChannel[channelIndex].baseColor.getValue();
-            updateChannel(channelIndex, color);
         });
 
         return (

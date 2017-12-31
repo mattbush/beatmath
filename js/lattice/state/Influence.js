@@ -209,16 +209,17 @@ class ColorInfluence extends Influence {
             start: params.startValue,
         });
         this._channelNumber = params.channelNumber;
+        updateChannel(this._channelNumber, this._mainParameter.getValue());
     }
     _mixByParameterType(pixelParameter, mixAmount) {
         const influenceParameter = this._mainParameter.getValue();
         return tinycolor.mix(pixelParameter, influenceParameter, mixAmount * 100);
     }
     update() {
-        // don't change color
+        // don't change color or update channel
         this._colParameter.update();
         this._rowParameter.update();
-        updateChannel(this._channelNumber, this._mainParameter.getValue());
+        // updateChannel(this._channelNumber, this._mainParameter.getValue());
     }
     getColor() {
         return this._mainParameter.getValue();
