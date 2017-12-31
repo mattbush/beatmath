@@ -1,5 +1,5 @@
 // const _ = require('lodash');
-const {LinearParameter, MovingColorParameter, LogarithmicParameter, MovingAngleParameter, MovingLogarithmicParameter} = require('js/core/parameters/Parameter'); // MovingLinearParameter
+const {LinearParameter, IntLinearParameter, MovingColorParameter, LogarithmicParameter, MovingAngleParameter, MovingLogarithmicParameter} = require('js/core/parameters/Parameter'); // MovingLinearParameter
 const {MixtrackButtons} = require('js/core/inputs/MixtrackConstants');
 const tinycolor = require('tinycolor2');
 const {posMod, lerp, xyRotatedAroundOriginWithAngle} = require('js/core/utils/math'); // posModAndBendToLowerHalf
@@ -19,10 +19,8 @@ class WallCircuitParameters extends PieceParameters {
         return {
             baseColor: {
                 type: MovingColorParameter,
-                start: tinycolor('#f00').spin(channel * 70),
+                start: tinycolor(['#8405F3', '#F405C3', '#F5B10F', '#00A093'][channel]),
                 max: 5,
-                variance: 1,
-                autoupdate: 1000,
             },
             volume: {
                 type: LinearParameter,
@@ -30,6 +28,13 @@ class WallCircuitParameters extends PieceParameters {
                 start: channel === 0 ? 2 : 0,
                 monitorName: `Ch ${channel} volume`,
                 listenToLaunchpadKnob: [0, channel],
+            },
+            completeness: {
+                type: IntLinearParameter,
+                range: [0, 4],
+                start: channel === 0 ? 0 : 4,
+                monitorName: `Ch ${channel} complete`,
+                listenToLaunchpadKnob: [1, channel],
             },
             periodTicks: {type: LogarithmicParameter,
                 range: [2, 64],

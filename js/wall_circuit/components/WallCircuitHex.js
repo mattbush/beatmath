@@ -23,6 +23,20 @@ const WallCircuitHex = React.createClass({
         return (
             <g style={{transform: `translate(${tx}px, ${ty}px) scale(${cell.scale}) rotate(${cell.rotation}deg)`}}>
                 {cell.edges.map((edge, index) => {
+                    if (edge.channel === 0) {
+                        const completeness = this.context.wallCircuitParametersByChannel[edge.channel].completeness.getValue();
+
+                        const completenessOfHex = Math.abs(this.props.row - 2);
+                        if (completeness < completenessOfHex) {
+                            return null;
+                        }
+
+                        // skip edges that are cyan and vertical
+                        if (completeness < 4 && edge.x1 === edge.x2) {
+                            return null;
+                        }
+                    }
+
                     const column = (tx + edge.center[0] - 7) / Y_AXIS_SCALE;
                     const row = -(ty + edge.center[1] - 1.5) * 2;
 
