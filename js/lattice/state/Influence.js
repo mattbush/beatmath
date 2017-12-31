@@ -215,7 +215,9 @@ class ColorInfluence extends Influence {
         return tinycolor.mix(pixelParameter, influenceParameter, mixAmount * 100);
     }
     update() {
-        super.update();
+        // don't change color
+        this._colParameter.update();
+        this._rowParameter.update();
         updateChannel(this._channelNumber, this._mainParameter.getValue());
     }
     getColor() {
