@@ -7,7 +7,7 @@ const hexGrid = require('js/wallow/WallowHexGrid');
 
 const Y_AXIS_SCALE = Math.sqrt(3) / 2;
 
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 const EDGES_MODE = false;
 const OVERLAP_MODE = false;
 
@@ -39,7 +39,7 @@ const Hex = React.createClass({
 
         const tx = Number(this.props.column) + (this.props.row % 2 ? 0.5 : 0) + cell.offsets[0];
         const ty = this.props.row * Y_AXIS_SCALE + cell.offsets[1];
-        const ghostNum = this.props.row % 2 * 2 + (this.props.column % 2);
+        const ghostNum = (this.props.row % 2 * 2 + (this.props.column % 2) + 4) % 4;
         const ghostTransform = ((this.props.row + this.props.column) % 2) ? 'scale(-1,1)' : null;
 
         return (

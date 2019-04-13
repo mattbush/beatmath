@@ -19,7 +19,7 @@ class WallCircuitParameters extends PieceParameters {
         return {
             baseColor: {
                 type: MovingColorParameter,
-                start: tinycolor(['#8405F3', '#F405C3', '#F5B10F', '#00A093'][channel]),
+                start: tinycolor(['#ff0098', '#f09a00', '#74f000', '#8888bb'][channel]),
                 max: 5,
             },
             volume: {

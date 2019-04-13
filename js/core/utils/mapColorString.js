@@ -27,9 +27,9 @@ const mappingPaletteByPieceName = {
 };
 
 let MAPPING_PALETTE = mappingPaletteByPieceName[pieceName];
-MAPPING_PALETTE = [-50, 0, 30, 165, 195]; // OVERRIDE
+MAPPING_PALETTE = [-5, 30, 110, 30]; // OVERRIDE
 
-const USE_COLOR_MAPPING = false; // !!MAPPING_PALETTE;
+const USE_COLOR_MAPPING = true; // !!MAPPING_PALETTE;
 
 function mapColorToPalette(color, palette) {
     const paletteSize = palette.length;
